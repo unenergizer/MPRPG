@@ -1,5 +1,6 @@
 package com.minepile.mprpg.listeners;
 
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockPlaceEvent;
@@ -18,11 +19,13 @@ public class BlockPlaceListener implements Listener{
 	
 	@EventHandler
 	public void onBlockPlace(BlockPlaceEvent event) {
+		Player player = event.getPlayer();
+		
 		event.setCancelled(true);
 		
 		//show debug message
 		if (MessageManager.canShowDebugMessage() == true) {
-			event.getPlayer().sendMessage(MessageManager.selectMessagePrefix("debug") 
+			player.sendMessage(MessageManager.selectMessagePrefix("debug") 
 					+ "You can not place blocks.");
 		}
 	}
