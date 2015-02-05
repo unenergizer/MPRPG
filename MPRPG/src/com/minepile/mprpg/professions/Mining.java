@@ -24,7 +24,20 @@ public class Mining {
 	}
 	
 	public static void addExperience(Player player, Material tool) {
-		player.sendMessage(MessageManager.selectMessagePrefix("debug") + "Adding experience.");
+		if (tool.equals(Material.WOOD_PICKAXE)) {
+			player.sendMessage(MessageManager.selectMessagePrefix("debug") + "Adding experience for wood pick.");
+		} else if (tool.equals(Material.STONE_PICKAXE)) {
+			player.sendMessage(MessageManager.selectMessagePrefix("debug") + "Adding experience for stone pick.");
+		} else if (tool.equals(Material.IRON_PICKAXE)) {
+			player.sendMessage(MessageManager.selectMessagePrefix("debug") + "Adding experience for iron pick.");
+		} else if (tool.equals(Material.GOLD_PICKAXE)) {
+			player.sendMessage(MessageManager.selectMessagePrefix("debug") + "Adding experience for gold pick.");
+		} else if (tool.equals(Material.DIAMOND_PICKAXE)) {
+			player.sendMessage(MessageManager.selectMessagePrefix("debug") + "Adding experience for diamond pick.");
+		} else {
+			//This should never happen.
+			player.sendMessage(MessageManager.selectMessagePrefix("debug") + "Can not add exp to your tool.");
+		}
 	}
 	
 

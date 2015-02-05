@@ -27,7 +27,7 @@ public class BlockBreakListener implements Listener{
 		Material block = event.getBlock().getType();		//The block type that is being broken.
 		
 		switch(block) {
-		case COAL_ORE:
+		case COAL_ORE: //Mining profession
 			if(tool.equals(Material.WOOD_PICKAXE) || tool.equals(Material.STONE_PICKAXE) ||
 					tool.equals(Material.IRON_PICKAXE) || tool.equals(Material.GOLD_PICKAXE) ||
 					tool.equals(Material.DIAMOND_PICKAXE)) {
@@ -43,7 +43,7 @@ public class BlockBreakListener implements Listener{
 				}
 			}
 			break;
-		case DIAMOND_ORE:
+		case DIAMOND_ORE: //Mining profession
 			if(tool.equals(Material.DIAMOND_PICKAXE)) {
 				//The player used the right tool, so lets try to add EXP.
 				Mining.addExperience(player, tool);
@@ -57,7 +57,7 @@ public class BlockBreakListener implements Listener{
 				}
 			}
 			break;
-		case EMERALD_ORE:
+		case EMERALD_ORE: //Mining profession
 			if(tool.equals(Material.IRON_PICKAXE) || tool.equals(Material.GOLD_PICKAXE) ||
 					tool.equals(Material.DIAMOND_PICKAXE)) {
 				//The player used the right tool, so lets try to add EXP.
@@ -72,7 +72,7 @@ public class BlockBreakListener implements Listener{
 				}
 			}
 			break;
-		case GOLD_ORE:
+		case GOLD_ORE: //Mining profession
 			if(tool.equals(Material.GOLD_PICKAXE) || tool.equals(Material.DIAMOND_PICKAXE)) {
 				//The player used the right tool, so lets try to add EXP.
 				Mining.addExperience(player, tool);
@@ -86,7 +86,7 @@ public class BlockBreakListener implements Listener{
 				}
 			}
 			break;
-		case IRON_ORE:
+		case IRON_ORE: //Mining profession
 			if(tool.equals(Material.STONE_PICKAXE) || tool.equals(Material.IRON_PICKAXE) || 
 					tool.equals(Material.GOLD_PICKAXE) || tool.equals(Material.DIAMOND_PICKAXE)) {
 				//The player used the right tool, so lets try to add EXP.
