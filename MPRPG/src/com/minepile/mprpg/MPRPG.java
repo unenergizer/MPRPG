@@ -9,6 +9,7 @@ import com.minepile.mprpg.listeners.BlockBreakListener;
 import com.minepile.mprpg.listeners.BlockPlaceListener;
 import com.minepile.mprpg.listeners.PlayerJoinListener;
 import com.minepile.mprpg.managers.MessageManager;
+import com.minepile.mprpg.professions.Mining;
 
 public class MPRPG extends JavaPlugin {
 	
@@ -30,6 +31,9 @@ public class MPRPG extends JavaPlugin {
         
         //setup manager instances
         MessageManager.getInstance().setup(this);
+        
+        //setup professions (game jobs) instances
+        Mining.getInstance().setup(this);
         
         //setup event listeners
         pluginManager.registerEvents(new BlockBreakListener(this), this);
