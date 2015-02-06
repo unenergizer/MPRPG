@@ -26,13 +26,37 @@ public class PlayerManager {
 		this.plugin = plugin;
 	}	
 	
+	public static void updatePlayerConfig(Player player, String stat, int amount) {
+    	
+		String uuid = player.getUniqueId().toString();
+    	
+        File configFile = new File("plugins/MPRPG/players/" + uuid + ".yml");
+        FileConfiguration playerConfig =  YamlConfiguration.loadConfiguration(configFile);
+        playerConfig.set(stat, amount);
+
+        try {
+            playerConfig.save(configFile);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } 
+	}
+	
+	public static int getPlayerConfig(Player player, String stat) {
+    	
+		String uuid = player.getUniqueId().toString();
+    	
+        File configFile = new File("plugins/MPRPG/players/" + uuid + ".yml");
+        FileConfiguration playerConfig =  YamlConfiguration.loadConfiguration(configFile);
+        return (int) playerConfig.get(stat);
+	}
+	
 	public static void loadPlayerConfig(Player player) {
 		
 		String uuid = player.getUniqueId().toString();
 		
 		//Check to make sure the player configuration exists.
 		//Player configurations are saved with the UUID (Mojang's Unique User Identifier).
-        if(new File("plugins/MPRPG/players/" + uuid + "config.yml").exists()){
+        if(new File("plugins/MPRPG/players/" + uuid + ".yml").exists()){
         	
             //Lets load the players configuration file.
             
@@ -57,7 +81,10 @@ public class PlayerManager {
         File configFile = new File("plugins/MPRPG/players/" + uuid + ".yml");
         FileConfiguration playerConfig =  YamlConfiguration.loadConfiguration(configFile);
         playerConfig.set("playerName", playerName);
-        playerConfig.set("miningExp", 0);
+        playerConfig.set("playerLVL", 1);
+        playerConfig.set("playerEXP", 0);
+        playerConfig.set("miningLVL", 1);
+        playerConfig.set("miningEXP", 0);
 
         try {
             playerConfig.save(configFile);
