@@ -9,6 +9,7 @@ import org.bukkit.event.player.PlayerJoinEvent;
 
 import com.minepile.mprpg.MPRPG;
 import com.minepile.mprpg.managers.MessageManager;
+import com.minepile.mprpg.managers.PlayerManager;
 
 public class PlayerJoinListener implements Listener {
 	
@@ -25,6 +26,9 @@ public class PlayerJoinListener implements Listener {
 		Player player = event.getPlayer();
 		String playerName = player.getName();
 		
+		//Load the player
+		PlayerManager.loadPlayerConfig(player);
+		
 		//Show the user the welcome message.
 		MessageManager.displayWelcomeMessage(player);
 		
@@ -32,7 +36,7 @@ public class PlayerJoinListener implements Listener {
 		//"PlayerName" has joined the game.
 		event.setJoinMessage("");
 		
-		//Send player specific join message.
+		//Send player specific/private join message.
 		//This message is not displayed to all users.
 		player.sendMessage(ChatColor.GRAY + "Welcome " + playerName + "!");
 	}
