@@ -52,6 +52,67 @@ public class MessageManager {
 		player.sendMessage(welcomeMessage);
 	}
 	
+	//EXP level formatting for chat.
+	public static String showEXPLevel(int exp, int currentExp, int expGoal){
+		int expPercent = ((100 * currentExp) / expGoal);
+	
+		return ChatColor.GRAY + "" + ChatColor.BOLD + 
+				"        EXP: " + 
+				percentBar(expPercent) + 
+				ChatColor.GRAY + ChatColor.BOLD + " " + expPercent + "%" + 
+				ChatColor.RESET + ChatColor.GRAY + " [" + 
+				ChatColor.BLUE + currentExp + " / " + expGoal +
+				ChatColor.RESET + ChatColor.GRAY + "] "
+				+ ChatColor.GREEN + "+" + ChatColor.GRAY+ exp + " EXP";
+	}
+	
+	//Precent bar for chat leveling bar.
+	private static String percentBar(int expPercent) {
+		if (expPercent <= 5) {
+			return ChatColor.RED + "" + ChatColor.BOLD + "|" + ChatColor.GRAY + ChatColor.BOLD + "|||||||||||||||||||";
+		} else if (expPercent > 5 && expPercent <= 10) {
+			return ChatColor.RED + "" + ChatColor.BOLD + "||" + ChatColor.GRAY + ChatColor.BOLD + "||||||||||||||||||";
+		} else if (expPercent > 10 && expPercent <= 15) {
+			return ChatColor.RED + "" + ChatColor.BOLD + "|||" + ChatColor.GRAY + ChatColor.BOLD + "|||||||||||||||||";
+		} else if (expPercent > 15 && expPercent <= 20) {
+			return ChatColor.RED + "" + ChatColor.BOLD + "||||" + ChatColor.GRAY + ChatColor.BOLD + "||||||||||||||||";
+		} else if (expPercent > 20 && expPercent <= 25) {
+			return ChatColor.RED + "" + ChatColor.BOLD + "|||||" + ChatColor.GRAY + ChatColor.BOLD + "|||||||||||||||";
+		} else if (expPercent > 25 && expPercent <= 30) {
+			return ChatColor.RED + "" + ChatColor.BOLD + "||||||" + ChatColor.GRAY + ChatColor.BOLD + "||||||||||||||";
+		} else if (expPercent > 30 && expPercent <= 35) {
+			return ChatColor.YELLOW + "" + ChatColor.BOLD + "|||||||" + ChatColor.GRAY + ChatColor.BOLD + "|||||||||||||";
+		} else if (expPercent > 35 && expPercent <= 40) {
+			return ChatColor.YELLOW + "" + ChatColor.BOLD + "||||||||" + ChatColor.GRAY + ChatColor.BOLD + "||||||||||||";
+		} else if (expPercent > 40 && expPercent <= 45) {
+			return ChatColor.YELLOW + "" + ChatColor.BOLD + "|||||||||" + ChatColor.GRAY + ChatColor.BOLD + "|||||||||||";
+		} else if (expPercent > 45 && expPercent <= 50) {
+			return ChatColor.YELLOW + "" + ChatColor.BOLD + "||||||||||" + ChatColor.GRAY + ChatColor.BOLD + "||||||||||";
+		} else if (expPercent > 50 && expPercent <= 55) {
+			return ChatColor.YELLOW + "" + ChatColor.BOLD + "|||||||||||" + ChatColor.GRAY + ChatColor.BOLD + "|||||||||";
+		} else if (expPercent > 55 && expPercent <= 60) {
+			return ChatColor.YELLOW + "" + ChatColor.BOLD + "||||||||||||" + ChatColor.GRAY + ChatColor.BOLD + "||||||||";
+		} else if (expPercent > 60 && expPercent <= 65) {
+			return ChatColor.GREEN + "" + ChatColor.BOLD + "|||||||||||||" + ChatColor.GRAY + ChatColor.BOLD + "|||||||";
+		} else if (expPercent > 65 && expPercent <= 70) {
+			return ChatColor.GREEN + "" + ChatColor.BOLD + "||||||||||||||" + ChatColor.GRAY + ChatColor.BOLD + "||||||";
+		} else if (expPercent > 70 && expPercent <= 75) {
+			return ChatColor.GREEN + "" + ChatColor.BOLD + "|||||||||||||||" + ChatColor.GRAY + ChatColor.BOLD + "|||||";
+		} else if (expPercent > 75 && expPercent <= 80) {
+			return ChatColor.GREEN + "" + ChatColor.BOLD + "||||||||||||||||" + ChatColor.GRAY + ChatColor.BOLD + "||||";
+		} else if (expPercent > 80 && expPercent <= 85) {
+			return ChatColor.GREEN + "" + ChatColor.BOLD + "|||||||||||||||||" + ChatColor.GRAY + ChatColor.BOLD + "|||";
+		} else if (expPercent > 85 && expPercent <= 90) {
+			return ChatColor.GREEN + "" + ChatColor.BOLD + "||||||||||||||||||" + ChatColor.GRAY + ChatColor.BOLD + "||";
+		} else if (expPercent > 90 && expPercent <= 95) {
+			return ChatColor.GREEN + "" + ChatColor.BOLD + "||||||||||||||||||" + ChatColor.GRAY + ChatColor.BOLD + "||";
+		} else if (expPercent > 95 && expPercent <= 100) {
+			return ChatColor.GREEN + "" + ChatColor.BOLD + "|||||||||||||||||||" + ChatColor.GRAY + ChatColor.BOLD + "|";
+		} else {
+			return ChatColor.GREEN + "" + ChatColor.BOLD + "||||||||||||||||||||";
+		}
+	}
+	
 	//////////////////////////////////////////////
 	// Getters and Setters ///////////////////////
 	//////////////////////////////////////////////
