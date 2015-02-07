@@ -67,7 +67,7 @@ public class MessageManager {
 	}
 	
 	//Precent bar for chat leveling bar.
-	private static String percentBar(int expPercent) {
+	public static String percentBar(int expPercent) {
 		if (expPercent <= 5) {
 			return ChatColor.RED + "" + ChatColor.BOLD + "|" + ChatColor.GRAY + ChatColor.BOLD + "|||||||||||||||||||";
 		} else if (expPercent > 5 && expPercent <= 10) {

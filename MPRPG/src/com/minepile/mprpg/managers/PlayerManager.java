@@ -40,15 +40,7 @@ public class PlayerManager {
             e.printStackTrace();
         } 
 	}
-	
-	public static int getPlayerConfig(Player player, String stat) {
-    	
-		String uuid = player.getUniqueId().toString();
-    	
-        File configFile = new File("plugins/MPRPG/players/" + uuid + ".yml");
-        FileConfiguration playerConfig =  YamlConfiguration.loadConfiguration(configFile);
-        return (int) playerConfig.get(stat);
-	}
+
 	
 	public static void loadPlayerConfig(Player player) {
 		
@@ -56,18 +48,7 @@ public class PlayerManager {
 		
 		//Check to make sure the player configuration exists.
 		//Player configurations are saved with the UUID (Mojang's Unique User Identifier).
-        if(new File("plugins/MPRPG/players/" + uuid + ".yml").exists()){
-        	
-            //Lets load the players configuration file.
-            
-        	/* This code will load settings from the user's configuration file. 
-        	File configFile = new File("plugins/MPRPG/players/" + uuid + ".yml");
-            FileConfiguration playerConfig =  YamlConfiguration.loadConfiguration(configFile);
-            playerConfig.get("miningExp");
-            */
-            
-        } else {
-        	
+        if(!new File("plugins/MPRPG/players/" + uuid + ".yml").exists()){
         	//The players file does not exist. Lets create the player file now.
         	createPlayerConfig(player);
         }
@@ -83,6 +64,9 @@ public class PlayerManager {
         playerConfig.set("playerName", playerName);
         playerConfig.set("playerLVL", 1);
         playerConfig.set("playerEXP", 0);
+        playerConfig.set("gold", 0);
+        playerConfig.set("silver", 0);
+        playerConfig.set("copper", 0);
         playerConfig.set("miningLVL", 1);
         playerConfig.set("miningEXP", 0);
 
@@ -92,4 +76,13 @@ public class PlayerManager {
             e.printStackTrace();
         } 
     }
+    
+	public static int getPlayerConfigStat(Player player, String stat) {
+    	
+		String uuid = player.getUniqueId().toString();
+    	
+        File configFile = new File("plugins/MPRPG/players/" + uuid + ".yml");
+        FileConfiguration playerConfig =  YamlConfiguration.loadConfiguration(configFile);
+        return (int) playerConfig.get(stat);
+	}
 }

@@ -2,6 +2,7 @@ package com.minepile.mprpg.professions;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import org.bukkit.ChatColor;
@@ -9,6 +10,8 @@ import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 
 import com.minepile.mprpg.MPRPG;
 import com.minepile.mprpg.managers.MessageManager;
@@ -48,24 +51,135 @@ public class Mining {
         }
 	}
 	
+	public static void updateItemMeta(Player player, Material tool) {
+		ItemStack is = player.getInventory().getItemInHand();
+		ItemMeta im = is.getItemMeta();
+		
+		int currentPickEXP = PlayerManager.getPlayerConfigStat(player, "miningEXP");
+		int currentPickLVL = PlayerManager.getPlayerConfigStat(player, "miningLVL");
+		int expToNextLevel = configMiningLevel.get(currentPickLVL);
+		int expPercent = ((100 * currentPickEXP) / expToNextLevel);
+		
+		//Set the item name
+		if (tool.equals(Material.WOOD_PICKAXE)) {
+			im.setDisplayName(ChatColor.WHITE + "Novice Pickaxe");
+		} else if (tool.equals(Material.STONE_PICKAXE)) {
+			im.setDisplayName(ChatColor.YELLOW + "Apprentice Pickaxe");
+		} else if (tool.equals(Material.IRON_PICKAXE)) {
+			im.setDisplayName(ChatColor.GREEN + "Adept Pickaxe");
+		} else if (tool.equals(Material.GOLD_PICKAXE)) {
+			im.setDisplayName(ChatColor.BLUE + "Expert Pickaxe");
+		} else {
+			im.setDisplayName(ChatColor.LIGHT_PURPLE + "Master Pickaxe");
+		}
+		
+		//Set the item lore
+		ArrayList<String> lore = new ArrayList<String>();
+		lore.add(ChatColor.RESET + "" + ChatColor.GRAY + ChatColor.BOLD + "LVL: " + ChatColor.RESET +
+				ChatColor.LIGHT_PURPLE + currentPickLVL);
+		lore.add(ChatColor.RESET + "" + ChatColor.GRAY + ChatColor.BOLD + "EXP: " + 
+				ChatColor.RESET + ChatColor.BLUE + currentPickEXP + " / " + expToNextLevel);
+		lore.add(ChatColor.RESET + "" + ChatColor.GRAY + ChatColor.BOLD + "EXP: " + 
+				MessageManager.percentBar(expPercent) + ChatColor.GRAY + " " + expPercent + "%");
+		lore.add(" ");//create blank space
+		
+		if (tool.equals(Material.WOOD_PICKAXE)) {
+			lore.add(ChatColor.RESET + "" + ChatColor.GRAY + ChatColor.ITALIC + "A pickaxe made of wood.");
+		} else if (tool.equals(Material.STONE_PICKAXE)) {
+			lore.add(ChatColor.RESET + "" + ChatColor.GRAY + ChatColor.ITALIC + "A pickaxe made of stone.");
+		} else if (tool.equals(Material.IRON_PICKAXE)) {
+			lore.add(ChatColor.RESET + "" + ChatColor.GRAY + ChatColor.ITALIC + "A pickaxe made of iron.");
+		} else if (tool.equals(Material.GOLD_PICKAXE)) {
+			lore.add(ChatColor.RESET + "" + ChatColor.GRAY + ChatColor.ITALIC + "A pickaxe made of gold.");
+		} else {
+			lore.add(ChatColor.RESET + "" + ChatColor.GRAY + ChatColor.ITALIC + "A pickaxe made of diamond.");
+		}
+		
+		//Set the item lore
+		im.setLore(lore);
+		//Set the item meta
+		is.setItemMeta(im);
+	}
+	
 	//This method is called by the BlockBreakEvent if the player has
 	//broken an ORE using a Pickaxe.
-	public static void addExperience(Player player, Material tool) {
+	public static void addExperience(Player player, Material tool, Material ore) {
 		if (tool.equals(Material.WOOD_PICKAXE)) {
+			
 			int expGain = calculateExpGain(10);
 			chatMiningMessage(player, expGain);
+			//update the items meta
+			updateItemMeta(player, tool);
+			
 		} else if (tool.equals(Material.STONE_PICKAXE)) {
-			int expGain = calculateExpGain(11);
-			chatMiningMessage(player, expGain);
+			
+			//Give lower exp gain for coal and other ores.
+			if(ore.equals(Material.COAL_ORE)) {
+				int expGain = calculateExpGain(9);
+				chatMiningMessage(player, expGain);
+			} else {
+				int expGain = calculateExpGain(10);
+				chatMiningMessage(player, expGain);
+			}
+			//update the items meta
+			updateItemMeta(player, tool);
 		} else if (tool.equals(Material.IRON_PICKAXE)) {
-			int expGain = calculateExpGain(12);
-			chatMiningMessage(player, expGain);
+			
+			//Give lower exp gain for coal and other ores.
+			if(ore.equals(Material.COAL_ORE)) {
+				int expGain = calculateExpGain(8);
+				chatMiningMessage(player, expGain);
+			} else if (ore.equals(Material.IRON_ORE)){
+				int expGain = calculateExpGain(9);
+				chatMiningMessage(player, expGain);
+			} else {
+				//Must be emrald ore.
+				int expGain = calculateExpGain(10);
+				chatMiningMessage(player, expGain);
+			}
+			//update the items meta
+			updateItemMeta(player, tool);
 		} else if (tool.equals(Material.GOLD_PICKAXE)) {
-			int expGain = calculateExpGain(13);
-			chatMiningMessage(player, expGain);
+			
+			//Give lower exp gain for coal and other ores.
+			if(ore.equals(Material.COAL_ORE)) {
+				int expGain = calculateExpGain(8);
+				chatMiningMessage(player, expGain);
+			} else if (ore.equals(Material.IRON_ORE)){
+				int expGain = calculateExpGain(9);
+				chatMiningMessage(player, expGain);
+			} else if (ore.equals(Material.EMERALD_ORE)){
+				int expGain = calculateExpGain(10);
+				chatMiningMessage(player, expGain);
+			} else {
+				//Must be gold ore.
+				int expGain = calculateExpGain(11);
+				chatMiningMessage(player, expGain);
+			}
+			//update the items meta
+			updateItemMeta(player, tool);
 		} else if (tool.equals(Material.DIAMOND_PICKAXE)) {
-			int expGain = calculateExpGain(14);
-			chatMiningMessage(player, expGain);
+			
+			//Give lower exp gain for coal and other ores.
+			if(ore.equals(Material.COAL_ORE)) {
+				int expGain = calculateExpGain(8);
+				chatMiningMessage(player, expGain);
+			} else if (ore.equals(Material.IRON_ORE)){
+				int expGain = calculateExpGain(9);
+				chatMiningMessage(player, expGain);
+			} else if (ore.equals(Material.EMERALD_ORE)){
+				int expGain = calculateExpGain(10);
+				chatMiningMessage(player, expGain);
+			} else if (ore.equals(Material.GOLD_ORE)) {
+				int expGain = calculateExpGain(11);
+				chatMiningMessage(player, expGain);
+			} else {
+				//must be diamond ore.
+				int expGain = calculateExpGain(12);
+				chatMiningMessage(player, expGain);
+			}
+			//update the items meta
+			updateItemMeta(player, tool);
 		} else {
 			//This should never happen.
 			player.sendMessage(MessageManager.selectMessagePrefix("debug") + "Can not add exp to your tool.");
@@ -93,9 +207,9 @@ public class Mining {
 		//If the expGain is any other number, let them know it was successful.
 		if (expGain != 0) {
 			//add EXP to tool
-			int currentPickEXP = PlayerManager.getPlayerConfig(player, "miningEXP");
+			int currentPickEXP = PlayerManager.getPlayerConfigStat(player, "miningEXP");
 			int newEXP = currentPickEXP + expGain;
-			int currentPickLVL = PlayerManager.getPlayerConfig(player, "miningLVL");
+			int currentPickLVL = PlayerManager.getPlayerConfigStat(player, "miningLVL");
 			int expToNextLevel = configMiningLevel.get(currentPickLVL);
 			
 			if (newEXP < expToNextLevel) {

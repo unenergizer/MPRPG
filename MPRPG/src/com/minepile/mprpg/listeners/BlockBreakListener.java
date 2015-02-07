@@ -32,7 +32,7 @@ public class BlockBreakListener implements Listener{
 					tool.equals(Material.IRON_PICKAXE) || tool.equals(Material.GOLD_PICKAXE) ||
 					tool.equals(Material.DIAMOND_PICKAXE)) {
 				//The player used the right tool, so lets try to add EXP.
-				Mining.addExperience(player, tool);
+				Mining.addExperience(player, tool, Material.COAL_ORE);
 			} else {
 				//Cancel the block being broken.
 				event.setCancelled(true);	
@@ -46,7 +46,7 @@ public class BlockBreakListener implements Listener{
 		case DIAMOND_ORE: //Mining profession
 			if(tool.equals(Material.DIAMOND_PICKAXE)) {
 				//The player used the right tool, so lets try to add EXP.
-				Mining.addExperience(player, tool);
+				Mining.addExperience(player, tool, Material.DIAMOND_ORE);
 			} else {
 				//Cancel the block being broken.
 				event.setCancelled(true);	
@@ -61,7 +61,7 @@ public class BlockBreakListener implements Listener{
 			if(tool.equals(Material.IRON_PICKAXE) || tool.equals(Material.GOLD_PICKAXE) ||
 					tool.equals(Material.DIAMOND_PICKAXE)) {
 				//The player used the right tool, so lets try to add EXP.
-				Mining.addExperience(player, tool);
+				Mining.addExperience(player, tool,  Material.EMERALD_ORE);
 			} else {
 				//Cancel the block being broken.
 				event.setCancelled(true);	
@@ -75,7 +75,7 @@ public class BlockBreakListener implements Listener{
 		case GOLD_ORE: //Mining profession
 			if(tool.equals(Material.GOLD_PICKAXE) || tool.equals(Material.DIAMOND_PICKAXE)) {
 				//The player used the right tool, so lets try to add EXP.
-				Mining.addExperience(player, tool);
+				Mining.addExperience(player, tool,  Material.GOLD_ORE);
 			} else {
 				//Cancel the block being broken.
 				event.setCancelled(true);	
@@ -90,7 +90,7 @@ public class BlockBreakListener implements Listener{
 			if(tool.equals(Material.STONE_PICKAXE) || tool.equals(Material.IRON_PICKAXE) || 
 					tool.equals(Material.GOLD_PICKAXE) || tool.equals(Material.DIAMOND_PICKAXE)) {
 				//The player used the right tool, so lets try to add EXP.
-				Mining.addExperience(player, tool);
+				Mining.addExperience(player, tool, Material.IRON_ORE);
 			} else {
 				//Cancel the block being broken.
 				event.setCancelled(true);	
