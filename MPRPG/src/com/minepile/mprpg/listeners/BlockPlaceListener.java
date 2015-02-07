@@ -21,13 +21,15 @@ public class BlockPlaceListener implements Listener{
 	public void onBlockPlace(BlockPlaceEvent event) {
 		Player player = event.getPlayer();
 		
-		event.setCancelled(true);
+		event.setCancelled(false);
+		
 		
 		//show debug message
-		if (MessageManager.canShowDebugMessage() == true) {
+		if (MessageManager.canShowAdminDebugMessage() == true) {
 			player.sendMessage(MessageManager.selectMessagePrefix("debug") 
 					+ "You can not place blocks.");
 		}
+		
 	}
 
 }

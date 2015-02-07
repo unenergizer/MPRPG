@@ -19,7 +19,7 @@ import com.minepile.mprpg.managers.PlayerManager;
 
 public class Mining {
 	
-	//setup variables
+	//setup instance variables
 	public static MPRPG plugin;
 	static Mining miningInstance = new Mining();
 	
@@ -216,15 +216,15 @@ public class Mining {
 				player.sendMessage(MessageManager.showEXPLevel(expGain, newEXP, configMiningLevel.get(currentPickLVL)));
 			
 				//Save the new EXP total to the user's configuration file.
-				PlayerManager.updatePlayerConfig(player, "miningEXP", newEXP);
+				PlayerManager.setPlayerConfigStat(player, "miningEXP", newEXP);
 			} else {
 				//level up the players pickaxe.
 				player.sendMessage(MessageManager.showEXPLevel(expGain, newEXP, configMiningLevel.get(currentPickLVL)));
 				
 				int newPickLVL = currentPickLVL + 1;
 				int newPickEXP = newEXP - expToNextLevel;
-				PlayerManager.updatePlayerConfig(player, "miningLVL", newPickLVL);
-				PlayerManager.updatePlayerConfig(player, "miningEXP", newPickEXP);
+				PlayerManager.setPlayerConfigStat(player, "miningLVL", newPickLVL);
+				PlayerManager.setPlayerConfigStat(player, "miningEXP", newPickEXP);
 				player.sendMessage(MessageManager.selectMessagePrefix("debug") +
 						ChatColor.YELLOW + ChatColor.BOLD + "Your pick is now level " + newPickLVL + ".");
 			}

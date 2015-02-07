@@ -8,11 +8,12 @@ import com.minepile.mprpg.MPRPG;
 
 public class MessageManager {
 	
-	//setup variables
+	//setup instance variables
 	public static MPRPG plugin;
 	static MessageManager messageManagerInstance = new MessageManager();
 	
 	//Message Manager specific variables
+	private static boolean showAdminDebugMessage = false;
 	private static boolean showDebugMessage = true;
 	
 	//Create instance
@@ -117,6 +118,14 @@ public class MessageManager {
 	// Getters and Setters ///////////////////////
 	//////////////////////////////////////////////
 	
+	public static boolean canShowAdminDebugMessage() {
+		return showAdminDebugMessage;
+	}
+
+	public static void setShowAdminDebugMessage(boolean showAdminDebugMessage) {
+		MessageManager.showAdminDebugMessage = showAdminDebugMessage;
+	}
+
 	/*
 	 * Returns a boolean if the debug messages
 	 * are turned on or off.

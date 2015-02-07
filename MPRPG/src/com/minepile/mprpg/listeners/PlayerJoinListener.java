@@ -27,7 +27,7 @@ public class PlayerJoinListener implements Listener {
 		String playerName = player.getName();
 		
 		//Load the player
-		PlayerManager.loadPlayerConfig(player);
+		PlayerManager.setupPlayer(player);
 		
 		//Show the user the welcome message.
 		MessageManager.displayWelcomeMessage(player);
