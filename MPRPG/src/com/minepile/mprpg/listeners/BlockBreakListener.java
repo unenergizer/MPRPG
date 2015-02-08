@@ -13,6 +13,7 @@ import com.minepile.mprpg.professions.Mining;
 public class BlockBreakListener implements Listener{
 	
 	public static MPRPG plugin;
+	public boolean allPlayersCanBreakBlocks = true;
 	
 	@SuppressWarnings("static-access")
 	public BlockBreakListener(MPRPG plugin) {
@@ -26,6 +27,8 @@ public class BlockBreakListener implements Listener{
 		Material tool = player.getItemInHand().getType();	//The tool the player may be holding.
 		Material block = event.getBlock().getType();		//The block type that is being broken.
 		
+		//Cancel the drops from the event.
+		
 		switch(block) {
 		case COAL_ORE: //Mining profession
 			if(tool.equals(Material.WOOD_PICKAXE) || tool.equals(Material.STONE_PICKAXE) ||
@@ -35,7 +38,7 @@ public class BlockBreakListener implements Listener{
 				Mining.addExperience(player, tool, Material.COAL_ORE);
 			} else {
 				//Cancel the block being broken.
-				event.setCancelled(true);	
+				event.setCancelled(false);	
 				//show debug message
 				if (MessageManager.canShowDebugMessage() == true) {
 					player.sendMessage(MessageManager.selectMessagePrefix("debug") 
@@ -102,12 +105,14 @@ public class BlockBreakListener implements Listener{
 			}
 			break;
 		default:
-			//Cancel the block being broken.
-			event.setCancelled(true);	
-			//show debug message
-			if (MessageManager.canShowDebugMessage() == true) {
-				player.sendMessage(MessageManager.selectMessagePrefix("debug") 
-						+ "You can not break blocks.");
+			if (allPlayersCanBreakBlocks == false) {
+				//Cancel the block being broken.
+				event.setCancelled(true);	
+				//show debug message
+				if (MessageManager.canShowAdminDebugMessage() == true) {
+					player.sendMessage(MessageManager.selectMessagePrefix("debug") 
+							+ "You can not break blocks.");
+				}
 			}
 			break;
 		}

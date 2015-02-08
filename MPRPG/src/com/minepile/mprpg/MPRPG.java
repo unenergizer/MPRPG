@@ -13,6 +13,7 @@ import com.minepile.mprpg.listeners.EntityDamageByEntityListener;
 import com.minepile.mprpg.listeners.EntityDamageListener;
 import com.minepile.mprpg.listeners.EntityRegainHealthListener;
 import com.minepile.mprpg.listeners.PlayerJoinListener;
+import com.minepile.mprpg.listeners.PlayerPickupItemListener;
 import com.minepile.mprpg.listeners.PlayerQuitListener;
 import com.minepile.mprpg.managers.MessageManager;
 import com.minepile.mprpg.managers.PlayerManager;
@@ -63,6 +64,7 @@ public class MPRPG extends JavaPlugin {
         pluginManager.registerEvents(new EntityDamageListener(this), this);
         pluginManager.registerEvents(new EntityRegainHealthListener(this), this);
         pluginManager.registerEvents(new PlayerJoinListener(this), this);
+        pluginManager.registerEvents(new PlayerPickupItemListener(this), this);
         pluginManager.registerEvents(new PlayerQuitListener(this), this);
         
         //Notify that plugin is fully finished loading.

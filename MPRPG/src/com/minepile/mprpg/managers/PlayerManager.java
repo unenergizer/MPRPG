@@ -7,6 +7,7 @@ import java.util.HashMap;
 import net.md_5.bungee.api.ChatColor;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Sound;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
@@ -58,7 +59,7 @@ public class PlayerManager {
 		int currentHP = healthPoints.get(playerName);
 		
 		//If heal == true, then we are healing the player and need to add to the players health.
-		if (heal == true) {
+		if (heal == true) { //Player is being healed.
 			double newHP = currentHP + hpAmount;
 			int maxHP = maxHealthPoints.get(playerName);
 			int hpPercent = (int) ((20 * newHP) / maxHP);
@@ -75,10 +76,15 @@ public class PlayerManager {
 				//Send the player the debug message.
 				player.sendMessage(ChatColor.GREEN + "         +" + hpAmount + " [" + newHP + "/" + maxHP + "]");
 			}
-		} else {
+		} else { //Player is being hurt.
 			double newHP = currentHP - hpAmount;
 			int maxHP = maxHealthPoints.get(playerName);
 			int hpPercent = (int) ((20 * newHP) / maxHP);
+			
+			//Play a sound for the player.  This is necessary
+			//because we canceled the event, which cancels the noise
+			//and damage sent to the player.
+			player.playSound(player.getLocation(), Sound.HURT_FLESH, 1, 1);
 			
 			//Sets new HP value in the hashMap.
 			healthPoints.put(playerName, (int) newHP);
