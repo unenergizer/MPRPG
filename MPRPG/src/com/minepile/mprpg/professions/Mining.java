@@ -103,11 +103,14 @@ public class Mining {
 	
 	//This method is called by the BlockBreakEvent if the player has
 	//broken an ORE using a Pickaxe.
-	public static void addExperience(Player player, Material tool, Material ore) {
+	public static void minedOre(Player player, Material tool, Material ore) {
 		if (tool.equals(Material.WOOD_PICKAXE)) {
 			
 			int expGain = calculateExpGain(10);
 			chatMiningMessage(player, expGain);
+			if (expGain != 0) {
+				player.getInventory().addItem(new ItemStack(ore, 1));
+			}
 			//update the items meta
 			updateItemMeta(player, tool);
 			
@@ -117,9 +120,15 @@ public class Mining {
 			if(ore.equals(Material.COAL_ORE)) {
 				int expGain = calculateExpGain(9);
 				chatMiningMessage(player, expGain);
+				if (expGain != 0) {
+					player.getInventory().addItem(new ItemStack(ore, 1));
+				}
 			} else {
 				int expGain = calculateExpGain(10);
 				chatMiningMessage(player, expGain);
+				if (expGain != 0) {
+					player.getInventory().addItem(new ItemStack(ore, 1));
+				}
 			}
 			//update the items meta
 			updateItemMeta(player, tool);
@@ -129,13 +138,22 @@ public class Mining {
 			if(ore.equals(Material.COAL_ORE)) {
 				int expGain = calculateExpGain(8);
 				chatMiningMessage(player, expGain);
+				if (expGain != 0) {
+					player.getInventory().addItem(new ItemStack(ore, 1));
+				}
 			} else if (ore.equals(Material.IRON_ORE)){
 				int expGain = calculateExpGain(9);
 				chatMiningMessage(player, expGain);
+				if (expGain != 0) {
+					player.getInventory().addItem(new ItemStack(ore, 1));
+				}
 			} else {
 				//Must be emrald ore.
 				int expGain = calculateExpGain(10);
 				chatMiningMessage(player, expGain);
+				if (expGain != 0) {
+					player.getInventory().addItem(new ItemStack(ore, 1));
+				}
 			}
 			//update the items meta
 			updateItemMeta(player, tool);
@@ -145,16 +163,28 @@ public class Mining {
 			if(ore.equals(Material.COAL_ORE)) {
 				int expGain = calculateExpGain(8);
 				chatMiningMessage(player, expGain);
+				if (expGain != 0) {
+					player.getInventory().addItem(new ItemStack(ore, 1));
+				}
 			} else if (ore.equals(Material.IRON_ORE)){
 				int expGain = calculateExpGain(9);
 				chatMiningMessage(player, expGain);
+				if (expGain != 0) {
+					player.getInventory().addItem(new ItemStack(ore, 1));
+				}
 			} else if (ore.equals(Material.EMERALD_ORE)){
 				int expGain = calculateExpGain(10);
 				chatMiningMessage(player, expGain);
+				if (expGain != 0) {
+					player.getInventory().addItem(new ItemStack(ore, 1));
+				}
 			} else {
 				//Must be gold ore.
 				int expGain = calculateExpGain(11);
 				chatMiningMessage(player, expGain);
+				if (expGain != 0) {
+					player.getInventory().addItem(new ItemStack(ore, 1));
+				}
 			}
 			//update the items meta
 			updateItemMeta(player, tool);
@@ -164,20 +194,36 @@ public class Mining {
 			if(ore.equals(Material.COAL_ORE)) {
 				int expGain = calculateExpGain(8);
 				chatMiningMessage(player, expGain);
+				if (expGain != 0) {
+					player.getInventory().addItem(new ItemStack(ore, 1));
+				}
 			} else if (ore.equals(Material.IRON_ORE)){
 				int expGain = calculateExpGain(9);
 				chatMiningMessage(player, expGain);
+				if (expGain != 0) {
+					player.getInventory().addItem(new ItemStack(ore, 1));
+				}
 			} else if (ore.equals(Material.EMERALD_ORE)){
 				int expGain = calculateExpGain(10);
 				chatMiningMessage(player, expGain);
+				if (expGain != 0) {
+					player.getInventory().addItem(new ItemStack(ore, 1));
+				}
 			} else if (ore.equals(Material.GOLD_ORE)) {
 				int expGain = calculateExpGain(11);
 				chatMiningMessage(player, expGain);
+				if (expGain != 0) {
+					player.getInventory().addItem(new ItemStack(ore, 1));
+				}
 			} else {
 				//must be diamond ore.
 				int expGain = calculateExpGain(12);
 				chatMiningMessage(player, expGain);
+				if (expGain != 0) {
+					player.getInventory().addItem(new ItemStack(ore, 1));
+				}
 			}
+			
 			//update the items meta
 			updateItemMeta(player, tool);
 		} else {

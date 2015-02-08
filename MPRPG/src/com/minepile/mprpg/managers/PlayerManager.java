@@ -66,7 +66,7 @@ public class PlayerManager {
 		
 		//If heal == true, then we are healing the player and need to add to the players health.
 		if (heal == true) { //Player is being healed.
-			double newHP = currentHP + hpAmount;
+			double newHP = currentHP + hpAmount + baseHealthRegenRate;
 			int maxHP = maxHealthPoints.get(playerName);
 			int hpPercent = (int) ((20 * newHP) / maxHP);
 			

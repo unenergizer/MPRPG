@@ -15,8 +15,11 @@ import com.minepile.mprpg.listeners.EntityRegainHealthListener;
 import com.minepile.mprpg.listeners.PlayerJoinListener;
 import com.minepile.mprpg.listeners.PlayerPickupItemListener;
 import com.minepile.mprpg.listeners.PlayerQuitListener;
+import com.minepile.mprpg.managers.BankChestManager;
 import com.minepile.mprpg.managers.MessageManager;
+import com.minepile.mprpg.managers.OreRegenerationManager;
 import com.minepile.mprpg.managers.PlayerManager;
+import com.minepile.mprpg.managers.ShopChestManager;
 import com.minepile.mprpg.professions.Blacksmithing;
 import com.minepile.mprpg.professions.Cooking;
 import com.minepile.mprpg.professions.Fishing;
@@ -43,8 +46,11 @@ public class MPRPG extends JavaPlugin {
         }
         
         //setup manager instances
+        BankChestManager.getInstance().setup(this);
         MessageManager.getInstance().setup(this);
+        OreRegenerationManager.getInstance().setup(this);
         PlayerManager.getInstance().setup(this);
+        ShopChestManager.getInstance().setup(this);
         
         //setup equipment instances
         ArmorManager.getInstance().setup(this);
