@@ -62,6 +62,9 @@ public class BlockBreakListener implements Listener{
 
 				//Lets add the block to the ore regeneration list to be replaced later.
 				OreRegenerationManager.setBlock(player, blockType, block.getLocation());
+				
+				//Now cancel the event.
+				event.setCancelled(true);
 			} else {
 				//Cancel the block being broken.
 				event.setCancelled(true);	
@@ -80,6 +83,9 @@ public class BlockBreakListener implements Listener{
 
 				//Lets add the block to the ore regeneration list to be replaced later.
 				OreRegenerationManager.setBlock(player, blockType, block.getLocation());
+				
+				//Now cancel the event.
+				event.setCancelled(true);
 			} else {
 				//Cancel the block being broken.
 				event.setCancelled(true);	
@@ -97,6 +103,9 @@ public class BlockBreakListener implements Listener{
 
 				//Lets add the block to the ore regeneration list to be replaced later.
 				OreRegenerationManager.setBlock(player, blockType, block.getLocation());
+				
+				//Now cancel the event.
+				event.setCancelled(true);
 			} else {
 				//Cancel the block being broken.
 				event.setCancelled(true);	
@@ -115,6 +124,9 @@ public class BlockBreakListener implements Listener{
 
 				//Lets add the block to the ore regeneration list to be replaced later.
 				OreRegenerationManager.setBlock(player, blockType, block.getLocation());
+				
+				//Now cancel the event.
+				event.setCancelled(true);
 			} else {
 				//Cancel the block being broken.
 				event.setCancelled(true);	

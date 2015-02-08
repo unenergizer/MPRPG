@@ -66,7 +66,7 @@ public class PlayerManager {
 		
 		//If heal == true, then we are healing the player and need to add to the players health.
 		if (heal == true) { //Player is being healed.
-			double newHP = currentHP + hpAmount + baseHealthRegenRate;
+			double newHP = currentHP + hpAmount;
 			int maxHP = maxHealthPoints.get(playerName);
 			int hpPercent = (int) ((20 * newHP) / maxHP);
 			
@@ -80,7 +80,25 @@ public class PlayerManager {
 				player.setHealth(hpPercent);
 				
 				//Send the player the debug message.
-				player.sendMessage(ChatColor.GREEN + "         +" + hpAmount + " [" + newHP + "/" + maxHP + "]");
+				player.sendMessage(ChatColor.GREEN + "         +" + 
+						ChatColor.GRAY + hpAmount + " [" + ChatColor.GREEN + newHP +
+						ChatColor.GRAY + "/" + ChatColor.GREEN + maxHP +
+						ChatColor.GRAY + "]");
+				
+				//If the health is 99%, go ahead and but it to 100% for healthbar sync reasons.
+				if(newHP >= maxHP - 1) {
+					//Sets new HP value in the hashMap.
+					healthPoints.put(playerName, maxHP);
+					
+					//Sets the players hearts on the player bar.
+					player.setHealth(20);
+					
+					//Send the player the debug message.
+					player.sendMessage(ChatColor.GREEN + "         +" + 
+							ChatColor.GRAY + hpAmount + " [" + ChatColor.GREEN + maxHP +
+							ChatColor.GRAY + "/" + ChatColor.GREEN + maxHP +
+							ChatColor.GRAY + "]");
+				}
 			}
 		} else { //Player is being hurt.
 			double newHP = currentHP - hpAmount;
@@ -99,7 +117,10 @@ public class PlayerManager {
 			player.setHealth(hpPercent);
 			
 			//Send the player the debug message.
-			player.sendMessage(ChatColor.RED + "         -" + hpAmount + " [" + newHP + "/" + maxHP + "]");
+			player.sendMessage(ChatColor.RED + "         -" + 
+					ChatColor.GRAY + hpAmount + " [" + ChatColor.GREEN + newHP +
+					ChatColor.GRAY + "/" + ChatColor.GREEN + maxHP +
+					ChatColor.GRAY + "]");
 		}
 	}
 	
@@ -124,10 +145,6 @@ public class PlayerManager {
         maxHealthPoints.put(playerName, baseHealthPoints);
         energyPoints.put(playerName, baseEnergyPoints);
         maxEnergyPoints.put(playerName, baseEnergyPoints);
-        
-        //Lets goahead and heal the player. This is mainly for reloads/restarts
-        //doing this will resync the players healthbar with the players actual hp. 
-        player.setHealth(20);
 	}
 	
 	//Remove players from the game. Will remove players

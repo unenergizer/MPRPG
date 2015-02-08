@@ -17,12 +17,12 @@ public class OreRegenerationManager {
 	public static MPRPG plugin;
 	static OreRegenerationManager oreRegenManagerInstance = new OreRegenerationManager();
 	
-	//Setup regen variables
+	//Setup regeneration variables
 	public static int oreRegenTime = 10; 				//Time it takes for an ore to regenerate.
 	public static int oreRegenRate = 5; 				//Default between 90 and 200 seconds.
 	public static int oreRegenTick = oreRegenRate * 20; //Time it takes for an ore to regenerate.
 	public static int oreID = 0;						//The current ID of the hashMaps.  Resets on reload.
-	public static int oreIDsRemoved = 0;
+	public static int oreIDsRemoved = 0;				//Keep track of how many ores we have removed from the HashMaps.
 	
 	public static HashMap<Integer, Material> oreType = new HashMap<Integer, Material>(); //ID > ORE
 	public static HashMap<Integer, Integer> oreTimeLeft = new HashMap<Integer, Integer>(); //ID > TimeLeft
