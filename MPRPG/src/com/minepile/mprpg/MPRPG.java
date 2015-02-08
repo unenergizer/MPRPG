@@ -9,6 +9,9 @@ import com.minepile.mprpg.equipment.ArmorManager;
 import com.minepile.mprpg.equipment.WeaponManager;
 import com.minepile.mprpg.listeners.BlockBreakListener;
 import com.minepile.mprpg.listeners.BlockPlaceListener;
+import com.minepile.mprpg.listeners.EntityDamageByEntityListener;
+import com.minepile.mprpg.listeners.EntityDamageListener;
+import com.minepile.mprpg.listeners.EntityRegainHealthListener;
 import com.minepile.mprpg.listeners.PlayerJoinListener;
 import com.minepile.mprpg.listeners.PlayerQuitListener;
 import com.minepile.mprpg.managers.MessageManager;
@@ -56,6 +59,9 @@ public class MPRPG extends JavaPlugin {
         //setup event listeners
         pluginManager.registerEvents(new BlockBreakListener(this), this);
         pluginManager.registerEvents(new BlockPlaceListener(this), this);
+        pluginManager.registerEvents(new EntityDamageByEntityListener(this), this);
+        pluginManager.registerEvents(new EntityDamageListener(this), this);
+        pluginManager.registerEvents(new EntityRegainHealthListener(this), this);
         pluginManager.registerEvents(new PlayerJoinListener(this), this);
         pluginManager.registerEvents(new PlayerQuitListener(this), this);
         
