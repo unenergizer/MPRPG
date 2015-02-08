@@ -27,7 +27,8 @@ public class BlockBreakListener implements Listener{
 		Material tool = player.getItemInHand().getType();	//The tool the player may be holding.
 		Material block = event.getBlock().getType();		//The block type that is being broken.
 		
-		//Cancel the drops from the event.
+		//Cancel experience drops
+		event.setExpToDrop(0);
 		
 		switch(block) {
 		case COAL_ORE: //Mining profession

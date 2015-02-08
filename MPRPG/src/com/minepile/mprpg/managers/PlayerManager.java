@@ -48,6 +48,12 @@ public class PlayerManager {
 	public void setup(MPRPG plugin) {
 		this.plugin = plugin;
 		
+		//If the server reloads, lets remove all players from the hashMaps.
+		//We will add them back after this step.
+		for (Player players : Bukkit.getOnlinePlayers()) {
+			removePlayer(players);
+		}
+		
 		//If the server reloads, then setup all the players again.
 		for (Player players : Bukkit.getOnlinePlayers()) {
 			setupPlayer(players);
@@ -118,6 +124,10 @@ public class PlayerManager {
         maxHealthPoints.put(playerName, baseHealthPoints);
         energyPoints.put(playerName, baseEnergyPoints);
         maxEnergyPoints.put(playerName, baseEnergyPoints);
+        
+        //Lets goahead and heal the player. This is mainly for reloads/restarts
+        //doing this will resync the players healthbar with the players actual hp. 
+        player.setHealth(20);
 	}
 	
 	//Remove players from the game. Will remove players

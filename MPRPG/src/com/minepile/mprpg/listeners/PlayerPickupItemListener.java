@@ -1,5 +1,6 @@
 package com.minepile.mprpg.listeners;
 
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerPickupItemEvent;
@@ -19,7 +20,7 @@ public class PlayerPickupItemListener implements Listener{
 	@EventHandler
 	public void onPlayerPickupItem(PlayerPickupItemEvent event) {
 		
-		//Player player = event.getPlayer();
+		Player player = event.getPlayer();
 		ItemStack item = event.getItem().getItemStack();
 		
 		//Get the items name, to know what type of statistics to generate.
@@ -27,6 +28,22 @@ public class PlayerPickupItemListener implements Listener{
 		//String item = event.getItem().getName();
 		
 		switch(item.getType()) {
+		/////////////
+		//Currency //
+		/////////////
+		case NETHER_BRICK:
+			player.sendMessage("picked up a nether brick");
+			break;
+		case IRON_INGOT:
+			player.sendMessage("picked up a iron ingot");
+			break;
+		case GOLD_INGOT:
+			player.sendMessage("picked up a gold ingot");
+			break;
+		case PORTAL:
+			player.sendMessage("picked up a portal");
+			break;
+		
 		//////////
 		//Armor //
 		//////////
@@ -35,6 +52,7 @@ public class PlayerPickupItemListener implements Listener{
 		case LEATHER_BOOTS:
 			break;
 		case LEATHER_CHESTPLATE:
+			player.sendMessage("picked up a lether chestplate");
 			break;
 		case LEATHER_HELMET:
 			break;
@@ -137,7 +155,8 @@ public class PlayerPickupItemListener implements Listener{
 			break;
 		case DIAMOND_HOE: //Tier #5
 			break;	
-
+			
+		//Default case.  "Everything else"
 		default:
 			break;
 		}
