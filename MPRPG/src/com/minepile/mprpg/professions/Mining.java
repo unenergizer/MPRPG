@@ -64,13 +64,13 @@ public class Mining {
 		if (tool.equals(Material.WOOD_PICKAXE)) {
 			im.setDisplayName(ChatColor.WHITE + "Novice Pickaxe");
 		} else if (tool.equals(Material.STONE_PICKAXE)) {
-			im.setDisplayName(ChatColor.YELLOW + "Apprentice Pickaxe");
+			im.setDisplayName(ChatColor.GREEN + "Apprentice Pickaxe");
 		} else if (tool.equals(Material.IRON_PICKAXE)) {
-			im.setDisplayName(ChatColor.GREEN + "Adept Pickaxe");
+			im.setDisplayName(ChatColor.BLUE + "Adept Pickaxe");
 		} else if (tool.equals(Material.GOLD_PICKAXE)) {
-			im.setDisplayName(ChatColor.BLUE + "Expert Pickaxe");
+			im.setDisplayName(ChatColor.LIGHT_PURPLE + "Expert Pickaxe");
 		} else {
-			im.setDisplayName(ChatColor.LIGHT_PURPLE + "Master Pickaxe");
+			im.setDisplayName(ChatColor.GOLD + "Master Pickaxe");
 		}
 		
 		//Set the item lore

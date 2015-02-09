@@ -81,7 +81,8 @@ public class PlayerManager {
 				
 				//Send the player the debug message.
 				player.sendMessage(ChatColor.GREEN + "         +" + 
-						ChatColor.GRAY + hpAmount + " [" + ChatColor.GREEN + newHP +
+						ChatColor.GRAY + hpAmount + ChatColor.BOLD + " HP" + 
+						ChatColor.GRAY + " [" + ChatColor.GREEN + newHP +
 						ChatColor.GRAY + "/" + ChatColor.GREEN + maxHP +
 						ChatColor.GRAY + "]");
 				
@@ -95,7 +96,8 @@ public class PlayerManager {
 					
 					//Send the player the debug message.
 					player.sendMessage(ChatColor.GREEN + "         +" + 
-							ChatColor.GRAY + hpAmount + " [" + ChatColor.GREEN + maxHP +
+							ChatColor.GRAY + hpAmount + ChatColor.BOLD + " HP" + 
+							ChatColor.GRAY + " [" + ChatColor.GREEN + maxHP +
 							ChatColor.GRAY + "/" + ChatColor.GREEN + maxHP +
 							ChatColor.GRAY + "]");
 				}
@@ -118,7 +120,8 @@ public class PlayerManager {
 			
 			//Send the player the debug message.
 			player.sendMessage(ChatColor.RED + "         -" + 
-					ChatColor.GRAY + hpAmount + " [" + ChatColor.GREEN + newHP +
+					ChatColor.GRAY + hpAmount + ChatColor.BOLD + " HP" + 
+					ChatColor.GRAY + " [" + ChatColor.GREEN + newHP +
 					ChatColor.GRAY + "/" + ChatColor.GREEN + maxHP +
 					ChatColor.GRAY + "]");
 		}
@@ -145,6 +148,9 @@ public class PlayerManager {
         maxHealthPoints.put(playerName, baseHealthPoints);
         energyPoints.put(playerName, baseEnergyPoints);
         maxEnergyPoints.put(playerName, baseEnergyPoints);
+        
+        //Set players health to max on the healthbar.
+        player.setHealth(20);
 	}
 	
 	//Remove players from the game. Will remove players
