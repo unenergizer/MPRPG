@@ -85,8 +85,7 @@ public class Mining {
 				player.sendMessage(ChatColor.GRAY + "        " + ChatColor.ITALIC + "Mining was not successful.");
 			}
 		} else if (tool.equals(Material.STONE_PICKAXE)) {
-			
-			if (ore.equals(Material.COAL)) {
+			if (ore.equals(Material.COAL_ORE)) {
 				//Lets calculate how much EXP we need to add.
 				int expGain = calculateExpGain(9);
 
@@ -117,8 +116,182 @@ public class Mining {
 				}
 			}
 		} else if (tool.equals(Material.IRON_PICKAXE)) {
+			if (ore.equals(Material.COAL_ORE)) {
+				//Lets calculate how much EXP we need to add.
+				int expGain = calculateExpGain(8);
+
+				//If expGain is no 0, lets:
+				//1) Add the ore mined to the players inventory.
+				//2) Update the players pickaxe information.
+				if (expGain != 0) {
+					player.getInventory().addItem(new ItemStack(ore, 1));
+					togglePickUpdate(player, tool, expGain, currentPickEXP, currentPickLVL);
+				} else {
+					//Let user know mining was not successful.
+					player.sendMessage(ChatColor.GRAY + "        " + ChatColor.ITALIC + "Mining was not successful.");
+				}
+				
+			} else if (ore.equals(Material.IRON_ORE)){ //Ore mined must be iron ore.
+				//Lets calculate how much EXP we need to add.
+				int expGain = calculateExpGain(9);
+
+				//If expGain is no 0, lets:
+				//1) Add the ore mined to the players inventory.
+				//2) Update the players pickaxe information.
+				if (expGain != 0) {
+					player.getInventory().addItem(new ItemStack(ore, 1));
+					togglePickUpdate(player, tool, expGain, currentPickEXP, currentPickLVL);
+				} else {
+					//Let user know mining was not successful.
+					player.sendMessage(ChatColor.GRAY + "        " + ChatColor.ITALIC + "Mining was not successful.");
+				}
+			} else { //Ore mined must be emerald ore.
+				//Lets calculate how much EXP we need to add.
+				int expGain = calculateExpGain(10);
+
+				//If expGain is no 0, lets:
+				//1) Add the ore mined to the players inventory.
+				//2) Update the players pickaxe information.
+				if (expGain != 0) {
+					player.getInventory().addItem(new ItemStack(ore, 1));
+					togglePickUpdate(player, tool, expGain, currentPickEXP, currentPickLVL);
+				} else {
+					//Let user know mining was not successful.
+					player.sendMessage(ChatColor.GRAY + "        " + ChatColor.ITALIC + "Mining was not successful.");
+				}
+			}
 		} else if (tool.equals(Material.GOLD_PICKAXE)) {
+			if (ore.equals(Material.COAL_ORE)) {
+				//Lets calculate how much EXP we need to add.
+				int expGain = calculateExpGain(9);
+
+				//If expGain is no 0, lets:
+				//1) Add the ore mined to the players inventory.
+				//2) Update the players pickaxe information.
+				if (expGain != 0) {
+					player.getInventory().addItem(new ItemStack(ore, 1));
+					togglePickUpdate(player, tool, expGain, currentPickEXP, currentPickLVL);
+				} else {
+					//Let user know mining was not successful.
+					player.sendMessage(ChatColor.GRAY + "        " + ChatColor.ITALIC + "Mining was not successful.");
+				}
+				
+			} else if (ore.equals(Material.IRON_ORE)){ //Ore mined must be iron ore.
+				//Lets calculate how much EXP we need to add.
+				int expGain = calculateExpGain(10);
+
+				//If expGain is no 0, lets:
+				//1) Add the ore mined to the players inventory.
+				//2) Update the players pickaxe information.
+				if (expGain != 0) {
+					player.getInventory().addItem(new ItemStack(ore, 1));
+					togglePickUpdate(player, tool, expGain, currentPickEXP, currentPickLVL);
+				} else {
+					//Let user know mining was not successful.
+					player.sendMessage(ChatColor.GRAY + "        " + ChatColor.ITALIC + "Mining was not successful.");
+				}
+			} else if (ore.equals(Material.EMERALD_ORE)){ //Ore mined must be iron ore.
+				//Lets calculate how much EXP we need to add.
+				int expGain = calculateExpGain(11);
+
+				//If expGain is no 0, lets:
+				//1) Add the ore mined to the players inventory.
+				//2) Update the players pickaxe information.
+				if (expGain != 0) {
+					player.getInventory().addItem(new ItemStack(ore, 1));
+					togglePickUpdate(player, tool, expGain, currentPickEXP, currentPickLVL);
+				} else {
+					//Let user know mining was not successful.
+					player.sendMessage(ChatColor.GRAY + "        " + ChatColor.ITALIC + "Mining was not successful.");
+				}
+			} else { //Ore mined must be gold ore.
+				//Lets calculate how much EXP we need to add.
+				int expGain = calculateExpGain(12);
+
+				//If expGain is no 0, lets:
+				//1) Add the ore mined to the players inventory.
+				//2) Update the players pickaxe information.
+				if (expGain != 0) {
+					player.getInventory().addItem(new ItemStack(ore, 1));
+					togglePickUpdate(player, tool, expGain, currentPickEXP, currentPickLVL);
+				} else {
+					//Let user know mining was not successful.
+					player.sendMessage(ChatColor.GRAY + "        " + ChatColor.ITALIC + "Mining was not successful.");
+				}
+			}
 		} else if (tool.equals(Material.DIAMOND_PICKAXE)) {
+			if (ore.equals(Material.COAL_ORE)) {
+				//Lets calculate how much EXP we need to add.
+				int expGain = calculateExpGain(8);
+
+				//If expGain is no 0, lets:
+				//1) Add the ore mined to the players inventory.
+				//2) Update the players pickaxe information.
+				if (expGain != 0) {
+					player.getInventory().addItem(new ItemStack(ore, 1));
+					togglePickUpdate(player, tool, expGain, currentPickEXP, currentPickLVL);
+				} else {
+					//Let user know mining was not successful.
+					player.sendMessage(ChatColor.GRAY + "        " + ChatColor.ITALIC + "Mining was not successful.");
+				}
+				
+			} else if (ore.equals(Material.IRON_ORE)){ //Ore mined must be iron ore.
+				//Lets calculate how much EXP we need to add.
+				int expGain = calculateExpGain(9);
+
+				//If expGain is no 0, lets:
+				//1) Add the ore mined to the players inventory.
+				//2) Update the players pickaxe information.
+				if (expGain != 0) {
+					player.getInventory().addItem(new ItemStack(ore, 1));
+					togglePickUpdate(player, tool, expGain, currentPickEXP, currentPickLVL);
+				} else {
+					//Let user know mining was not successful.
+					player.sendMessage(ChatColor.GRAY + "        " + ChatColor.ITALIC + "Mining was not successful.");
+				}
+			} else if (ore.equals(Material.EMERALD_ORE)){ //Ore mined must be iron ore.
+				//Lets calculate how much EXP we need to add.
+				int expGain = calculateExpGain(10);
+
+				//If expGain is no 0, lets:
+				//1) Add the ore mined to the players inventory.
+				//2) Update the players pickaxe information.
+				if (expGain != 0) {
+					player.getInventory().addItem(new ItemStack(ore, 1));
+					togglePickUpdate(player, tool, expGain, currentPickEXP, currentPickLVL);
+				} else {
+					//Let user know mining was not successful.
+					player.sendMessage(ChatColor.GRAY + "        " + ChatColor.ITALIC + "Mining was not successful.");
+				}
+			} else if (ore.equals(Material.GOLD_ORE)){ //Ore mined must be iron ore.
+				//Lets calculate how much EXP we need to add.
+				int expGain = calculateExpGain(11);
+
+				//If expGain is no 0, lets:
+				//1) Add the ore mined to the players inventory.
+				//2) Update the players pickaxe information.
+				if (expGain != 0) {
+					player.getInventory().addItem(new ItemStack(ore, 1));
+					togglePickUpdate(player, tool, expGain, currentPickEXP, currentPickLVL);
+				} else {
+					//Let user know mining was not successful.
+					player.sendMessage(ChatColor.GRAY + "        " + ChatColor.ITALIC + "Mining was not successful.");
+				}
+			} else { //Ore mined must be diamond ore.
+				//Lets calculate how much EXP we need to add.
+				int expGain = calculateExpGain(12);
+
+				//If expGain is no 0, lets:
+				//1) Add the ore mined to the players inventory.
+				//2) Update the players pickaxe information.
+				if (expGain != 0) {
+					player.getInventory().addItem(new ItemStack(ore, 1));
+					togglePickUpdate(player, tool, expGain, currentPickEXP, currentPickLVL);
+				} else {
+					//Let user know mining was not successful.
+					player.sendMessage(ChatColor.GRAY + "        " + ChatColor.ITALIC + "Mining was not successful.");
+				}
+			}
 		} else {
 			//This should never happen.
 			player.sendMessage(MessageManager.selectMessagePrefix("debug") + "Can not add exp to your tool.");
@@ -138,15 +311,50 @@ public class Mining {
 			int newPickLVL = currentPickLVL + 1;
 			int getLeftOverEXP = totalEXP - expGoal;
 			
-			//Update the items meta and add 1 level.
-			setLore(player, tool, getLeftOverEXP, newPickLVL);
-			
-			//Send EXP up message.
-			player.sendMessage(MessageManager.showEXPLevel(expGain, totalEXP, expGoal));
-			
-			//Send level up message.
-			player.sendMessage(MessageManager.selectMessagePrefix("debug") +
-					ChatColor.YELLOW + ChatColor.BOLD + "Your pick is now level " + newPickLVL + ".");
+			if (newPickLVL == 20 || newPickLVL == 40 || newPickLVL == 60 || newPickLVL == 80) {
+
+				ItemStack currentTool = player.getItemInHand();
+				
+				if (newPickLVL == 20) {
+					currentTool.setType(Material.STONE_PICKAXE);
+					Material newTool = Material.STONE_PICKAXE;
+					//Update the items meta and add 1 level.
+					setLore(player, newTool, getLeftOverEXP, newPickLVL);
+				} else if (newPickLVL == 40) {
+					currentTool.setType(Material.IRON_PICKAXE);
+					Material newTool = Material.IRON_PICKAXE;
+					//Update the items meta and add 1 level.
+					setLore(player, newTool, getLeftOverEXP, newPickLVL);
+				} else if (newPickLVL == 60) {
+					currentTool.setType(Material.GOLD_PICKAXE);
+					Material newTool = Material.GOLD_PICKAXE;
+					//Update the items meta and add 1 level.
+					setLore(player, newTool, getLeftOverEXP, newPickLVL);
+				} else if (newPickLVL == 80) {
+					currentTool.setType(Material.DIAMOND_PICKAXE);
+					Material newTool = Material.DIAMOND_PICKAXE;
+					//Update the items meta and add 1 level.
+					setLore(player, newTool, getLeftOverEXP, newPickLVL);
+				}
+				
+				//Send EXP up message.
+				player.sendMessage(MessageManager.showEXPLevel(expGain, totalEXP, expGoal));
+				
+				//Send level up message.
+				player.sendMessage(MessageManager.selectMessagePrefix("debug") +
+						ChatColor.YELLOW + ChatColor.BOLD + "Your pick is now level " + newPickLVL + ".");
+			} else {
+				
+				//Update the items meta and add 1 level.
+				setLore(player, tool, getLeftOverEXP, newPickLVL);
+				
+				//Send EXP up message.
+				player.sendMessage(MessageManager.showEXPLevel(expGain, totalEXP, expGoal));
+				
+				//Send level up message.
+				player.sendMessage(MessageManager.selectMessagePrefix("debug") +
+						ChatColor.YELLOW + ChatColor.BOLD + "Your pick is now level " + newPickLVL + ".");
+			}
 		} else { //The players pickaxe has not leveled up.  Just add exp to it.
 			//Update the items meta and add 1 level.
 			setLore(player, tool, totalEXP, currentPickLVL);
