@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -15,7 +16,6 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import com.minepile.mprpg.MPRPG;
 import com.minepile.mprpg.managers.MessageManager;
-import com.minepile.mprpg.managers.PlayerManager;
 
 public class Mining {
 	
@@ -51,185 +51,279 @@ public class Mining {
         }
 	}
 	
-	public static void updateItemMeta(Player player, Material tool) {
-		ItemStack is = player.getInventory().getItemInHand();
-		ItemMeta im = is.getItemMeta();
-		
-		int currentPickEXP = PlayerManager.getPlayerConfigStat(player, "miningEXP");
-		int currentPickLVL = PlayerManager.getPlayerConfigStat(player, "miningLVL");
-		int expToNextLevel = configMiningLevel.get(currentPickLVL);
-		int expPercent = ((100 * currentPickEXP) / expToNextLevel);
-		
-		//Set the item name
-		if (tool.equals(Material.WOOD_PICKAXE)) {
-			im.setDisplayName(ChatColor.WHITE + "Novice Pickaxe");
-		} else if (tool.equals(Material.STONE_PICKAXE)) {
-			im.setDisplayName(ChatColor.GREEN + "Apprentice Pickaxe");
-		} else if (tool.equals(Material.IRON_PICKAXE)) {
-			im.setDisplayName(ChatColor.BLUE + "Adept Pickaxe");
-		} else if (tool.equals(Material.GOLD_PICKAXE)) {
-			im.setDisplayName(ChatColor.LIGHT_PURPLE + "Expert Pickaxe");
-		} else {
-			im.setDisplayName(ChatColor.GOLD + "Master Pickaxe");
-		}
-		
-		//Set the item lore
-		ArrayList<String> lore = new ArrayList<String>();
-		lore.add(ChatColor.RESET + "" + ChatColor.GRAY + ChatColor.BOLD + "LVL: " + ChatColor.RESET +
-				ChatColor.LIGHT_PURPLE + currentPickLVL);
-		lore.add(ChatColor.RESET + "" + ChatColor.GRAY + ChatColor.BOLD + "EXP: " + 
-				ChatColor.RESET + ChatColor.BLUE + currentPickEXP + " / " + expToNextLevel);
-		lore.add(ChatColor.RESET + "" + ChatColor.GRAY + ChatColor.BOLD + "EXP: " + 
-				MessageManager.percentBar(expPercent) + ChatColor.GRAY + " " + expPercent + "%");
-		lore.add(" ");//create blank space
-		
-		if (tool.equals(Material.WOOD_PICKAXE)) {
-			lore.add(ChatColor.RESET + "" + ChatColor.GRAY + ChatColor.ITALIC + "A pickaxe made of wood.");
-		} else if (tool.equals(Material.STONE_PICKAXE)) {
-			lore.add(ChatColor.RESET + "" + ChatColor.GRAY + ChatColor.ITALIC + "A pickaxe made of stone.");
-		} else if (tool.equals(Material.IRON_PICKAXE)) {
-			lore.add(ChatColor.RESET + "" + ChatColor.GRAY + ChatColor.ITALIC + "A pickaxe made of iron.");
-		} else if (tool.equals(Material.GOLD_PICKAXE)) {
-			lore.add(ChatColor.RESET + "" + ChatColor.GRAY + ChatColor.ITALIC + "A pickaxe made of gold.");
-		} else {
-			lore.add(ChatColor.RESET + "" + ChatColor.GRAY + ChatColor.ITALIC + "A pickaxe made of diamond.");
-		}
-		
-		//Set the item lore
-		im.setLore(lore);
-		//Set the item meta
-		is.setItemMeta(im);
-	}
-	
 	//This method is called by the BlockBreakEvent if the player has
 	//broken an ORE using a Pickaxe.
-	public static void minedOre(Player player, Material tool, Material ore) {
+	public static void toggleOreMined(Player player, Material tool, Material ore) {
+
+		ItemStack is = player.getInventory().getItemInHand();
+		ItemMeta im = is.getItemMeta();
+		List<String> cointainsLore = im.getLore();
+		
+		//If the pickaxe does not have lore, lets create a new pickaxe.
+		if (cointainsLore == null) {
+			createPickaxe(player);
+		}
+		
+		//Now that we know the pickaxe exists, lets get it's data.
+		int currentPickLVL = getLoreLVL(player);
+		int currentPickEXP = getLoreEXP(player);
+		
+		
 		if (tool.equals(Material.WOOD_PICKAXE)) {
 			
+			//Lets calculate how much EXP we need to add.
 			int expGain = calculateExpGain(10);
-			chatMiningMessage(player, expGain);
+
+			//If expGain is no 0, lets:
+			//1) Add the ore mined to the players inventory.
+			//2) Update the players pickaxe information.
 			if (expGain != 0) {
 				player.getInventory().addItem(new ItemStack(ore, 1));
+				togglePickUpdate(player, tool, expGain, currentPickEXP, currentPickLVL);
+			} else {
+				//Let user know mining was not successful.
+				player.sendMessage(ChatColor.GRAY + "        " + ChatColor.ITALIC + "Mining was not successful.");
 			}
-			//update the items meta
-			updateItemMeta(player, tool);
-			
 		} else if (tool.equals(Material.STONE_PICKAXE)) {
 			
-			//Give lower exp gain for coal and other ores.
-			if(ore.equals(Material.COAL_ORE)) {
+			if (ore.equals(Material.COAL)) {
+				//Lets calculate how much EXP we need to add.
 				int expGain = calculateExpGain(9);
-				chatMiningMessage(player, expGain);
+
+				//If expGain is no 0, lets:
+				//1) Add the ore mined to the players inventory.
+				//2) Update the players pickaxe information.
 				if (expGain != 0) {
 					player.getInventory().addItem(new ItemStack(ore, 1));
+					togglePickUpdate(player, tool, expGain, currentPickEXP, currentPickLVL);
+				} else {
+					//Let user know mining was not successful.
+					player.sendMessage(ChatColor.GRAY + "        " + ChatColor.ITALIC + "Mining was not successful.");
 				}
-			} else {
+				
+			} else { //Ore mined must be iron ore.
+				//Lets calculate how much EXP we need to add.
 				int expGain = calculateExpGain(10);
-				chatMiningMessage(player, expGain);
+
+				//If expGain is no 0, lets:
+				//1) Add the ore mined to the players inventory.
+				//2) Update the players pickaxe information.
 				if (expGain != 0) {
 					player.getInventory().addItem(new ItemStack(ore, 1));
+					togglePickUpdate(player, tool, expGain, currentPickEXP, currentPickLVL);
+				} else {
+					//Let user know mining was not successful.
+					player.sendMessage(ChatColor.GRAY + "        " + ChatColor.ITALIC + "Mining was not successful.");
 				}
 			}
-			//update the items meta
-			updateItemMeta(player, tool);
 		} else if (tool.equals(Material.IRON_PICKAXE)) {
-			
-			//Give lower exp gain for coal and other ores.
-			if(ore.equals(Material.COAL_ORE)) {
-				int expGain = calculateExpGain(8);
-				chatMiningMessage(player, expGain);
-				if (expGain != 0) {
-					player.getInventory().addItem(new ItemStack(ore, 1));
-				}
-			} else if (ore.equals(Material.IRON_ORE)){
-				int expGain = calculateExpGain(9);
-				chatMiningMessage(player, expGain);
-				if (expGain != 0) {
-					player.getInventory().addItem(new ItemStack(ore, 1));
-				}
-			} else {
-				//Must be emrald ore.
-				int expGain = calculateExpGain(10);
-				chatMiningMessage(player, expGain);
-				if (expGain != 0) {
-					player.getInventory().addItem(new ItemStack(ore, 1));
-				}
-			}
-			//update the items meta
-			updateItemMeta(player, tool);
 		} else if (tool.equals(Material.GOLD_PICKAXE)) {
-			
-			//Give lower exp gain for coal and other ores.
-			if(ore.equals(Material.COAL_ORE)) {
-				int expGain = calculateExpGain(8);
-				chatMiningMessage(player, expGain);
-				if (expGain != 0) {
-					player.getInventory().addItem(new ItemStack(ore, 1));
-				}
-			} else if (ore.equals(Material.IRON_ORE)){
-				int expGain = calculateExpGain(9);
-				chatMiningMessage(player, expGain);
-				if (expGain != 0) {
-					player.getInventory().addItem(new ItemStack(ore, 1));
-				}
-			} else if (ore.equals(Material.EMERALD_ORE)){
-				int expGain = calculateExpGain(10);
-				chatMiningMessage(player, expGain);
-				if (expGain != 0) {
-					player.getInventory().addItem(new ItemStack(ore, 1));
-				}
-			} else {
-				//Must be gold ore.
-				int expGain = calculateExpGain(11);
-				chatMiningMessage(player, expGain);
-				if (expGain != 0) {
-					player.getInventory().addItem(new ItemStack(ore, 1));
-				}
-			}
-			//update the items meta
-			updateItemMeta(player, tool);
 		} else if (tool.equals(Material.DIAMOND_PICKAXE)) {
-			
-			//Give lower exp gain for coal and other ores.
-			if(ore.equals(Material.COAL_ORE)) {
-				int expGain = calculateExpGain(8);
-				chatMiningMessage(player, expGain);
-				if (expGain != 0) {
-					player.getInventory().addItem(new ItemStack(ore, 1));
-				}
-			} else if (ore.equals(Material.IRON_ORE)){
-				int expGain = calculateExpGain(9);
-				chatMiningMessage(player, expGain);
-				if (expGain != 0) {
-					player.getInventory().addItem(new ItemStack(ore, 1));
-				}
-			} else if (ore.equals(Material.EMERALD_ORE)){
-				int expGain = calculateExpGain(10);
-				chatMiningMessage(player, expGain);
-				if (expGain != 0) {
-					player.getInventory().addItem(new ItemStack(ore, 1));
-				}
-			} else if (ore.equals(Material.GOLD_ORE)) {
-				int expGain = calculateExpGain(11);
-				chatMiningMessage(player, expGain);
-				if (expGain != 0) {
-					player.getInventory().addItem(new ItemStack(ore, 1));
-				}
-			} else {
-				//must be diamond ore.
-				int expGain = calculateExpGain(12);
-				chatMiningMessage(player, expGain);
-				if (expGain != 0) {
-					player.getInventory().addItem(new ItemStack(ore, 1));
-				}
-			}
-			
-			//update the items meta
-			updateItemMeta(player, tool);
 		} else {
 			//This should never happen.
 			player.sendMessage(MessageManager.selectMessagePrefix("debug") + "Can not add exp to your tool.");
 		}
+	}
+	
+	//Updates a players pickaxe with new statistical information.
+	public static void togglePickUpdate(Player player, Material tool, int expGain, int currentPickEXP, int currentPickLVL) {
+		
+		//Additional variables.
+		int totalEXP = currentPickEXP + expGain;
+		int expGoal = configMiningLevel.get(currentPickLVL);
+		
+		//If the players pickaxe has leveled up, update the lore, and show a message.
+		if (totalEXP > expGoal) {
+			//The pick has leveled. Lets add 1 level to it.
+			int newPickLVL = currentPickLVL + 1;
+			int getLeftOverEXP = totalEXP - expGoal;
+			
+			//Update the items meta and add 1 level.
+			setLore(player, tool, getLeftOverEXP, newPickLVL);
+			
+			//Send EXP up message.
+			player.sendMessage(MessageManager.showEXPLevel(expGain, totalEXP, expGoal));
+			
+			//Send level up message.
+			player.sendMessage(MessageManager.selectMessagePrefix("debug") +
+					ChatColor.YELLOW + ChatColor.BOLD + "Your pick is now level " + newPickLVL + ".");
+		} else { //The players pickaxe has not leveled up.  Just add exp to it.
+			//Update the items meta and add 1 level.
+			setLore(player, tool, totalEXP, currentPickLVL);
+			
+			//Send EXP up message.
+			player.sendMessage(MessageManager.showEXPLevel(expGain, totalEXP, expGoal));
+		}
+	}
+	
+	//Chat Message for mining
+	public static void chatMiningMessage(Player player, int expGain) {
+		//If expGain is 0, let the user know the mine was not successful.
+		//If the expGain is any other number, let them know it was successful.
+		if (expGain != 0) {
+			//add EXP to tool
+			int currentPickEXP = getLoreEXP(player);
+			int currentPickLVL = getLoreLVL(player);
+			int expToNextLevel = configMiningLevel.get(currentPickLVL);
+			
+			if (currentPickEXP < expToNextLevel) {
+				//Displays the leveling bar when user mines an ore.
+				player.sendMessage(MessageManager.showEXPLevel(expGain, currentPickEXP, expToNextLevel));
+			} else {
+				//level up the players pickaxe.
+				player.sendMessage(MessageManager.showEXPLevel(expGain, currentPickEXP, expToNextLevel));
+				
+				int newPickLVL = currentPickLVL + 1;
+				player.sendMessage(MessageManager.selectMessagePrefix("debug") +
+						ChatColor.YELLOW + ChatColor.BOLD + "Your pick is now level " + newPickLVL + ".");
+			}
+		} else {
+			//Let user know mining was not successful.
+			player.sendMessage(ChatColor.GRAY + "        " + ChatColor.ITALIC + "Mining was not successful.");
+		}
+	}	
+	
+	public static int getLoreEXP(Player player) {
+		ItemStack item = player.getItemInHand();
+		
+		// I'm not really sure if this could ever be null
+		if (item != null) {
+			ItemMeta meta = item.getItemMeta();
+			
+			// This can definitely be null, if the item has no metadata. (lore/enchantments/display name)
+			if (meta != null) {
+				// This part is probably never null...
+				List<String> lore = meta.getLore();
+				
+				if (lore != null) {
+					String loreLineText = lore.get(1);
+					
+					String[] parts = loreLineText.split("EXP: " + ChatColor.RESET + ChatColor.BLUE);
+					String part2 = parts[1];
+					
+					String[] getEXP = part2.split(" / ");
+					String part3 = getEXP[0];
+
+					int parseInt = Integer.parseInt(part3);
+					return parseInt;
+					
+				}
+			} else {
+				return 0;
+			}
+		}
+		return 0;
+	}
+	
+	public static int getLoreLVL(Player player) {
+		ItemStack item = player.getItemInHand();
+		
+		// I'm not really sure if this could ever be null
+		if (item != null) {
+			ItemMeta meta = item.getItemMeta();
+			
+			// This can definitely be null, if the item has no metadata. (lore/enchantments/display name)
+			if (meta != null) {
+				// This part is probably never null...
+				List<String> lore = meta.getLore();
+				
+				if (lore != null) {
+					String loreLineText = lore.get(0);
+					
+					String[] parts = loreLineText.split("LVL: " + ChatColor.RESET + ChatColor.LIGHT_PURPLE);
+					String part2 = parts[1];
+					
+					int parseInt = Integer.parseInt(part2);
+					return parseInt;
+					
+				}
+			} else {
+				return 1;
+			}
+		}
+		return 1;
+	}
+	
+	public static void setLore(Player player, Material tool, int exp, int lvl) {
+		
+		ItemStack is = player.getInventory().getItemInHand();
+		ItemMeta im = is.getItemMeta();
+		List<String> cointainsLore = im.getLore();
+		
+		if (cointainsLore == null) {
+			createPickaxe(player);
+		} else {
+			int pickEXP = exp;
+			int pickLVL = lvl;
+			int expToNextLevel = configMiningLevel.get(pickLVL);
+			int expPercent = ((100 * pickEXP) / expToNextLevel);
+				
+			//Set the item name
+			if (tool.equals(Material.WOOD_PICKAXE)) {
+				im.setDisplayName(ChatColor.WHITE + "Novice Pickaxe");
+			} else if (tool.equals(Material.STONE_PICKAXE)) {
+				im.setDisplayName(ChatColor.GREEN + "Apprentice Pickaxe");
+			} else if (tool.equals(Material.IRON_PICKAXE)) {
+				im.setDisplayName(ChatColor.BLUE + "Adept Pickaxe");
+			} else if (tool.equals(Material.GOLD_PICKAXE)) {
+				im.setDisplayName(ChatColor.DARK_PURPLE + "Expert Pickaxe");
+			} else {
+				im.setDisplayName(ChatColor.GOLD + "Master Pickaxe");
+			}
+				
+			//Set the item lore
+			ArrayList<String> lore = new ArrayList<String>();
+			lore.add(ChatColor.GRAY + "" + ChatColor.BOLD + "LVL: " + ChatColor.RESET +
+					ChatColor.LIGHT_PURPLE + pickLVL);
+			lore.add(ChatColor.GRAY + "" + ChatColor.BOLD + "EXP: " + 
+					ChatColor.RESET + ChatColor.BLUE + pickEXP + " / " + expToNextLevel);
+			lore.add(ChatColor.GRAY + "" + ChatColor.BOLD + "EXP: " + 
+					MessageManager.percentBar(expPercent) + ChatColor.GRAY + " " + expPercent + "%");
+			lore.add(" ");//create blank space
+			
+			if (tool.equals(Material.WOOD_PICKAXE)) {
+				lore.add(ChatColor.GRAY + "" + ChatColor.ITALIC + "A pickaxe made of wood.");
+			} else if (tool.equals(Material.STONE_PICKAXE)) {
+				lore.add(ChatColor.GRAY + "" + ChatColor.ITALIC + "A pickaxe made of stone.");
+			} else if (tool.equals(Material.IRON_PICKAXE)) {
+				lore.add(ChatColor.GRAY + "" + ChatColor.ITALIC + "A pickaxe made of iron.");
+			} else if (tool.equals(Material.GOLD_PICKAXE)) {
+				lore.add(ChatColor.GRAY + "" + ChatColor.ITALIC + "A pickaxe made of gold.");
+			} else {
+				lore.add(ChatColor.GRAY + "" + ChatColor.ITALIC + "A pickaxe made of diamond.");
+			}
+			
+			//Set the item lore
+			im.setLore(lore);
+			//Set the item meta
+			is.setItemMeta(im);
+		}
+	}
+	
+	public static void createPickaxe(Player player) {
+		ItemStack tool = player.getInventory().getItemInHand();
+		ItemMeta meta = tool.getItemMeta();
+
+		int expGoal = configMiningLevel.get(1);
+		
+		//Set the item name
+		meta.setDisplayName(ChatColor.WHITE + "Novice Pickaxe");
+		
+		//Set the item lore
+		ArrayList<String> lore = new ArrayList<String>();
+		lore.add(ChatColor.GRAY + "" + ChatColor.BOLD + "LVL: " + ChatColor.RESET +
+				ChatColor.LIGHT_PURPLE + "1");
+		lore.add(ChatColor.GRAY + "" + ChatColor.BOLD + "EXP: " + 
+				ChatColor.RESET + ChatColor.BLUE + "0" + " / " + expGoal);
+		lore.add(ChatColor.GRAY + "" + ChatColor.BOLD + "EXP: " + 
+				MessageManager.percentBar(0) + ChatColor.GRAY + " " + "0" + "%");
+		lore.add(" ");//create blank space
+		lore.add(ChatColor.GRAY + "" + ChatColor.ITALIC + "A pickaxe made of wood.");
+		
+		//Set the item lore
+		meta.setLore(lore);
+		//Set the item meta
+		tool.setItemMeta(meta);
 	}
 	
 	//Calculates how much EXP the player should get from mining.
@@ -244,39 +338,6 @@ public class Mining {
 		} else {
 			//mine was not successful
 			return 0;
-		}
-	}
-	
-	//Chat Message for mining
-	public static void chatMiningMessage(Player player, int expGain) {
-		//If expGain is 0, let the user know the mine was not successful.
-		//If the expGain is any other number, let them know it was successful.
-		if (expGain != 0) {
-			//add EXP to tool
-			int currentPickEXP = PlayerManager.getPlayerConfigStat(player, "miningEXP");
-			int newEXP = currentPickEXP + expGain;
-			int currentPickLVL = PlayerManager.getPlayerConfigStat(player, "miningLVL");
-			int expToNextLevel = configMiningLevel.get(currentPickLVL);
-			
-			if (newEXP < expToNextLevel) {
-				player.sendMessage(MessageManager.showEXPLevel(expGain, newEXP, configMiningLevel.get(currentPickLVL)));
-			
-				//Save the new EXP total to the user's configuration file.
-				PlayerManager.setPlayerConfigStat(player, "miningEXP", newEXP);
-			} else {
-				//level up the players pickaxe.
-				player.sendMessage(MessageManager.showEXPLevel(expGain, newEXP, configMiningLevel.get(currentPickLVL)));
-				
-				int newPickLVL = currentPickLVL + 1;
-				int newPickEXP = newEXP - expToNextLevel;
-				PlayerManager.setPlayerConfigStat(player, "miningLVL", newPickLVL);
-				PlayerManager.setPlayerConfigStat(player, "miningEXP", newPickEXP);
-				player.sendMessage(MessageManager.selectMessagePrefix("debug") +
-						ChatColor.YELLOW + ChatColor.BOLD + "Your pick is now level " + newPickLVL + ".");
-			}
-		} else {
-			//Let user know mining was not successful.
-			player.sendMessage(MessageManager.selectMessagePrefix("debug") + "Mining was not successful.");
 		}
 	}
 	

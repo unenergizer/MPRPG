@@ -68,7 +68,9 @@ public class PlayerManager {
 		if (heal == true) { //Player is being healed.
 			double newHP = currentHP + hpAmount;
 			int maxHP = maxHealthPoints.get(playerName);
-			int hpPercent = (int) ((20 * newHP) / maxHP);
+			int hpBarPercent = (int) ((20 * newHP) / maxHP);
+			int hpPercent = (int) ((100 * newHP) / maxHP);
+			
 			
 			//Set new value if player is being healed.
 			//Do not let the heal value go over the maxHP.
@@ -77,13 +79,14 @@ public class PlayerManager {
 				healthPoints.put(playerName, (int) newHP);
 				
 				//Sets the players hearts on the player bar.
-				player.setHealth(hpPercent);
+				player.setHealth(hpBarPercent);
 				
 				//Send the player the debug message.
 				player.sendMessage(ChatColor.GREEN + "         +" + 
-						ChatColor.GRAY + hpAmount + ChatColor.BOLD + " HP" + 
+						ChatColor.GRAY + hpAmount + ChatColor.BOLD + " HP: " +
+						ChatColor.GRAY + ChatColor.BOLD + hpPercent + "%" + 
 						ChatColor.GRAY + " [" + ChatColor.GREEN + newHP +
-						ChatColor.GRAY + "/" + ChatColor.GREEN + maxHP +
+						ChatColor.GRAY + " / " + ChatColor.GREEN + maxHP +
 						ChatColor.GRAY + "]");
 				
 				//If the health is 99%, go ahead and but it to 100% for healthbar sync reasons.
@@ -96,16 +99,18 @@ public class PlayerManager {
 					
 					//Send the player the debug message.
 					player.sendMessage(ChatColor.GREEN + "         +" + 
-							ChatColor.GRAY + hpAmount + ChatColor.BOLD + " HP" + 
+							ChatColor.GRAY + hpAmount + ChatColor.BOLD + " HP: " +
+							ChatColor.GRAY + ChatColor.BOLD + "100%" + 
 							ChatColor.GRAY + " [" + ChatColor.GREEN + maxHP +
-							ChatColor.GRAY + "/" + ChatColor.GREEN + maxHP +
+							ChatColor.GRAY + " / " + ChatColor.GREEN + maxHP +
 							ChatColor.GRAY + "]");
 				}
 			}
 		} else { //Player is being hurt.
 			double newHP = currentHP - hpAmount;
 			int maxHP = maxHealthPoints.get(playerName);
-			int hpPercent = (int) ((20 * newHP) / maxHP);
+			int hpBarPercent = (int) ((20 * newHP) / maxHP);
+			int hpPercent = (int) ((100 * newHP) / maxHP);
 			
 			//Play a sound for the player.  This is necessary
 			//because we canceled the event, which cancels the noise
@@ -116,13 +121,14 @@ public class PlayerManager {
 			healthPoints.put(playerName, (int) newHP);
 			
 			//Sets the players red hearts on the player bar.
-			player.setHealth(hpPercent);
+			player.setHealth(hpBarPercent);
 			
 			//Send the player the debug message.
 			player.sendMessage(ChatColor.RED + "         -" + 
-					ChatColor.GRAY + hpAmount + ChatColor.BOLD + " HP" + 
-					ChatColor.GRAY + " [" + ChatColor.GREEN + newHP +
-					ChatColor.GRAY + "/" + ChatColor.GREEN + maxHP +
+					ChatColor.GRAY + hpAmount + ChatColor.BOLD + " HP: " +
+					ChatColor.GRAY + ChatColor.BOLD + hpPercent + "%" +
+					ChatColor.GRAY + " [" + ChatColor.RED + newHP +
+					ChatColor.GRAY + " / " + ChatColor.GREEN + maxHP +
 					ChatColor.GRAY + "]");
 		}
 	}
@@ -192,12 +198,6 @@ public class PlayerManager {
         playerConfig.set("blackSmithingEXP", 0);
         playerConfig.set("cookingLVL", 1);
         playerConfig.set("cookingEXP", 0);
-        playerConfig.set("fishingLVL", 1);
-        playerConfig.set("fishingEXP", 0);
-        playerConfig.set("herbalismLVL", 1);
-        playerConfig.set("herbalismEXP", 0);
-        playerConfig.set("miningLVL", 1);
-        playerConfig.set("miningEXP", 0);
 
         try {
             playerConfig.save(configFile);

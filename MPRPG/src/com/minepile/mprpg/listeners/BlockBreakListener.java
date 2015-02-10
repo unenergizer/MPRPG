@@ -39,7 +39,7 @@ public class BlockBreakListener implements Listener{
 					tool.equals(Material.IRON_PICKAXE) || tool.equals(Material.GOLD_PICKAXE) ||
 					tool.equals(Material.DIAMOND_PICKAXE)) {
 				//The player used the right tool, so lets try to add EXP.
-				Mining.minedOre(player, tool, Material.COAL_ORE);
+				Mining.toggleOreMined(player, tool, Material.COAL_ORE);
 				//Lets add the block to the ore regeneration list to be replaced later.
 				OreRegenerationManager.setBlock(player, blockType, block.getLocation());
 				
@@ -58,7 +58,7 @@ public class BlockBreakListener implements Listener{
 		case DIAMOND_ORE: //Mining profession
 			if(tool.equals(Material.DIAMOND_PICKAXE)) {
 				//The player used the right tool, so lets try to add EXP.
-				Mining.minedOre(player, tool, Material.DIAMOND_ORE);
+				Mining.toggleOreMined(player, tool, Material.DIAMOND_ORE);
 
 				//Lets add the block to the ore regeneration list to be replaced later.
 				OreRegenerationManager.setBlock(player, blockType, block.getLocation());
@@ -79,7 +79,7 @@ public class BlockBreakListener implements Listener{
 			if(tool.equals(Material.IRON_PICKAXE) || tool.equals(Material.GOLD_PICKAXE) ||
 					tool.equals(Material.DIAMOND_PICKAXE)) {
 				//The player used the right tool, so lets try to add EXP.
-				Mining.minedOre(player, tool,  Material.EMERALD_ORE);
+				Mining.toggleOreMined(player, tool,  Material.EMERALD_ORE);
 
 				//Lets add the block to the ore regeneration list to be replaced later.
 				OreRegenerationManager.setBlock(player, blockType, block.getLocation());
@@ -99,7 +99,7 @@ public class BlockBreakListener implements Listener{
 		case GOLD_ORE: //Mining profession
 			if(tool.equals(Material.GOLD_PICKAXE) || tool.equals(Material.DIAMOND_PICKAXE)) {
 				//The player used the right tool, so lets try to add EXP.
-				Mining.minedOre(player, tool,  Material.GOLD_ORE);
+				Mining.toggleOreMined(player, tool,  Material.GOLD_ORE);
 
 				//Lets add the block to the ore regeneration list to be replaced later.
 				OreRegenerationManager.setBlock(player, blockType, block.getLocation());
@@ -120,7 +120,7 @@ public class BlockBreakListener implements Listener{
 			if(tool.equals(Material.STONE_PICKAXE) || tool.equals(Material.IRON_PICKAXE) || 
 					tool.equals(Material.GOLD_PICKAXE) || tool.equals(Material.DIAMOND_PICKAXE)) {
 				//The player used the right tool, so lets try to add EXP.
-				Mining.minedOre(player, tool, Material.IRON_ORE);
+				Mining.toggleOreMined(player, tool, Material.IRON_ORE);
 
 				//Lets add the block to the ore regeneration list to be replaced later.
 				OreRegenerationManager.setBlock(player, blockType, block.getLocation());
