@@ -31,8 +31,8 @@ public class PlayerPickupItemListener implements Listener{
 		/////////////
 		//Currency //
 		/////////////
-		case NETHER_BRICK:
-			player.sendMessage("picked up a nether brick");
+		case CLAY_BRICK:
+			player.sendMessage("picked up a clay brick");
 			break;
 		case IRON_INGOT:
 			player.sendMessage("picked up a iron ingot");

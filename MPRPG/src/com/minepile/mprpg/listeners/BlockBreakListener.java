@@ -15,7 +15,7 @@ import com.minepile.mprpg.professions.Mining;
 public class BlockBreakListener implements Listener{
 	
 	public static MPRPG plugin;
-	public boolean allPlayersCanBreakBlocks = true;
+	public boolean allPlayersCanBreakBlocks = false;
 	
 	@SuppressWarnings("static-access")
 	public BlockBreakListener(MPRPG plugin) {

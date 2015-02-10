@@ -12,6 +12,7 @@ import com.minepile.mprpg.listeners.BlockPlaceListener;
 import com.minepile.mprpg.listeners.EntityDamageByEntityListener;
 import com.minepile.mprpg.listeners.EntityDamageListener;
 import com.minepile.mprpg.listeners.EntityRegainHealthListener;
+import com.minepile.mprpg.listeners.PlayerInteractListener;
 import com.minepile.mprpg.listeners.PlayerJoinListener;
 import com.minepile.mprpg.listeners.PlayerPickupItemListener;
 import com.minepile.mprpg.listeners.PlayerQuitListener;
@@ -19,6 +20,7 @@ import com.minepile.mprpg.managers.BankChestManager;
 import com.minepile.mprpg.managers.MessageManager;
 import com.minepile.mprpg.managers.OreRegenerationManager;
 import com.minepile.mprpg.managers.PlayerManager;
+import com.minepile.mprpg.managers.PlayerMenuManager;
 import com.minepile.mprpg.managers.ShopChestManager;
 import com.minepile.mprpg.professions.Blacksmithing;
 import com.minepile.mprpg.professions.Cooking;
@@ -50,6 +52,7 @@ public class MPRPG extends JavaPlugin {
         MessageManager.getInstance().setup(this);
         OreRegenerationManager.getInstance().setup(this);
         PlayerManager.getInstance().setup(this);
+        PlayerMenuManager.getInstance().setup(this);
         ShopChestManager.getInstance().setup(this);
         
         //setup equipment instances
@@ -69,6 +72,7 @@ public class MPRPG extends JavaPlugin {
         pluginManager.registerEvents(new EntityDamageByEntityListener(this), this);
         pluginManager.registerEvents(new EntityDamageListener(this), this);
         pluginManager.registerEvents(new EntityRegainHealthListener(this), this);
+        pluginManager.registerEvents(new PlayerInteractListener(this), this);
         pluginManager.registerEvents(new PlayerJoinListener(this), this);
         pluginManager.registerEvents(new PlayerPickupItemListener(this), this);
         pluginManager.registerEvents(new PlayerQuitListener(this), this);

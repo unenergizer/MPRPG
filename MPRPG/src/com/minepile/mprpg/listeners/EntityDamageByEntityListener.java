@@ -21,8 +21,8 @@ public class EntityDamageByEntityListener implements Listener{
 	public void onEntityDamageByEntity(EntityDamageByEntityEvent event) {
 		if (event.getEntity() instanceof Player) {
 			
-			//cancel the event to do health custom health removal.
-			event.setCancelled(true);
+			//Do not cancel
+			event.setCancelled(false);
 			
 			Player player = (Player) event.getEntity(); //Player who was attacked
 			double damage = event.getDamage();
