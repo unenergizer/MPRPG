@@ -1,11 +1,16 @@
 package com.minepile.mprpg.managers;
 
+import java.util.ArrayList;
+
 import net.md_5.bungee.api.ChatColor;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.PlayerInventory;
+import org.bukkit.inventory.meta.ItemMeta;
 
 import com.minepile.mprpg.MPRPG;
 
@@ -16,7 +21,7 @@ public class PlayerMenuManager {
 	static PlayerMenuManager menuManagerInstance = new PlayerMenuManager();
 	
 	//Define inventory menu's here.
-	public static Inventory mainMenu = Bukkit.createInventory(null, 27, ChatColor.DARK_GREEN + 
+	public static Inventory mainMenu = Bukkit.createInventory(null, 27, ChatColor.DARK_PURPLE + 
 			"" + ChatColor.BOLD + "MinePile Player Menu!");
 	public static Inventory settingsMenu = Bukkit.createInventory(null, 27, ChatColor.GREEN + "Game Settings");
 	
@@ -55,5 +60,32 @@ public class PlayerMenuManager {
         
 		//Define the items in the Settings Menu.
 		
+	}
+	
+	//This will give the player the menu, if they don't already have it.
+	public static void givePlayerMenu(Player player) {
+		PlayerInventory playerInv = player.getInventory();
+		
+		if (!playerInv.contains(Material.COMPASS)) {
+			
+			ItemStack tool = new ItemStack(Material.COMPASS);
+			ItemMeta meta = tool.getItemMeta();
+			
+			meta.setDisplayName(ChatColor.GOLD + "" + ChatColor.BOLD + "Game Menu");
+			
+			ArrayList<String> lore = new ArrayList<String>();
+			lore.add(ChatColor.GRAY + "This is the main menu for the game.");
+			lore.add(ChatColor.GRAY + "With this menu you can view your");
+			lore.add(ChatColor.GRAY + "statistics and change your settings.");
+			lore.add(ChatColor.GRAY + "This item can not be removed from your");
+			lore.add(ChatColor.GRAY + "inventory.");
+			
+			//Set the item lore
+			meta.setLore(lore);
+			//Set the item meta
+			tool.setItemMeta(meta);
+			
+			playerInv.setItem(8, tool);
+		}
 	}
 }

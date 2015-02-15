@@ -550,7 +550,7 @@ public class Mining {
 	}
 	
 	//This creates the configuration file that has the EXP leveling requirements.
-    public static void createMiningConfig() {
+    private static void createMiningConfig() {
     	
         File configFile = new File("plugins/MPRPG/professions/mining.yml");
         FileConfiguration miningConfig =  YamlConfiguration.loadConfiguration(configFile);

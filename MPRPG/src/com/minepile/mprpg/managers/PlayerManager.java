@@ -157,6 +157,9 @@ public class PlayerManager {
         
         //Set players health to max on the healthbar.
         player.setHealth(20);
+        
+        //Give new players the MinePile game menu.
+        PlayerMenuManager.givePlayerMenu(player);
 	}
 	
 	//Remove players from the game. Will remove players
