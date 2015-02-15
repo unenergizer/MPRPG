@@ -1,11 +1,14 @@
 package com.minepile.mprpg.listeners;
 
 import org.bukkit.Material;
+import org.bukkit.entity.Item;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerDropItemEvent;
 
 import com.minepile.mprpg.MPRPG;
+import com.minepile.mprpg.managers.PlayerMenuManager;
 
 public class PlayerDropItemListener  implements Listener{
 	
@@ -17,13 +20,20 @@ public class PlayerDropItemListener  implements Listener{
 	}
 	
 	@EventHandler
-	public void onPlayerInteract(PlayerDropItemEvent event) {
+	public void onPlayerDropItem(PlayerDropItemEvent event) {
 		
-		Material itemDrop = event.getItemDrop().getItemStack().getType();
+		Item itemDrop = event.getItemDrop();
+		Material item = itemDrop.getItemStack().getType();
+		Player player = event.getPlayer();
 		
 		//TODO: Cancel mainMenu drops (compass).
-		if (itemDrop.equals(Material.COMPASS)) {
+		if (item.equals(Material.COMPASS)) {
+			
+			//Cancel the drop. Prevents item from hitting the ground.
 			event.setCancelled(true);
+			
+			//Now lets replace it with a new one.
+			PlayerMenuManager.givePlayerMenu(player);
 		}
 	}
 }

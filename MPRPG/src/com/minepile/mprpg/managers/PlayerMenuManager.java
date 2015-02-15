@@ -66,8 +66,12 @@ public class PlayerMenuManager {
 	public static void givePlayerMenu(Player player) {
 		PlayerInventory playerInv = player.getInventory();
 		
+		if (playerInv.contains(Material.COMPASS)) {
+			playerInv.remove(Material.COMPASS);
+		}
+		
 		if (!playerInv.contains(Material.COMPASS)) {
-			
+				
 			ItemStack tool = new ItemStack(Material.COMPASS);
 			ItemMeta meta = tool.getItemMeta();
 			

@@ -19,11 +19,31 @@ public class PlayerFishListener implements Listener{
 	
 	@EventHandler
 	public void onPlayerFish(PlayerFishEvent event) {
+		
 		Player player = event.getPlayer();
-			
-		if (event.getCaught() != null) {
-			//Toggle the fishing manager code.
+		
+		//Lets get the state of the fishing event.
+		//Lets only toggle profession fishing if
+		//the CAUGHT_FISH state is triggered.
+		//This will prevent profession leveling
+		//if the player tries to fish a mob.
+		switch(event.getState()){
+		case CAUGHT_ENTITY:
+			break;
+		case CAUGHT_FISH:
+			//Fish was caught, lets remove the fist item.
+			event.getCaught().remove();
+			//Toggle the fishing profession code.
 			Fishing.toggleFishing(player);
+			break;
+		case FAILED_ATTEMPT:
+			break;
+		case FISHING:
+			break;
+		case IN_GROUND:
+			break;
+		default:
+			break;
 		}
 	}
 }

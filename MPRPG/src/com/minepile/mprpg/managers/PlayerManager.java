@@ -33,7 +33,7 @@ public class PlayerManager {
 	static HashMap<String, Integer> fireDamage = new HashMap<String, Integer>();
 	
 	//Base statistic rates
-	static int baseHealthPoints = 5000;
+	static int baseHealthPoints = 500;
 	static int baseEnergyPoints = 500;
 	static int baseHealthRegenRate = 1;
 	static int baseEnergyRegenRate = 1;
