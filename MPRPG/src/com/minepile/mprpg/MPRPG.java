@@ -5,6 +5,7 @@ import java.io.File;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import com.minepile.mprpg.commands.CommandManager;
 import com.minepile.mprpg.equipment.ArmorManager;
 import com.minepile.mprpg.equipment.WeaponManager;
 import com.minepile.mprpg.listeners.BlockBreakListener;
@@ -19,8 +20,8 @@ import com.minepile.mprpg.listeners.PlayerJoinListener;
 import com.minepile.mprpg.listeners.PlayerPickupItemListener;
 import com.minepile.mprpg.listeners.PlayerQuitListener;
 import com.minepile.mprpg.managers.BankChestManager;
-import com.minepile.mprpg.managers.MessageManager;
 import com.minepile.mprpg.managers.BlockRegenerationManager;
+import com.minepile.mprpg.managers.MessageManager;
 import com.minepile.mprpg.managers.PlayerManager;
 import com.minepile.mprpg.managers.PlayerMenuManager;
 import com.minepile.mprpg.managers.ShopChestManager;
@@ -51,8 +52,8 @@ public class MPRPG extends JavaPlugin {
         
         //setup manager instances
         BankChestManager.getInstance().setup(this);
-        MessageManager.getInstance().setup(this);
         BlockRegenerationManager.getInstance().setup(this);
+        MessageManager.getInstance().setup(this);
         PlayerManager.getInstance().setup(this);
         PlayerMenuManager.getInstance().setup(this);
         ShopChestManager.getInstance().setup(this);
@@ -80,6 +81,9 @@ public class MPRPG extends JavaPlugin {
         pluginManager.registerEvents(new PlayerJoinListener(this), this);
         pluginManager.registerEvents(new PlayerPickupItemListener(this), this);
         pluginManager.registerEvents(new PlayerQuitListener(this), this);
+        
+        //Setup Commands
+        getCommand("test").setExecutor(new CommandManager(this));
         
         //Notify that plugin is fully finished loading.
         getLogger().info("Start up has finished for MinePile:RPG!");

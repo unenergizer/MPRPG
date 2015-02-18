@@ -4,3 +4,6 @@ version: 0.1
 description: MinePile RPG
 author: unenergizer
 website: http://www.minepile.com/
+commands:
+   test:
+      description: testing to see if commands work.
