@@ -21,8 +21,8 @@ public class PlayerMenuManager {
 	static PlayerMenuManager menuManagerInstance = new PlayerMenuManager();
 	
 	//Define inventory menu's here.
-	public static Inventory mainMenu = Bukkit.createInventory(null, 27, ChatColor.DARK_PURPLE + 
-			"" + ChatColor.BOLD + "MinePile Player Menu!");
+	public static Inventory mainMenu = Bukkit.createInventory(null, 27, ChatColor.DARK_GRAY + 
+			"" + ChatColor.BOLD + "Player Menu!" + ChatColor.BLUE + " Not Ready Yet");
 	public static Inventory settingsMenu = Bukkit.createInventory(null, 27, ChatColor.GREEN + "Game Settings");
 	
 	//Create instance

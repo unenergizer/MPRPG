@@ -277,15 +277,15 @@ public class Herbalism {
 			lore.add(" ");//create blank space
 			
 			if (lvl <= 19) {
-				lore.add(ChatColor.GRAY + "" + ChatColor.ITALIC + "A herbalism tool made of wood.");
+				lore.add(ChatColor.GRAY + "" + ChatColor.ITALIC + "Shears made of wood and dull stone.");
 			} else if (lvl > 19 && lvl <= 39) {
-				lore.add(ChatColor.GRAY + "" + ChatColor.ITALIC + "A herbalism tool reinforced with stone.");
+				lore.add(ChatColor.GRAY + "" + ChatColor.ITALIC + "Shears made of wood and reinforced with sharp stone.");
 			} else if (lvl > 29 && lvl <= 59) {
-				lore.add(ChatColor.GRAY + "" + ChatColor.ITALIC + "A herbalism tool reinforced with iron.");
+				lore.add(ChatColor.GRAY + "" + ChatColor.ITALIC + "Shears made of wood and reinforced with sharp iron.");
 			} else if (lvl > 59 && lvl <= 79) {
-				lore.add(ChatColor.GRAY + "" + ChatColor.ITALIC + "A herbalism tool reinforced with gold.");
+				lore.add(ChatColor.GRAY + "" + ChatColor.ITALIC + "Shears made of wood and reinforced with sharp gold.");
 			} else {
-				lore.add(ChatColor.GRAY + "" + ChatColor.ITALIC + "A herbalism tool reinforced with diamond.");
+				lore.add(ChatColor.GRAY + "" + ChatColor.ITALIC + "Shears made of wood and reinforced with sharp diamond.");
 			}
 			
 			//Set the item lore
