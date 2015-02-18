@@ -9,6 +9,8 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 public class MaterialLoreReaderUtil {
 
+	//TODO: USE THIS CODE OR REMOVE IT.
+	
 	public void getLore(Player player, int loreLine) {
 		ItemStack item = player.getItemInHand();
 		

@@ -20,7 +20,7 @@ import com.minepile.mprpg.listeners.PlayerPickupItemListener;
 import com.minepile.mprpg.listeners.PlayerQuitListener;
 import com.minepile.mprpg.managers.BankChestManager;
 import com.minepile.mprpg.managers.MessageManager;
-import com.minepile.mprpg.managers.OreRegenerationManager;
+import com.minepile.mprpg.managers.BlockRegenerationManager;
 import com.minepile.mprpg.managers.PlayerManager;
 import com.minepile.mprpg.managers.PlayerMenuManager;
 import com.minepile.mprpg.managers.ShopChestManager;
@@ -52,7 +52,7 @@ public class MPRPG extends JavaPlugin {
         //setup manager instances
         BankChestManager.getInstance().setup(this);
         MessageManager.getInstance().setup(this);
-        OreRegenerationManager.getInstance().setup(this);
+        BlockRegenerationManager.getInstance().setup(this);
         PlayerManager.getInstance().setup(this);
         PlayerMenuManager.getInstance().setup(this);
         ShopChestManager.getInstance().setup(this);

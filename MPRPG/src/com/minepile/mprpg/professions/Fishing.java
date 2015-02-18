@@ -62,7 +62,7 @@ public class Fishing {
 			createFishingRod(player);
 		}
 		
-		//Now that we know the pickaxe exists, lets get it's data.
+		//Now that we know the fishing rod exists, lets get it's data.
 		int currentRodLVL = getLoreLVL(player);
 		int currentRodEXP = getLoreEXP(player);
 
