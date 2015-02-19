@@ -104,8 +104,8 @@ public class MPRPG extends JavaPlugin {
 	
 	@Override
 	public void onDisable() {
-		//TODO: Use me.
-		
+		//Reset all plants and blocks that have been picked or mined.
+		BlockRegenerationManager.resetAllBlocks();
 	}
 	
 }

@@ -74,6 +74,23 @@ public class BlockRegenerationManager {
         }, 0L, blockRegenTick);
 	}
 	
+	public static void resetAllBlocks() {
+		for (int i = blockIDsRemoved; i < blockID; i++) {
+			int timeLeft = blockTimeLeft.get(i);
+			
+			Block block = Bukkit.getWorld("world").getBlockAt(blockX.get(i), blockY.get(i), blockZ.get(i));
+			block.setType(blockType.get(i));
+
+			blockType.remove(i);
+			blockTimeLeft.remove(i);
+			blockX.remove(i);
+			blockY.remove(i);
+			blockZ.remove(i);
+				
+			blockIDsRemoved++;
+		}
+	}
+	
 	public static void setBlock(Player player, Material type, Material tempBlock, Location location) {
 		
 		Block block = location.getBlock();
