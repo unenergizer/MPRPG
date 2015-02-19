@@ -146,7 +146,7 @@ public class CommandManager implements CommandExecutor{
 				String targetName = PlayerManager.getPlayerConfigString(player, "setting.chat.lastpm");
 				String senderName = sender.getName();
 				
-				if (Bukkit.getServer().getPlayer(args[0]) != null) {
+				if (Bukkit.getServer().getPlayer(targetName) != null) {
 					StringBuilder str = new StringBuilder();
 					
 					//Start loop at location 0.
