@@ -205,6 +205,7 @@ public class PlayerManager {
 
         playerConfig.set("setting.chat.languagefilter", 1);
         playerConfig.set("setting.chat.focus", "local");
+        playerConfig.set("setting.chat.lastpm", null);
         
         playerConfig.set("setting.chatchannel.admin", 1);
         playerConfig.set("setting.chatchannel.global", 1);
@@ -224,7 +225,7 @@ public class PlayerManager {
         playerConfig.set("economy.shopRows", 1);
 
         playerConfig.set("clan.id", 0);
-        playerConfig.set("clan.prefix", null);
+        playerConfig.set("clan.tag", null);
         
         playerConfig.set("profession.blackSmithingLVL", 1);
         playerConfig.set("profession.blackSmithingEXP", 0);

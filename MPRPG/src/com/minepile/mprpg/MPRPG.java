@@ -91,7 +91,13 @@ public class MPRPG extends JavaPlugin {
         getCommand("ch").setExecutor(new CommandManager(this));
         getCommand("chatchanel").setExecutor(new CommandManager(this));
         getCommand("chat").setExecutor(new CommandManager(this));
-         
+        
+        getCommand("msg").setExecutor(new CommandManager(this));
+        getCommand("message").setExecutor(new CommandManager(this));
+        getCommand("pm").setExecutor(new CommandManager(this));
+        getCommand("tell").setExecutor(new CommandManager(this));
+        getCommand("r").setExecutor(new CommandManager(this));
+        
         //Notify that plugin is fully finished loading.
         getLogger().info("Start up has finished for MinePile:RPG!");
 	}

@@ -13,3 +13,14 @@ commands:
       description: Used to change players chat channel.
    ch:
       description: Used to change players chat channel.
+   msg:
+      description: Used to send other players private messages.
+   message:
+      description: Used to send other players private messages.
+   pm:
+      description: Used to send other players private messages.
+   tell:
+      description: Used to send other players private messages.
+   r:
+      description: Quickly reply to your last private message.
+   
