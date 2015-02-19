@@ -55,8 +55,10 @@ public class AsyncPlayerChatListener implements Listener{
 				clanTag = "";
 			}
 			
-			if (isAdmin == 1 || player.isOp()) {
+			if (player.isOp()) {
 				prefix = ChatColor.RED + "" + ChatColor.BOLD + "OP ";
+			} else if (isAdmin == 1) {
+				prefix = ChatColor.RED + "" + ChatColor.BOLD + "ADMIN ";
 			} else if (isDev == 1) {
 				prefix = ChatColor.GOLD + "" + ChatColor.BOLD + "DEV ";
 			} else if (isMod == 1) {

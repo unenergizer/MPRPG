@@ -8,6 +8,7 @@ import java.util.List;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
@@ -343,6 +344,9 @@ public class Mining {
 				//Send level up message.
 				player.sendMessage(MessageManager.selectMessagePrefix("debug") +
 						ChatColor.YELLOW + ChatColor.BOLD + "Your pick is now level " + newPickLVL + ".");
+				
+				//Play a level up sound.
+				player.playSound(player.getLocation(), Sound.FIREWORK_TWINKLE2, 1F, 1F);
 			} else {
 				
 				//Update the items meta and add 1 level.
@@ -354,6 +358,9 @@ public class Mining {
 				//Send level up message.
 				player.sendMessage(MessageManager.selectMessagePrefix("debug") +
 						ChatColor.YELLOW + ChatColor.BOLD + "Your pick is now level " + newPickLVL + ".");
+				
+				//Play a level up sound.
+				player.playSound(player.getLocation(), Sound.FIREWORK_TWINKLE2, 1F, 1F);
 			}
 		} else { //The players pickaxe has not leveled up.  Just add exp to it.
 			//Update the items meta and add 1 level.

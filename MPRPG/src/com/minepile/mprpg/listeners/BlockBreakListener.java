@@ -1,7 +1,5 @@
 package com.minepile.mprpg.listeners;
 
-import net.md_5.bungee.api.ChatColor;
-
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
@@ -153,21 +151,27 @@ public class BlockBreakListener implements Listener{
 			
 		case BAKED_POTATO:
 			player.sendMessage("You broke: " + blockType.toString());
+			event.setCancelled(true);
 			break;
 		case BROWN_MUSHROOM:
 			player.sendMessage("You broke: " + blockType.toString());
+			event.setCancelled(true);
 			break;
 		case CACTUS:
 			player.sendMessage("You broke: " + blockType.toString());
+			event.setCancelled(true);
 			break;
 		case CARROT:
 			player.sendMessage("You broke: " + blockType.toString());
+			event.setCancelled(true);
 			break;
 		case CARROT_ITEM:
 			player.sendMessage("You broke: " + blockType.toString());
+			event.setCancelled(true);
 			break;
 		case CARROT_STICK:
 			player.sendMessage("You broke: " + blockType.toString());
+			event.setCancelled(true);
 			break;
 		case DEAD_BUSH:
 			if(tool.equals(Material.SHEARS)) {
@@ -191,60 +195,79 @@ public class BlockBreakListener implements Listener{
 			break;
 		case DOUBLE_PLANT:
 			player.sendMessage("You broke: " + blockType.toString());
+			event.setCancelled(true);
 			break;
 		case DRAGON_EGG:
 			player.sendMessage("You broke: " + blockType.toString());
+			event.setCancelled(true);
 			break;
 		case FLOWER_POT:
 			player.sendMessage("You broke: " + blockType.toString());
+			event.setCancelled(true);
 			break;
 		case FLOWER_POT_ITEM:
 			player.sendMessage("You broke: " + blockType.toString());
+			event.setCancelled(true);
 			break;
 		case JACK_O_LANTERN:
 			player.sendMessage("You broke: " + blockType.toString());
+			event.setCancelled(true);
 			break;
 		case LEAVES:
 			player.sendMessage("You broke: " + blockType.toString());
+			event.setCancelled(true);
 			break;
 		case LEAVES_2:
 			player.sendMessage("You broke: " + blockType.toString());
+			event.setCancelled(true);
 			break;
 		case LONG_GRASS:
 			player.sendMessage("You broke: " + blockType.toString());
+			event.setCancelled(true);
 			break;
 		case MELON:
 			player.sendMessage("You broke: " + blockType.toString());
+			event.setCancelled(true);
 			break;
 		case MELON_BLOCK:
 			player.sendMessage("You broke: " + blockType.toString());
+			event.setCancelled(true);
 			break;
 		case MELON_SEEDS:
 			player.sendMessage("You broke: " + blockType.toString());
+			event.setCancelled(true);
 			break;
 		case MELON_STEM:
 			player.sendMessage("You broke: " + blockType.toString());
+			event.setCancelled(true);
 			break;
 		case POISONOUS_POTATO:
 			player.sendMessage("You broke: " + blockType.toString());
+			event.setCancelled(true);
 			break;
 		case POTATO:
 			player.sendMessage("You broke: " + blockType.toString());
+			event.setCancelled(true);
 			break;
 		case POTATO_ITEM:
 			player.sendMessage("You broke: " + blockType.toString());
+			event.setCancelled(true);
 			break;
 		case PUMPKIN:
 			player.sendMessage("You broke: " + blockType.toString());
+			event.setCancelled(true);
 			break;
 		case PUMPKIN_SEEDS:
 			player.sendMessage("You broke: " + blockType.toString());
+			event.setCancelled(true);
 			break;
 		case PUMPKIN_STEM:
 			player.sendMessage("You broke: " + blockType.toString());
+			event.setCancelled(true);
 			break;
 		case RED_MUSHROOM:
 			player.sendMessage("You broke: " + blockType.toString());
+			event.setCancelled(true);
 			break;
 		case RED_ROSE:
 			if(tool.equals(Material.SHEARS)) {
@@ -268,24 +291,31 @@ public class BlockBreakListener implements Listener{
 			break;
 		case SAPLING:
 			player.sendMessage("You broke: " + blockType.toString());
+			event.setCancelled(true);
 			break;
 		case SEEDS:
 			player.sendMessage("You broke: " + blockType.toString());
+			event.setCancelled(true);
 			break;
 		case SUGAR_CANE:
 			player.sendMessage("You broke: " + blockType.toString());
+			event.setCancelled(true);
 			break;
 		case SUGAR_CANE_BLOCK:
 			player.sendMessage("You broke: " + blockType.toString());
+			event.setCancelled(true);
 			break;
 		case VINE:
 			player.sendMessage("You broke: " + blockType.toString());
+			event.setCancelled(true);
 			break;
 		case WATER_LILY:
 			player.sendMessage("You broke: " + blockType.toString());
+			event.setCancelled(true);
 			break;
 		case WHEAT:
 			player.sendMessage("You broke: " + blockType.toString());
+			event.setCancelled(true);
 			break;
 		case YELLOW_FLOWER:
 			player.sendMessage("You broke: " + blockType.toString());
@@ -314,8 +344,6 @@ public class BlockBreakListener implements Listener{
 		//////////////////////
 			
 		default:
-			player.sendMessage(ChatColor.RED + "defaultInvoked.");
-			player.sendMessage("You broke: " + blockType.toString());
 			if (allPlayersCanBreakBlocks == false) {
 				//Cancel the block being broken.
 				event.setCancelled(true);	

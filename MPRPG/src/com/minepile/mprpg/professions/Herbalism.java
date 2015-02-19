@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import org.bukkit.ChatColor;
+import org.bukkit.Sound;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
@@ -137,6 +138,9 @@ public class Herbalism {
 				//Send level up message.
 				player.sendMessage(MessageManager.selectMessagePrefix("debug") +
 						ChatColor.YELLOW + ChatColor.BOLD + "Your shears are now level " + newToolkLVL + ".");
+				
+				//Play a level up sound.
+				player.playSound(player.getLocation(), Sound.FIREWORK_TWINKLE2, 1F, 1F);
 			} else {
 				
 				//Update the items meta and add 1 level.
@@ -148,6 +152,9 @@ public class Herbalism {
 				//Send level up message.
 				player.sendMessage(MessageManager.selectMessagePrefix("debug") +
 						ChatColor.YELLOW + ChatColor.BOLD + "Your shears are now level " + newToolkLVL + ".");
+				
+				//Play a level up sound.
+				player.playSound(player.getLocation(), Sound.FIREWORK_TWINKLE2, 1F, 1F);
 			}
 		} else { //The players herbalism tool has not leveled up.  Just add exp to it.
 			//Update the items meta and add 1 level.

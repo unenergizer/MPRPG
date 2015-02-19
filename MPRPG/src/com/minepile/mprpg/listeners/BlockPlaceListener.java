@@ -11,7 +11,7 @@ import com.minepile.mprpg.managers.MessageManager;
 public class BlockPlaceListener implements Listener{
 	
 	public static MPRPG plugin;
-	public boolean allPlayersCanPlaceBlocks = true;
+	public boolean allPlayersCanPlaceBlocks = false;
 	
 	@SuppressWarnings("static-access")
 	public BlockPlaceListener(MPRPG plugin) {
@@ -24,8 +24,7 @@ public class BlockPlaceListener implements Listener{
 		
 		if (allPlayersCanPlaceBlocks == false) {
 			//Cancel the event.
-			event.setCancelled(false);
-			
+			event.setCancelled(true);
 			
 			//show debug message
 			if (MessageManager.canShowAdminDebugMessage() == true) {
@@ -33,7 +32,5 @@ public class BlockPlaceListener implements Listener{
 						+ "You can not place blocks.");
 			}
 		}
-		
 	}
-
 }
