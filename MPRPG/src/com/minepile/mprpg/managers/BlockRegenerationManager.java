@@ -76,8 +76,6 @@ public class BlockRegenerationManager {
 	
 	public static void resetAllBlocks() {
 		for (int i = blockIDsRemoved; i < blockID; i++) {
-			int timeLeft = blockTimeLeft.get(i);
-			
 			Block block = Bukkit.getWorld("world").getBlockAt(blockX.get(i), blockY.get(i), blockZ.get(i));
 			block.setType(blockType.get(i));
 

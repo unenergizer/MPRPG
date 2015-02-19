@@ -1,4 +1,4 @@
-package com.minepile.mprpg.managers;
+package com.minepile.mprpg.player;
 
 import java.io.File;
 import java.io.IOException;

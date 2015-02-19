@@ -8,7 +8,7 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.inventory.ItemStack;
 
 import com.minepile.mprpg.MPRPG;
-import com.minepile.mprpg.managers.PlayerManager;
+import com.minepile.mprpg.player.PlayerManager;
 
 public class EntityDamageListener implements Listener{
 	

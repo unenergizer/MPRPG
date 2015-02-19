@@ -9,7 +9,7 @@ import org.bukkit.event.player.PlayerJoinEvent;
 
 import com.minepile.mprpg.MPRPG;
 import com.minepile.mprpg.managers.MessageManager;
-import com.minepile.mprpg.managers.PlayerManager;
+import com.minepile.mprpg.player.PlayerManager;
 
 public class PlayerJoinListener implements Listener {
 	

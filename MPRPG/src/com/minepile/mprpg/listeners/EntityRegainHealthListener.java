@@ -6,7 +6,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityRegainHealthEvent;
 
 import com.minepile.mprpg.MPRPG;
-import com.minepile.mprpg.managers.PlayerManager;
+import com.minepile.mprpg.player.PlayerManager;
 
 public class EntityRegainHealthListener implements Listener{
 	

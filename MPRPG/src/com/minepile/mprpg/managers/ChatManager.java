@@ -7,6 +7,7 @@ import net.md_5.bungee.api.ChatColor;
 import org.bukkit.entity.Player;
 
 import com.minepile.mprpg.MPRPG;
+import com.minepile.mprpg.player.PlayerManager;
 
 public class ChatManager {
 	

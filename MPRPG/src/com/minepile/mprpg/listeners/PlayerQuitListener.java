@@ -6,7 +6,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerQuitEvent;
 
 import com.minepile.mprpg.MPRPG;
-import com.minepile.mprpg.managers.PlayerManager;
+import com.minepile.mprpg.player.PlayerManager;
 
 public class PlayerQuitListener  implements Listener {
 	

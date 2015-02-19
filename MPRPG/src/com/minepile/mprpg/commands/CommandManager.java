@@ -11,7 +11,7 @@ import org.bukkit.entity.Player;
 import com.minepile.mprpg.MPRPG;
 import com.minepile.mprpg.managers.ChatManager;
 import com.minepile.mprpg.managers.MessageManager;
-import com.minepile.mprpg.managers.PlayerManager;
+import com.minepile.mprpg.player.PlayerManager;
 
 public class CommandManager implements CommandExecutor{
 	

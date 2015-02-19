@@ -8,7 +8,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerDropItemEvent;
 
 import com.minepile.mprpg.MPRPG;
-import com.minepile.mprpg.managers.PlayerMenuManager;
+import com.minepile.mprpg.player.PlayerMenuManager;
 
 public class PlayerDropItemListener  implements Listener{
 	
