@@ -5,5 +5,11 @@ description: MinePile RPG
 author: unenergizer
 website: http://www.minepile.com/
 commands:
-   test:
-      description: testing to see if commands work.
+   cc:
+      description: Used to change players chat channel.
+   chat:
+      description: Used to change players chat channel.
+   chatchanel:
+      description: Used to change players chat channel.
+   ch:
+      description: Used to change players chat channel.

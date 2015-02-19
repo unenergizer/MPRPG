@@ -8,6 +8,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import com.minepile.mprpg.commands.CommandManager;
 import com.minepile.mprpg.equipment.ArmorManager;
 import com.minepile.mprpg.equipment.WeaponManager;
+import com.minepile.mprpg.listeners.AsyncPlayerChatListener;
 import com.minepile.mprpg.listeners.BlockBreakListener;
 import com.minepile.mprpg.listeners.BlockPlaceListener;
 import com.minepile.mprpg.listeners.EntityDamageByEntityListener;
@@ -21,6 +22,7 @@ import com.minepile.mprpg.listeners.PlayerPickupItemListener;
 import com.minepile.mprpg.listeners.PlayerQuitListener;
 import com.minepile.mprpg.managers.BankChestManager;
 import com.minepile.mprpg.managers.BlockRegenerationManager;
+import com.minepile.mprpg.managers.ChatManager;
 import com.minepile.mprpg.managers.MessageManager;
 import com.minepile.mprpg.managers.PlayerManager;
 import com.minepile.mprpg.managers.PlayerMenuManager;
@@ -53,6 +55,7 @@ public class MPRPG extends JavaPlugin {
         //setup manager instances
         BankChestManager.getInstance().setup(this);
         BlockRegenerationManager.getInstance().setup(this);
+        ChatManager.getInstance().setup(this);
         MessageManager.getInstance().setup(this);
         PlayerManager.getInstance().setup(this);
         PlayerMenuManager.getInstance().setup(this);
@@ -70,6 +73,7 @@ public class MPRPG extends JavaPlugin {
         Mining.getInstance().setup(this);
         
         //setup event listeners
+        pluginManager.registerEvents(new AsyncPlayerChatListener(this), this);
         pluginManager.registerEvents(new BlockBreakListener(this), this);
         pluginManager.registerEvents(new BlockPlaceListener(this), this);
         pluginManager.registerEvents(new EntityDamageByEntityListener(this), this);
@@ -83,8 +87,11 @@ public class MPRPG extends JavaPlugin {
         pluginManager.registerEvents(new PlayerQuitListener(this), this);
         
         //Setup Commands
-        getCommand("test").setExecutor(new CommandManager(this));
-        
+        getCommand("cc").setExecutor(new CommandManager(this));
+        getCommand("ch").setExecutor(new CommandManager(this));
+        getCommand("chatchanel").setExecutor(new CommandManager(this));
+        getCommand("chat").setExecutor(new CommandManager(this));
+         
         //Notify that plugin is fully finished loading.
         getLogger().info("Start up has finished for MinePile:RPG!");
 	}

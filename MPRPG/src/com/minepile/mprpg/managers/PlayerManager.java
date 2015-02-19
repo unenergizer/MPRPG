@@ -189,18 +189,47 @@ public class PlayerManager {
         File configFile = new File("plugins/MPRPG/players/" + uuid + ".yml");
         FileConfiguration playerConfig =  YamlConfiguration.loadConfiguration(configFile);
         playerConfig.set("playerName", playerName);
-        playerConfig.set("playerLVL", 1);
-        playerConfig.set("playerEXP", 0);
-        playerConfig.set("gold", 0);
-        playerConfig.set("silver", 0);
-        playerConfig.set("copper", 32);
-        playerConfig.set("portalCash", 0);
-        playerConfig.set("bankRows", 1);
-        playerConfig.set("shopRows", 1);
-        playerConfig.set("blackSmithingLVL", 1);
-        playerConfig.set("blackSmithingEXP", 0);
-        playerConfig.set("cookingLVL", 1);
-        playerConfig.set("cookingEXP", 0);
+        playerConfig.set("player.playerLVL", 1);
+        playerConfig.set("player.playerEXP", 0);
+        
+        playerConfig.set("permissions.admin", 0);
+        playerConfig.set("permissions.dev", 0);
+        playerConfig.set("permissions.mod", 0);
+        
+        playerConfig.set("attribute.dexterity", 0);
+        playerConfig.set("attribute.intellect", 0);
+        playerConfig.set("attribute.luck", 0);
+        playerConfig.set("attribute.personality", 0);
+        playerConfig.set("attribute.strength", 0);
+        playerConfig.set("attribute.vitality", 0);
+
+        playerConfig.set("setting.chat.languagefilter", 1);
+        playerConfig.set("setting.chat.focus", "local");
+        
+        playerConfig.set("setting.chatchannel.admin", 1);
+        playerConfig.set("setting.chatchannel.global", 1);
+        playerConfig.set("setting.chatchannel.guild", 1);
+        playerConfig.set("setting.chatchannel.help", 1);
+        playerConfig.set("setting.chatchannel.local", 1);
+        playerConfig.set("setting.chatchannel.mod", 1);
+        playerConfig.set("setting.chatchannel.party", 1);
+        playerConfig.set("setting.chatchannel.pm", 1);
+        playerConfig.set("setting.chatchannel.trade", 1);
+        
+        playerConfig.set("economy.gold", 0);
+        playerConfig.set("economy.silver", 0);
+        playerConfig.set("economy.copper", 32);
+        playerConfig.set("economy.portalCash", 0);
+        playerConfig.set("economy.bankRows", 1);
+        playerConfig.set("economy.shopRows", 1);
+
+        playerConfig.set("clan.id", 0);
+        playerConfig.set("clan.prefix", null);
+        
+        playerConfig.set("profession.blackSmithingLVL", 1);
+        playerConfig.set("profession.blackSmithingEXP", 0);
+        playerConfig.set("profession.cookingLVL", 1);
+        playerConfig.set("profession.cookingEXP", 0);
 
         try {
             playerConfig.save(configFile);
@@ -209,13 +238,13 @@ public class PlayerManager {
         } 
     }
     
-	public static void setPlayerConfigStat(Player player, String stat, int amount) {
+	public static void setPlayerConfigInt(Player player, String config, int value) {
     	
 		String uuid = player.getUniqueId().toString();
     	
         File configFile = new File("plugins/MPRPG/players/" + uuid + ".yml");
         FileConfiguration playerConfig =  YamlConfiguration.loadConfiguration(configFile);
-        playerConfig.set(stat, amount);
+        playerConfig.set(config, value);
 
         try {
             playerConfig.save(configFile);
@@ -224,12 +253,36 @@ public class PlayerManager {
         } 
 	}
     
-	public static int getPlayerConfigStat(Player player, String stat) {
+	public static int getPlayerConfigInt(Player player, String value) {
     	
 		String uuid = player.getUniqueId().toString();
     	
         File configFile = new File("plugins/MPRPG/players/" + uuid + ".yml");
         FileConfiguration playerConfig =  YamlConfiguration.loadConfiguration(configFile);
-        return (int) playerConfig.get(stat);
+        return (int) playerConfig.get(value);
+	}
+	
+	public static void setPlayerConfigString(Player player, String config, String value) {
+    	
+		String uuid = player.getUniqueId().toString();
+    	
+        File configFile = new File("plugins/MPRPG/players/" + uuid + ".yml");
+        FileConfiguration playerConfig =  YamlConfiguration.loadConfiguration(configFile);
+        playerConfig.set(config, value);
+
+        try {
+            playerConfig.save(configFile);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } 
+	}
+	
+	public static String getPlayerConfigString(Player player, String value) {
+    	
+		String uuid = player.getUniqueId().toString();
+    	
+        File configFile = new File("plugins/MPRPG/players/" + uuid + ".yml");
+        FileConfiguration playerConfig =  YamlConfiguration.loadConfiguration(configFile);
+        return  (String) playerConfig.get(value);
 	}
 }

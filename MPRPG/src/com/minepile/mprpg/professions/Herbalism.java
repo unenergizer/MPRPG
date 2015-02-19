@@ -75,7 +75,7 @@ public class Herbalism {
 				toggleToolUpdate(player, expGain, currentToolEXP, currentToolLVL);
 			} else {
 				//Let user know mining was not successful.
-				player.sendMessage(ChatColor.GRAY + "        " + ChatColor.ITALIC + "Herbalism attempt was not successful.");
+				player.sendMessage(ChatColor.GRAY + "        " + ChatColor.ITALIC + "Harvest attempt was not successful.");
 			}
 		} else if (currentToolLVL > 19 && currentToolLVL <= 39) {
 			
@@ -86,7 +86,7 @@ public class Herbalism {
 				toggleToolUpdate(player, expGain, currentToolEXP, currentToolLVL);
 			} else {
 				//Let user know mining was not successful.
-				player.sendMessage(ChatColor.GRAY + "        " + ChatColor.ITALIC + "Herbalism attempt was not successful.");
+				player.sendMessage(ChatColor.GRAY + "        " + ChatColor.ITALIC + "Harvest attempt was not successful.");
 			}
 		} else if (currentToolLVL > 39 && currentToolLVL <= 59) {
 			
@@ -97,7 +97,7 @@ public class Herbalism {
 				toggleToolUpdate(player, expGain, currentToolEXP, currentToolLVL);
 			} else {
 				//Let user know mining was not successful.
-				player.sendMessage(ChatColor.GRAY + "        " + ChatColor.ITALIC + "Herbalism attempt was not successful.");
+				player.sendMessage(ChatColor.GRAY + "        " + ChatColor.ITALIC + "Harvest attempt was not successful.");
 			}
 		} else if (currentToolLVL > 59 && currentToolLVL <= 79) {
 			
@@ -108,7 +108,7 @@ public class Herbalism {
 				toggleToolUpdate(player, expGain, currentToolEXP, currentToolLVL);
 			} else {
 				//Let user know mining was not successful.
-				player.sendMessage(ChatColor.GRAY + "        " + ChatColor.ITALIC + "Herbalism attempt was not successful.");
+				player.sendMessage(ChatColor.GRAY + "        " + ChatColor.ITALIC + "Harvest attempt was not successful.");
 			}
 		}
 	}
@@ -136,7 +136,7 @@ public class Herbalism {
 				
 				//Send level up message.
 				player.sendMessage(MessageManager.selectMessagePrefix("debug") +
-						ChatColor.YELLOW + ChatColor.BOLD + "Your pick is now level " + newToolkLVL + ".");
+						ChatColor.YELLOW + ChatColor.BOLD + "Your shears are now level " + newToolkLVL + ".");
 			} else {
 				
 				//Update the items meta and add 1 level.
@@ -147,7 +147,7 @@ public class Herbalism {
 				
 				//Send level up message.
 				player.sendMessage(MessageManager.selectMessagePrefix("debug") +
-						ChatColor.YELLOW + ChatColor.BOLD + "Your pick is now level " + newToolkLVL + ".");
+						ChatColor.YELLOW + ChatColor.BOLD + "Your shears are now level " + newToolkLVL + ".");
 			}
 		} else { //The players herbalism tool has not leveled up.  Just add exp to it.
 			//Update the items meta and add 1 level.
@@ -177,11 +177,11 @@ public class Herbalism {
 				
 				int newPickLVL = currentToolLVL + 1;
 				player.sendMessage(MessageManager.selectMessagePrefix("debug") +
-						ChatColor.YELLOW + ChatColor.BOLD + "Your herbalism tool is now level " + newPickLVL + ".");
+						ChatColor.YELLOW + ChatColor.BOLD + "Your shears are now level " + newPickLVL + ".");
 			}
 		} else {
 			//Let user know herbalism was not successful.
-			player.sendMessage(ChatColor.GRAY + "        " + ChatColor.ITALIC + "Herbalism attempt was not successful.");
+			player.sendMessage(ChatColor.GRAY + "        " + ChatColor.ITALIC + "Harvest attempt was not successful.");
 		}
 	}	
 	
@@ -255,15 +255,15 @@ public class Herbalism {
 				
 			//Set the item name
 			if (lvl <= 19) {
-				im.setDisplayName(ChatColor.WHITE + "Novice Herbalism Tool");
+				im.setDisplayName(ChatColor.WHITE + "Novice Shears");
 			} else if (lvl > 19 && lvl <= 39) {
-				im.setDisplayName(ChatColor.GREEN + "Apprentice Herbalism Tool");
+				im.setDisplayName(ChatColor.GREEN + "Apprentice Shears");
 			} else if (lvl > 29 && lvl <= 59) {
-				im.setDisplayName(ChatColor.BLUE + "Adept Herbalism Tool");
+				im.setDisplayName(ChatColor.BLUE + "Adept Shears");
 			} else if (lvl > 59 && lvl <= 79) {
-				im.setDisplayName(ChatColor.DARK_PURPLE + "Expert Herbalism Tool");
+				im.setDisplayName(ChatColor.DARK_PURPLE + "Expert Shears");
 			} else {
-				im.setDisplayName(ChatColor.GOLD + "Master Herbalism Tool");
+				im.setDisplayName(ChatColor.GOLD + "Master Shears");
 			}
 				
 			//Set the item lore
@@ -302,7 +302,7 @@ public class Herbalism {
 		int expGoal = configHerbalismLevel.get(1);
 		
 		//Set the item name
-		meta.setDisplayName(ChatColor.WHITE + "Novice Herbalism Tool");
+		meta.setDisplayName(ChatColor.WHITE + "Novice Shears");
 		
 		//Set the item lore
 		ArrayList<String> lore = new ArrayList<String>();

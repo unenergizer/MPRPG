@@ -136,7 +136,7 @@ public class Fishing {
 				
 				//Send level up message.
 				player.sendMessage(MessageManager.selectMessagePrefix("debug") +
-						ChatColor.YELLOW + ChatColor.BOLD + "Your pick is now level " + newRodkLVL + ".");
+						ChatColor.YELLOW + ChatColor.BOLD + "Your fishing rod is now level " + newRodkLVL + ".");
 			} else {
 				
 				//Update the items meta and add 1 level.
@@ -147,7 +147,7 @@ public class Fishing {
 				
 				//Send level up message.
 				player.sendMessage(MessageManager.selectMessagePrefix("debug") +
-						ChatColor.YELLOW + ChatColor.BOLD + "Your pick is now level " + newRodkLVL + ".");
+						ChatColor.YELLOW + ChatColor.BOLD + "Your fishing rod is now level " + newRodkLVL + ".");
 			}
 		} else { //The players fishing rod has not leveled up.  Just add exp to it.
 			//Update the items meta and add 1 level.
@@ -175,9 +175,9 @@ public class Fishing {
 				//level up the players fishing rod.
 				player.sendMessage(MessageManager.showEXPLevel(expGain, currentRodEXP, expToNextLevel));
 				
-				int newPickLVL = currentRodLVL + 1;
+				int newRodLVL = currentRodLVL + 1;
 				player.sendMessage(MessageManager.selectMessagePrefix("debug") +
-						ChatColor.YELLOW + ChatColor.BOLD + "Your fishing rod is now level " + newPickLVL + ".");
+						ChatColor.YELLOW + ChatColor.BOLD + "Your fishing rod is now level " + newRodLVL + ".");
 			}
 		} else {
 			//Let user know fishing was not successful.
