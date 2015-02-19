@@ -10,6 +10,7 @@ import org.bukkit.entity.Player;
 
 import com.minepile.mprpg.MPRPG;
 import com.minepile.mprpg.managers.ChatManager;
+import com.minepile.mprpg.managers.LagManager;
 import com.minepile.mprpg.managers.MessageManager;
 import com.minepile.mprpg.player.PlayerManager;
 
@@ -181,6 +182,16 @@ public class CommandManager implements CommandExecutor{
 							targetName + " is offline.");
 				}
 			}
+		}
+		
+		//Show player the server lag.
+		if (label.equalsIgnoreCase("lag")) {
+			player.sendMessage("command recieved");
+			double tps = LagManager.getTPS();
+			double percent = LagManager.getLagPercent();
+			player.sendMessage(MessageManager.selectMessagePrefix("debug") +
+					"TPS: " + Double.valueOf(String.format("%.2f",tps)) + " - " +
+					"Lag: " + Double.valueOf(String.format("%.2f", percent)) + "%");
 		}
 		return false;
 	}

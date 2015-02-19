@@ -24,6 +24,7 @@ import com.minepile.mprpg.listeners.PlayerPickupItemListener;
 import com.minepile.mprpg.listeners.PlayerQuitListener;
 import com.minepile.mprpg.managers.BlockRegenerationManager;
 import com.minepile.mprpg.managers.ChatManager;
+import com.minepile.mprpg.managers.LagManager;
 import com.minepile.mprpg.managers.MessageManager;
 import com.minepile.mprpg.player.PlayerManager;
 import com.minepile.mprpg.player.PlayerMenuManager;
@@ -56,6 +57,7 @@ public class MPRPG extends JavaPlugin {
         BankChestManager.getInstance().setup(this);
         BlockRegenerationManager.getInstance().setup(this);
         ChatManager.getInstance().setup(this);
+        LagManager.getInstance().setup(this);
         MessageManager.getInstance().setup(this);
         PlayerManager.getInstance().setup(this);
         PlayerMenuManager.getInstance().setup(this);
@@ -91,6 +93,8 @@ public class MPRPG extends JavaPlugin {
         getCommand("ch").setExecutor(new CommandManager(this));
         getCommand("chatchanel").setExecutor(new CommandManager(this));
         getCommand("chat").setExecutor(new CommandManager(this));
+
+        getCommand("lag").setExecutor(new CommandManager(this));
         
         getCommand("msg").setExecutor(new CommandManager(this));
         getCommand("message").setExecutor(new CommandManager(this));
