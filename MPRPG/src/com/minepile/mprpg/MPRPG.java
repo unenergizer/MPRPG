@@ -22,6 +22,7 @@ import com.minepile.mprpg.listeners.PlayerInteractListener;
 import com.minepile.mprpg.listeners.PlayerJoinListener;
 import com.minepile.mprpg.listeners.PlayerPickupItemListener;
 import com.minepile.mprpg.listeners.PlayerQuitListener;
+import com.minepile.mprpg.listeners.WeatherChangeListener;
 import com.minepile.mprpg.managers.BlockRegenerationManager;
 import com.minepile.mprpg.managers.ChatManager;
 import com.minepile.mprpg.managers.LagManager;
@@ -87,19 +88,25 @@ public class MPRPG extends JavaPlugin {
         pluginManager.registerEvents(new PlayerJoinListener(this), this);
         pluginManager.registerEvents(new PlayerPickupItemListener(this), this);
         pluginManager.registerEvents(new PlayerQuitListener(this), this);
+        pluginManager.registerEvents(new WeatherChangeListener(this), this);
         
         //Setup Commands
+        //setting player chat channel
         getCommand("cc").setExecutor(new CommandManager(this));
         getCommand("ch").setExecutor(new CommandManager(this));
         getCommand("chatchanel").setExecutor(new CommandManager(this));
         getCommand("chat").setExecutor(new CommandManager(this));
-
+        
+        //get the server lag
         getCommand("lag").setExecutor(new CommandManager(this));
         
+        //private message other players
         getCommand("msg").setExecutor(new CommandManager(this));
         getCommand("message").setExecutor(new CommandManager(this));
         getCommand("pm").setExecutor(new CommandManager(this));
         getCommand("tell").setExecutor(new CommandManager(this));
+        
+        //send quick reply to the last private message a player had
         getCommand("r").setExecutor(new CommandManager(this));
         
         //Notify that plugin is fully finished loading.

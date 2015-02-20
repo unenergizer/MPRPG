@@ -286,13 +286,17 @@ public class Herbalism {
 			if (lvl <= 19) {
 				lore.add(ChatColor.GRAY + "" + ChatColor.ITALIC + "Shears made of wood and dull stone.");
 			} else if (lvl > 19 && lvl <= 39) {
-				lore.add(ChatColor.GRAY + "" + ChatColor.ITALIC + "Shears made of wood and reinforced with sharp stone.");
+				lore.add(ChatColor.GRAY + "" + ChatColor.ITALIC + "Shears made of wood and"); 
+				lore.add(ChatColor.GRAY + "" + ChatColor.ITALIC + "reinforced with sharp stone.");
 			} else if (lvl > 29 && lvl <= 59) {
-				lore.add(ChatColor.GRAY + "" + ChatColor.ITALIC + "Shears made of wood and reinforced with sharp iron.");
+				lore.add(ChatColor.GRAY + "" + ChatColor.ITALIC + "Shears made of wood and"); 
+				lore.add(ChatColor.GRAY + "" + ChatColor.ITALIC + "reinforced with sharp iron.");
 			} else if (lvl > 59 && lvl <= 79) {
-				lore.add(ChatColor.GRAY + "" + ChatColor.ITALIC + "Shears made of wood and reinforced with sharp gold.");
+				lore.add(ChatColor.GRAY + "" + ChatColor.ITALIC + "Shears made of wood and"); 
+				lore.add(ChatColor.GRAY + "" + ChatColor.ITALIC + "reinforced with sharp gold.");
 			} else {
-				lore.add(ChatColor.GRAY + "" + ChatColor.ITALIC + "Shears made of wood and reinforced with sharp diamond.");
+				lore.add(ChatColor.GRAY + "" + ChatColor.ITALIC + "Shears made of wood and"); 
+				lore.add(ChatColor.GRAY + "" + ChatColor.ITALIC + "reinforced with sharp diamond.");
 			}
 			
 			//Set the item lore

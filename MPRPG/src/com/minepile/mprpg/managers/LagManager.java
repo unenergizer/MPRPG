@@ -62,9 +62,9 @@ public class LagManager {
         scheduler.scheduleSyncRepeatingTask(plugin, new Runnable() {
             @Override
             public void run() {
-            	TICKS[(TICK_COUNT% TICKS.length)] = System.currentTimeMillis();
+            	TICKS[(TICK_COUNT % TICKS.length)] = System.currentTimeMillis();
            	 
-                TICK_COUNT+= 1;
+                TICK_COUNT += 1;
             }
         }, 100L, 1L);
 	}

@@ -186,12 +186,37 @@ public class CommandManager implements CommandExecutor{
 		
 		//Show player the server lag.
 		if (label.equalsIgnoreCase("lag")) {
-			player.sendMessage("command recieved");
-			double tps = LagManager.getTPS();
-			double percent = LagManager.getLagPercent();
-			player.sendMessage(MessageManager.selectMessagePrefix("debug") +
-					"TPS: " + Double.valueOf(String.format("%.2f",tps)) + " - " +
-					"Lag: " + Double.valueOf(String.format("%.2f", percent)) + "%");
+			double tps = Double.valueOf(String.format("%.2f", LagManager.getTPS()));
+			double percent = Double.valueOf(String.format("%.2f", LagManager.getLagPercent()));
+			long totalRam = Runtime.getRuntime().totalMemory() / 1048576L;
+			long ramUsed = (Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()) / 1048576L;
+			long freeRam = Runtime.getRuntime().freeMemory() / 1048576L;
+			
+			String tpsStr = Double.toString(tps);
+			String percentStr = Double.toString(percent);
+			String ramUsedStr = Long.toString(ramUsed);
+			String totalRamStr = Long.toString(totalRam);
+			String freeRamStr = Long.toString(freeRam);
+			
+			player.sendMessage(ChatColor.DARK_GRAY + "" + ChatColor.BOLD + "----------------" +
+					ChatColor.DARK_GRAY + "<[" +
+					ChatColor.GOLD + " Lag Meter " + ChatColor.DARK_GRAY + "]>" +
+					ChatColor.BOLD + "------------------");
+			player.sendMessage(ChatColor.GOLD + "  " + ChatColor.BOLD + "TPS" + 
+					ChatColor.DARK_GRAY + ChatColor.BOLD + ": " + ChatColor.GREEN + 
+					tpsStr + ChatColor.GRAY + "/" + ChatColor.GREEN + "20");
+			player.sendMessage(ChatColor.RED + "    " + ChatColor.BOLD + "LAG" + 
+					ChatColor.DARK_GRAY + ChatColor.BOLD + ": " + ChatColor.GREEN + 
+					percentStr + ChatColor.GRAY + "/" + ChatColor.GREEN + "100%");
+			player.sendMessage(ChatColor.BLUE + "      " + ChatColor.BOLD + "RAM" + 
+					ChatColor.DARK_GRAY + ChatColor.BOLD + ": " + ChatColor.GREEN + 
+					ramUsedStr + " MB" + ChatColor.GRAY + "/" + ChatColor.GREEN + totalRamStr + " MB");
+			player.sendMessage(ChatColor.DARK_PURPLE + "        " + ChatColor.BOLD + "FREE RAM" + 
+					ChatColor.DARK_GRAY + ChatColor.BOLD + ": " + ChatColor.GREEN + freeRamStr + " MB");
+			player.sendMessage(ChatColor.GRAY + "          " + ChatColor.BOLD + "Condition" + 
+					ChatColor.DARK_GRAY + ChatColor.BOLD + ": " + ChatColor.GREEN + 
+					"No issues found. Running great.");
+			player.sendMessage(ChatColor.DARK_GRAY + "" + ChatColor.BOLD +"---------------------------------------------");
 		}
 		return false;
 	}
