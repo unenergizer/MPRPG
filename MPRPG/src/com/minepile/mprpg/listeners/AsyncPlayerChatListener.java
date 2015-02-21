@@ -83,7 +83,7 @@ public class AsyncPlayerChatListener implements Listener{
 						ChatColor.GRAY + "%s" + ChatColor.DARK_GRAY + ": " + 
 						ChatColor.WHITE + "%s");
 			} else if (chatFocus.equalsIgnoreCase("trade")) {
-				event.setFormat(ChatColor.BLUE + "" + ChatColor.BOLD + "Trade " +
+				event.setFormat(ChatColor.DARK_AQUA + "" + ChatColor.BOLD + "Trade " +
 						prefix + clanTag +
 						ChatColor.GRAY + "%s" + ChatColor.DARK_GRAY + ": " + 
 						ChatColor.WHITE + "%s");

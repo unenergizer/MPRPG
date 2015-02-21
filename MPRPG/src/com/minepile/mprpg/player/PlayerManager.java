@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 
+import me.mgone.bossbarapi.BossbarAPI;
 import net.md_5.bungee.api.ChatColor;
 
 import org.bukkit.Bukkit;
@@ -40,12 +41,12 @@ public class PlayerManager {
 	static int baseEnergyRegenRate = 1;
 	
 	//Base attributes
-	static int dexterity = 0;
-	static int intellect = 0;
-	static int luck = 0;
-	static int personality = 0;
-	static int strength = 0;
-	static int vitality = 0;
+	static int dexterity = 8;
+	static int intellect = 8;
+	static int luck = 5;
+	static int personality = 5;
+	static int strength = 10;
+	static int vitality = 9;
 	
 	//Create instance
 	public static PlayerManager getInstance() {
@@ -67,8 +68,25 @@ public class PlayerManager {
 		for (Player players : Bukkit.getOnlinePlayers()) {
 			setupPlayer(players);
 		}
-	}	
+	}
 	
+	public static void updatePlayerBossbar(Player player) {
+		
+		int playerlvlexp = player.getLevel();
+		String playerLevel = Integer.toString(playerlvlexp);
+		String playerMana = Integer.toString(100);
+		String playerStamina = Integer.toString(100);
+		
+		BossbarAPI.setMessage(player, ChatColor.AQUA + "" + ChatColor.BOLD + "    " +
+				"LVL " + ChatColor.AQUA + playerLevel + ChatColor.DARK_GRAY + ChatColor.BOLD + 
+				"  -  " + ChatColor.LIGHT_PURPLE + ChatColor.BOLD + "Mana " + 
+				ChatColor.LIGHT_PURPLE + playerMana +  " / " + playerMana + ChatColor.DARK_GRAY + ChatColor.BOLD + 
+				"  -  " + ChatColor.GREEN + ChatColor.BOLD + "Stamina " + ChatColor.GREEN + playerStamina + "%  " );
+	}
+	
+	//Sets a players health points.  
+	//If heal == true, then the player is being healed.
+	//If heal == false, the player is being damaged.
 	public static void setPlayerHealthPoints(Player player, double hpAmount, boolean heal) {
 		String playerName = player.getName();
 		int currentHP = healthPoints.get(playerName);
@@ -77,7 +95,7 @@ public class PlayerManager {
 		if (heal == true) { //Player is being healed.
 			double newHP = currentHP + hpAmount;
 			int maxHP = maxHealthPoints.get(playerName);
-			int hpBarPercent = (int) ((20 * newHP) / maxHP);
+			int hpBarPercent = (int) ((200 * newHP) / maxHP);
 			int hpPercent = (int) ((100 * newHP) / maxHP);
 			
 			
@@ -104,7 +122,7 @@ public class PlayerManager {
 					healthPoints.put(playerName, maxHP);
 					
 					//Sets the players hearts on the player bar.
-					player.setHealth(20);
+					player.setHealth(200);
 					
 					//Send the player the debug message.
 					player.sendMessage(ChatColor.GREEN + "         +" + 
@@ -118,7 +136,7 @@ public class PlayerManager {
 		} else { //Player is being hurt.
 			double newHP = currentHP - hpAmount;
 			int maxHP = maxHealthPoints.get(playerName);
-			int hpBarPercent = (int) ((20 * newHP) / maxHP);
+			int hpBarPercent = (int) ((200 * newHP) / maxHP);
 			int hpPercent = (int) ((100 * newHP) / maxHP);
 			
 			//Play a sound for the player.  This is necessary
@@ -157,6 +175,9 @@ public class PlayerManager {
         	createPlayerConfig(player);
         }
         
+        //Monster bar at the top of the screen.
+      	updatePlayerBossbar(player);
+        
         //Read armor and set statistics.
         //update HashMap info
         healthPoints.put(playerName, baseHealthPoints);
@@ -173,7 +194,7 @@ public class PlayerManager {
     	vitalityMap.put(playerName, getPlayerConfigInt(player, "attribute.vitality"));
         
         //Set players health to max on the health bar.
-        player.setHealth(20);
+        player.setMaxHealth(200);
         
         //Give new players the MinePile game menu.
         PlayerMenuManager.givePlayerMenu(player);
@@ -215,12 +236,12 @@ public class PlayerManager {
         playerConfig.set("permissions.dev", 0);
         playerConfig.set("permissions.mod", 0);
         
-        playerConfig.set("attribute.dexterity", 0);
-        playerConfig.set("attribute.intellect", 0);
-        playerConfig.set("attribute.luck", 0);
-        playerConfig.set("attribute.personality", 0);
-        playerConfig.set("attribute.strength", 0);
-        playerConfig.set("attribute.vitality", 0);
+        playerConfig.set("attribute.dexterity", dexterity);
+        playerConfig.set("attribute.intellect", intellect);
+        playerConfig.set("attribute.luck", luck);
+        playerConfig.set("attribute.personality", personality);
+        playerConfig.set("attribute.strength", strength);
+        playerConfig.set("attribute.vitality", vitality);
 
         playerConfig.set("setting.chat.languagefilter", 1);
         playerConfig.set("setting.chat.focus", "local");
@@ -238,18 +259,13 @@ public class PlayerManager {
         
         playerConfig.set("economy.gold", 0);
         playerConfig.set("economy.silver", 0);
-        playerConfig.set("economy.copper", 32);
+        playerConfig.set("economy.copper", 15);
         playerConfig.set("economy.portalCash", 0);
         playerConfig.set("economy.bankRows", 1);
         playerConfig.set("economy.shopRows", 1);
 
         playerConfig.set("clan.id", 0);
         playerConfig.set("clan.tag", null);
-        
-        playerConfig.set("profession.blackSmithingLVL", 1);
-        playerConfig.set("profession.blackSmithingEXP", 0);
-        playerConfig.set("profession.cookingLVL", 1);
-        playerConfig.set("profession.cookingEXP", 0);
 
         try {
             playerConfig.save(configFile);

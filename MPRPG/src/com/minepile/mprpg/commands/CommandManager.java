@@ -70,18 +70,18 @@ public class CommandManager implements CommandExecutor{
 						if (arg.equalsIgnoreCase(currentChannel)) {
 							//Tell the player their chat channel has NOT been changed.
 							player.sendMessage(ChatColor.RED + "" + ChatColor.BOLD + 
-									"       Your are already in channel " + ChatColor.RED + 
+									"       Your are already in the " + ChatColor.WHITE + 
 									ChatColor.BOLD + ChatColor.UNDERLINE + arg + 
-									ChatColor.RED + ChatColor.BOLD + ".");
+									ChatColor.RED + ChatColor.BOLD + " channel.");
 						} else {
 							//Set the players chat channel focus.
 							PlayerManager.setPlayerConfigString(player, "setting.chat.focus", arg);
 						
 							//Tell the player their chat channel has been changed.
 							player.sendMessage(ChatColor.YELLOW + "" + ChatColor.BOLD + 
-									"       Your chat channel has been changed to " + 
-									ChatColor.YELLOW + ChatColor.BOLD + ChatColor.UNDERLINE + arg + 
-									ChatColor.YELLOW + ChatColor.BOLD + ".");
+									"       Your are now chatting in the " + 
+									ChatColor.WHITE + ChatColor.BOLD + ChatColor.UNDERLINE + arg + 
+									ChatColor.YELLOW + ChatColor.BOLD + " channel.");
 						}
 						
 					} else {
