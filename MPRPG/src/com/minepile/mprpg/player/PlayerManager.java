@@ -81,7 +81,7 @@ public class PlayerManager {
 				"LVL " + ChatColor.AQUA + playerLevel + ChatColor.DARK_GRAY + ChatColor.BOLD + 
 				"  -  " + ChatColor.LIGHT_PURPLE + ChatColor.BOLD + "Mana " + 
 				ChatColor.LIGHT_PURPLE + playerMana +  " / " + playerMana + ChatColor.DARK_GRAY + ChatColor.BOLD + 
-				"  -  " + ChatColor.GREEN + ChatColor.BOLD + "Stamina " + ChatColor.GREEN + playerStamina + "%  " );
+				"  -  " + ChatColor.GREEN + ChatColor.BOLD + "Stamina " + ChatColor.GREEN + playerStamina + "%" );
 	}
 	
 	//Sets a players health points.  

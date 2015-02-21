@@ -7,6 +7,7 @@ import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.inventory.ItemStack;
 
 import com.minepile.mprpg.MPRPG;
+import com.minepile.mprpg.equipment.ArmorManager;
 
 public class PlayerPickupItemListener implements Listener{
 	
@@ -50,53 +51,72 @@ public class PlayerPickupItemListener implements Listener{
 		
 		//Tier #1
 		case LEATHER_BOOTS:
+			ArmorManager.makeArmor(player, event.getItem());
 			break;
 		case LEATHER_CHESTPLATE:
-			player.sendMessage("picked up a lether chestplate");
+			ArmorManager.makeArmor(player, event.getItem());
 			break;
 		case LEATHER_HELMET:
+			ArmorManager.makeArmor(player, event.getItem());
 			break;
 		case LEATHER_LEGGINGS:
+			ArmorManager.makeArmor(player, event.getItem());
 			break;
 			
 		//Tier #2	
 		case CHAINMAIL_BOOTS:
+			ArmorManager.makeArmor(player, event.getItem());
 			break;
 		case CHAINMAIL_CHESTPLATE:
+			ArmorManager.makeArmor(player, event.getItem());
 			break;
 		case CHAINMAIL_HELMET:
+			ArmorManager.makeArmor(player, event.getItem());
 			break;
 		case CHAINMAIL_LEGGINGS:
+			ArmorManager.makeArmor(player, event.getItem());
 			break;
 			
 		//Tier #3	
 		case IRON_BOOTS:
+			ArmorManager.makeArmor(player, event.getItem());
 			break;
 		case IRON_CHESTPLATE:
+			ArmorManager.makeArmor(player, event.getItem());
 			break;
 		case IRON_HELMET:
+			ArmorManager.makeArmor(player, event.getItem());
 			break;
 		case IRON_LEGGINGS:
+			ArmorManager.makeArmor(player, event.getItem());
 			break;
 			
 		//Tier #4
 		case GOLD_BOOTS:
+			ArmorManager.makeArmor(player, event.getItem());
 			break;
 		case GOLD_CHESTPLATE:
+			ArmorManager.makeArmor(player, event.getItem());
 			break;
 		case GOLD_HELMET:
+			ArmorManager.makeArmor(player, event.getItem());
 			break;
 		case GOLD_LEGGINGS:
+			ArmorManager.makeArmor(player, event.getItem());
 			break;
 		
 		//Tier #5
 		case DIAMOND_BOOTS:
+			ArmorManager.makeArmor(player, event.getItem());
 			break;
 		case DIAMOND_CHESTPLATE:
+			ArmorManager.makeArmor(player, event.getItem());
 			break;
 		case DIAMOND_HELMET:
+			ArmorManager.makeArmor(player, event.getItem());
 			break;
 		case DIAMOND_LEGGINGS:
+			ArmorManager.makeArmor(player, event.getItem());
 			break;
 		
 		
