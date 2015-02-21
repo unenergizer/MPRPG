@@ -31,7 +31,7 @@ public class ChatManager {
 	}
 	
 	public static String getClanTag(Player player) {
-		String clanTag = PlayerManager.getPlayerConfigString(player, "permissions.clan.tag");
+		String clanTag = PlayerManager.getPlayerConfigString(player, "clan.tag");
 		
 		if (clanTag != null) {
 			return ChatColor.GRAY + "[" + clanTag.toUpperCase() + "] ";

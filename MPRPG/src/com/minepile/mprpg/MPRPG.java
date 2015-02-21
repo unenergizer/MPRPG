@@ -54,6 +54,11 @@ public class MPRPG extends JavaPlugin {
         	reloadConfig();
         }
         
+        
+        /////////////////////////////
+        /// Setup Class Instances ///
+        /////////////////////////////
+        
         //setup manager instances
         BankChestManager.getInstance().setup(this);
         BlockRegenerationManager.getInstance().setup(this);
@@ -75,7 +80,10 @@ public class MPRPG extends JavaPlugin {
         Herbalism.getInstance().setup(this);
         Mining.getInstance().setup(this);
         
-        //setup event listeners
+        /////////////////////////////
+        /// Setup Event Listeners ///
+        /////////////////////////////
+        
         pluginManager.registerEvents(new AsyncPlayerChatListener(this), this);
         pluginManager.registerEvents(new BlockBreakListener(this), this);
         pluginManager.registerEvents(new BlockPlaceListener(this), this);
@@ -90,7 +98,10 @@ public class MPRPG extends JavaPlugin {
         pluginManager.registerEvents(new PlayerQuitListener(this), this);
         pluginManager.registerEvents(new WeatherChangeListener(this), this);
         
-        //Setup Commands
+        //////////////////////
+        /// Setup Commands ///
+        //////////////////////
+        
         //setting player chat channel
         getCommand("cc").setExecutor(new CommandManager(this));
         getCommand("ch").setExecutor(new CommandManager(this));

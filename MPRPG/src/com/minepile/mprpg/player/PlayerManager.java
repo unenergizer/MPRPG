@@ -25,18 +25,27 @@ public class PlayerManager {
 	static HashMap<String, Integer> maxHealthPoints = new HashMap<String, Integer>();
 	static HashMap<String, Integer> energyPoints = new HashMap<String, Integer>();
 	static HashMap<String, Integer> maxEnergyPoints = new HashMap<String, Integer>();
-	static HashMap<String, Integer> swordDamage = new HashMap<String, Integer>();
-	static HashMap<String, Integer> polearmDamage = new HashMap<String, Integer>();
-	static HashMap<String, Integer> wandDamage = new HashMap<String, Integer>();
-	static HashMap<String, Integer> axeDamage = new HashMap<String, Integer>();
-	static HashMap<String, Integer> iceDamage = new HashMap<String, Integer>();
-	static HashMap<String, Integer> fireDamage = new HashMap<String, Integer>();
+	
+	static HashMap<String, Integer> dexterityMap = new HashMap<String, Integer>();
+	static HashMap<String, Integer> intellectMap = new HashMap<String, Integer>();
+	static HashMap<String, Integer> luckMap = new HashMap<String, Integer>();
+	static HashMap<String, Integer> personalityMap = new HashMap<String, Integer>();
+	static HashMap<String, Integer> strengthMap = new HashMap<String, Integer>();
+	static HashMap<String, Integer> vitalityMap = new HashMap<String, Integer>();
 	
 	//Base statistic rates
 	static int baseHealthPoints = 500;
 	static int baseEnergyPoints = 500;
 	static int baseHealthRegenRate = 1;
 	static int baseEnergyRegenRate = 1;
+	
+	//Base attributes
+	static int dexterity = 0;
+	static int intellect = 0;
+	static int luck = 0;
+	static int personality = 0;
+	static int strength = 0;
+	static int vitality = 0;
 	
 	//Create instance
 	public static PlayerManager getInstance() {
@@ -148,14 +157,22 @@ public class PlayerManager {
         	createPlayerConfig(player);
         }
         
-        //Read armor and set stats
+        //Read armor and set statistics.
         //update HashMap info
         healthPoints.put(playerName, baseHealthPoints);
         maxHealthPoints.put(playerName, baseHealthPoints);
         energyPoints.put(playerName, baseEnergyPoints);
         maxEnergyPoints.put(playerName, baseEnergyPoints);
         
-        //Set players health to max on the healthbar.
+        //Setup players attributes
+    	dexterityMap.put(playerName, getPlayerConfigInt(player, "attribute.dexterity"));
+    	intellectMap.put(playerName, getPlayerConfigInt(player, "attribute.intellect"));
+    	luckMap.put(playerName, getPlayerConfigInt(player, "attribute.luck"));
+    	personalityMap.put(playerName, getPlayerConfigInt(player, "attribute.personality"));
+    	strengthMap.put(playerName, getPlayerConfigInt(player, "attribute.strength"));
+    	vitalityMap.put(playerName, getPlayerConfigInt(player, "attribute.vitality"));
+        
+        //Set players health to max on the health bar.
         player.setHealth(20);
         
         //Give new players the MinePile game menu.
@@ -168,17 +185,19 @@ public class PlayerManager {
 		//Get Player's name.
 		String playerName = player.getName();
 		
-		//remove player from hashmaps.
+		//remove player from HashMaps.
 		healthPoints.remove(playerName);
 		maxHealthPoints.remove(playerName);
 		energyPoints.remove(playerName);
 		maxEnergyPoints.remove(playerName);
-		swordDamage.remove(playerName);
-		polearmDamage.remove(playerName);
-		wandDamage.remove(playerName);
-		axeDamage.remove(playerName);
-		iceDamage.remove(playerName);
-		fireDamage.remove(playerName);
+		
+		//remove player attributes from HashMaps.
+		dexterityMap.remove(playerName);
+    	intellectMap.remove(playerName);
+    	luckMap.remove(playerName);
+    	personalityMap.remove(playerName);
+    	strengthMap.remove(playerName);
+    	vitalityMap.remove(playerName);
 	}
 
     public static void createPlayerConfig(Player player) {
