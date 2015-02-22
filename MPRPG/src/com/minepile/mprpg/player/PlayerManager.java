@@ -24,8 +24,10 @@ public class PlayerManager {
 	//MAIN STATS
 	static HashMap<String, Integer> healthPoints = new HashMap<String, Integer>();
 	static HashMap<String, Integer> maxHealthPoints = new HashMap<String, Integer>();
-	static HashMap<String, Integer> energyPoints = new HashMap<String, Integer>();
-	static HashMap<String, Integer> maxEnergyPoints = new HashMap<String, Integer>();
+	static HashMap<String, Integer> staminaPoints = new HashMap<String, Integer>();
+	static HashMap<String, Integer> maxStaminaPoints = new HashMap<String, Integer>();
+	static HashMap<String, Integer> manaPoints = new HashMap<String, Integer>();
+	static HashMap<String, Integer> maxManaPoints = new HashMap<String, Integer>();
 	
 	static HashMap<String, Integer> dexterityMap = new HashMap<String, Integer>();
 	static HashMap<String, Integer> intellectMap = new HashMap<String, Integer>();
@@ -35,10 +37,12 @@ public class PlayerManager {
 	static HashMap<String, Integer> vitalityMap = new HashMap<String, Integer>();
 	
 	//Base statistic rates
-	static int baseHealthPoints = 500;
-	static int baseEnergyPoints = 500;
+	static int baseHealthPoints = 100;
+	static int baseStaminaPoints = 100;
+	static int baseManaPoints = 100;
 	static int baseHealthRegenRate = 1;
-	static int baseEnergyRegenRate = 1;
+	static int baseStaminaRegenRate = 1;
+	static int baseManaRegenRate = 1;
 	
 	//Base attributes
 	static int dexterity = 8;
@@ -73,15 +77,19 @@ public class PlayerManager {
 	public static void updatePlayerBossbar(Player player) {
 		
 		int playerlvlexp = player.getLevel();
+		int playerMana = manaPoints.get(player.getName());
+		int playerMaxMana = maxManaPoints.get(player.getName());
+		
 		String playerLevel = Integer.toString(playerlvlexp);
-		String playerMana = Integer.toString(100);
-		String playerStamina = Integer.toString(100);
+		String playerMaxManaString = Integer.toString(playerMaxMana);
+		String playerStaminaString = Integer.toString((staminaPoints.get(player.getName()) * 100 ) / maxStaminaPoints.get(player.getName()));
+		
 		
 		BossbarAPI.setMessage(player, ChatColor.AQUA + "" + ChatColor.BOLD + "    " +
 				"LVL " + ChatColor.AQUA + playerLevel + ChatColor.DARK_GRAY + ChatColor.BOLD + 
 				"  -  " + ChatColor.LIGHT_PURPLE + ChatColor.BOLD + "Mana " + 
-				ChatColor.LIGHT_PURPLE + playerMana +  " / " + playerMana + ChatColor.DARK_GRAY + ChatColor.BOLD + 
-				"  -  " + ChatColor.GREEN + ChatColor.BOLD + "Stamina " + ChatColor.GREEN + playerStamina + "%" );
+				ChatColor.LIGHT_PURPLE + playerMana +  " / " + playerMaxManaString + ChatColor.DARK_GRAY + ChatColor.BOLD + 
+				"  -  " + ChatColor.GREEN + ChatColor.BOLD + "Stamina " + ChatColor.GREEN + playerStaminaString + "%");
 	}
 	
 	//Sets a players health points.  
@@ -146,6 +154,7 @@ public class PlayerManager {
 			
 			//Sets new HP value in the hashMap.
 			healthPoints.put(playerName, (int) newHP);
+			manaPoints.put(playerName, manaPoints.get(playerName) - 1);
 			
 			//Sets the players red hearts on the player bar.
 			player.setHealth(hpBarPercent);
@@ -175,15 +184,14 @@ public class PlayerManager {
         	createPlayerConfig(player);
         }
         
-        //Monster bar at the top of the screen.
-      	updatePlayerBossbar(player);
-        
         //Read armor and set statistics.
         //update HashMap info
         healthPoints.put(playerName, baseHealthPoints);
         maxHealthPoints.put(playerName, baseHealthPoints);
-        energyPoints.put(playerName, baseEnergyPoints);
-        maxEnergyPoints.put(playerName, baseEnergyPoints);
+        staminaPoints.put(playerName, baseStaminaPoints);
+        maxStaminaPoints.put(playerName, baseStaminaPoints);
+        manaPoints.put(playerName, baseManaPoints);
+        maxManaPoints.put(playerName, baseManaPoints);
         
         //Setup players attributes
     	dexterityMap.put(playerName, getPlayerConfigInt(player, "attribute.dexterity"));
@@ -198,6 +206,31 @@ public class PlayerManager {
         
         //Give new players the MinePile game menu.
         PlayerMenuManager.givePlayerMenu(player);
+        
+        //Monster bar at the top of the screen.
+      	updatePlayerBossbar(player);
+	}
+	
+	public static void updateHashMap(Player player, String attribute, int x) {
+        String playerName = player.getName();
+		
+		healthPoints.put(playerName, baseHealthPoints);
+		
+        maxHealthPoints.put(playerName, maxHealthPoints.get(playerName) + x);
+		player.sendMessage("new hp: " + maxHealthPoints.get(playerName).toString());
+		
+        staminaPoints.put(playerName, baseStaminaPoints);
+        maxStaminaPoints.put(playerName, baseStaminaPoints);
+        manaPoints.put(playerName, baseManaPoints);
+        maxManaPoints.put(playerName, baseManaPoints);
+        
+        //Setup players attributes
+    	dexterityMap.put(playerName, getPlayerConfigInt(player, "attribute.dexterity"));
+    	intellectMap.put(playerName, getPlayerConfigInt(player, "attribute.intellect"));
+    	luckMap.put(playerName, getPlayerConfigInt(player, "attribute.luck"));
+    	personalityMap.put(playerName, getPlayerConfigInt(player, "attribute.personality"));
+    	strengthMap.put(playerName, getPlayerConfigInt(player, "attribute.strength"));
+    	vitalityMap.put(playerName, getPlayerConfigInt(player, "attribute.vitality"));
 	}
 	
 	//Remove players from the game. Will remove players
@@ -209,8 +242,10 @@ public class PlayerManager {
 		//remove player from HashMaps.
 		healthPoints.remove(playerName);
 		maxHealthPoints.remove(playerName);
-		energyPoints.remove(playerName);
-		maxEnergyPoints.remove(playerName);
+		staminaPoints.remove(playerName);
+		maxStaminaPoints.remove(playerName);
+		manaPoints.remove(playerName);
+		maxManaPoints.remove(playerName);
 		
 		//remove player attributes from HashMaps.
 		dexterityMap.remove(playerName);

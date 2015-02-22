@@ -318,7 +318,6 @@ public class BlockBreakListener implements Listener{
 			event.setCancelled(true);
 			break;
 		case YELLOW_FLOWER:
-			player.sendMessage("You broke: " + blockType.toString());
 			if(tool.equals(Material.SHEARS)) {
 				//The player used the right tool, so lets try to add EXP.
 				Herbalism.toggleHerbalism(player);

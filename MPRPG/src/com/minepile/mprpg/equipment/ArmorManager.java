@@ -1,10 +1,14 @@
 package com.minepile.mprpg.equipment;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.EntityType;
+import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -12,6 +16,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import com.minepile.mprpg.MPRPG;
+import com.minepile.mprpg.player.PlayerManager;
 
 public class ArmorManager {
 	
@@ -28,6 +33,30 @@ public class ArmorManager {
 	@SuppressWarnings("static-access")
 	public void setup(MPRPG plugin) {
 		this.plugin = plugin;
+	}
+	
+	public enum LoreType {
+		
+		EXP("EXP"),
+		DMG("DMG"),
+		HP("HP"),
+		STRENGTH("STR"),
+		INTELLECT("INT"),
+		CRIT("CRIT"),
+		ITEMFIND("item find"),
+		GOLDFIND("gold find");
+
+		private String name;
+
+		LoreType(String s)
+		{
+			this.name = s;
+		}
+
+		public String getName()
+		{
+			return name;
+		}
 	}
 	
 	//TODO: Use or delete.
@@ -56,6 +85,53 @@ public class ArmorManager {
 		}
 	}
 	
+	public static int getLore(HumanEntity player) {
+		
+		for (ItemStack item : player.getEquipment().getArmorContents()) {
+        	player.sendMessage(ChatColor.GRAY + "Armor loop");
+			
+        	if (item != null && item.hasItemMeta() && item.getItemMeta().hasLore()) {
+	        	ItemMeta im = item.getItemMeta();
+				player.sendMessage(ChatColor.GRAY + "hasItemMeta == true");
+				
+				List<String> lore = im.getLore();
+				String allLore = lore.toString().toLowerCase();
+				
+				player.sendMessage(allLore);
+				
+				Pattern pattern = Pattern.compile("(hp:)[ ][0-9]+");
+				Matcher matcher = pattern.matcher(allLore);
+				
+		        if (matcher.find()) {
+		        	String getNums = matcher.group(0).toString();
+		        	
+		        	player.sendMessage("matcher string: " + getNums);
+		        	
+		        	Pattern numsOnly = Pattern.compile("[0-9]+");
+		        	Matcher numMatch = numsOnly.matcher(getNums);
+		        	
+		        	player.sendMessage("fist: " + matcher.group(0));
+		        	
+		        	if (numMatch.find()) {
+		        		player.sendMessage("second: " + numMatch.group(0));
+		        		player.sendMessage(ChatColor.GREEN + "HP updated!! match: " + numMatch.group(0).toString());
+			        	PlayerManager.updateHashMap((Player) player, "hp", Integer.valueOf(numMatch.group(0)).intValue());
+			        	PlayerManager.setPlayerHealthPoints((Player)player, Double.valueOf(numMatch.group(0)).doubleValue(), false);
+		        	}
+		        	
+		        	//int match = Integer.valueOf(matcher.group(1));
+		        	//player.sendMessage(ChatColor.GREEN + "HP updated!! match: " + Integer.toString(match));
+		        	//PlayerManager.updateHashMap((Player) player, "hp", Integer.valueOf(matcher.group(1)).intValue());
+		        }
+	        } else {
+	        	player.sendMessage("resetting player");
+	        	PlayerManager.setupPlayer((Player) player);
+	        }
+			
+		}
+		return 0;
+	}
+	
 	public static void setLore(Player player, Item item) {
 		
 		player.sendMessage("setLore() invoked");
@@ -81,12 +157,9 @@ public class ArmorManager {
 				
 			//Set the item lore
 			ArrayList<String> lore = new ArrayList<String>();
-			lore.add(ChatColor.GRAY + "" + ChatColor.BOLD + "HP: " + ChatColor.RESET +
-					ChatColor.LIGHT_PURPLE + hp );
-			lore.add(ChatColor.GRAY + "" + ChatColor.BOLD + "DMG: " + 
-					ChatColor.RESET + ChatColor.BLUE + dmg);
-			lore.add(ChatColor.RED + "" + ChatColor.BOLD + "Gold Find: " + 
-					ChatColor.GRAY + " " + goldFind + "%");
+			lore.add(ChatColor.GRAY + "" + ChatColor.BOLD + "HP: " + hp );
+			lore.add(ChatColor.GRAY + "" + ChatColor.BOLD + "DMG: " + dmg);
+			lore.add(ChatColor.RED + "" + ChatColor.BOLD + "Gold Find: " + goldFind + "%");
 			lore.add(" ");//create blank space
 			
 			
