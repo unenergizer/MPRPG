@@ -127,6 +127,10 @@ public class MPRPG extends JavaPlugin {
         //get the server lag
         getCommand("lag").setExecutor(new CommandManager(this));
         
+        //get the server lag
+        getCommand("armorstats").setExecutor(new CommandManager(this));
+        getCommand("lorestats").setExecutor(new CommandManager(this));
+        
         //private message other players
         getCommand("msg").setExecutor(new CommandManager(this));
         getCommand("message").setExecutor(new CommandManager(this));

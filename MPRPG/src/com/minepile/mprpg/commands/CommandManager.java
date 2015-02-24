@@ -9,6 +9,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import com.minepile.mprpg.MPRPG;
+import com.minepile.mprpg.equipment.LoreManager;
 import com.minepile.mprpg.managers.ChatManager;
 import com.minepile.mprpg.managers.LagManager;
 import com.minepile.mprpg.managers.MessageManager;
@@ -277,7 +278,17 @@ public class CommandManager implements CommandExecutor{
 						"No issues found. Running great.");
 				player.sendMessage(ChatColor.DARK_GRAY + "" + ChatColor.BOLD +"---------------------------------------------");
 			}
-		} else {
+			
+			//Display the players lore stats.
+		    if (cmd.getLabel().equalsIgnoreCase("lorestats") || cmd.getLabel().equalsIgnoreCase("armorstats")) {
+		      if (!(sender instanceof Player)) {
+		        return false;
+		      }
+		      LoreManager.displayLoreStats((Player)sender);
+		      return true;
+		    }
+		        
+		} else { //The command sent was not by a player.
 			sender.sendMessage("Please do not use the console to run this command.");
 		}
 		return false;

@@ -25,4 +25,8 @@ commands:
       description: Used to send other players private messages.
    lag:
       description: Get the server TPS and lag percent.
+   armorstats:
+      description: Get the players current armor and weapon stats.
+   lorestats:
+      description: Get the players current armor and weapon stats.
   

@@ -327,28 +327,55 @@ public class LoreManager {
 		}
 		return speed;
 	}
-
+	
+	/*
+	 * Applies a players HP ARMOR + HP Base to get total HP.
+	 * 
+	 * @param entity A living entity.
+	 */
 	public static void applyHpBonus(LivingEntity entity) {
+		//If the entity is not valid, cancel this method.
 		if (!entity.isValid()) {
 			return;
 		}
+		//Get armor HP bonuses
 		Integer hpToAdd = Integer.valueOf(getHpBonus(entity));
+		
+		//Make sure the entity is a player.
 		if ((entity instanceof Player)) {
+			
+			//If the players HP is greater than the base HP + HP bonus,
+			//set the players HP.  BaseHP + Armor HP.
 			if (entity.getHealth() > getBaseHealth((Player)entity) + hpToAdd.intValue()) {
+				//Set player HP. BaseHP + Armor HP
 				entity.setHealth(getBaseHealth((Player)entity) + hpToAdd.intValue());
 			}
+			
+			//Change the players MAX HP.
 			entity.setMaxHealth(getBaseHealth((Player)entity) + hpToAdd.intValue());
 		}
 	}
 
 	public static int getHpBonus(LivingEntity entity) {
 		Integer hpToAdd = Integer.valueOf(0);
+		
+		//Loop through the armor slots and find armor.
 		for (ItemStack item : entity.getEquipment().getArmorContents()) {
+			
+			//If the item is not null and has meta and has lore, continue.
 			if ((item != null) && (item.hasItemMeta()) && (item.getItemMeta().hasLore())) {
+				
+				//Create an array list of "Lore" strings and add them to it.
 				List<String> lore = item.getItemMeta().getLore();
+				
+				//Convert the array to a string, and make it all lowercase.
 				String allLore = lore.toString().toLowerCase();
+				
+				//Prepare for text matching using regular expressions.
 				Matcher negmatcher = negHealthRegex.matcher(allLore);
 				Matcher matcher = healthRegex.matcher(allLore);
+				
+				//Find the new value.
 				if (matcher.find()) {
 					hpToAdd = Integer.valueOf(hpToAdd.intValue() + Integer.valueOf(matcher.group(1)).intValue());
 				}
@@ -360,30 +387,49 @@ public class LoreManager {
 				}
 			}
 		}
+		//Return the HP value.
 		return hpToAdd.intValue();
 	}
-
+	
+	//Get player base health points.
+	//This is defined in the PlayerManager.
 	public static int getBaseHealth(Player player) {
 		int hp = PlayerManager.getBaseHealthPoints();
 		return hp;
 	}
-
+	
+	/*
+	 * Get the players regeneration bonuses.
+	 * 
+	 * @param entity A living entity.
+	 */
 	public static int getRegenBonus(LivingEntity entity) {
+		//If entity is not valid, lets cancel the method.
 		if (!entity.isValid()) {
 			return 0;
 		}
+		//Regeneration bonus
 		Integer regenBonus = Integer.valueOf(0);
+		
+		//Loop through the armor slots and get the Regeneration Bonus for all Armor.
 		for (ItemStack item : entity.getEquipment().getArmorContents()) {
+			
+			//If the item is not null and the item has meta and item lore, continue.
 			if ((item != null) && (item.hasItemMeta()) && (item.getItemMeta().hasLore())) {
+				
+				//Create an array list of strings, and add the item lore to it.
 				List<String> lore = item.getItemMeta().getLore();
+				//Get the lore array, and make each entry lowercase.
 				String allLore = lore.toString().toLowerCase();
-
+				//Prepare to use regular expressions to find the regeneration lore.
 				Matcher matcher = regenRegex.matcher(allLore);
+				//If we can find a RegenBonus in the armor, then lets get that and add it to the end value.
 				if (matcher.find()) {
 					regenBonus = Integer.valueOf(regenBonus.intValue() + Integer.valueOf(matcher.group(1)).intValue());
 				}
 			}
 		}
+		//Return the regeneration bonus.
 		return regenBonus.intValue();
 	}
 
@@ -434,28 +480,40 @@ public class LoreManager {
 		}
 		return (int)Math.round(Math.random() * (damageMax.intValue() - damageMin.intValue()) + damageMin.intValue() + damageBonus.intValue() + getCritDamage(entity));
 	}
-
+	
 	public static boolean useRangeOfDamage(LivingEntity entity) {
+		//If the entity is not valid, lets exit the method.
 		if (!entity.isValid()) {
 			return false;
 		}
+		//Lets loop through the armor slots and get the armor contents.
 		for (ItemStack item : entity.getEquipment().getArmorContents()) {
+			
+			//If the armor slot is not null and the item has meta and the item has lore, continue.
 			if ((item != null) && (item.hasItemMeta()) && (item.getItemMeta().hasLore())) {
+				//Create an array of strings from the items lore.
 				List<String> lore = item.getItemMeta().getLore();
+				//Convert the array of strings to a single string, all lower case.
 				String allLore = lore.toString().toLowerCase();
-
+				//Prepare the string to math the damage range.
 				Matcher rangeMatcher = damageRangeRegex.matcher(allLore);
+				//If a match is found, return true.
 				if (rangeMatcher.find()) {
 					return true;
 				}
 			}
 		}
+		//Get the item in the players hand (looking for a weapon).
 		ItemStack item = entity.getEquipment().getItemInHand();
+		//If the item is not null and the item has meta and the item has lore, continue.
 		if ((item != null) && (item.hasItemMeta()) && (item.getItemMeta().hasLore())) {
+			//Get the items lore.
 			Object lore = item.getItemMeta().getLore();
+			//Convert the array of strings to a single string, all lower case.
 			String allLore = lore.toString().toLowerCase();
-
+			//Prepare the string to math the damage range.
 			Matcher rangeMatcher = damageRangeRegex.matcher(allLore);
+			//If a match is found, return true.
 			if (rangeMatcher.find()) {
 				return true;
 			}
@@ -465,43 +523,48 @@ public class LoreManager {
 
 	private static int getPermissionsHealth(Player player){
 		int hp = PlayerManager.getBaseHealthPoints();
-		try {
-			hp = PlayerManager.getBaseHealthPoints();
-		} catch (Exception e) {
-			return hp;
-		}
 		return hp;
 	}
 
-	public static void displayLoreStats(Player sender)
-	{
+	public static void displayLoreStats(Player sender) {
 		HashSet<String> message = new HashSet<String>();
 		if (getHpBonus(sender) != 0) {
-			message.add(ChatColor.GRAY + "HitPoints" + ": " + ChatColor.WHITE + getHpBonus(sender));
+			message.add(ChatColor.GRAY + "" + ChatColor.BOLD + "HitPoints" + 
+					ChatColor.DARK_GRAY + ChatColor.BOLD + ": " + ChatColor.WHITE + getHpBonus(sender));
 		}
 		if (getRegenBonus(sender) != 0) {
-			message.add(ChatColor.GRAY + "Regeneration" + ": " + ChatColor.WHITE + getRegenBonus(sender));
+			message.add(ChatColor.GRAY + "" + ChatColor.BOLD + "Regeneration" + 
+					ChatColor.DARK_GRAY + ChatColor.BOLD + ": " + ChatColor.WHITE + getRegenBonus(sender));
 		}
 		if (getStaminaSpeed(sender) != 0) {
-			message.add(ChatColor.GRAY + "Stamina Speed" + ": " + ChatColor.WHITE + getStaminaSpeed(sender));
+			message.add(ChatColor.GRAY + "" + ChatColor.BOLD + "Stamina Speed" + 
+					ChatColor.DARK_GRAY + ChatColor.BOLD + ": " + ChatColor.WHITE + getStaminaSpeed(sender));
 		}
 		if (getDamageBonus(sender) != 0) {
-			message.add(ChatColor.GRAY + "Damage" + ": " + ChatColor.WHITE + getDamageBonus(sender));
+			message.add(ChatColor.GRAY + "" + ChatColor.BOLD + "Damage" + 
+					ChatColor.DARK_GRAY + ChatColor.BOLD + ": " + ChatColor.WHITE + getDamageBonus(sender));
 		}
 		if (getDodgeBonus(sender) != 0) {
-			message.add(ChatColor.GRAY + "Dodge" + ": " + ChatColor.WHITE + getDodgeBonus(sender) + "%");
+			message.add(ChatColor.GRAY + "" + ChatColor.BOLD + "Dodge" + 
+					ChatColor.DARK_GRAY + ChatColor.BOLD + ": " + ChatColor.WHITE + getDodgeBonus(sender) +
+					ChatColor.GRAY + "%");
 		}
 		if (getCritChance(sender) != 0) {
-			message.add(ChatColor.GRAY + "Critical Hit Chance" + ": " + ChatColor.WHITE + getCritChance(sender) + "%");
+			message.add(ChatColor.GRAY + "" + ChatColor.BOLD + "Critical Hit Chance" + 
+					ChatColor.DARK_GRAY + ChatColor.BOLD + ": " + ChatColor.WHITE + getCritChance(sender) +
+					ChatColor.GRAY + "%");
 		}
 		if (getCritDamage(sender) != 0) {
-			message.add(ChatColor.GRAY + "Critical Damage" + ": " + ChatColor.WHITE + getCritDamage(sender));
+			message.add(ChatColor.GRAY + "" + ChatColor.BOLD + "Critical Damage" + 
+					ChatColor.DARK_GRAY + ChatColor.BOLD + ": " + ChatColor.WHITE + getCritDamage(sender));
 		}
 		if (getLifeSteal(sender) != 0) {
-			message.add(ChatColor.GRAY + "Life Steal" + ": " + ChatColor.WHITE + getLifeSteal(sender));
+			message.add(ChatColor.GRAY + "" + ChatColor.BOLD + "Life Steal" + 
+					ChatColor.DARK_GRAY + ChatColor.BOLD + ": " + ChatColor.WHITE + getLifeSteal(sender));
 		}
 		if (getArmorBonus(sender) != 0) {
-			message.add(ChatColor.GRAY + "Armor" + ": " + ChatColor.WHITE + getArmorBonus(sender));
+			message.add(ChatColor.GRAY + "" + ChatColor.BOLD + "Armor" + 
+					ChatColor.DARK_GRAY + ChatColor.BOLD + ": " + ChatColor.WHITE + getArmorBonus(sender));
 		}
 		String newMessage = "";
 		for (String toSend : message)
