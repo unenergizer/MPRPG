@@ -85,8 +85,13 @@ public class ArmorManager {
 		}
 	}
 	
-	public static int getLore(HumanEntity player) {
+	public static int getLore(HumanEntity entity) {
 		
+		Player player = (Player) entity;
+		
+    	player.sendMessage("resetting player");
+    	PlayerManager.resetPlayerHashMap(player);
+    	
 		for (ItemStack item : player.getEquipment().getArmorContents()) {
         	player.sendMessage(ChatColor.GRAY + "Armor loop");
 			
@@ -115,8 +120,7 @@ public class ArmorManager {
 		        	if (numMatch.find()) {
 		        		player.sendMessage("second: " + numMatch.group(0));
 		        		player.sendMessage(ChatColor.GREEN + "HP updated!! match: " + numMatch.group(0).toString());
-			        	PlayerManager.updateHashMap((Player) player, "hp", Integer.valueOf(numMatch.group(0)).intValue());
-			        	PlayerManager.setPlayerHealthPoints((Player)player, Double.valueOf(numMatch.group(0)).doubleValue(), false);
+			        	PlayerManager.updatePlayerHashMap((Player) player, "hp", Integer.valueOf(numMatch.group(0)).intValue());
 		        	}
 		        	
 		        	//int match = Integer.valueOf(matcher.group(1));
@@ -125,9 +129,8 @@ public class ArmorManager {
 		        }
 	        } else {
 	        	player.sendMessage("resetting player");
-	        	PlayerManager.setupPlayer((Player) player);
+	        	PlayerManager.resetPlayerHashMap(player);
 	        }
-			
 		}
 		return 0;
 	}
@@ -145,7 +148,7 @@ public class ArmorManager {
 			player.sendMessage("setLore() invoked - containsLore == null");
 			
 			//Setup variables
-			int hp = 100;
+			int hp = 20;
 			int dmg = 5;
 			int goldFind = 1;
 			
@@ -157,8 +160,8 @@ public class ArmorManager {
 				
 			//Set the item lore
 			ArrayList<String> lore = new ArrayList<String>();
-			lore.add(ChatColor.GRAY + "" + ChatColor.BOLD + "HP: " + hp );
-			lore.add(ChatColor.GRAY + "" + ChatColor.BOLD + "DMG: " + dmg);
+			lore.add(ChatColor.GRAY + "" + ChatColor.BOLD + "+" + hp + " health");
+			lore.add(ChatColor.GRAY + "" + ChatColor.BOLD + "+" + dmg + " damage");
 			lore.add(ChatColor.RED + "" + ChatColor.BOLD + "Gold Find: " + goldFind + "%");
 			lore.add(" ");//create blank space
 			

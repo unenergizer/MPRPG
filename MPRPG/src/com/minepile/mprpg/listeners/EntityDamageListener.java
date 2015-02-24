@@ -8,7 +8,6 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.inventory.ItemStack;
 
 import com.minepile.mprpg.MPRPG;
-import com.minepile.mprpg.player.PlayerManager;
 
 public class EntityDamageListener implements Listener{
 	
@@ -32,15 +31,11 @@ public class EntityDamageListener implements Listener{
 			
 			Player player = (Player) event.getEntity(); //Player who was attacked
 			ItemStack weapon = player.getItemInHand();
-			double damage = event.getDamage();
 			
 			//Lets cancel fishing rod damage.
 			if (weapon.getType().equals(Material.FISHING_ROD)) {
 				player.sendMessage("EntityDamageEvent");
 				event.setCancelled(true);
-			} else {
-				//Now do manual health removal.
-				PlayerManager.setPlayerHealthPoints(player, damage, false);
 			}
 		}
 		

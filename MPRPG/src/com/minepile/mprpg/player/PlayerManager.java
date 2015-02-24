@@ -37,9 +37,9 @@ public class PlayerManager {
 	static HashMap<String, Integer> vitalityMap = new HashMap<String, Integer>();
 	
 	//Base statistic rates
-	static int baseHealthPoints = 100;
-	static int baseStaminaPoints = 100;
-	static int baseManaPoints = 100;
+	static int baseHealthPoints = 20;
+	static int baseStaminaPoints = 20;
+	static int baseManaPoints = 20;
 	static int baseHealthRegenRate = 1;
 	static int baseStaminaRegenRate = 1;
 	static int baseManaRegenRate = 1;
@@ -202,7 +202,7 @@ public class PlayerManager {
     	vitalityMap.put(playerName, getPlayerConfigInt(player, "attribute.vitality"));
         
         //Set players health to max on the health bar.
-        player.setMaxHealth(200);
+        //player.setMaxHealth(200);
         
         //Give new players the MinePile game menu.
         PlayerMenuManager.givePlayerMenu(player);
@@ -211,7 +211,7 @@ public class PlayerManager {
       	updatePlayerBossbar(player);
 	}
 	
-	public static void updateHashMap(Player player, String attribute, int x) {
+	public static void updatePlayerHashMap(Player player, String attribute, int x) {
         String playerName = player.getName();
 		
 		healthPoints.put(playerName, baseHealthPoints);
@@ -219,6 +219,26 @@ public class PlayerManager {
         maxHealthPoints.put(playerName, maxHealthPoints.get(playerName) + x);
 		player.sendMessage("new hp: " + maxHealthPoints.get(playerName).toString());
 		
+        staminaPoints.put(playerName, baseStaminaPoints);
+        maxStaminaPoints.put(playerName, baseStaminaPoints);
+        manaPoints.put(playerName, baseManaPoints);
+        maxManaPoints.put(playerName, baseManaPoints);
+        
+        //Setup players attributes
+    	dexterityMap.put(playerName, getPlayerConfigInt(player, "attribute.dexterity"));
+    	intellectMap.put(playerName, getPlayerConfigInt(player, "attribute.intellect"));
+    	luckMap.put(playerName, getPlayerConfigInt(player, "attribute.luck"));
+    	personalityMap.put(playerName, getPlayerConfigInt(player, "attribute.personality"));
+    	strengthMap.put(playerName, getPlayerConfigInt(player, "attribute.strength"));
+    	vitalityMap.put(playerName, getPlayerConfigInt(player, "attribute.vitality"));
+	}
+	
+	public static void resetPlayerHashMap(Player player) {
+        String playerName = player.getName();
+		
+		healthPoints.put(playerName, baseHealthPoints);
+		
+        maxHealthPoints.put(playerName, baseHealthPoints);
         staminaPoints.put(playerName, baseStaminaPoints);
         maxStaminaPoints.put(playerName, baseStaminaPoints);
         manaPoints.put(playerName, baseManaPoints);
@@ -355,5 +375,149 @@ public class PlayerManager {
         File configFile = new File("plugins/MPRPG/players/" + uuid + ".yml");
         FileConfiguration playerConfig =  YamlConfiguration.loadConfiguration(configFile);
         return  (String) playerConfig.get(value);
+	}
+
+	public static HashMap<String, Integer> getHealthPoints() {
+		return healthPoints;
+	}
+
+	public static void setHealthPoints(HashMap<String, Integer> healthPoints) {
+		PlayerManager.healthPoints = healthPoints;
+	}
+
+	public static HashMap<String, Integer> getMaxHealthPoints() {
+		return maxHealthPoints;
+	}
+
+	public static void setMaxHealthPoints(HashMap<String, Integer> maxHealthPoints) {
+		PlayerManager.maxHealthPoints = maxHealthPoints;
+	}
+
+	public static HashMap<String, Integer> getStaminaPoints() {
+		return staminaPoints;
+	}
+
+	public static void setStaminaPoints(HashMap<String, Integer> staminaPoints) {
+		PlayerManager.staminaPoints = staminaPoints;
+	}
+
+	public static HashMap<String, Integer> getMaxStaminaPoints() {
+		return maxStaminaPoints;
+	}
+
+	public static void setMaxStaminaPoints(HashMap<String, Integer> maxStaminaPoints) {
+		PlayerManager.maxStaminaPoints = maxStaminaPoints;
+	}
+
+	public static HashMap<String, Integer> getManaPoints() {
+		return manaPoints;
+	}
+
+	public static void setManaPoints(HashMap<String, Integer> manaPoints) {
+		PlayerManager.manaPoints = manaPoints;
+	}
+
+	public static HashMap<String, Integer> getMaxManaPoints() {
+		return maxManaPoints;
+	}
+
+	public static void setMaxManaPoints(HashMap<String, Integer> maxManaPoints) {
+		PlayerManager.maxManaPoints = maxManaPoints;
+	}
+
+	public static int getBaseHealthPoints() {
+		return baseHealthPoints;
+	}
+
+	public static void setBaseHealthPoints(int baseHealthPoints) {
+		PlayerManager.baseHealthPoints = baseHealthPoints;
+	}
+
+	public static int getBaseStaminaPoints() {
+		return baseStaminaPoints;
+	}
+
+	public static void setBaseStaminaPoints(int baseStaminaPoints) {
+		PlayerManager.baseStaminaPoints = baseStaminaPoints;
+	}
+
+	public static int getBaseManaPoints() {
+		return baseManaPoints;
+	}
+
+	public static void setBaseManaPoints(int baseManaPoints) {
+		PlayerManager.baseManaPoints = baseManaPoints;
+	}
+
+	public static int getBaseHealthRegenRate() {
+		return baseHealthRegenRate;
+	}
+
+	public static void setBaseHealthRegenRate(int baseHealthRegenRate) {
+		PlayerManager.baseHealthRegenRate = baseHealthRegenRate;
+	}
+
+	public static int getBaseStaminaRegenRate() {
+		return baseStaminaRegenRate;
+	}
+
+	public static void setBaseStaminaRegenRate(int baseStaminaRegenRate) {
+		PlayerManager.baseStaminaRegenRate = baseStaminaRegenRate;
+	}
+
+	public static int getBaseManaRegenRate() {
+		return baseManaRegenRate;
+	}
+
+	public static void setBaseManaRegenRate(int baseManaRegenRate) {
+		PlayerManager.baseManaRegenRate = baseManaRegenRate;
+	}
+
+	public static int getDexterity() {
+		return dexterity;
+	}
+
+	public static void setDexterity(int dexterity) {
+		PlayerManager.dexterity = dexterity;
+	}
+
+	public static int getIntellect() {
+		return intellect;
+	}
+
+	public static void setIntellect(int intellect) {
+		PlayerManager.intellect = intellect;
+	}
+
+	public static int getLuck() {
+		return luck;
+	}
+
+	public static void setLuck(int luck) {
+		PlayerManager.luck = luck;
+	}
+
+	public static int getPersonality() {
+		return personality;
+	}
+
+	public static void setPersonality(int personality) {
+		PlayerManager.personality = personality;
+	}
+
+	public static int getStrength() {
+		return strength;
+	}
+
+	public static void setStrength(int strength) {
+		PlayerManager.strength = strength;
+	}
+
+	public static int getVitality() {
+		return vitality;
+	}
+
+	public static void setVitality(int vitality) {
+		PlayerManager.vitality = vitality;
 	}
 }

@@ -8,6 +8,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 
 import com.minepile.mprpg.MPRPG;
+import com.minepile.mprpg.equipment.LoreManager;
 import com.minepile.mprpg.managers.MessageManager;
 import com.minepile.mprpg.player.PlayerManager;
 
@@ -39,5 +40,7 @@ public class PlayerJoinListener implements Listener {
 		//Send player specific/private join message.
 		//This message is not displayed to all users.
 		player.sendMessage(ChatColor.GRAY + "Welcome " + playerName + "!");
+		
+		LoreManager.applyHpBonus(player);
 	}
 }

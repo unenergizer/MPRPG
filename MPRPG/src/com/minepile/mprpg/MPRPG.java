@@ -7,15 +7,21 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import com.minepile.mprpg.commands.CommandManager;
 import com.minepile.mprpg.equipment.ArmorManager;
+import com.minepile.mprpg.equipment.LoreManager;
 import com.minepile.mprpg.equipment.WeaponManager;
 import com.minepile.mprpg.inventory.BankChestManager;
 import com.minepile.mprpg.inventory.ShopChestManager;
 import com.minepile.mprpg.listeners.AsyncPlayerChatListener;
 import com.minepile.mprpg.listeners.BlockBreakListener;
 import com.minepile.mprpg.listeners.BlockPlaceListener;
+import com.minepile.mprpg.listeners.CraftItemListener;
 import com.minepile.mprpg.listeners.EntityDamageByEntityListener;
 import com.minepile.mprpg.listeners.EntityDamageListener;
+import com.minepile.mprpg.listeners.EntityDeathListener;
 import com.minepile.mprpg.listeners.EntityRegainHealthListener;
+import com.minepile.mprpg.listeners.EntityShootBowListener;
+import com.minepile.mprpg.listeners.EntityTargetListener;
+import com.minepile.mprpg.listeners.InventoryClickListener;
 import com.minepile.mprpg.listeners.InventoryCloseListener;
 import com.minepile.mprpg.listeners.PlayerDropItemListener;
 import com.minepile.mprpg.listeners.PlayerFishListener;
@@ -23,6 +29,7 @@ import com.minepile.mprpg.listeners.PlayerInteractListener;
 import com.minepile.mprpg.listeners.PlayerJoinListener;
 import com.minepile.mprpg.listeners.PlayerPickupItemListener;
 import com.minepile.mprpg.listeners.PlayerQuitListener;
+import com.minepile.mprpg.listeners.PlayerRespawnListener;
 import com.minepile.mprpg.listeners.WeatherChangeListener;
 import com.minepile.mprpg.managers.BlockRegenerationManager;
 import com.minepile.mprpg.managers.ChatManager;
@@ -72,6 +79,7 @@ public class MPRPG extends JavaPlugin {
         
         //setup equipment instances
         ArmorManager.getInstance().setup(this);
+        LoreManager.getInstance().setup(this);
         WeaponManager.getInstance().setup(this);
         
         //setup professions (game jobs) instances
@@ -88,9 +96,14 @@ public class MPRPG extends JavaPlugin {
         pluginManager.registerEvents(new AsyncPlayerChatListener(this), this);
         pluginManager.registerEvents(new BlockBreakListener(this), this);
         pluginManager.registerEvents(new BlockPlaceListener(this), this);
+        pluginManager.registerEvents(new CraftItemListener(this), this);
         pluginManager.registerEvents(new EntityDamageByEntityListener(this), this);
         pluginManager.registerEvents(new EntityDamageListener(this), this);
+        pluginManager.registerEvents(new EntityDeathListener(this), this);
         pluginManager.registerEvents(new EntityRegainHealthListener(this), this);
+        pluginManager.registerEvents(new EntityShootBowListener(this), this);
+        pluginManager.registerEvents(new EntityTargetListener(this), this);
+        pluginManager.registerEvents(new InventoryClickListener(this), this);
         pluginManager.registerEvents(new InventoryCloseListener(this), this);
         pluginManager.registerEvents(new PlayerDropItemListener(this), this);
         pluginManager.registerEvents(new PlayerFishListener(this), this);
@@ -98,6 +111,7 @@ public class MPRPG extends JavaPlugin {
         pluginManager.registerEvents(new PlayerJoinListener(this), this);
         pluginManager.registerEvents(new PlayerPickupItemListener(this), this);
         pluginManager.registerEvents(new PlayerQuitListener(this), this);
+        pluginManager.registerEvents(new PlayerRespawnListener(this), this);
         pluginManager.registerEvents(new WeatherChangeListener(this), this);
         
         //////////////////////
@@ -130,6 +144,9 @@ public class MPRPG extends JavaPlugin {
 	public void onDisable() {
 		//Reset all plants and blocks that have been picked or mined.
 		BlockRegenerationManager.resetAllBlocks();
+		
+		//Clear LoreManager Log
+		LoreManager.staminaLog.clear();
 	}
 	
 }

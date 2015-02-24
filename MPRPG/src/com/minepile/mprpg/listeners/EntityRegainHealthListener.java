@@ -1,12 +1,13 @@
 package com.minepile.mprpg.listeners;
 
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityRegainHealthEvent;
 
 import com.minepile.mprpg.MPRPG;
-import com.minepile.mprpg.player.PlayerManager;
+import com.minepile.mprpg.equipment.LoreManager;
 
 public class EntityRegainHealthListener implements Listener{
 	
@@ -21,14 +22,13 @@ public class EntityRegainHealthListener implements Listener{
 	public void onEntityRegainHealth(EntityRegainHealthEvent event) {
 		if(event.getEntity() instanceof Player) {
 			
-			//cancel the event to do health custom health addition.
-			event.setCancelled(true);
-			
-			Player player = (Player) event.getEntity(); //Player who was attacked
-			double amount = event.getAmount();
-			
-			//Now do manual health removal.
-			PlayerManager.setPlayerHealthPoints(player, amount, true);
+			if (((event.getEntity() instanceof Player)) && 
+					(event.getRegainReason() == EntityRegainHealthEvent.RegainReason.SATIATED)) {
+				event.setAmount(event.getAmount() + LoreManager.getRegenBonus((LivingEntity)event.getEntity()));
+				if (event.getAmount() <= 0.0D) {
+					event.setCancelled(true);
+				}
+			}
 		}
 	}
 

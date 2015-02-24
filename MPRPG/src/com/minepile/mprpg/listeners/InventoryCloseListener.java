@@ -6,7 +6,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 
 import com.minepile.mprpg.MPRPG;
-import com.minepile.mprpg.equipment.ArmorManager;
+import com.minepile.mprpg.equipment.LoreManager;
 
 public class InventoryCloseListener implements Listener{
 	
@@ -19,10 +19,10 @@ public class InventoryCloseListener implements Listener{
 	
 	@EventHandler
 	public void onInventoryClose(InventoryCloseEvent event) {
-		event.getPlayer().sendMessage("InventoryCloseEvent");
 		if (event.getPlayer() instanceof Player) {
-			event.getPlayer().sendMessage("InventoryCloseEvent");
-			ArmorManager.getLore(event.getPlayer());
+			Player player = (Player) event.getPlayer();
+			
+			LoreManager.handleArmorRestriction(player);
 		}
 	}
 }
