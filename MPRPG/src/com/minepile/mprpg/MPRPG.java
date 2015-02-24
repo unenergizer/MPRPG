@@ -2,6 +2,7 @@ package com.minepile.mprpg;
 
 import java.io.File;
 
+import org.bukkit.Bukkit;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -53,7 +54,7 @@ public class MPRPG extends JavaPlugin {
 		this.pluginManager = getServer().getPluginManager();
 		
 		//Notify that plugin is starting to load all components
-		getLogger().info("Starting up MinePile:RPG now!");
+		Bukkit.getConsoleSender().sendMessage("§b§lStarting up MinePile:RPG now!");
 		
         //Save config.yml if it doesn't exist. Reload it, if it does.
         if(!(new File("plugins/MPRPG/config.yml")).exists()){
@@ -141,16 +142,22 @@ public class MPRPG extends JavaPlugin {
         getCommand("r").setExecutor(new CommandManager(this));
         
         //Notify that plugin is fully finished loading.
-        getLogger().info("Start up has finished for MinePile:RPG!");
+        Bukkit.getConsoleSender().sendMessage("§b§lStart up has finished for MinePile:RPG!");
 	}
 	
 	@Override
 	public void onDisable() {
+		//Show the administrator the plugin closing message.
+		Bukkit.getConsoleSender().sendMessage("§c§lShutting down MinePile:RPG!");
+		
 		//Reset all plants and blocks that have been picked or mined.
 		BlockRegenerationManager.resetAllBlocks();
 		
 		//Clear LoreManager Log
 		LoreManager.staminaLog.clear();
+		
+		//Show the administrator that the plugin is finished closing.
+		Bukkit.getConsoleSender().sendMessage("§c§lShut down of MinePile:RPG is complete!");
 	}
 	
 }

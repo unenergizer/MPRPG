@@ -520,64 +520,64 @@ public class LoreManager {
 		}
 		return false;
 	}
-
-	private static int getPermissionsHealth(Player player){
-		int hp = PlayerManager.getBaseHealthPoints();
-		return hp;
-	}
-
-	public static void displayLoreStats(Player sender) {
+	
+	/*
+	 * This method displays the users current equipped armor and weapon lore statistics.
+	 * 
+	 * @param player The player who ran the "/armorstats" or "/lorestats" command.
+	 */
+	public static void displayLoreStats(Player player) {
 		HashSet<String> message = new HashSet<String>();
-		if (getHpBonus(sender) != 0) {
+		if (getHpBonus(player) != 0) {
 			message.add(ChatColor.GRAY + "" + ChatColor.BOLD + "HitPoints" + 
-					ChatColor.DARK_GRAY + ChatColor.BOLD + ": " + ChatColor.WHITE + getHpBonus(sender));
+					ChatColor.DARK_GRAY + ChatColor.BOLD + ": " + ChatColor.WHITE + getHpBonus(player));
 		}
-		if (getRegenBonus(sender) != 0) {
+		if (getRegenBonus(player) != 0) {
 			message.add(ChatColor.GRAY + "" + ChatColor.BOLD + "Regeneration" + 
-					ChatColor.DARK_GRAY + ChatColor.BOLD + ": " + ChatColor.WHITE + getRegenBonus(sender));
+					ChatColor.DARK_GRAY + ChatColor.BOLD + ": " + ChatColor.WHITE + getRegenBonus(player));
 		}
-		if (getStaminaSpeed(sender) != 0) {
+		if (getStaminaSpeed(player) != 0) {
 			message.add(ChatColor.GRAY + "" + ChatColor.BOLD + "Stamina Speed" + 
-					ChatColor.DARK_GRAY + ChatColor.BOLD + ": " + ChatColor.WHITE + getStaminaSpeed(sender));
+					ChatColor.DARK_GRAY + ChatColor.BOLD + ": " + ChatColor.WHITE + getStaminaSpeed(player));
 		}
-		if (getDamageBonus(sender) != 0) {
+		if (getDamageBonus(player) != 0) {
 			message.add(ChatColor.GRAY + "" + ChatColor.BOLD + "Damage" + 
-					ChatColor.DARK_GRAY + ChatColor.BOLD + ": " + ChatColor.WHITE + getDamageBonus(sender));
+					ChatColor.DARK_GRAY + ChatColor.BOLD + ": " + ChatColor.WHITE + getDamageBonus(player));
 		}
-		if (getDodgeBonus(sender) != 0) {
+		if (getDodgeBonus(player) != 0) {
 			message.add(ChatColor.GRAY + "" + ChatColor.BOLD + "Dodge" + 
-					ChatColor.DARK_GRAY + ChatColor.BOLD + ": " + ChatColor.WHITE + getDodgeBonus(sender) +
+					ChatColor.DARK_GRAY + ChatColor.BOLD + ": " + ChatColor.WHITE + getDodgeBonus(player) +
 					ChatColor.GRAY + "%");
 		}
-		if (getCritChance(sender) != 0) {
+		if (getCritChance(player) != 0) {
 			message.add(ChatColor.GRAY + "" + ChatColor.BOLD + "Critical Hit Chance" + 
-					ChatColor.DARK_GRAY + ChatColor.BOLD + ": " + ChatColor.WHITE + getCritChance(sender) +
+					ChatColor.DARK_GRAY + ChatColor.BOLD + ": " + ChatColor.WHITE + getCritChance(player) +
 					ChatColor.GRAY + "%");
 		}
-		if (getCritDamage(sender) != 0) {
+		if (getCritDamage(player) != 0) {
 			message.add(ChatColor.GRAY + "" + ChatColor.BOLD + "Critical Damage" + 
-					ChatColor.DARK_GRAY + ChatColor.BOLD + ": " + ChatColor.WHITE + getCritDamage(sender));
+					ChatColor.DARK_GRAY + ChatColor.BOLD + ": " + ChatColor.WHITE + getCritDamage(player));
 		}
-		if (getLifeSteal(sender) != 0) {
+		if (getLifeSteal(player) != 0) {
 			message.add(ChatColor.GRAY + "" + ChatColor.BOLD + "Life Steal" + 
-					ChatColor.DARK_GRAY + ChatColor.BOLD + ": " + ChatColor.WHITE + getLifeSteal(sender));
+					ChatColor.DARK_GRAY + ChatColor.BOLD + ": " + ChatColor.WHITE + getLifeSteal(player));
 		}
-		if (getArmorBonus(sender) != 0) {
+		if (getArmorBonus(player) != 0) {
 			message.add(ChatColor.GRAY + "" + ChatColor.BOLD + "Armor" + 
-					ChatColor.DARK_GRAY + ChatColor.BOLD + ": " + ChatColor.WHITE + getArmorBonus(sender));
+					ChatColor.DARK_GRAY + ChatColor.BOLD + ": " + ChatColor.WHITE + getArmorBonus(player));
 		}
 		String newMessage = "";
 		for (String toSend : message)
 		{
-			newMessage = newMessage + "     " + toSend;
+			newMessage = newMessage + ChatColor.DARK_GRAY + ",   " + toSend;
 			if (newMessage.length() > 40)
 			{
-				sender.sendMessage(newMessage);
+				player.sendMessage(newMessage);
 				newMessage = "";
 			}
 		}
 		if (newMessage.length() > 0) {
-			sender.sendMessage(newMessage);
+			player.sendMessage(newMessage);
 		}
 		message.clear();
 	}
