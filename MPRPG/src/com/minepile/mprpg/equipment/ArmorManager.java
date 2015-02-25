@@ -80,8 +80,6 @@ public class ArmorManager {
 			setLore(player, item);
 		} else if (armorType.equals(Material.LEATHER_LEGGINGS)) {
 			setLore(player, item);
-		} else {
-			player.sendMessage("makeArmor() this should not happen.");
 		}
 	}
 	
@@ -137,15 +135,11 @@ public class ArmorManager {
 	
 	public static void setLore(Player player, Item item) {
 		
-		player.sendMessage("setLore() invoked");
-		
 		ItemStack is = item.getItemStack();
 		ItemMeta im = is.getItemMeta();
 		boolean cointainsLore = im.hasLore();
 		
 		if (cointainsLore == false) {
-			
-			player.sendMessage("setLore() invoked - containsLore == null");
 			
 			//Setup variables
 			int hp = 20;
@@ -173,8 +167,6 @@ public class ArmorManager {
 			im.setLore(lore);
 			//Set the item meta
 			is.setItemMeta(im);
-		} else {
-			player.sendMessage("ContainsLore?");
 		}
 	}
 }

@@ -25,6 +25,7 @@ import com.minepile.mprpg.listeners.EntityTargetListener;
 import com.minepile.mprpg.listeners.InventoryClickListener;
 import com.minepile.mprpg.listeners.InventoryCloseListener;
 import com.minepile.mprpg.listeners.InventoryOpenListener;
+import com.minepile.mprpg.listeners.PlayerDeathListener;
 import com.minepile.mprpg.listeners.PlayerDropItemListener;
 import com.minepile.mprpg.listeners.PlayerFishListener;
 import com.minepile.mprpg.listeners.PlayerInteractListener;
@@ -113,6 +114,7 @@ public class MPRPG extends JavaPlugin {
         pluginManager.registerEvents(new InventoryCloseListener(this), this);
         pluginManager.registerEvents(new InventoryOpenListener(this), this);
         
+        pluginManager.registerEvents(new PlayerDeathListener(this), this);
         pluginManager.registerEvents(new PlayerDropItemListener(this), this);
         pluginManager.registerEvents(new PlayerFishListener(this), this);
         pluginManager.registerEvents(new PlayerInteractListener(this), this);
