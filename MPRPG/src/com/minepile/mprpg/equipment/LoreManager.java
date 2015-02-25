@@ -348,11 +348,15 @@ public class LoreManager {
 			//set the players HP.  BaseHP + Armor HP.
 			if (entity.getHealth() > getBaseHealth((Player)entity) + hpToAdd.intValue()) {
 				//Set player HP. BaseHP + Armor HP
-				entity.setHealth(getBaseHealth((Player)entity) + hpToAdd.intValue());
+				int newHP = getBaseHealth((Player)entity) + hpToAdd.intValue();
+				entity.setHealth(newHP);
+				entity.sendMessage(ChatColor.BLUE + "" + ChatColor.BOLD + "New HP: " + ChatColor.RESET + newHP);
 			}
 			
 			//Change the players MAX HP.
-			entity.setMaxHealth(getBaseHealth((Player)entity) + hpToAdd.intValue());
+			int newMaxHP = getBaseHealth((Player)entity) + hpToAdd.intValue();
+			entity.setMaxHealth(newMaxHP);
+			entity.sendMessage(ChatColor.BLUE + "" + ChatColor.BOLD + "New MaxHP: " + ChatColor.RESET + newMaxHP);
 		}
 	}
 
@@ -569,7 +573,7 @@ public class LoreManager {
 		String newMessage = "";
 		for (String toSend : message)
 		{
-			newMessage = newMessage + ChatColor.DARK_GRAY + ",   " + toSend;
+			newMessage = newMessage + "   " + toSend;
 			if (newMessage.length() > 40)
 			{
 				player.sendMessage(newMessage);
