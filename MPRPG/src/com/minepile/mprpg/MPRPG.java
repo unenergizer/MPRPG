@@ -24,6 +24,7 @@ import com.minepile.mprpg.listeners.EntityShootBowListener;
 import com.minepile.mprpg.listeners.EntityTargetListener;
 import com.minepile.mprpg.listeners.InventoryClickListener;
 import com.minepile.mprpg.listeners.InventoryCloseListener;
+import com.minepile.mprpg.listeners.InventoryOpenListener;
 import com.minepile.mprpg.listeners.PlayerDropItemListener;
 import com.minepile.mprpg.listeners.PlayerFishListener;
 import com.minepile.mprpg.listeners.PlayerInteractListener;
@@ -95,17 +96,23 @@ public class MPRPG extends JavaPlugin {
         /////////////////////////////
         
         pluginManager.registerEvents(new AsyncPlayerChatListener(this), this);
+        
         pluginManager.registerEvents(new BlockBreakListener(this), this);
         pluginManager.registerEvents(new BlockPlaceListener(this), this);
+        
         pluginManager.registerEvents(new CraftItemListener(this), this);
+        
         pluginManager.registerEvents(new EntityDamageByEntityListener(this), this);
         pluginManager.registerEvents(new EntityDamageListener(this), this);
         pluginManager.registerEvents(new EntityDeathListener(this), this);
         pluginManager.registerEvents(new EntityRegainHealthListener(this), this);
         pluginManager.registerEvents(new EntityShootBowListener(this), this);
         pluginManager.registerEvents(new EntityTargetListener(this), this);
+        
         pluginManager.registerEvents(new InventoryClickListener(this), this);
         pluginManager.registerEvents(new InventoryCloseListener(this), this);
+        pluginManager.registerEvents(new InventoryOpenListener(this), this);
+        
         pluginManager.registerEvents(new PlayerDropItemListener(this), this);
         pluginManager.registerEvents(new PlayerFishListener(this), this);
         pluginManager.registerEvents(new PlayerInteractListener(this), this);
@@ -113,6 +120,7 @@ public class MPRPG extends JavaPlugin {
         pluginManager.registerEvents(new PlayerPickupItemListener(this), this);
         pluginManager.registerEvents(new PlayerQuitListener(this), this);
         pluginManager.registerEvents(new PlayerRespawnListener(this), this);
+        
         pluginManager.registerEvents(new WeatherChangeListener(this), this);
         
         //////////////////////

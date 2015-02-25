@@ -49,6 +49,9 @@ public class InventoryClickListener implements Listener{
 				break;
 			}
 			
+			//Check the armor slot if the player has shift clicked.
+			//This will make check if the player has shift clicked
+			//armor into the armor slot.
 			if (event.isShiftClick()) {
 				delayedSlotUpdate(player);
 			}
