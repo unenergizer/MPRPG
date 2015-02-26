@@ -356,7 +356,7 @@ public class LoreManager {
 			//Change the players MAX HP.
 			int newMaxHP = getBaseHealth((Player)entity) + hpToAdd.intValue();
 			entity.setMaxHealth(newMaxHP);
-			entity.sendMessage(ChatColor.BLUE + "" + ChatColor.BOLD + "New MaxHP: " + ChatColor.RESET + newMaxHP);
+			entity.sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "New MaxHP: " + ChatColor.RESET + newMaxHP);
 		}
 	}
 

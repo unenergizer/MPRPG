@@ -27,6 +27,7 @@ public class InventoryOpenListener implements Listener{
 				event.setCancelled(true);
 				break;
 			case BEACON:
+				event.setCancelled(true);
 				break;
 			case BREWING:
 				event.setCancelled(true);
@@ -34,12 +35,16 @@ public class InventoryOpenListener implements Listener{
 			case CHEST:
 				break;
 			case CRAFTING:
+				event.setCancelled(true);
 				break;
 			case CREATIVE:
+				event.setCancelled(true);
 				break;
 			case DISPENSER:
+				event.setCancelled(true);
 				break;
 			case DROPPER:
+				event.setCancelled(true);
 				break;
 			case ENCHANTING:
 				event.setCancelled(true);
@@ -47,10 +52,13 @@ public class InventoryOpenListener implements Listener{
 			case ENDER_CHEST:
 				break;
 			case FURNACE:
+				event.setCancelled(true);
 				break;
 			case HOPPER:
+				event.setCancelled(true);
 				break;
 			case MERCHANT:
+				event.setCancelled(true);
 				break;
 			case PLAYER:
 				break;

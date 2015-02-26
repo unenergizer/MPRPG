@@ -36,6 +36,7 @@ import com.minepile.mprpg.listeners.PlayerRespawnListener;
 import com.minepile.mprpg.listeners.WeatherChangeListener;
 import com.minepile.mprpg.managers.BlockRegenerationManager;
 import com.minepile.mprpg.managers.ChatManager;
+import com.minepile.mprpg.managers.DiceRollManager;
 import com.minepile.mprpg.managers.LagManager;
 import com.minepile.mprpg.managers.MessageManager;
 import com.minepile.mprpg.player.PlayerManager;
@@ -74,6 +75,7 @@ public class MPRPG extends JavaPlugin {
         BankChestManager.getInstance().setup(this);
         BlockRegenerationManager.getInstance().setup(this);
         ChatManager.getInstance().setup(this);
+        DiceRollManager.getInstance().setup(this);
         LagManager.getInstance().setup(this);
         MessageManager.getInstance().setup(this);
         PlayerManager.getInstance().setup(this);
@@ -150,6 +152,9 @@ public class MPRPG extends JavaPlugin {
         
         //send quick reply to the last private message a player had
         getCommand("r").setExecutor(new CommandManager(this));
+        
+        //roll a dice
+        getCommand("roll").setExecutor(new CommandManager(this));
         
         //Notify that plugin is fully finished loading.
         Bukkit.getConsoleSender().sendMessage("§b§lStart up has finished for MinePile:RPG!");

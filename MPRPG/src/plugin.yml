@@ -29,4 +29,6 @@ commands:
       description: Get the players current armor and weapon stats.
    lorestats:
       description: Get the players current armor and weapon stats.
+   roll:
+      description: Rolls a dice to get a random number.
   
