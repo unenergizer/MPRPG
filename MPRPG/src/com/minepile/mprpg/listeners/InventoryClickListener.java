@@ -70,6 +70,6 @@ public class InventoryClickListener implements Listener{
 				LoreManager.applyHpBonus(player);
 
 			} //END Run method.
-		}, 10); //(20 ticks = 1 second)
+		}, 5); //(20 ticks = 1 second)
 	}
 }

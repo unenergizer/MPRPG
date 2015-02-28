@@ -312,12 +312,14 @@ public class BlockBreakListener implements Listener{
 			
 		default:
 			if (allPlayersCanBreakBlocks == false) {
-				//Cancel the block being broken.
-				event.setCancelled(true);	
-				//show debug message
-				if (MessageManager.canShowAdminDebugMessage() == true) {
-					player.sendMessage(MessageManager.selectMessagePrefix("debug") 
-							+ "You can not break blocks.");
+				//Cancel the block being broken if the player is not OP.
+				if (!player.isOp()) {
+					event.setCancelled(true);	
+					//show debug message
+					if (MessageManager.canShowAdminDebugMessage() == true) {
+						player.sendMessage(MessageManager.selectMessagePrefix("debug") 
+								+ "You can not break blocks.");
+					}
 				}
 			}
 			break;

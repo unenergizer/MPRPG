@@ -85,8 +85,8 @@ public class PlayerManager {
     	player.playSound(player.getLocation(), Sound.AMBIENCE_CAVE, .8f, .8f);
     	
     	//Add temporary potion effects.
-    	PotionEffect blind = new PotionEffect(PotionEffectType.BLINDNESS, 7*20, 10);
-		PotionEffect confuse = new PotionEffect(PotionEffectType.CONFUSION, 7*20, 10);
+    	PotionEffect blind = new PotionEffect(PotionEffectType.BLINDNESS, 6*20, 10);
+		PotionEffect confuse = new PotionEffect(PotionEffectType.CONFUSION, 6*20, 20);
 		blind.apply(player);
 		confuse.apply(player);
 	}

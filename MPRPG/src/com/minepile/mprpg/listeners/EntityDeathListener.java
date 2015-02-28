@@ -24,8 +24,6 @@ public class EntityDeathListener implements Listener{
 			Player player = (Player) event.getEntity();
 			
 			PlayerManager.teleportPlayerToSpawn(player);
-		} else {
-			event.getDrops().clear();
 		}
 	}
 }
