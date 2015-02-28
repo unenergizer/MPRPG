@@ -8,6 +8,7 @@ import me.mgone.bossbarapi.BossbarAPI;
 import net.md_5.bungee.api.ChatColor;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.Sound;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -72,6 +73,11 @@ public class PlayerManager {
 		for (Player players : Bukkit.getOnlinePlayers()) {
 			setupPlayer(players);
 		}
+	}
+	
+	public static void teleportPlayerToSpawn(Player player) {
+    	//Player must be new, lets teleport them to the new player starting point.
+    	player.teleport(new Location(Bukkit.getWorld("world"), 43, 78, -35));
 	}
 	
 	public static void updatePlayerBossbar(Player player) {
@@ -182,6 +188,9 @@ public class PlayerManager {
         if(!new File("plugins/MPRPG/players/" + uuid + ".yml").exists()){
         	//The players file does not exist. Lets create the player file now.
         	createPlayerConfig(player);
+        	
+        	//Teleport new players to the spawn location.
+        	teleportPlayerToSpawn(player);
         }
         
         //Read armor and set statistics.

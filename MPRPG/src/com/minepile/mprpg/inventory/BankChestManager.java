@@ -53,7 +53,7 @@ public class BankChestManager {
 
 	public static Inventory getBank(Player player) {
 		// TODO Auto-generated method stub
-		return null;
+		return player.getEnderChest();
 	}
 	
     public static void createPlayerBankConfig(Player player) {

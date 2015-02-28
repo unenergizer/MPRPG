@@ -19,7 +19,6 @@ public class LivingEntitySpawnerUtil {
 		entity.setCanPickupItems(false);
 		
 		setEntityID(entity.getUniqueId());
-		
 	}
 
 	public UUID getEntityID() {
