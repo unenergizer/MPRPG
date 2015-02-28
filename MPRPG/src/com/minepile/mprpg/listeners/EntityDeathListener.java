@@ -11,7 +11,6 @@ import com.minepile.mprpg.player.PlayerManager;
 public class EntityDeathListener implements Listener{
 	
 	public static MPRPG plugin;
-	public boolean allPlayersCanPlaceBlocks = true;
 	
 	@SuppressWarnings("static-access")
 	public EntityDeathListener(MPRPG plugin) {
@@ -25,7 +24,8 @@ public class EntityDeathListener implements Listener{
 			Player player = (Player) event.getEntity();
 			
 			PlayerManager.teleportPlayerToSpawn(player);
+		} else {
+			event.getDrops().clear();
 		}
-		
 	}
 }

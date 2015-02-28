@@ -13,6 +13,8 @@ import org.bukkit.Sound;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 
 import com.minepile.mprpg.MPRPG;
 
@@ -78,6 +80,15 @@ public class PlayerManager {
 	public static void teleportPlayerToSpawn(Player player) {
     	//Player must be new, lets teleport them to the new player starting point.
     	player.teleport(new Location(Bukkit.getWorld("world"), 43, 78, -35));
+    	
+    	//Play a sound effect for the player.
+    	player.playSound(player.getLocation(), Sound.AMBIENCE_CAVE, .8f, .8f);
+    	
+    	//Add temporary potion effects.
+    	PotionEffect blind = new PotionEffect(PotionEffectType.BLINDNESS, 7*20, 10);
+		PotionEffect confuse = new PotionEffect(PotionEffectType.CONFUSION, 7*20, 10);
+		blind.apply(player);
+		confuse.apply(player);
 	}
 	
 	public static void updatePlayerBossbar(Player player) {

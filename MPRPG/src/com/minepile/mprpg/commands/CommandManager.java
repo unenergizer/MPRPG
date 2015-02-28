@@ -329,7 +329,13 @@ public class CommandManager implements CommandExecutor{
 					player.sendMessage(ChatColor.DARK_GRAY + "" + ChatColor.BOLD +"---------------------------------------------");
 				}
 			}
-
+			
+			//Roll command. Used to get a random number.
+			if (cmd.getLabel().equalsIgnoreCase("spawn")) {
+				if (player.isOp()) {
+					PlayerManager.teleportPlayerToSpawn(player);
+				}
+			}
 
 		} else { //The command sent was not by a player.
 			sender.sendMessage("Please do not use the console to run this command.");

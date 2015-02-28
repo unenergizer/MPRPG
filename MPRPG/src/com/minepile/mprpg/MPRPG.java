@@ -157,6 +157,9 @@ public class MPRPG extends JavaPlugin {
         
         //roll a dice
         getCommand("roll").setExecutor(new CommandManager(this));
+     
+        //sends operator to the spawn location.
+        getCommand("spawn").setExecutor(new CommandManager(this));
         
         //Notify that plugin is fully finished loading.
         Bukkit.getConsoleSender().sendMessage("§b§lStart up has finished for MinePile:RPG!");

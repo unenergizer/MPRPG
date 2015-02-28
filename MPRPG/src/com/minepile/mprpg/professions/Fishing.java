@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import org.bukkit.ChatColor;
+import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -73,6 +74,7 @@ public class Fishing {
 			int expGain = calculateExpGain(10);
 
 			if (expGain != 0) {
+				player.getInventory().addItem(new ItemStack(Material.RAW_FISH, 1));
 				toggleRodUpdate(player, expGain, currentRodEXP, currentRodLVL);
 			} else {
 				//Let user know mining was not successful.
@@ -84,6 +86,7 @@ public class Fishing {
 			int expGain = calculateExpGain(11);
 
 			if (expGain != 0) {
+				player.getInventory().addItem(new ItemStack(Material.RAW_FISH, 1, (short) 1));
 				toggleRodUpdate(player, expGain, currentRodEXP, currentRodLVL);
 			} else {
 				//Let user know mining was not successful.
@@ -95,6 +98,7 @@ public class Fishing {
 			int expGain = calculateExpGain(12);
 
 			if (expGain != 0) {
+				player.getInventory().addItem(new ItemStack(Material.RAW_FISH, 1, (short) 2));
 				toggleRodUpdate(player, expGain, currentRodEXP, currentRodLVL);
 			} else {
 				//Let user know mining was not successful.
@@ -106,6 +110,7 @@ public class Fishing {
 			int expGain = calculateExpGain(13);
 
 			if (expGain != 0) {
+				player.getInventory().addItem(new ItemStack(Material.RAW_FISH, 1, (short) 3));
 				toggleRodUpdate(player, expGain, currentRodEXP, currentRodLVL);
 			} else {
 				//Let user know mining was not successful.

@@ -31,4 +31,6 @@ commands:
       description: Get the players current armor and weapon stats.
    roll:
       description: Rolls a dice to get a random number.
+   spawn:
+      description: Sends the player to spawn, if they are OP.
   

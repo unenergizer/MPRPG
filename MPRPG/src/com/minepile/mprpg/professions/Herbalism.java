@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import org.bukkit.ChatColor;
+import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -52,7 +53,7 @@ public class Herbalism {
 		
 	}
 	
-	public static void toggleHerbalism(Player player) {
+	public static void toggleHerbalism(Player player, Material plant) {
 		
 		ItemStack is = player.getInventory().getItemInHand();
 		ItemMeta im = is.getItemMeta();
@@ -73,6 +74,7 @@ public class Herbalism {
 			int expGain = calculateExpGain(10);
 
 			if (expGain != 0) {
+				player.getInventory().addItem(new ItemStack(plant, 1));
 				toggleToolUpdate(player, expGain, currentToolEXP, currentToolLVL);
 			} else {
 				//Let user know mining was not successful.
@@ -84,6 +86,7 @@ public class Herbalism {
 			int expGain = calculateExpGain(11);
 
 			if (expGain != 0) {
+				player.getInventory().addItem(new ItemStack(plant, 1));
 				toggleToolUpdate(player, expGain, currentToolEXP, currentToolLVL);
 			} else {
 				//Let user know mining was not successful.
@@ -95,6 +98,7 @@ public class Herbalism {
 			int expGain = calculateExpGain(12);
 
 			if (expGain != 0) {
+				player.getInventory().addItem(new ItemStack(plant, 1));
 				toggleToolUpdate(player, expGain, currentToolEXP, currentToolLVL);
 			} else {
 				//Let user know mining was not successful.
@@ -106,6 +110,7 @@ public class Herbalism {
 			int expGain = calculateExpGain(13);
 
 			if (expGain != 0) {
+				player.getInventory().addItem(new ItemStack(plant, 1));
 				toggleToolUpdate(player, expGain, currentToolEXP, currentToolLVL);
 			} else {
 				//Let user know mining was not successful.

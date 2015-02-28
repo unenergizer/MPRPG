@@ -18,8 +18,8 @@ public class BlockRegenerationManager {
 	static BlockRegenerationManager blockRegenManagerInstance = new BlockRegenerationManager();
 	
 	//Setup regeneration variables
-	public static int blockRegenTime = 10; 				//Time it takes for an block to regenerate.
-	public static int blockRegenRate = 5; 				//Default between 90 and 200 seconds.
+	public static int blockRegenTime = 120; 			//Time it takes for an block to regenerate. 120 = 2 Minutes (60*2)
+	public static int blockRegenRate = 5; 				//Default between 90 and 200 seconds intervals.
 	public static int blockRegenTick = blockRegenRate * 20; //Time it takes for an block to regenerate.
 	public static int blockID = 0;						//The current ID of the hashMaps.  Resets on reload.
 	public static int blockIDsRemoved = 0;				//Keep track of how many blocks we have removed from the HashMaps.
