@@ -35,7 +35,6 @@ public class EntityDamageByEntityListener implements Listener{
 
 			//Lets cancel fishing rod damage.
 			if (weapon.getType().equals(Material.FISHING_ROD)) {
-				player.sendMessage("EntityDamageByEntityEvent");
 				event.setCancelled(true);
 			}
 		}
@@ -59,10 +58,7 @@ public class EntityDamageByEntityListener implements Listener{
 			int newHP = victimHP - damage;
 			int hpBarPercent = (20 * (victimHP - damage) / victimMaxHP);
 			int hpPercent = (int) ((100 * newHP) / victimMaxHP);
-			
-			victim.sendMessage("CurrentHP: " + Integer.toString(victimHP));
-			
-			
+
 			LoreManager.addAttackCooldown(damagerName);
 
 			victim.setHealth(hpBarPercent);
@@ -88,17 +84,24 @@ public class EntityDamageByEntityListener implements Listener{
 				Player damager = (Player) arrow.getShooter();
 				String damagerName = damager.getName();
 				
+				int damage = (int) (Math.min(PlayerManager.getMaxHealthPoints(damagerName), PlayerManager.getHealthPoints(damagerName) + Math.min(LoreManager.getLifeSteal(damager), event.getDamage())));
 				int victimHP = PlayerManager.getHealthPoints(victimName);
+				int victimMaxHP = PlayerManager.getMaxHealthPoints(victimName);
+				int newHP = victimHP - damage;
+				int hpBarPercent = (20 * (victimHP - damage) / victimMaxHP);
+				int hpPercent = (int) ((100 * newHP) / victimMaxHP);
 				
 				LoreManager.addAttackCooldown(((Player)damager).getName());
 				
-				event.setDamage(Math.max(0, LoreManager.getDamageBonus(damager) - LoreManager.getArmorBonus((LivingEntity)event.getEntity())));
+				victim.setHealth(hpBarPercent);
+				victim.sendMessage(ChatColor.RED + "         -" + 
+						ChatColor.GRAY + damage + ChatColor.BOLD + " HP: " +
+						ChatColor.GRAY + ChatColor.BOLD + hpPercent + "%" +
+						ChatColor.GRAY + " [" + ChatColor.RED + newHP +
+						ChatColor.GRAY + " / " + ChatColor.GREEN + victimMaxHP +
+						ChatColor.GRAY + "]");
 				
-				int damage = (int) (Math.min(PlayerManager.getMaxHealthPoints(damagerName), PlayerManager.getHealthPoints(damagerName) + Math.min(LoreManager.getLifeSteal(damager), event.getDamage())));
-				PlayerManager.setHealthPoints(victimName, victimHP - damage);
-				victim.sendMessage(ChatColor.RED + Integer.toString(victimHP) + " - " + Integer.toString(damage) + " = " + PlayerManager.getHealthPoints(victimName));
 			}
 		}
 	}
-
 }

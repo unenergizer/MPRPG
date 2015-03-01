@@ -204,6 +204,11 @@ public class PlayerManager {
         	teleportPlayerToSpawn(player);
         }
         
+        //Set the players level, if less than 1.
+        if (player.getLevel() < 1) {
+        	player.setLevel(1);
+        }
+        
         //Read armor and set statistics.
         //update HashMap info
         healthPoints.put(playerName, baseHealthPoints);

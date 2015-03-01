@@ -1,5 +1,6 @@
 package com.minepile.mprpg.listeners;
 
+import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
@@ -14,34 +15,34 @@ import com.minepile.mprpg.professions.Herbalism;
 import com.minepile.mprpg.professions.Mining;
 
 public class BlockBreakListener implements Listener{
-	
+
 	public static MPRPG plugin;
 	public boolean allPlayersCanBreakBlocks = false;
-	
+
 	@SuppressWarnings("static-access")
 	public BlockBreakListener(MPRPG plugin) {
 		this.plugin = plugin;
 	}
-	
+
 	@EventHandler
 	public void onBlockBreak(BlockBreakEvent event) {
-		
+
 		Player player = event.getPlayer();					//The player who triggered the event.
 		Material tool = player.getItemInHand().getType();	//The tool the player may be holding.
 		Block block = event.getBlock();						//Gets the actual block broken.
 		Material blockType = event.getBlock().getType();	//The block type that is being broken.
-		
-		
-		
+
+
+
 		//Cancel experience drops
 		event.setExpToDrop(0);
-		
+
 		switch(blockType) {
-		
+
 		/////////////////////////
 		/// Mining Profession ///
 		/////////////////////////
-		
+
 		case COAL_ORE: //Mining profession
 			if(tool.equals(Material.WOOD_PICKAXE) || tool.equals(Material.STONE_PICKAXE) ||
 					tool.equals(Material.IRON_PICKAXE) || tool.equals(Material.GOLD_PICKAXE) ||
@@ -50,7 +51,7 @@ public class BlockBreakListener implements Listener{
 				Mining.toggleOreMined(player, tool, Material.COAL_ORE);
 				//Lets add the block to the ore regeneration list to be replaced later.
 				BlockRegenerationManager.setBlock(player, blockType, Material.STONE, block.getLocation());
-				
+
 				//Now cancel the event.
 				event.setCancelled(true);
 			} else {
@@ -70,7 +71,7 @@ public class BlockBreakListener implements Listener{
 
 				//Lets add the block to the ore regeneration list to be replaced later.
 				BlockRegenerationManager.setBlock(player, blockType, Material.STONE, block.getLocation());
-				
+
 				//Now cancel the event.
 				event.setCancelled(true);
 			} else {
@@ -91,7 +92,7 @@ public class BlockBreakListener implements Listener{
 
 				//Lets add the block to the ore regeneration list to be replaced later.
 				BlockRegenerationManager.setBlock(player, blockType, Material.STONE, block.getLocation());
-				
+
 				//Now cancel the event.
 				event.setCancelled(true);
 			} else {
@@ -111,7 +112,7 @@ public class BlockBreakListener implements Listener{
 
 				//Lets add the block to the ore regeneration list to be replaced later.
 				BlockRegenerationManager.setBlock(player, blockType, Material.STONE, block.getLocation());
-				
+
 				//Now cancel the event.
 				event.setCancelled(true);
 			} else {
@@ -132,7 +133,7 @@ public class BlockBreakListener implements Listener{
 
 				//Lets add the block to the ore regeneration list to be replaced later.
 				BlockRegenerationManager.setBlock(player, blockType, Material.STONE, block.getLocation());
-				
+
 				//Now cancel the event.
 				event.setCancelled(true);
 			} else {
@@ -145,10 +146,10 @@ public class BlockBreakListener implements Listener{
 				}
 			}
 			break;
-		////////////////////////////
-		/// Herbalism Profession ///
-		////////////////////////////
-			
+			////////////////////////////
+			/// Herbalism Profession ///
+			////////////////////////////
+
 		case BAKED_POTATO:
 			event.setCancelled(true);
 			break;
@@ -174,7 +175,7 @@ public class BlockBreakListener implements Listener{
 
 				//Lets add the block to the ore regeneration list to be replaced later.
 				BlockRegenerationManager.setBlock(player, blockType, Material.AIR, block.getLocation());
-				
+
 				//Now cancel the event.
 				event.setCancelled(true);
 			} else {
@@ -251,7 +252,7 @@ public class BlockBreakListener implements Listener{
 
 				//Lets add the block to the ore regeneration list to be replaced later.
 				BlockRegenerationManager.setBlock(player, blockType, Material.AIR, block.getLocation());
-				
+
 				//Now cancel the event.
 				event.setCancelled(true);
 			} else {
@@ -292,7 +293,7 @@ public class BlockBreakListener implements Listener{
 
 				//Lets add the block to the ore regeneration list to be replaced later.
 				BlockRegenerationManager.setBlock(player, blockType, Material.AIR, block.getLocation());
-				
+
 				//Now cancel the event.
 				event.setCancelled(true);
 			} else {
@@ -305,21 +306,29 @@ public class BlockBreakListener implements Listener{
 				}
 			}
 			break;
-			
-		//////////////////////
-		/// Default Action ///
-		//////////////////////
-			
+
+			//////////////////////
+			/// Default Action ///
+			//////////////////////
+
 		default:
-			if (allPlayersCanBreakBlocks == false) {
-				//Cancel the block being broken if the player is not OP.
-				if (!player.isOp()) {
-					event.setCancelled(true);	
-					//show debug message
-					if (MessageManager.canShowAdminDebugMessage() == true) {
-						player.sendMessage(MessageManager.selectMessagePrefix("debug") 
-								+ "You can not break blocks.");
-					}
+
+			//Cancel the block being broken if the player is not OP.
+			if (!player.isOp()) {
+				event.setCancelled(true);	
+				//show debug message
+				if (MessageManager.canShowAdminDebugMessage() == true) {
+					player.sendMessage(MessageManager.selectMessagePrefix("debug") 
+							+ "You can not break blocks.");
+				}
+			} else if (player.isOp() && player.getGameMode().equals(GameMode.CREATIVE)) {
+				event.setCancelled(false);
+			} else {
+				event.setCancelled(true);
+				//show debug message
+				if (MessageManager.canShowAdminDebugMessage() == true) {
+					player.sendMessage(MessageManager.selectMessagePrefix("debug") 
+							+ "You can not break blocks.");
 				}
 			}
 			break;
