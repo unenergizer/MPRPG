@@ -8,6 +8,7 @@ import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import com.minepile.mprpg.MPRPG;
+import com.minepile.mprpg.equipment.ItemDropManager;
 import com.minepile.mprpg.player.PlayerManager;
 
 public class EntityDeathListener implements Listener{
@@ -21,21 +22,32 @@ public class EntityDeathListener implements Listener{
 	
 	@EventHandler
 	public void onEntityDeath(EntityDeathEvent event) {
-		//Not doing anything here yet.
 		if (event.getEntity() instanceof Player) {
 			Player player = (Player) event.getEntity();
-			player.setGameMode(GameMode.CREATIVE);
+			String playerName = player.getName();
+			
 			//Heal the player
-			player.setHealth(PlayerManager.getMaxHealthPoints(player));
+			player.setHealth(20);
+			PlayerManager.setHealthPoints(player.getName(), PlayerManager.getMaxHealthPoints(playerName));
+			
+			player.setGameMode(GameMode.CREATIVE);
 			
 			PlayerManager.teleportPlayerToSpawn(player);
 			player.setGameMode(GameMode.SURVIVAL);
+
+			//Heal the player
+			PlayerManager.setHealthPoints(player.getName(), PlayerManager.getMaxHealthPoints(playerName));
 			new BukkitRunnable() {
 				@Override
 		    	public void run() {
 
 				}
 			}.runTaskLater(plugin, 1); //run after 1 tick
+		} else {
+			event.getDrops().clear();
+			
+			String entityName = event.getEntity().getName();
+			ItemDropManager.toggleItemDrops(entityName);
 		}
 	}
 }

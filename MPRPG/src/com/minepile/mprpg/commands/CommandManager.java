@@ -32,8 +32,7 @@ public class CommandManager implements CommandExecutor{
 
 			Player player = (Player) sender;
 
-			if (label.equalsIgnoreCase("cc") || label.equalsIgnoreCase("chat") ||
-					label.equalsIgnoreCase("chatchanel") || label.equalsIgnoreCase("ch")) {
+			if (label.equalsIgnoreCase("c")) {
 				if (args.length == 0) {
 					player.sendMessage(" ");
 					player.sendMessage(ChatColor.DARK_GRAY + "" + ChatColor.BOLD + "----------------" +
@@ -140,7 +139,7 @@ public class CommandManager implements CommandExecutor{
 
 			//Send a private message.
 			if (label.equalsIgnoreCase("msg") || label.equalsIgnoreCase("tell") ||
-					label.equalsIgnoreCase("message") || label.equalsIgnoreCase("pm")) {
+					label.equalsIgnoreCase("pm")) {
 				if (args.length == 0) {
 					player.sendMessage(MessageManager.selectMessagePrefix("debug") +
 							"Please specify the players name and then your message.");

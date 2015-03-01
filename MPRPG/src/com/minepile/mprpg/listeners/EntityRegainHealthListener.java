@@ -1,5 +1,7 @@
 package com.minepile.mprpg.listeners;
 
+import net.md_5.bungee.api.ChatColor;
+
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -8,6 +10,7 @@ import org.bukkit.event.entity.EntityRegainHealthEvent;
 
 import com.minepile.mprpg.MPRPG;
 import com.minepile.mprpg.equipment.LoreManager;
+import com.minepile.mprpg.player.PlayerManager;
 
 public class EntityRegainHealthListener implements Listener{
 	
@@ -21,15 +24,40 @@ public class EntityRegainHealthListener implements Listener{
 	@EventHandler
 	public void onEntityRegainHealth(EntityRegainHealthEvent event) {
 		if(event.getEntity() instanceof Player) {
+			Player player = (Player) event.getEntity();
+			String playerName = player.getName();
 			
-			if (((event.getEntity() instanceof Player)) && 
-					(event.getRegainReason() == EntityRegainHealthEvent.RegainReason.SATIATED)) {
-				event.setAmount(event.getAmount() + LoreManager.getRegenBonus((LivingEntity)event.getEntity()));
-				if (event.getAmount() <= 0.0D) {
-					event.setCancelled(true);
-				}
+			int currentHP = PlayerManager.getHealthPoints(playerName);
+			int maxHP = PlayerManager.getMaxHealthPoints(playerName);
+			int healAmount = (int) (event.getAmount() + LoreManager.getRegenBonus((LivingEntity)event.getEntity()));
+			int newHP = currentHP + healAmount;
+			int hpPercent = (int) ((100 * newHP) / maxHP);
+			int hpBarPercent = (20 * currentHP) / maxHP;
+			
+			
+			if (currentHP == maxHP) {
+				PlayerManager.setHealthPoints(playerName, maxHP);
+				player.setHealth(20);
+				
+				/* Redundant message.
+				player.sendMessage(ChatColor.GREEN + "            " + 
+						ChatColor.GRAY + ChatColor.BOLD + " HP: " +
+						ChatColor.GRAY + ChatColor.BOLD + "100%" +
+						ChatColor.GRAY + " [" + ChatColor.GREEN + maxHP +
+						ChatColor.GRAY + " / " + ChatColor.GREEN + maxHP +
+						ChatColor.GRAY + "]");
+				*/
+			} else if (currentHP < maxHP){
+				PlayerManager.setHealthPoints(playerName, newHP);
+				player.setHealth(hpBarPercent - 1);
+				
+				player.sendMessage(ChatColor.GREEN + "         +" + 
+						ChatColor.GRAY + healAmount + ChatColor.BOLD + " HP: " +
+						ChatColor.GRAY + ChatColor.BOLD + hpPercent + "%" +
+						ChatColor.GRAY + " [" + ChatColor.GREEN + newHP +
+						ChatColor.GRAY + " / " + ChatColor.GREEN + maxHP +
+						ChatColor.GRAY + "]");
 			}
 		}
 	}
-
 }

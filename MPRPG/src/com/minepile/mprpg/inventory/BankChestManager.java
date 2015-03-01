@@ -4,11 +4,17 @@ import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 
+import net.md_5.bungee.api.ChatColor;
+
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 
+import com.gmail.filoghost.holographicdisplays.api.Hologram;
+import com.gmail.filoghost.holographicdisplays.api.HologramsAPI;
 import com.minepile.mprpg.MPRPG;
 
 public class BankChestManager {
@@ -49,6 +55,9 @@ public class BankChestManager {
             	configBankCosts.put(i, totalEXPforLVL);
             }
         }
+		
+		//Display bank holograms
+		setupBankHolograms();
 	}
 
 	public static Inventory getBank(Player player) {
@@ -94,5 +103,16 @@ public class BankChestManager {
         } catch (IOException e) {
             e.printStackTrace();
         } 
+    }
+    
+    public static void setupBankHolograms() {
+    	Location bank01 = new Location(Bukkit.getWorld("world"), 16.5, 80.5, -5.5);
+    	Location bank02 = new Location(Bukkit.getWorld("world"), 18.5, 80.5, -7.5);
+    	
+    	Hologram bankHologram01 = HologramsAPI.createHologram(plugin, bank01);
+    	bankHologram01.appendTextLine(ChatColor.GREEN + "" + ChatColor.BOLD + "Player Stash");
+    	
+    	Hologram bankHologram02 = HologramsAPI.createHologram(plugin, bank02);
+    	bankHologram02.appendTextLine(ChatColor.GREEN + "" + ChatColor.BOLD + "Player Stash");
     }
 }

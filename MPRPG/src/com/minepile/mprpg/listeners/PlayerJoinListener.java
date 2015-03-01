@@ -2,6 +2,7 @@ package com.minepile.mprpg.listeners;
 
 import net.md_5.bungee.api.ChatColor;
 
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -15,6 +16,9 @@ import com.minepile.mprpg.player.PlayerManager;
 public class PlayerJoinListener implements Listener {
 	
 	public static MPRPG plugin;
+	
+	@SuppressWarnings("unused")
+	private static int taskID; 
 	
 	@SuppressWarnings("static-access")
 	public PlayerJoinListener(MPRPG plugin) {
@@ -41,6 +45,19 @@ public class PlayerJoinListener implements Listener {
 		//This message is not displayed to all users.
 		player.sendMessage(ChatColor.GRAY + "Welcome " + playerName + "!");
 		
-		LoreManager.applyHpBonus(player);
+		updatePlayerArmor(player);
+	}
+	
+	//It seems that the client responds better if we give it time to
+	//set the experience, then update the players armor..
+	public void updatePlayerArmor(final Player player) {
+		//Lets start a  task
+		taskID = Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
+			@Override
+			public void run() {
+				//Update the players armor.
+				LoreManager.applyHpBonus(player);
+			} //END Run method.
+		}, 5); //(20 ticks = 1 second)
 	}
 }

@@ -40,9 +40,9 @@ public class PlayerManager {
 	static HashMap<String, Integer> vitalityMap = new HashMap<String, Integer>();
 	
 	//Base statistic rates
-	static int baseHealthPoints = 20;
-	static int baseStaminaPoints = 20;
-	static int baseManaPoints = 20;
+	static int baseHealthPoints = 100;
+	static int baseStaminaPoints = 100;
+	static int baseManaPoints = 100;
 	static int baseHealthRegenRate = 1;
 	static int baseStaminaRegenRate = 1;
 	static int baseManaRegenRate = 1;
@@ -397,48 +397,48 @@ public class PlayerManager {
         return  (String) playerConfig.get(value);
 	}
 
-	public static int getHealthPoints(Player player) {
-		return healthPoints.get(player);
+	public static int getHealthPoints(String playerName) {
+		return healthPoints.get(playerName);
 	}
 
-	public static void setHealthPoints(HashMap<String, Integer> healthPoints) {
-		PlayerManager.healthPoints = healthPoints;
+	public static void setHealthPoints(String playerName, Integer healthPoints) {
+		PlayerManager.healthPoints.put(playerName, healthPoints);;
 	}
 
-	public static int getMaxHealthPoints(Player player) {
-		return maxHealthPoints.get(player.getName());
+	public static int getMaxHealthPoints(String playerName) {
+		return PlayerManager.maxHealthPoints.get(playerName);
 	}
 
-	public static void setMaxHealthPoints(HashMap<String, Integer> maxHealthPoints) {
-		PlayerManager.maxHealthPoints = maxHealthPoints;
+	public static void setMaxHealthPoints(String playerName, Integer maxHealthPoints) {
+		PlayerManager.maxHealthPoints.put(playerName, maxHealthPoints);
 	}
 
-	public static int getStaminaPoints(Player player) {
-		return staminaPoints.get(player);
+	public static int getStaminaPoints(String playerName) {
+		return staminaPoints.get(playerName);
 	}
 
 	public static void setStaminaPoints(HashMap<String, Integer> staminaPoints) {
 		PlayerManager.staminaPoints = staminaPoints;
 	}
 
-	public static int getMaxStaminaPoints(Player player) {
-		return maxStaminaPoints.get(player);
+	public static int getMaxStaminaPoints(String playerName) {
+		return maxStaminaPoints.get(playerName);
 	}
 
 	public static void setMaxStaminaPoints(HashMap<String, Integer> maxStaminaPoints) {
 		PlayerManager.maxStaminaPoints = maxStaminaPoints;
 	}
 
-	public static int getManaPoints(Player player) {
-		return manaPoints.get(player);
+	public static int getManaPoints(String playerName) {
+		return manaPoints.get(playerName);
 	}
 
 	public static void setManaPoints(HashMap<String, Integer> manaPoints) {
 		PlayerManager.manaPoints = manaPoints;
 	}
 
-	public static int getMaxManaPoints(Player player) {
-		return maxManaPoints.get(player);
+	public static int getMaxManaPoints(String playerName) {
+		return maxManaPoints.get(playerName);
 	}
 
 	public static void setMaxManaPoints(HashMap<String, Integer> maxManaPoints) {
@@ -540,4 +540,5 @@ public class PlayerManager {
 	public static void setVitality(int vitality) {
 		PlayerManager.vitality = vitality;
 	}
+
 }

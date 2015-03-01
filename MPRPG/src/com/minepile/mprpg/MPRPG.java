@@ -8,6 +8,8 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import com.minepile.mprpg.commands.CommandManager;
 import com.minepile.mprpg.equipment.ArmorManager;
+import com.minepile.mprpg.equipment.ItemDropManager;
+import com.minepile.mprpg.equipment.ItemQualityManager;
 import com.minepile.mprpg.equipment.LoreManager;
 import com.minepile.mprpg.equipment.WeaponManager;
 import com.minepile.mprpg.inventory.BankChestManager;
@@ -77,6 +79,8 @@ public class MPRPG extends JavaPlugin {
         BlockRegenerationManager.getInstance().setup(this);
         ChatManager.getInstance().setup(this);
         DiceRollManager.getInstance().setup(this);
+        ItemDropManager.getInstance().setup(this);
+        ItemQualityManager.getInstance().setup(this);
         LagManager.getInstance().setup(this);
         MessageManager.getInstance().setup(this);
         PlayerManager.getInstance().setup(this);
@@ -134,21 +138,16 @@ public class MPRPG extends JavaPlugin {
         //////////////////////
         
         //setting player chat channel
-        getCommand("cc").setExecutor(new CommandManager(this));
-        getCommand("ch").setExecutor(new CommandManager(this));
-        getCommand("chatchanel").setExecutor(new CommandManager(this));
-        getCommand("chat").setExecutor(new CommandManager(this));
+        getCommand("c").setExecutor(new CommandManager(this));
         
         //get the server lag
         getCommand("lag").setExecutor(new CommandManager(this));
         
         //get the server lag
         getCommand("armorstats").setExecutor(new CommandManager(this));
-        getCommand("lorestats").setExecutor(new CommandManager(this));
         
         //private message other players
         getCommand("msg").setExecutor(new CommandManager(this));
-        getCommand("message").setExecutor(new CommandManager(this));
         getCommand("pm").setExecutor(new CommandManager(this));
         getCommand("tell").setExecutor(new CommandManager(this));
         

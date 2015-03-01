@@ -1,5 +1,7 @@
 package com.minepile.mprpg.listeners;
 
+import net.md_5.bungee.api.ChatColor;
+
 import org.bukkit.Material;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.LivingEntity;
@@ -39,72 +41,62 @@ public class EntityDamageByEntityListener implements Listener{
 		}
 
 		//Check Weapon Restriction
-		if (!(event.getDamager() instanceof Player)) {
-			return;
-		}
-		if (!LoreManager.canUse((Player)event.getDamager(), ((Player)event.getDamager()).getItemInHand()))
-		{
-			event.setCancelled(true);
-			return;
-		}
-
-		//modifyEntityDamage
-		if ((event.isCancelled()) || (!(event.getEntity() instanceof LivingEntity))) {
-			return;
-		}
-		if (LoreManager.dodgedAttack((LivingEntity)event.getEntity()))
-		{
+		if (LoreManager.dodgedAttack((LivingEntity)event.getEntity())) {
 			event.setDamage(0.0D);
 			event.setCancelled(true);
 			return;
 		}
-		if ((event.getDamager() instanceof LivingEntity))
-		{
-			LivingEntity damager = (LivingEntity)event.getDamager();
-			if ((damager instanceof Player)) {
-				if (LoreManager.canAttack(((Player)damager).getName()))
-				{
-					LoreManager.addAttackCooldown(((Player)damager).getName());
-				}
-				else
-				{
-					((Player)damager).sendMessage("lore.attack-speed.message");
-					event.setCancelled(true);
-					return;
-				}
-			}
-			if (LoreManager.useRangeOfDamage(damager)) {
-				event.setDamage(Math.max(0, LoreManager.getDamageBonus(damager) - LoreManager.getArmorBonus((LivingEntity)event.getEntity())));
-			} else {
-				event.setDamage(Math.max(0.0D, event.getDamage() + LoreManager.getDamageBonus(damager) - LoreManager.getArmorBonus((LivingEntity)event.getEntity())));
-			}
-			damager.setHealth(Math.min(damager.getMaxHealth(), damager.getHealth() + Math.min(LoreManager.getLifeSteal(damager), event.getDamage())));
-		}
-		else if ((event.getDamager() instanceof Arrow))
-		{
+		if ((event.getEntity() instanceof Player) && (event.getDamager() instanceof LivingEntity)) {
+			
+			Player victim = (Player) event.getEntity();
+			String victimName = victim.getName();
+			LivingEntity damager = (LivingEntity) event.getDamager();
+			String damagerName = damager.getName();
+			
+			int victimHP = PlayerManager.getHealthPoints(victimName);
+			int victimMaxHP = PlayerManager.getMaxHealthPoints(victimName);
+			int damage = Math.max(0, LoreManager.getDamageBonus(damager) - LoreManager.getArmorBonus((LivingEntity)event.getEntity()));
+			int newHP = victimHP - damage;
+			int hpBarPercent = (20 * (victimHP - damage) / victimMaxHP);
+			int hpPercent = (int) ((100 * newHP) / victimMaxHP);
+			
+			victim.sendMessage("CurrentHP: " + Integer.toString(victimHP));
+			
+			
+			LoreManager.addAttackCooldown(damagerName);
+
+			victim.setHealth(hpBarPercent);
+			PlayerManager.setHealthPoints(victimName, newHP);
+			//victim.sendMessage(ChatColor.RED + Integer.toString(victimHP) + " - " + Integer.toString(damage) + " = " + PlayerManager.getHealthPoints(victimName));
+			//Send the player the debug message.
+			
+			victim.sendMessage(ChatColor.RED + "         -" + 
+					ChatColor.GRAY + damage + ChatColor.BOLD + " HP: " +
+					ChatColor.GRAY + ChatColor.BOLD + hpPercent + "%" +
+					ChatColor.GRAY + " [" + ChatColor.RED + newHP +
+					ChatColor.GRAY + " / " + ChatColor.GREEN + victimMaxHP +
+					ChatColor.GRAY + "]");
+			
+		} else if ((event.getDamager() instanceof Arrow)) {
+			
 			Arrow arrow = (Arrow)event.getDamager();
-			if ((arrow.getShooter() != null) && ((arrow.getShooter() instanceof LivingEntity)))
-			{
-				LivingEntity damager = (LivingEntity) arrow.getShooter();
-				if ((damager instanceof Player)) {
-					if (LoreManager.canAttack(((Player)damager).getName()))
-					{
-						LoreManager.addAttackCooldown(((Player)damager).getName());
-					}
-					else
-					{
+			
+			if ((arrow.getShooter() != null) && ((arrow.getShooter() instanceof Player))) {
 				
-						((Player)damager).sendMessage("lore.attack-speed.message");
-						event.setCancelled(true);
-						return;
-					}
-				}
-				if (LoreManager.useRangeOfDamage(damager)) {
-					event.setDamage(Math.max(0, LoreManager.getDamageBonus(damager) - LoreManager.getArmorBonus((LivingEntity)event.getEntity())));
-				} else {
-					event.setDamage(Math.max(0.0D, event.getDamage() + LoreManager.getDamageBonus(damager)) - LoreManager.getArmorBonus((LivingEntity)event.getEntity()));
-				}
-				damager.setHealth(Math.min(damager.getMaxHealth(), damager.getHealth() + Math.min(LoreManager.getLifeSteal(damager), event.getDamage())));
+				Player victim = (Player) event.getEntity();
+				String victimName = victim.getName();
+				Player damager = (Player) arrow.getShooter();
+				String damagerName = damager.getName();
+				
+				int victimHP = PlayerManager.getHealthPoints(victimName);
+				
+				LoreManager.addAttackCooldown(((Player)damager).getName());
+				
+				event.setDamage(Math.max(0, LoreManager.getDamageBonus(damager) - LoreManager.getArmorBonus((LivingEntity)event.getEntity())));
+				
+				int damage = (int) (Math.min(PlayerManager.getMaxHealthPoints(damagerName), PlayerManager.getHealthPoints(damagerName) + Math.min(LoreManager.getLifeSteal(damager), event.getDamage())));
+				PlayerManager.setHealthPoints(victimName, victimHP - damage);
+				victim.sendMessage(ChatColor.RED + Integer.toString(victimHP) + " - " + Integer.toString(damage) + " = " + PlayerManager.getHealthPoints(victimName));
 			}
 		}
 	}

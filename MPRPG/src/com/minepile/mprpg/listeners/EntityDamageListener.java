@@ -22,12 +22,8 @@ public class EntityDamageListener implements Listener{
 	public void onEntityDamage(EntityDamageEvent event) {
 		
 		if(event.getEntity() instanceof Player) {
-			
-			//Do not cancel
+			//Do not cancel, causes bugs.
 			event.setCancelled(false);
-			
-			//stop any damage and we will inflict our own.
-			//event.setDamage(0);
 			
 			Player player = (Player) event.getEntity(); //Player who was attacked
 			ItemStack weapon = player.getItemInHand();

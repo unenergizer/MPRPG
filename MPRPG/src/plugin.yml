@@ -4,18 +4,11 @@ version: 0.1
 description: MinePile RPG
 author: unenergizer
 website: http://www.minepile.com/
+softdepend: [HolographicDisplays]
 commands:
-   cc:
-      description: Used to change players chat channel.
-   chat:
-      description: Used to change players chat channel.
-   chatchanel:
-      description: Used to change players chat channel.
-   ch:
+   c:
       description: Used to change players chat channel.
    msg:
-      description: Used to send other players private messages.
-   message:
       description: Used to send other players private messages.
    pm:
       description: Used to send other players private messages.
@@ -26,8 +19,6 @@ commands:
    lag:
       description: Get the server TPS and lag percent.
    armorstats:
-      description: Get the players current armor and weapon stats.
-   lorestats:
       description: Get the players current armor and weapon stats.
    roll:
       description: Rolls a dice to get a random number.

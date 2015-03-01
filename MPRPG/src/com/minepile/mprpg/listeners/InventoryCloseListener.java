@@ -22,7 +22,7 @@ public class InventoryCloseListener implements Listener{
 		if (event.getPlayer() instanceof Player) {
 			Player player = (Player) event.getPlayer();
 			
-			LoreManager.handleArmorRestriction(player);
+			LoreManager.applyHpBonus(player);
 		}
 	}
 }

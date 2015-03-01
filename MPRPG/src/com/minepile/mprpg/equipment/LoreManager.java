@@ -56,42 +56,6 @@ public class LoreManager {
 		}
 	}
 
-	public static void handleArmorRestriction(Player player) {
-		if (!canUse(player, player.getInventory().getBoots())) {
-			if (player.getInventory().firstEmpty() >= 0) {
-				player.getInventory().addItem(new ItemStack[] { player.getInventory().getBoots() });
-			} else {
-				player.getWorld().dropItem(player.getLocation(), player.getInventory().getBoots());
-			}
-			player.getInventory().setBoots(new ItemStack(0));
-		}
-		if (!canUse(player, player.getInventory().getChestplate())) {
-			if (player.getInventory().firstEmpty() >= 0) {
-				player.getInventory().addItem(new ItemStack[] { player.getInventory().getChestplate() });
-			} else {
-				player.getWorld().dropItem(player.getLocation(), player.getInventory().getChestplate());
-			}
-			player.getInventory().setChestplate(new ItemStack(0));
-		}
-		if (!canUse(player, player.getInventory().getHelmet())) {
-			if (player.getInventory().firstEmpty() >= 0) {
-				player.getInventory().addItem(new ItemStack[] { player.getInventory().getHelmet() });
-			} else {
-				player.getWorld().dropItem(player.getLocation(), player.getInventory().getHelmet());
-			}
-			player.getInventory().setHelmet(new ItemStack(0));
-		}
-		if (!canUse(player, player.getInventory().getLeggings())) {
-			if (player.getInventory().firstEmpty() >= 0) {
-				player.getInventory().addItem(new ItemStack[] { player.getInventory().getLeggings() });
-			} else {
-				player.getWorld().dropItem(player.getLocation(), player.getInventory().getLeggings());
-			}
-			player.getInventory().setLeggings(new ItemStack(0));
-		}
-		applyHpBonus(player);
-	}
-
 	public static boolean canUse(Player player, ItemStack item){
 		if ((item != null) && (item.hasItemMeta()) && (item.getItemMeta().hasLore())) {
 			List<String> lore = item.getItemMeta().getLore();
@@ -344,25 +308,34 @@ public class LoreManager {
 		//Make sure the entity is a player.
 		if ((entity instanceof Player)) {
 			
+			Player player = ((Player) entity).getPlayer();
+			String playerName = player.getName();
+			
 			//If the players HP is greater than the base HP + HP bonus,
 			//set the players HP.  BaseHP + Armor HP.
-			if (entity.getHealth() > getBaseHealth((Player)entity) + hpToAdd.intValue()) {
+			if (PlayerManager.getHealthPoints(playerName) > getBaseHealth(player) + hpToAdd.intValue()) {
 				//Set player HP. BaseHP + Armor HP
 				int newHP = getBaseHealth((Player)entity) + hpToAdd.intValue();
-				double totalHP = entity.getMaxHealth();
+				double totalHP = PlayerManager.getMaxHealthPoints(playerName);
 				
 				if (newHP != totalHP) {
-					entity.setHealth(newHP);
+					//entity.setHealth(newHP);
+					PlayerManager.setHealthPoints(entity.getName(), newHP);
 					entity.sendMessage(ChatColor.BLUE + "" + ChatColor.BOLD + "New HP: " + ChatColor.RESET + newHP);
+					
+					entity.setHealth(20 * PlayerManager.getHealthPoints(playerName) / PlayerManager.getMaxHealthPoints(playerName));
 				}
 			}
 			
 			//Change the players MAX HP.
-			int newMaxHP = getBaseHealth((Player)entity) + hpToAdd.intValue();
-			double totalHP = entity.getMaxHealth();
+			int newMaxHP = getBaseHealth(player) + hpToAdd.intValue();
+			double totalHP = PlayerManager.getMaxHealthPoints(playerName);
 			if (newMaxHP != totalHP) {
-				entity.setMaxHealth(newMaxHP);
+
+				PlayerManager.setMaxHealthPoints(entity.getName(), newMaxHP);
 				entity.sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "New MaxHP: " + ChatColor.RESET + newMaxHP);
+
+				entity.setHealth(20 * PlayerManager.getHealthPoints(playerName) / PlayerManager.getMaxHealthPoints(playerName));
 			}
 		}
 	}
