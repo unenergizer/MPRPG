@@ -37,8 +37,6 @@ public class EntityDamageListener implements Listener{
 				player.sendMessage("EntityDamageEvent");
 				event.setCancelled(true);
 			}
-		}
-		
+		}	
 	}
-
 }
