@@ -234,6 +234,10 @@ public class PlayerManager {
         
         //Monster bar at the top of the screen.
       	updatePlayerBossbar(player);
+      	
+      	//Feed player.
+      	player.setFoodLevel(20);
+      	
 	}
 	
 	public static void updatePlayerHashMap(Player player, String attribute, int x) {

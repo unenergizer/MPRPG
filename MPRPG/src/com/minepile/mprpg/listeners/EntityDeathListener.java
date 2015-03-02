@@ -28,6 +28,7 @@ public class EntityDeathListener implements Listener{
 			
 			//Heal the player
 			player.setHealth(20);
+			player.setFoodLevel(20);
 			PlayerManager.setHealthPoints(player.getName(), PlayerManager.getMaxHealthPoints(playerName));
 			
 			player.setGameMode(GameMode.CREATIVE);

@@ -26,82 +26,115 @@ public class EntityDamageByEntityListener implements Listener{
 	@EventHandler
 	public void onEntityDamageByEntity(EntityDamageByEntityEvent event) {
 		if (event.getEntity() instanceof Player) {
-
+			
 			//Do not cancel
 			event.setCancelled(false);
 
 			Player player = (Player) event.getEntity(); //Player who was attacked
 			ItemStack weapon = player.getItemInHand();
-
+			
 			//Lets cancel fishing rod damage.
 			if (weapon.getType().equals(Material.FISHING_ROD)) {
 				event.setCancelled(true);
 			}
 		}
 
-		//Check Weapon Restriction
-		if (LoreManager.dodgedAttack((LivingEntity)event.getEntity())) {
-			event.setDamage(0.0D);
-			event.setCancelled(true);
-			return;
-		}
-		if ((event.getEntity() instanceof Player) && (event.getDamager() instanceof LivingEntity)) {
+		//Calculate the damage caused by other players.
+		if (event.getEntity() instanceof LivingEntity) {
 			
-			Player victim = (Player) event.getEntity();
-			String victimName = victim.getName();
-			LivingEntity damager = (LivingEntity) event.getDamager();
-			String damagerName = damager.getName();
+			LivingEntity victim = (LivingEntity) event.getEntity();
 			
-			int victimHP = PlayerManager.getHealthPoints(victimName);
-			int victimMaxHP = PlayerManager.getMaxHealthPoints(victimName);
-			int damage = Math.max(0, LoreManager.getDamageBonus(damager) - LoreManager.getArmorBonus((LivingEntity)event.getEntity()));
-			int newHP = victimHP - damage;
-			int hpBarPercent = (20 * (victimHP - damage) / victimMaxHP);
-			int hpPercent = (int) ((100 * newHP) / victimMaxHP);
-
-			LoreManager.addAttackCooldown(damagerName);
-
-			victim.setHealth(hpBarPercent);
-			PlayerManager.setHealthPoints(victimName, newHP);
-			//victim.sendMessage(ChatColor.RED + Integer.toString(victimHP) + " - " + Integer.toString(damage) + " = " + PlayerManager.getHealthPoints(victimName));
-			//Send the player the debug message.
-			
-			victim.sendMessage(ChatColor.RED + "         -" + 
-					ChatColor.GRAY + damage + ChatColor.BOLD + " HP: " +
-					ChatColor.GRAY + ChatColor.BOLD + hpPercent + "%" +
-					ChatColor.GRAY + " [" + ChatColor.RED + newHP +
-					ChatColor.GRAY + " / " + ChatColor.GREEN + victimMaxHP +
-					ChatColor.GRAY + "]");
-			
-		} else if ((event.getDamager() instanceof Arrow)) {
-			
-			Arrow arrow = (Arrow)event.getDamager();
-			
-			if ((arrow.getShooter() != null) && ((arrow.getShooter() instanceof Player))) {
+			if (victim instanceof Player) {
+				Player player = (Player) event.getEntity();
+				String playerName = player.getName();
 				
-				Player victim = (Player) event.getEntity();
-				String victimName = victim.getName();
-				Player damager = (Player) arrow.getShooter();
-				String damagerName = damager.getName();
+				int playerHealth = PlayerManager.getHealthPoints(playerName);
+				int playerMaxHealth = PlayerManager.getMaxHealthPoints(playerName);
 				
-				int damage = (int) (Math.min(PlayerManager.getMaxHealthPoints(damagerName), PlayerManager.getHealthPoints(damagerName) + Math.min(LoreManager.getLifeSteal(damager), event.getDamage())));
-				int victimHP = PlayerManager.getHealthPoints(victimName);
-				int victimMaxHP = PlayerManager.getMaxHealthPoints(victimName);
-				int newHP = victimHP - damage;
-				int hpBarPercent = (20 * (victimHP - damage) / victimMaxHP);
-				int hpPercent = (int) ((100 * newHP) / victimMaxHP);
+				//Damager is another player
+				if (event.getDamager() instanceof Player) {
+					
+					Player damager = (Player) event.getDamager();
+					String damagerName = damager.getName();
+					
+					int damage = Math.max(0, LoreManager.getDamageBonus(damager) - LoreManager.getArmorBonus((LivingEntity)event.getEntity()));
+					int healthBarPercent = (int) (20 * (playerHealth - damage) / playerMaxHealth);
+					int newHealthTotal = (int) (playerHealth - damage);
 				
-				LoreManager.addAttackCooldown(((Player)damager).getName());
+					LoreManager.addAttackCooldown(damagerName);
+					
+					//Show player damage message.
+					hpChangeMessage(player, playerHealth, (int) damage, playerMaxHealth);
+					
+					if (playerHealth == 0) {
+						//kill player
+						player.setHealth(healthBarPercent);
+					} else if (playerHealth >= 1) {
+						
+						if (player.getHealth() == 1) {
+							//kill player
+							player.setHealth(2);
+							PlayerManager.setHealthPoints(playerName, newHealthTotal);
+						} else if (playerHealth >= 1) {
+							player.setHealth(healthBarPercent);
+							PlayerManager.setHealthPoints(playerName, newHealthTotal);
+						}
+					}
+					
+				//PLayer shot arrow.
+				} else if (event.getDamager() instanceof Arrow){
 				
-				victim.setHealth(hpBarPercent);
-				victim.sendMessage(ChatColor.RED + "         -" + 
-						ChatColor.GRAY + damage + ChatColor.BOLD + " HP: " +
-						ChatColor.GRAY + ChatColor.BOLD + hpPercent + "%" +
-						ChatColor.GRAY + " [" + ChatColor.RED + newHP +
-						ChatColor.GRAY + " / " + ChatColor.GREEN + victimMaxHP +
-						ChatColor.GRAY + "]");
-				
+					Arrow arrow = (Arrow)event.getDamager();
+					
+					if ((arrow.getShooter() != null) && ((arrow.getShooter() instanceof Player))) {
+						Player damager = (Player) event.getDamager();
+						String damagerName = damager.getName();
+						
+						int damage = (int) event.getDamage();
+						int healthBarPercent = (int) (20 * (playerHealth - damage) / playerMaxHealth);
+						int newHealthTotal = (int) (playerHealth - damage);
+						
+						
+						LoreManager.addAttackCooldown(damagerName);
+						
+						//Show player damage message.
+						hpChangeMessage(player, playerHealth, (int) damage, playerMaxHealth);
+						
+						if (player.getHealth() <= 2) {
+							player.setHealth(2);
+							
+							if (playerHealth <= 1) {
+								//kill player
+								player.setHealth(healthBarPercent);
+							} else {
+								PlayerManager.setHealthPoints(playerName, newHealthTotal);
+							}
+							
+						} else {
+							player.setHealth(healthBarPercent);
+							PlayerManager.setHealthPoints(playerName, newHealthTotal);
+						}
+					}
+				}
 			}
 		}
+		
+	}
+	
+	public static void hpChangeMessage(Player player, int playerHealth, int damage, int playerMaxHealth) {
+		
+		int newHP = playerHealth - damage;
+		int hpPercent = (int) ((100 * newHP) / playerMaxHealth);
+		
+		String dmg = Integer.toString(damage);
+		String hpPrc = Integer.toString(hpPercent);
+		String hp = Integer.toString(newHP);
+		String maxHP = Integer.toString(playerMaxHealth);
+		player.sendMessage(ChatColor.RED + "         -" + 
+				ChatColor.GRAY + dmg + ChatColor.BOLD + " HP: " +
+				ChatColor.GRAY + ChatColor.BOLD + hpPrc + "%" +
+				ChatColor.GRAY + " [" + ChatColor.RED + hp +
+				ChatColor.GRAY + " / " + ChatColor.GREEN + maxHP +
+				ChatColor.GRAY + "]");
 	}
 }
