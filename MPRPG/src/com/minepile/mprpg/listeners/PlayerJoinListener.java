@@ -56,7 +56,7 @@ public class PlayerJoinListener implements Listener {
 			@Override
 			public void run() {
 				//Update the players armor.
-				LoreManager.applyHpBonus(player);
+				LoreManager.applyHpBonus(player, false);
 			} //END Run method.
 		}, 5); //(20 ticks = 1 second)
 	}

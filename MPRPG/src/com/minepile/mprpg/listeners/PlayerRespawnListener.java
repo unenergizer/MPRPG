@@ -21,7 +21,7 @@ public class PlayerRespawnListener implements Listener {
 	@EventHandler
 	public void onPlayerRespawn(PlayerRespawnEvent event) {
 		Player player = event.getPlayer();
-		LoreManager.applyHpBonus(player);
+		LoreManager.applyHpBonus(player, false);
 		PlayerManager.teleportPlayerToSpawn(player);
 	}
 }

@@ -22,7 +22,7 @@ public class EntityTargetListener implements Listener {
 	    if ((event.getEntity() instanceof LivingEntity)) {
 	      LivingEntity e = (LivingEntity)event.getEntity();
 	      
-	      LoreManager.applyHpBonus(e);
+	      LoreManager.applyHpBonus(e, false);
 	    }
 	}
 }

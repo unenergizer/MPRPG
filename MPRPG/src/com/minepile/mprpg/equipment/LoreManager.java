@@ -11,6 +11,7 @@ import java.util.regex.Pattern;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Sound;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -52,7 +53,7 @@ public class LoreManager {
 		this.plugin = plugin;
 		
 		for (Player players : Bukkit.getOnlinePlayers()) {
-			applyHpBonus(players);
+			applyHpBonus(players, false);
 		}
 	}
 
@@ -297,7 +298,7 @@ public class LoreManager {
 	 * 
 	 * @param entity A living entity.
 	 */
-	public static void applyHpBonus(LivingEntity entity) {
+	public static void applyHpBonus(LivingEntity entity, boolean playSoundEffect) {
 		//If the entity is not valid, cancel this method.
 		if (!entity.isValid()) {
 			return;
@@ -336,6 +337,11 @@ public class LoreManager {
 				entity.sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "New MaxHP: " + ChatColor.RESET + newMaxHP);
 
 				entity.setHealth(20 * PlayerManager.getHealthPoints(playerName) / PlayerManager.getMaxHealthPoints(playerName));
+				
+				if (playSoundEffect == true) {
+					//Play sound effect.
+					((Player) entity).playSound(entity.getLocation(), Sound.ANVIL_LAND, .5F, 1F);
+				}
 			}
 		}
 	}

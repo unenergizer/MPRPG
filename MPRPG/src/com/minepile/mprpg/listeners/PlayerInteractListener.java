@@ -2,6 +2,7 @@ package com.minepile.mprpg.listeners;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -198,6 +199,9 @@ public class PlayerInteractListener implements Listener{
 
 			//Show custom chest.
 			player.openInventory(BankChestManager.getBank(player));
+			
+			//Play a sound
+			player.playSound(player.getLocation(), Sound.CHEST_OPEN, .5F, 1F);
 		}
 	}
 
@@ -208,7 +212,7 @@ public class PlayerInteractListener implements Listener{
 		taskID = Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
 			@Override
 			public void run() {
-				LoreManager.applyHpBonus(player);
+				LoreManager.applyHpBonus(player, true);
 
 			} //END Run method.
 		}, 10); //(20 ticks = 1 second)

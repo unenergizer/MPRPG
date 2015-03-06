@@ -11,6 +11,7 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.inventory.ItemStack;
 
 import com.minepile.mprpg.MPRPG;
+import com.minepile.mprpg.monsters.MonsterManager;
 import com.minepile.mprpg.player.PlayerManager;
 
 public class EntityDamageListener implements Listener{
@@ -54,26 +55,27 @@ public class EntityDamageListener implements Listener{
 				int healthBarPercent = (int) (20 * (playerHealth - damage) / playerMaxHealth);
 				int newHealthTotal = (int) (playerHealth - damage);
 				
+				//Cancel regular event damage
+				event.setDamage(0);
+				
 				//Print out the type of damage done.
-				player.sendMessage(ChatColor.AQUA + "DmgCause: " + event.getCause().toString());
+				//player.sendMessage(ChatColor.AQUA + "DmgCause: " + event.getCause().toString());
 				
 				//Show player damage message.
 				hpChangeMessage(player, playerHealth, (int) damage, playerMaxHealth);
-
-				if (playerHealth == 0) {
-					//kill player
-					player.setHealth(healthBarPercent);
-				} else if (playerHealth >= 1) {
-					
-					if (player.getHealth() == 1) {
-						//kill player
-						player.setHealth(2);
-						PlayerManager.setHealthPoints(playerName, newHealthTotal);
-					} else if (playerHealth >=1) {
-						player.setHealth(healthBarPercent);
-						PlayerManager.setHealthPoints(playerName, newHealthTotal);
-					}
+				
+				if (player.getHealth() > 1 && playerHealth > 0) {
+					player.setHealth(healthBarPercent + 1);
+					PlayerManager.setHealthPoints(playerName, newHealthTotal);
+				} else if (player.getHealth() == 1) {
+					player.setHealth(player.getHealth() + 1);
+					PlayerManager.setHealthPoints(playerName, newHealthTotal);
+				} else if (playerHealth <= 0) {
+					player.setHealth(0);
 				}
+			} else {
+				//The victim was not a player but a mob. Lets apply name changes.
+				MonsterManager.toggleDamage(victim.getUniqueId(), event.getDamage());
 			}
 		}
 	}

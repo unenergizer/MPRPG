@@ -67,7 +67,7 @@ public class InventoryClickListener implements Listener{
 		taskID = Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
 			@Override
 			public void run() {
-				LoreManager.applyHpBonus(player);
+				LoreManager.applyHpBonus(player, true);
 
 			} //END Run method.
 		}, 5); //(20 ticks = 1 second)

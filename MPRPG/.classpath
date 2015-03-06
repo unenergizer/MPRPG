@@ -10,5 +10,6 @@
 	<classpathentry kind="lib" path="C:/Users/Andrew/Development/Minecraft MinePile Project/SpigotLibraries/BossbarAPI.jar"/>
 	<classpathentry kind="lib" path="C:/Users/Andrew/Development/Minecraft MinePile Project/SpigotLibraries/ProtocolLib.jar"/>
 	<classpathentry kind="lib" path="C:/Users/Andrew/Development/Minecraft MinePile Project/SpigotLibraries/HolographicDisplaysAPI_v2.1.3.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Andrew/Development/Minecraft MinePile Project/SpigotLibraries/citizensapi-2.0.14-SNAPSHOT.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

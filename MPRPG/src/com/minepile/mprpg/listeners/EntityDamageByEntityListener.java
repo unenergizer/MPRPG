@@ -13,6 +13,7 @@ import org.bukkit.inventory.ItemStack;
 
 import com.minepile.mprpg.MPRPG;
 import com.minepile.mprpg.equipment.LoreManager;
+import com.minepile.mprpg.monsters.MonsterManager;
 import com.minepile.mprpg.player.PlayerManager;
 
 public class EntityDamageByEntityListener implements Listener{
@@ -116,6 +117,9 @@ public class EntityDamageByEntityListener implements Listener{
 						}
 					}
 				}
+			} else {
+				//Living entity is not a player, so it must be some type of mob.
+				MonsterManager.toggleDamage(victim.getUniqueId(), event.getDamage());
 			}
 		}
 		

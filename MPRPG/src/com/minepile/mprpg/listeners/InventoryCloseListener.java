@@ -1,5 +1,7 @@
 package com.minepile.mprpg.listeners;
 
+import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -22,7 +24,12 @@ public class InventoryCloseListener implements Listener{
 		if (event.getPlayer() instanceof Player) {
 			Player player = (Player) event.getPlayer();
 			
-			LoreManager.applyHpBonus(player);
+			LoreManager.applyHpBonus(player, true);
+			
+			if (event.getInventory().getType().equals(Material.ENDER_CHEST)) {
+				//Play a closing sound.
+				player.playSound(player.getLocation(), Sound.CHEST_CLOSE, .5F, 1F);
+			}
 		}
 	}
 }

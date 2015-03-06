@@ -42,6 +42,9 @@ import com.minepile.mprpg.managers.ChatManager;
 import com.minepile.mprpg.managers.DiceRollManager;
 import com.minepile.mprpg.managers.LagManager;
 import com.minepile.mprpg.managers.MessageManager;
+import com.minepile.mprpg.managers.NPCManager;
+import com.minepile.mprpg.monsters.EntityTierManager;
+import com.minepile.mprpg.monsters.MonsterManager;
 import com.minepile.mprpg.player.PlayerManager;
 import com.minepile.mprpg.player.PlayerMenuManager;
 import com.minepile.mprpg.professions.Blacksmithing;
@@ -79,10 +82,13 @@ public class MPRPG extends JavaPlugin {
         BlockRegenerationManager.getInstance().setup(this);
         ChatManager.getInstance().setup(this);
         DiceRollManager.getInstance().setup(this);
+        EntityTierManager.getInstance().setup(this);
         ItemDropManager.getInstance().setup(this);
         ItemQualityManager.getInstance().setup(this);
         LagManager.getInstance().setup(this);
         MessageManager.getInstance().setup(this);
+        MonsterManager.getInstance().setup(this);
+        NPCManager.getInstance().setup(this);
         PlayerManager.getInstance().setup(this);
         PlayerMenuManager.getInstance().setup(this);
         ShopChestManager.getInstance().setup(this);
@@ -177,6 +183,9 @@ public class MPRPG extends JavaPlugin {
 		
 		//Show the administrator that the plugin is finished closing.
 		Bukkit.getConsoleSender().sendMessage("§c§lShut down of MinePile:RPG is complete!");
+		
+		//Remove any existing Holograms
+		BankChestManager.removeBankHolograms();
 	}
 	
 }

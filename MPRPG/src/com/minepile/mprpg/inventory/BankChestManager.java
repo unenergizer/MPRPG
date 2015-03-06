@@ -23,6 +23,10 @@ public class BankChestManager {
 	public static MPRPG plugin;
 	static BankChestManager weaponManagerInstance = new BankChestManager();
 	
+	 //Holograms
+	static Hologram bankHologram01;
+	static Hologram bankHologram02;
+	
 	static int maxChestPages = 5;//Change Me
 	
 	static int slotsPerRow = 9; //Do Not change
@@ -109,10 +113,15 @@ public class BankChestManager {
     	Location bank01 = new Location(Bukkit.getWorld("world"), 16.5, 80.5, -5.5);
     	Location bank02 = new Location(Bukkit.getWorld("world"), 18.5, 80.5, -7.5);
     	
-    	Hologram bankHologram01 = HologramsAPI.createHologram(plugin, bank01);
+    	bankHologram01 = HologramsAPI.createHologram(plugin, bank01);
     	bankHologram01.appendTextLine(ChatColor.GREEN + "" + ChatColor.BOLD + "Player Stash");
     	
-    	Hologram bankHologram02 = HologramsAPI.createHologram(plugin, bank02);
+    	bankHologram02 = HologramsAPI.createHologram(plugin, bank02);
     	bankHologram02.appendTextLine(ChatColor.GREEN + "" + ChatColor.BOLD + "Player Stash");
+    }
+    
+    public static void removeBankHolograms() {
+    	bankHologram01.delete();
+    	bankHologram02.delete();
     }
 }
