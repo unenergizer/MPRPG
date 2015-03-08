@@ -10,6 +10,7 @@ import org.bukkit.event.entity.EntityRegainHealthEvent;
 
 import com.minepile.mprpg.MPRPG;
 import com.minepile.mprpg.equipment.LoreManager;
+import com.minepile.mprpg.player.PlayerHealthTagManager;
 import com.minepile.mprpg.player.PlayerManager;
 
 public class EntityRegainHealthListener implements Listener{
@@ -62,6 +63,9 @@ public class EntityRegainHealthListener implements Listener{
 						ChatColor.GRAY + " [" + ChatColor.GREEN + newHP +
 						ChatColor.GRAY + " / " + ChatColor.GREEN + maxHP +
 						ChatColor.GRAY + "]");
+				
+				//Update the players health tag.
+				PlayerHealthTagManager.updateHealthTag(player);
 			}
 		}
 	}

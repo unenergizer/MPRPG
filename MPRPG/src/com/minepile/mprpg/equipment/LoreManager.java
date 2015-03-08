@@ -17,6 +17,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import com.minepile.mprpg.MPRPG;
+import com.minepile.mprpg.player.PlayerHealthTagManager;
 import com.minepile.mprpg.player.PlayerManager;
 
 public class LoreManager {
@@ -46,12 +47,12 @@ public class LoreManager {
 	public static LoreManager getInstance() {
 		return loreManagerInstance;
 	}
-	
+
 	//Setup PlayerManager
 	@SuppressWarnings("static-access")
 	public void setup(MPRPG plugin) {
 		this.plugin = plugin;
-		
+
 		for (Player players : Bukkit.getOnlinePlayers()) {
 			applyHpBonus(players, false);
 		}
@@ -292,7 +293,7 @@ public class LoreManager {
 		}
 		return speed;
 	}
-	
+
 	/*
 	 * Applies a players HP ARMOR + HP Base to get total HP.
 	 * 
@@ -305,67 +306,89 @@ public class LoreManager {
 		}
 		//Get armor HP bonuses
 		Integer hpToAdd = Integer.valueOf(getHpBonus(entity));
-		
+
 		//Make sure the entity is a player.
 		if ((entity instanceof Player)) {
-			
+
 			Player player = ((Player) entity).getPlayer();
 			String playerName = player.getName();
-			int healthPoints = PlayerManager.getHealthPoints(playerName);
-			
+			int currentHP = PlayerManager.getHealthPoints(playerName);
+			int newMaxHP = getBaseHealth(player) + hpToAdd.intValue();
+			double oldMaxHP = PlayerManager.getMaxHealthPoints(playerName);
+
 			//If the players HP is greater than the base HP + HP bonus,
 			//set the players HP.  BaseHP + Armor HP.
-			if (healthPoints < getBaseHealth(player) + hpToAdd.intValue()) {
-				//Set player HP. BaseHP + Armor HP
-				int newHP = getBaseHealth((Player)entity) + hpToAdd.intValue();
-				double totalHP = PlayerManager.getMaxHealthPoints(playerName);
+			if (currentHP > newMaxHP) {
+
+				//entity.setHealth(newHP);
+				PlayerManager.setHealthPoints(entity.getName(), newMaxHP);
+				entity.sendMessage(ChatColor.BLUE + "" + ChatColor.BOLD + "New HP: " + ChatColor.RESET + newMaxHP);
 				
-				if (newHP < totalHP) {
-					//entity.setHealth(newHP);
-					PlayerManager.setHealthPoints(entity.getName(), newHP);
-					entity.sendMessage(ChatColor.BLUE + "" + ChatColor.BOLD + "New HP: " + ChatColor.RESET + newHP);
-					
-					entity.setHealth(20 * PlayerManager.getHealthPoints(playerName) / PlayerManager.getMaxHealthPoints(playerName));
-				}
+				//Set players heart's level to 20 (full health).
+				entity.sendMessage("updatingplayerhp 2");
+				entity.setHealth(20);
+
 			}
 			
-			//Change the players MAX HP.
-			int newMaxHP = getBaseHealth(player) + hpToAdd.intValue();
-			double totalHP = PlayerManager.getMaxHealthPoints(playerName);
-			if (newMaxHP != totalHP) {
+			//Lets grab the players HP again, just incase it was updated above.
+			int updatedHP = PlayerManager.getHealthPoints(playerName);
+			//This is the percent determines how many play hearts are shown.
+			int healthPercent = (int) ((20 * updatedHP) / newMaxHP);
+			
+			//If the players maximum HP has changed, then lets update
+			//the user on that change.  If the oldMaxHP equals the newMaxHP
+			//then no change has been made and the user does not need updates.
+			if (newMaxHP != oldMaxHP) {
 
 				PlayerManager.setMaxHealthPoints(entity.getName(), newMaxHP);
 				entity.sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "New MaxHP: " + ChatColor.RESET + newMaxHP);
-
-				entity.setHealth(20 * PlayerManager.getHealthPoints(playerName) / PlayerManager.getMaxHealthPoints(playerName));
 				
+				//If the players HP percent is over 20,
+				//then just set the players hearts to 20.
+				if (healthPercent >= 20) {
+
+					//Debug messages
+					//entity.sendMessage("newMaxHP: " + newMaxHP);
+					//entity.sendMessage("oldMaxHP: " + oldMaxHP);
+					//entity.sendMessage("currentHP (old): " + currentHP);
+					//entity.sendMessage("updatedHP: " + updatedHP);
+					//entity.sendMessage("healthPercent: " + healthPercent);
+					
+					entity.setHealth(20);
+				} else {
+					entity.setHealth(healthPercent);
+				}
+
 				if (playSoundEffect == true) {
 					//Play sound effect.
 					((Player) entity).playSound(entity.getLocation(), Sound.ANVIL_LAND, .5F, 1F);
 				}
 			}
+
+			//Update the players health tag.
+			PlayerHealthTagManager.updateHealthTag(player);
 		}
 	}
 
 	public static int getHpBonus(LivingEntity entity) {
 		Integer hpToAdd = Integer.valueOf(0);
-		
+
 		//Loop through the armor slots and find armor.
 		for (ItemStack item : entity.getEquipment().getArmorContents()) {
-			
+
 			//If the item is not null and has meta and has lore, continue.
 			if ((item != null) && (item.hasItemMeta()) && (item.getItemMeta().hasLore())) {
-				
+
 				//Create an array list of "Lore" strings and add them to it.
 				List<String> lore = item.getItemMeta().getLore();
-				
+
 				//Convert the array to a string, and make it all lowercase.
 				String allLore = lore.toString().toLowerCase();
-				
+
 				//Prepare for text matching using regular expressions.
 				Matcher negmatcher = negHealthRegex.matcher(allLore);
 				Matcher matcher = healthRegex.matcher(allLore);
-				
+
 				//Find the new value.
 				if (matcher.find()) {
 					hpToAdd = Integer.valueOf(hpToAdd.intValue() + Integer.valueOf(matcher.group(1)).intValue());
@@ -381,14 +404,14 @@ public class LoreManager {
 		//Return the HP value.
 		return hpToAdd.intValue();
 	}
-	
+
 	//Get player base health points.
 	//This is defined in the PlayerManager.
 	public static int getBaseHealth(Player player) {
 		int hp = PlayerManager.getBaseHealthPoints();
 		return hp;
 	}
-	
+
 	/*
 	 * Get the players regeneration bonuses.
 	 * 
@@ -401,13 +424,13 @@ public class LoreManager {
 		}
 		//Regeneration bonus
 		Integer regenBonus = Integer.valueOf(0);
-		
+
 		//Loop through the armor slots and get the Regeneration Bonus for all Armor.
 		for (ItemStack item : entity.getEquipment().getArmorContents()) {
-			
+
 			//If the item is not null and the item has meta and item lore, continue.
 			if ((item != null) && (item.hasItemMeta()) && (item.getItemMeta().hasLore())) {
-				
+
 				//Create an array list of strings, and add the item lore to it.
 				List<String> lore = item.getItemMeta().getLore();
 				//Get the lore array, and make each entry lowercase.
@@ -471,7 +494,7 @@ public class LoreManager {
 		}
 		return (int)Math.round(Math.random() * (damageMax.intValue() - damageMin.intValue()) + damageMin.intValue() + damageBonus.intValue() + getCritDamage(entity));
 	}
-	
+
 	public static boolean useRangeOfDamage(LivingEntity entity) {
 		//If the entity is not valid, lets exit the method.
 		if (!entity.isValid()) {
@@ -479,7 +502,7 @@ public class LoreManager {
 		}
 		//Lets loop through the armor slots and get the armor contents.
 		for (ItemStack item : entity.getEquipment().getArmorContents()) {
-			
+
 			//If the armor slot is not null and the item has meta and the item has lore, continue.
 			if ((item != null) && (item.hasItemMeta()) && (item.getItemMeta().hasLore())) {
 				//Create an array of strings from the items lore.
@@ -511,7 +534,7 @@ public class LoreManager {
 		}
 		return false;
 	}
-	
+
 	/*
 	 * This method displays the users current equipped armor and weapon lore statistics.
 	 * 
