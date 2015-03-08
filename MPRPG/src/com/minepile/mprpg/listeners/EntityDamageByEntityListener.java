@@ -1,9 +1,12 @@
 package com.minepile.mprpg.listeners;
 
+import java.util.UUID;
+
 import net.md_5.bungee.api.ChatColor;
 
 import org.bukkit.Material;
 import org.bukkit.entity.Arrow;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -65,7 +68,7 @@ public class EntityDamageByEntityListener implements Listener{
 					LoreManager.addAttackCooldown(damagerName);
 					
 					//Show player damage message.
-					hpChangeMessage(player, playerHealth, (int) damage, playerMaxHealth);
+					playerHealthChangeMessage(player, playerHealth, (int) damage, playerMaxHealth);
 					
 					if (playerHealth == 0) {
 						//kill player
@@ -77,7 +80,11 @@ public class EntityDamageByEntityListener implements Listener{
 							player.setHealth(2);
 							PlayerManager.setHealthPoints(playerName, newHealthTotal);
 						} else if (playerHealth >= 1) {
-							player.setHealth(healthBarPercent);
+							if (healthBarPercent < 1) {
+								player.setHealth(healthBarPercent + 1);
+							} else {
+								player.setHealth(healthBarPercent);
+							}
 							PlayerManager.setHealthPoints(playerName, newHealthTotal);
 						}
 					}
@@ -88,7 +95,7 @@ public class EntityDamageByEntityListener implements Listener{
 					Arrow arrow = (Arrow)event.getDamager();
 					
 					if ((arrow.getShooter() != null) && ((arrow.getShooter() instanceof Player))) {
-						Player damager = (Player) event.getDamager();
+						Player damager = (Player) arrow.getShooter();
 						String damagerName = damager.getName();
 						
 						int damage = (int) event.getDamage();
@@ -99,7 +106,7 @@ public class EntityDamageByEntityListener implements Listener{
 						LoreManager.addAttackCooldown(damagerName);
 						
 						//Show player damage message.
-						hpChangeMessage(player, playerHealth, (int) damage, playerMaxHealth);
+						damager.sendMessage(playerHealthChangeMessage(player, playerHealth, (int) damage, playerMaxHealth));
 						
 						if (player.getHealth() <= 2) {
 							player.setHealth(2);
@@ -117,15 +124,44 @@ public class EntityDamageByEntityListener implements Listener{
 						}
 					}
 				}
-			} else {
-				//Living entity is not a player, so it must be some type of mob.
-				MonsterManager.toggleDamage(victim.getUniqueId(), event.getDamage());
+			} else if (event.getEntity() instanceof LivingEntity) {
+				//Living entity is not a player, so it must be some type of mob.				
+				UUID victimID = victim.getUniqueId();
+				Entity damager = event.getDamager();
+				
+				int victimHealth = MonsterManager.getMobHealthPoints(victimID);
+				int victimMaxHealth = MonsterManager.getMobMaxHealthPoints(victimID);
+				
+				int damage = (int) event.getDamage();
+				
+				
+				//Set the entities health to 20.
+				//We need this if the entity default 
+				//health is less than 20. Example is 
+				//chickens with 4 hit points.
+				if (victim.getHealth() < 20) {
+					victim.setMaxHealth(20);
+				}
+				
+				//Show monster damage message.
+				if (damager instanceof Player) {
+					damager.sendMessage(mobHealthChangeMessage((Player)damager, victim, victimHealth, (int) damage, victimMaxHealth));
+				}
+				
+				if (victimHealth <= 1) {
+					victim.setHealth(0);
+					MonsterManager.toggleDeath(victimID);
+				} else {
+					victim.setHealth(15);
+					MonsterManager.toggleDamage(victimID, damage);
+					
+				}
 			}
 		}
 		
 	}
 	
-	public static void hpChangeMessage(Player player, int playerHealth, int damage, int playerMaxHealth) {
+	public static String playerHealthChangeMessage(Player player, int playerHealth, int damage, int playerMaxHealth) {
 		
 		int newHP = playerHealth - damage;
 		int hpPercent = (int) ((100 * newHP) / playerMaxHealth);
@@ -134,11 +170,31 @@ public class EntityDamageByEntityListener implements Listener{
 		String hpPrc = Integer.toString(hpPercent);
 		String hp = Integer.toString(newHP);
 		String maxHP = Integer.toString(playerMaxHealth);
-		player.sendMessage(ChatColor.RED + "         -" + 
+		String hpMessage = ChatColor.RED + "         -" + 
 				ChatColor.GRAY + dmg + ChatColor.BOLD + " HP: " +
 				ChatColor.GRAY + ChatColor.BOLD + hpPrc + "%" +
 				ChatColor.GRAY + " [" + ChatColor.RED + hp +
 				ChatColor.GRAY + " / " + ChatColor.GREEN + maxHP +
-				ChatColor.GRAY + "]");
+				ChatColor.GRAY + "]";
+		return hpMessage;
+	}
+	
+	public static String mobHealthChangeMessage(Player player, Entity victim, int playerHealth, int damage, int playerMaxHealth) {
+		
+		int newHP = playerHealth - damage;
+		int hpPercent = (int) ((100 * newHP) / playerMaxHealth);
+		
+		String name = victim.getType().toString();
+		String dmg = Integer.toString(damage);
+		String hpPrc = Integer.toString(hpPercent);
+		String hp = Integer.toString(newHP);
+		String maxHP = Integer.toString(playerMaxHealth);
+		String hpMessage = ChatColor.GRAY + "          " + ChatColor.BOLD + name + ": " +
+				ChatColor.GRAY + ChatColor.BOLD + hpPrc + "%" +
+				ChatColor.GRAY + " [" + ChatColor.LIGHT_PURPLE + hp +
+				ChatColor.GRAY + " / " + ChatColor.DARK_PURPLE + maxHP +
+				ChatColor.GRAY + "]" + ChatColor.RED + " -" + 
+						ChatColor.GRAY + dmg + " hp";
+		return hpMessage;
 	}
 }

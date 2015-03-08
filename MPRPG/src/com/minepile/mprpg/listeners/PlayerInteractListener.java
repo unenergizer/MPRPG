@@ -1,5 +1,7 @@
 package com.minepile.mprpg.listeners;
 
+import net.md_5.bungee.api.ChatColor;
+
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -192,6 +194,8 @@ public class PlayerInteractListener implements Listener{
 				
 			}
 		}
+		
+		//If a player clicks their bank.
 		if (event.getAction().equals(Action.RIGHT_CLICK_BLOCK) && block.getType().equals(Material.ENDER_CHEST)) {
 
 			//Cancel opening the ender chest and show a custom chest.
@@ -202,6 +206,16 @@ public class PlayerInteractListener implements Listener{
 			
 			//Play a sound
 			player.playSound(player.getLocation(), Sound.CHEST_OPEN, .5F, 1F);
+		}
+		
+		//If player clicks a mail box.
+		if (event.getAction().equals(Action.RIGHT_CLICK_BLOCK) && block.getType().equals(Material.DROPPER)) {
+
+			//Cancel opening the ender chest and show a custom chest.
+			event.setCancelled(true);
+
+			//Mailbox.
+			player.sendMessage(ChatColor.GRAY + "     " +ChatColor.ITALIC +"You have no mail in your mailbox.");
 		}
 	}
 

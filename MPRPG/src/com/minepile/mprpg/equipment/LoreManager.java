@@ -319,7 +319,7 @@ public class LoreManager {
 				int newHP = getBaseHealth((Player)entity) + hpToAdd.intValue();
 				double totalHP = PlayerManager.getMaxHealthPoints(playerName);
 				
-				if (newHP != totalHP) {
+				if (newHP < totalHP) {
 					//entity.setHealth(newHP);
 					PlayerManager.setHealthPoints(entity.getName(), newHP);
 					entity.sendMessage(ChatColor.BLUE + "" + ChatColor.BOLD + "New HP: " + ChatColor.RESET + newHP);

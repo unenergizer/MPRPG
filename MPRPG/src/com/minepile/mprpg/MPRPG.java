@@ -3,6 +3,7 @@ package com.minepile.mprpg;
 import java.io.File;
 
 import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -18,6 +19,7 @@ import com.minepile.mprpg.listeners.AsyncPlayerChatListener;
 import com.minepile.mprpg.listeners.BlockBreakListener;
 import com.minepile.mprpg.listeners.BlockPlaceListener;
 import com.minepile.mprpg.listeners.CraftItemListener;
+import com.minepile.mprpg.listeners.CreatureSpawnListener;
 import com.minepile.mprpg.listeners.EntityDamageByEntityListener;
 import com.minepile.mprpg.listeners.EntityDamageListener;
 import com.minepile.mprpg.listeners.EntityDeathListener;
@@ -45,6 +47,8 @@ import com.minepile.mprpg.managers.MessageManager;
 import com.minepile.mprpg.managers.NPCManager;
 import com.minepile.mprpg.monsters.EntityTierManager;
 import com.minepile.mprpg.monsters.MonsterManager;
+import com.minepile.mprpg.player.PlayerHealthTagManager;
+import com.minepile.mprpg.player.PlayerMailManager;
 import com.minepile.mprpg.player.PlayerManager;
 import com.minepile.mprpg.player.PlayerMenuManager;
 import com.minepile.mprpg.professions.Blacksmithing;
@@ -89,7 +93,9 @@ public class MPRPG extends JavaPlugin {
         MessageManager.getInstance().setup(this);
         MonsterManager.getInstance().setup(this);
         NPCManager.getInstance().setup(this);
+        PlayerMailManager.getInstance().setup(this);
         PlayerManager.getInstance().setup(this);
+        PlayerHealthTagManager.getInstance().setup(this);
         PlayerMenuManager.getInstance().setup(this);
         ShopChestManager.getInstance().setup(this);
         
@@ -113,8 +119,9 @@ public class MPRPG extends JavaPlugin {
         
         pluginManager.registerEvents(new BlockBreakListener(this), this);
         pluginManager.registerEvents(new BlockPlaceListener(this), this);
-        
+
         pluginManager.registerEvents(new CraftItemListener(this), this);
+        pluginManager.registerEvents(new CreatureSpawnListener(this), this);
         
         pluginManager.registerEvents(new EntityDamageByEntityListener(this), this);
         pluginManager.registerEvents(new EntityDamageListener(this), this);
@@ -152,6 +159,9 @@ public class MPRPG extends JavaPlugin {
         //get the server lag
         getCommand("armorstats").setExecutor(new CommandManager(this));
         
+        //commands to define monsters in the world
+        getCommand("mm").setExecutor(new CommandManager(this));
+        
         //private message other players
         getCommand("msg").setExecutor(new CommandManager(this));
         getCommand("pm").setExecutor(new CommandManager(this));
@@ -186,6 +196,15 @@ public class MPRPG extends JavaPlugin {
 		
 		//Remove any existing Holograms
 		BankChestManager.removeBankHolograms();
+		
+		//Remove mail holograms
+		PlayerMailManager.removeMailHolograms();
+		
+		//Save players last health
+		for (Player players : Bukkit.getOnlinePlayers()) {
+			int logoutHP = PlayerManager.getHealthPoints(players.getName());
+			PlayerManager.setPlayerConfigInt(players, "player.logoutHP", logoutHP);
+		}
 	}
 	
 }

@@ -21,6 +21,10 @@ public class PlayerQuitListener  implements Listener {
 	public void onPlayerQuit(PlayerQuitEvent event) {
 		Player player = event.getPlayer();
 		
+		//Save players last health
+		int logoutHP = PlayerManager.getHealthPoints(player.getName());
+		PlayerManager.setPlayerConfigInt(player, "player.logoutHP", logoutHP);
+		
 		//Removes the player from the game.
 		//Removes players from hashMaps.
 		PlayerManager.removePlayer(player);

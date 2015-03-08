@@ -211,7 +211,11 @@ public class PlayerManager {
         
         //Read armor and set statistics.
         //update HashMap info
-        healthPoints.put(playerName, baseHealthPoints);
+        if (getPlayerConfigInt(player, "player.logoutHP") == 0) {
+        	healthPoints.put(playerName, getPlayerConfigInt(player, "player.logoutHP"));
+        } else {
+        	healthPoints.put(playerName, baseHealthPoints);
+        }
         maxHealthPoints.put(playerName, baseHealthPoints);
         staminaPoints.put(playerName, baseStaminaPoints);
         maxStaminaPoints.put(playerName, baseStaminaPoints);
@@ -315,6 +319,7 @@ public class PlayerManager {
         playerConfig.set("playerName", playerName);
         playerConfig.set("player.playerLVL", 1);
         playerConfig.set("player.playerEXP", 0);
+        playerConfig.set("player.logoutHP", 0);
         
         playerConfig.set("permissions.admin", 0);
         playerConfig.set("permissions.dev", 0);

@@ -1,5 +1,7 @@
 package com.minepile.mprpg.listeners;
 
+import java.util.UUID;
+
 import net.md_5.bungee.api.ChatColor;
 
 import org.bukkit.Material;
@@ -74,8 +76,27 @@ public class EntityDamageListener implements Listener{
 					player.setHealth(0);
 				}
 			} else {
-				//The victim was not a player but a mob. Lets apply name changes.
-				MonsterManager.toggleDamage(victim.getUniqueId(), event.getDamage());
+				//Living entity is not a player, so it must be some type of mob.
+				UUID victimID = victim.getUniqueId();
+				int victimHealth = MonsterManager.getMobHealthPoints(victimID);
+				int damage = (int) event.getDamage();
+				
+				//Set the entities health to 20.
+				//We need this if the entity default 
+				//health is less than 20. Example is 
+				//chickens with 4 hit points.
+				if (victim.getHealth() < 20) {
+					victim.setMaxHealth(20);
+				}
+				
+				if (victimHealth <= 1) {
+					victim.setHealth(0);
+					MonsterManager.toggleDeath(victimID);
+				} else {
+					victim.setHealth(15);
+					MonsterManager.toggleDamage(victimID, damage);
+					
+				}
 			}
 		}
 	}

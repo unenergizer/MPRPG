@@ -290,7 +290,7 @@ public class CommandManager implements CommandExecutor{
 
 					try {
 						int roll = DiceRollManager.onDiceRoll(Integer.parseInt(args[0]));
-						
+
 						Bukkit.broadcastMessage(ChatColor.GRAY + "     " + ChatColor.BOLD +
 								player.getName() + ChatColor.DARK_GRAY + ChatColor.BOLD +
 								": " + ChatColor.GRAY + "Rolled a " + ChatColor.UNDERLINE + 
@@ -328,13 +328,87 @@ public class CommandManager implements CommandExecutor{
 					player.sendMessage(ChatColor.DARK_GRAY + "" + ChatColor.BOLD +"---------------------------------------------");
 				}
 			}
-			
-			//Roll command. Used to get a random number.
+
+			//Teleports the player back to the spawn location.
 			if (cmd.getLabel().equalsIgnoreCase("spawn")) {
-				if (player.isOp()) {
-					PlayerManager.teleportPlayerToSpawn(player);
-				}
+				PlayerManager.teleportPlayerToSpawn(player);
 			}
+
+			//Defines a mob location.
+			if (cmd.getLabel().equalsIgnoreCase("mm")) {
+				if (player.isOp()) {
+					if (args.length == 1 && args[0].toString().equals("set")) {
+
+					} else {
+						player.sendMessage(" ");
+						player.sendMessage(ChatColor.DARK_GRAY + "" + ChatColor.BOLD + "---------------" +
+								ChatColor.DARK_GRAY + "<[" +
+								ChatColor.GOLD + " Monster Manager " + ChatColor.DARK_GRAY + "]>" +
+								ChatColor.BOLD + "--------------");
+						player.sendMessage(" ");
+						player.sendMessage(ChatColor.RED + "  " + ChatColor.BOLD + "! " +
+								ChatColor.GREEN + ChatColor.BOLD + "Please specify the monster and its properties.");
+						player.sendMessage(" ");
+						player.sendMessage(ChatColor.GREEN + "  " + ChatColor.BOLD + 
+								"Passive Entities" + ChatColor.DARK_GRAY + ChatColor.BOLD + ": " +
+								ChatColor.WHITE + "Bat" + ChatColor.DARK_GRAY + ", " +
+								ChatColor.WHITE + "chicken" + ChatColor.DARK_GRAY  + ", " +
+								ChatColor.WHITE + "cow" + ChatColor.DARK_GRAY  + ", " +
+								ChatColor.WHITE + "donkey" + ChatColor.DARK_GRAY + ", " +
+								ChatColor.WHITE + "horse" + ChatColor.DARK_GRAY + ", " +
+								ChatColor.WHITE + "mooshroom" + ChatColor.DARK_GRAY + ", " +
+								ChatColor.WHITE + "mule" + ChatColor.DARK_GRAY + ", " +
+								ChatColor.WHITE + "ocelot" + ChatColor.DARK_GRAY + ", " +
+								ChatColor.WHITE + "pig" + ChatColor.DARK_GRAY + ", " +
+								ChatColor.WHITE + "rabbit" + ChatColor.DARK_GRAY + ", " +
+								ChatColor.WHITE + "sheep" + ChatColor.DARK_GRAY + ", " +
+								ChatColor.WHITE + "squid" + ChatColor.DARK_GRAY + ", " +
+								ChatColor.WHITE + "and " + "villager" + 
+								ChatColor.DARK_GRAY + ".");
+						player.sendMessage(" ");
+						player.sendMessage(ChatColor.BLUE + "  " + ChatColor.BOLD + 
+								"Neutral Entities" + ChatColor.DARK_GRAY + ChatColor.BOLD + ": " +
+								ChatColor.WHITE + "Cave spider" + ChatColor.DARK_GRAY + ", " +
+								ChatColor.WHITE + "enderman" + ChatColor.DARK_GRAY  + ", " +
+								ChatColor.WHITE + "iron golem" + ChatColor.DARK_GRAY  + ", " +
+								ChatColor.WHITE + "spider" + ChatColor.DARK_GRAY  + ", " +
+								ChatColor.WHITE + "wolf" + ChatColor.DARK_GRAY  + ", " +
+								ChatColor.WHITE + "and " + "zombie pigman" + 
+								ChatColor.DARK_GRAY + ".");
+						player.sendMessage(" ");
+						player.sendMessage(ChatColor.RED + "  " + ChatColor.BOLD + 
+								"Hostile Entities" + ChatColor.DARK_GRAY + ChatColor.BOLD + ": " +
+								ChatColor.WHITE + "Blaze" + ChatColor.DARK_GRAY + ", " +
+								ChatColor.WHITE + "chicken jockey" + ChatColor.DARK_GRAY  + ", " +
+								ChatColor.WHITE + "creeper" + ChatColor.DARK_GRAY  + ", " +
+								ChatColor.WHITE + "elder guardian" + ChatColor.DARK_GRAY + ", " +
+								ChatColor.WHITE + "ender dragon" + ChatColor.DARK_GRAY + ", " +
+								ChatColor.WHITE + "endermite" + ChatColor.DARK_GRAY + ", " +
+								ChatColor.WHITE + "ghast" + ChatColor.DARK_GRAY + ", " +
+								ChatColor.WHITE + "giant" + ChatColor.DARK_GRAY + ", " +
+								ChatColor.WHITE + "guardian" + ChatColor.DARK_GRAY + ", " +
+								ChatColor.WHITE + "killer bunny" + ChatColor.DARK_GRAY + ", " +
+								ChatColor.WHITE + "magma cube" + ChatColor.DARK_GRAY + ", " +
+								ChatColor.WHITE + "siverfish" + ChatColor.DARK_GRAY + ", " +
+								ChatColor.WHITE + "skeleton" + ChatColor.DARK_GRAY + ", " +
+								ChatColor.WHITE + "slime" + ChatColor.DARK_GRAY + ", " +
+								ChatColor.WHITE + "spider jockey" + ChatColor.DARK_GRAY + ", " +
+								ChatColor.WHITE + "witch" + ChatColor.DARK_GRAY + ", " +
+								ChatColor.WHITE + "wither" + ChatColor.DARK_GRAY + ", " +
+								ChatColor.WHITE + "wither skeleton" + ChatColor.DARK_GRAY + ", " +
+								ChatColor.WHITE + "zombie" + ChatColor.DARK_GRAY + ", " +
+								ChatColor.WHITE + "and " + "zombie villager" + 
+								ChatColor.DARK_GRAY + ".");
+						player.sendMessage(" ");
+						player.sendMessage(ChatColor.GRAY + "  " + ChatColor.BOLD + 
+								"Example" + ChatColor.DARK_GRAY + ChatColor.BOLD + ": " + 
+								ChatColor.WHITE + "/" + label + " set <entity> <lvl> <tier> <dropTableId>");
+						player.sendMessage(ChatColor.DARK_GRAY + "" + ChatColor.BOLD +"---------------------------------------------");
+					}
+				}	
+			}
+
+
 
 		} else { //The command sent was not by a player.
 			sender.sendMessage("Please do not use the console to run this command.");

@@ -20,6 +20,6 @@ public class CreatureSpawnListener  implements Listener {
 	@EventHandler
 	public void onCreatureSpawn(CreatureSpawnEvent event) {
 
-		MonsterManager.addMonster(event.getEntity().getUniqueId());
+		MonsterManager.setMobName(event.getEntity());;
 	}
 }

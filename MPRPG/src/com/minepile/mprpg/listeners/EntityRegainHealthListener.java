@@ -49,7 +49,12 @@ public class EntityRegainHealthListener implements Listener{
 				*/
 			} else if (currentHP < maxHP){
 				PlayerManager.setHealthPoints(playerName, newHP);
-				player.setHealth(hpBarPercent - 1);
+				
+				if (hpBarPercent > 1) {
+					player.setHealth(hpBarPercent - 1);
+				} else {
+					player.setHealth(hpBarPercent);
+				}
 				
 				player.sendMessage(ChatColor.GREEN + "         +" + 
 						ChatColor.GRAY + healAmount + ChatColor.BOLD + " HP: " +
