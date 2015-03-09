@@ -14,6 +14,7 @@ import org.bukkit.inventory.ItemStack;
 
 import com.minepile.mprpg.MPRPG;
 import com.minepile.mprpg.monsters.MonsterManager;
+import com.minepile.mprpg.player.PlayerHealthTagManager;
 import com.minepile.mprpg.player.PlayerManager;
 
 public class EntityDamageListener implements Listener{
@@ -75,6 +76,9 @@ public class EntityDamageListener implements Listener{
 				} else if (playerHealth <= 0) {
 					player.setHealth(0);
 				}
+				
+				//Update the players health tag
+				PlayerHealthTagManager.updateHealthTag(player);
 			} else {
 				//Living entity is not a player, so it must be some type of mob.
 				UUID victimID = victim.getUniqueId();

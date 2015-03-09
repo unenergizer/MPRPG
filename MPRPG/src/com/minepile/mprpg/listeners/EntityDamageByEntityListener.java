@@ -17,6 +17,7 @@ import org.bukkit.inventory.ItemStack;
 import com.minepile.mprpg.MPRPG;
 import com.minepile.mprpg.equipment.LoreManager;
 import com.minepile.mprpg.monsters.MonsterManager;
+import com.minepile.mprpg.player.PlayerHealthTagManager;
 import com.minepile.mprpg.player.PlayerManager;
 
 public class EntityDamageByEntityListener implements Listener{
@@ -89,6 +90,9 @@ public class EntityDamageByEntityListener implements Listener{
 						}
 					}
 					
+					//Update the players health tag
+					PlayerHealthTagManager.updateHealthTag(player);
+					
 				//PLayer shot arrow.
 				} else if (event.getDamager() instanceof Arrow){
 				
@@ -122,6 +126,9 @@ public class EntityDamageByEntityListener implements Listener{
 							player.setHealth(healthBarPercent);
 							PlayerManager.setHealthPoints(playerName, newHealthTotal);
 						}
+
+						//Update the players health tag
+						PlayerHealthTagManager.updateHealthTag(player);
 					}
 				}
 			} else if (event.getEntity() instanceof LivingEntity) {

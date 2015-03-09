@@ -11,6 +11,7 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import com.minepile.mprpg.MPRPG;
 import com.minepile.mprpg.equipment.LoreManager;
 import com.minepile.mprpg.managers.MessageManager;
+import com.minepile.mprpg.player.PlayerHealthTagManager;
 import com.minepile.mprpg.player.PlayerManager;
 
 public class PlayerJoinListener implements Listener {
@@ -46,6 +47,10 @@ public class PlayerJoinListener implements Listener {
 		player.sendMessage(ChatColor.GRAY + "Welcome " + playerName + "!");
 		
 		updatePlayerArmor(player);
+		
+		//Add the players health tag below their name.
+		PlayerHealthTagManager.addPlayer(player);
+		PlayerHealthTagManager.updateHealthTag(player);
 	}
 	
 	//It seems that the client responds better if we give it time to

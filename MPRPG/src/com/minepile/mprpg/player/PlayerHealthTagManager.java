@@ -2,9 +2,11 @@ package com.minepile.mprpg.player;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Scoreboard;
+import org.bukkit.scoreboard.Team;
 
 import com.minepile.mprpg.MPRPG;
 
@@ -15,7 +17,8 @@ public class PlayerHealthTagManager {
 	static PlayerHealthTagManager playerHealthTagManagerInstance = new PlayerHealthTagManager();
 	
 	static Scoreboard sb;
-	private Objective obj;
+	static Team team;
+	private static Objective obj;
 	
 	//Create instance
 	public static PlayerHealthTagManager getInstance() {
@@ -27,16 +30,39 @@ public class PlayerHealthTagManager {
 	public void setup(MPRPG plugin) {
 		this.plugin = plugin;
 		
-		setupScoreboard("Lobby", "RPG");
+		setupScoreboard();
+		
+		for (Player players : Bukkit.getOnlinePlayers()) {
+			addPlayer(players);
+			updateHealthTag(players);
+		}
 	}	
 	
-	public void setupScoreboard(String objectiveName, String displayName) {
+	public void setupScoreboard() {
 		
 		sb = Bukkit.getScoreboardManager().getNewScoreboard();
 		
-		obj = sb.registerNewObjective(objectiveName, "dummy");
+		obj = sb.registerNewObjective("playerhealthtag", "dummy");
+		obj.setDisplayName(ChatColor.RED + "❤ ");
 		obj.setDisplaySlot(DisplaySlot.BELOW_NAME);
-		obj.setDisplayName(ChatColor.GREEN + "" + ChatColor.BOLD + displayName);
+		
+		setupTeam();
+	}
+	
+	public static void setupTeam() {
+		team = sb.registerNewTeam("team0");
+		team.setCanSeeFriendlyInvisibles(false);
+		team.setAllowFriendlyFire(true);
+		team.setPrefix("");
+	}
+	
+	public static void addPlayer(Player player) {
+		player.setScoreboard(sb);
+		team.addPlayer(player);
+	}
+	
+	public static void updateHealthTag(Player player) {
+		obj.getScore(player).setScore(PlayerManager.getHealthPoints(player.getName()));
 	}
 	
 }
