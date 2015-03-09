@@ -17,6 +17,7 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
 import com.minepile.mprpg.MPRPG;
+import com.minepile.mprpg.equipment.LoreManager;
 
 public class PlayerManager {
 	
@@ -211,10 +212,10 @@ public class PlayerManager {
         
         //Read armor and set statistics.
         //update HashMap info
-        if (getPlayerConfigInt(player, "player.logoutHP") == 0) {
-        	healthPoints.put(playerName, getPlayerConfigInt(player, "player.logoutHP"));
-        } else {
+        if (getPlayerConfigInt(player, "player.logoutHP") < LoreManager.getHpBonus(player)) {
         	healthPoints.put(playerName, baseHealthPoints);
+        } else {
+        	healthPoints.put(playerName, getPlayerConfigInt(player, "player.logoutHP"));
         }
         maxHealthPoints.put(playerName, baseHealthPoints);
         staminaPoints.put(playerName, baseStaminaPoints);

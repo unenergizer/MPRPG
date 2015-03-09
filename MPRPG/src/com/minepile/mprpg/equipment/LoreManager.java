@@ -311,10 +311,11 @@ public class LoreManager {
 			
 			Player player = ((Player) entity).getPlayer();
 			String playerName = player.getName();
+			int healthPoints = PlayerManager.getHealthPoints(playerName);
 			
 			//If the players HP is greater than the base HP + HP bonus,
 			//set the players HP.  BaseHP + Armor HP.
-			if (PlayerManager.getHealthPoints(playerName) > getBaseHealth(player) + hpToAdd.intValue()) {
+			if (healthPoints < getBaseHealth(player) + hpToAdd.intValue()) {
 				//Set player HP. BaseHP + Armor HP
 				int newHP = getBaseHealth((Player)entity) + hpToAdd.intValue();
 				double totalHP = PlayerManager.getMaxHealthPoints(playerName);
