@@ -21,10 +21,13 @@ public class BlockPlaceListener implements Listener{
 	@EventHandler
 	public void onBlockPlace(BlockPlaceEvent event) {
 		Player player = event.getPlayer();
-
-
-		//Cancel the event if the player is not an operator.
-		if (!player.isOp() && player.getGameMode().equals(GameMode.CREATIVE)) {
+		
+		
+		if (player.isOp() && player.getGameMode().equals(GameMode.CREATIVE)) {
+			event.setCancelled(false);
+		} else {
+			
+			//Cancel the event if the player is not an operator.
 			event.setCancelled(true);
 
 			//show debug message

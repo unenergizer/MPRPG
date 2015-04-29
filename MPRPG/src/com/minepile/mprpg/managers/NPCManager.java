@@ -72,7 +72,7 @@ public class NPCManager {
 
 	public static void spawnNPC() {	
 		//ShopMaster.
-		spawnerUtil.spawnEntity(world.getName(), npc0Location, EntityType.VILLAGER, ChatColor.LIGHT_PURPLE + "" + ChatColor.BOLD + "Shop Master");
+		spawnerUtil.spawnEntity(world.getName(), npc0Location, EntityType.VILLAGER, ChatColor.LIGHT_PURPLE + "" + "Island Villager");
 		entityLocation.put(spawnerUtil.getEntityID(), npc0Location);
 	}
 

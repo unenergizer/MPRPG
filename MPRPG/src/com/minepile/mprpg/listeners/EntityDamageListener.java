@@ -68,12 +68,19 @@ public class EntityDamageListener implements Listener{
 				hpChangeMessage(player, playerHealth, (int) damage, playerMaxHealth);
 				
 				if (player.getHealth() > 1 && playerHealth > 0) {
-					player.setHealth(healthBarPercent + 1);
+					if (healthBarPercent <= 1) {
+						player.setHealth(healthBarPercent);
+					} else {
+						player.setHealth(healthBarPercent - 1);
+					}
 					PlayerManager.setHealthPoints(playerName, newHealthTotal);
 				} else if (player.getHealth() == 1) {
 					player.setHealth(player.getHealth() + 1);
 					PlayerManager.setHealthPoints(playerName, newHealthTotal);
 				} else if (playerHealth <= 0) {
+					//Cancel any further damage.
+					event.setCancelled(true);
+					//Kill the player
 					player.setHealth(0);
 				}
 				

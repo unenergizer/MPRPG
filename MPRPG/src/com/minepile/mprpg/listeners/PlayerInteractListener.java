@@ -217,6 +217,26 @@ public class PlayerInteractListener implements Listener{
 			//Mailbox.
 			player.sendMessage(ChatColor.GRAY + "     " +ChatColor.ITALIC +"You have no mail in your mailbox.");
 		}
+		
+		//If player clicks a Potion Stand (Alchemy profession).
+		if (event.getAction().equals(Action.RIGHT_CLICK_BLOCK) && block.getType().equals(Material.BREWING_STAND)) {
+
+			//Cancel opening the regular inventory.
+			event.setCancelled(true);
+
+			//Mailbox.
+			player.sendMessage(ChatColor.GRAY + "     " +ChatColor.ITALIC +"You have clicked an Anvil.");
+		}
+		
+		//If player clicks a Anvil (Blacksmithing profession).
+		if (event.getAction().equals(Action.RIGHT_CLICK_BLOCK) && block.getType().equals(Material.ANVIL)) {
+
+			//Cancel opening the regular inventory.
+			event.setCancelled(true);
+
+			//Mailbox.
+			player.sendMessage(ChatColor.GRAY + "     " +ChatColor.ITALIC +"You have clicked an Anvil.");
+		}
 	}
 
 	//It seems that the client responds better if we give it time to

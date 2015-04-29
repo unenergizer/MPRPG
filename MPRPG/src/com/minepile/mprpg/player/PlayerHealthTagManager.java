@@ -61,8 +61,21 @@ public class PlayerHealthTagManager {
 		team.addPlayer(player);
 	}
 	
+	@SuppressWarnings("deprecation")
 	public static void updateHealthTag(Player player) {
 		obj.getScore(player).setScore(PlayerManager.getHealthPoints(player.getName()));
+	}
+
+	public static Scoreboard getSb() {
+		return sb;
+	}
+
+	public static Team getTeam() {
+		return team;
+	}
+
+	public static Objective getObj() {
+		return obj;
 	}
 	
 }

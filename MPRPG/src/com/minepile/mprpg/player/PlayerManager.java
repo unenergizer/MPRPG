@@ -92,6 +92,16 @@ public class PlayerManager {
 		confuse.apply(player);
 	}
 	
+	/*
+	public static void updateCustomName(Player player) {
+		String name = player.getName();
+		int level = player.getLevel();
+		player.setCustomName(ChatColor.LIGHT_PURPLE + "[" + level + "]" +
+				ChatColor.WHITE + name);
+		player.setCustomNameVisible(true);
+	}
+	*/
+	
 	public static void updatePlayerBossbar(Player player) {
 		
 		int playerlvlexp = player.getLevel();
@@ -165,6 +175,12 @@ public class PlayerManager {
       	
       	//Feed player.
       	player.setFoodLevel(20);
+      	
+      	//update the players health tag
+      	if (PlayerHealthTagManager.getSb() != null && PlayerHealthTagManager.getObj() != null) {
+      		PlayerHealthTagManager.addPlayer(player);
+      		PlayerHealthTagManager.updateHealthTag(player);
+      	}
       	
 	}
 	

@@ -7,6 +7,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
 
 import com.minepile.mprpg.MPRPG;
+import com.minepile.mprpg.player.PlayerHealthTagManager;
 
 public class PlayerDeathListener implements Listener {
 	
@@ -26,7 +27,10 @@ public class PlayerDeathListener implements Listener {
 		String killerName = "";
 		String deathCause = "";
 		
-		if(!(killer instanceof Player)){
+		//update the players health tag.
+		PlayerHealthTagManager.updateHealthTag(player);
+		
+		if(!(killer instanceof Player) && player.getLastDamageCause().getCause() != null){
 			//Get damage type so we can build a death message.
 			switch(player.getLastDamageCause().getCause()){
 			case BLOCK_EXPLOSION:

@@ -48,11 +48,13 @@ import com.minepile.mprpg.managers.LagManager;
 import com.minepile.mprpg.managers.MessageManager;
 import com.minepile.mprpg.managers.NPCManager;
 import com.minepile.mprpg.monsters.EntityTierManager;
+import com.minepile.mprpg.monsters.MonsterCreatorManager;
 import com.minepile.mprpg.monsters.MonsterManager;
 import com.minepile.mprpg.player.PlayerHealthTagManager;
 import com.minepile.mprpg.player.PlayerMailManager;
 import com.minepile.mprpg.player.PlayerManager;
 import com.minepile.mprpg.player.PlayerMenuManager;
+import com.minepile.mprpg.professions.Alchemy;
 import com.minepile.mprpg.professions.Blacksmithing;
 import com.minepile.mprpg.professions.Cooking;
 import com.minepile.mprpg.professions.Fishing;
@@ -69,7 +71,7 @@ public class MPRPG extends JavaPlugin {
 		this.pluginManager = getServer().getPluginManager();
 		
 		//Notify that plugin is starting to load all components
-		Bukkit.getConsoleSender().sendMessage("§b§lStarting up MinePile:RPG now!");
+		Bukkit.getConsoleSender().sendMessage("ï¿½bï¿½lStarting up MinePile:RPG now!");
 		
         //Save config.yml if it doesn't exist. Reload it, if it does.
         if(!(new File("plugins/MPRPG/config.yml")).exists()){
@@ -93,6 +95,7 @@ public class MPRPG extends JavaPlugin {
         ItemQualityManager.getInstance().setup(this);
         LagManager.getInstance().setup(this);
         MessageManager.getInstance().setup(this);
+        MonsterCreatorManager.getInstance().setup(this);
         MonsterManager.getInstance().setup(this);
         NPCManager.getInstance().setup(this);
         PlayerMailManager.getInstance().setup(this);
@@ -107,6 +110,7 @@ public class MPRPG extends JavaPlugin {
         WeaponManager.getInstance().setup(this);
         
         //setup professions (game jobs) instances
+        Alchemy.getInstance().setup(this);
         Blacksmithing.getInstance().setup(this);
         Cooking.getInstance().setup(this);
         Fishing.getInstance().setup(this);
@@ -181,13 +185,13 @@ public class MPRPG extends JavaPlugin {
         getCommand("spawn").setExecutor(new CommandManager(this));
         
         //Notify that plugin is fully finished loading.
-        Bukkit.getConsoleSender().sendMessage("§b§lStart up has finished for MinePile:RPG!");
+        Bukkit.getConsoleSender().sendMessage("ï¿½bï¿½lStart up has finished for MinePile:RPG!");
 	}
 	
 	@Override
 	public void onDisable() {
 		//Show the administrator the plugin closing message.
-		Bukkit.getConsoleSender().sendMessage("§c§lShutting down MinePile:RPG!");
+		Bukkit.getConsoleSender().sendMessage("ï¿½cï¿½lShutting down MinePile:RPG!");
 		
 		//Reset all plants and blocks that have been picked or mined.
 		BlockRegenerationManager.resetAllBlocks();
@@ -196,13 +200,19 @@ public class MPRPG extends JavaPlugin {
 		LoreManager.staminaLog.clear();
 		
 		//Show the administrator that the plugin is finished closing.
-		Bukkit.getConsoleSender().sendMessage("§c§lShut down of MinePile:RPG is complete!");
+		Bukkit.getConsoleSender().sendMessage("ï¿½cï¿½lShut down of MinePile:RPG is complete!");
 		
 		//Remove any existing Holograms
 		BankChestManager.removeBankHolograms();
 		
 		//Remove mail holograms
 		PlayerMailManager.removeMailHolograms();
+		
+		//Remove Blacksmiting holograms
+		Alchemy.removeHolograms();
+		
+		//Remove Blacksmiting holograms
+		Blacksmithing.removeHolograms();
 		
 		//Save players last health
 		for (Player players : Bukkit.getOnlinePlayers()) {

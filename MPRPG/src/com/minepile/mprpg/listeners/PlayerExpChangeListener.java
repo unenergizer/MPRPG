@@ -38,6 +38,14 @@ public class PlayerExpChangeListener implements Listener{
 			public void run() {
 				//Update the player boss bar.
 				PlayerManager.updatePlayerBossbar(player);
+				
+				int level = player.getLevel();
+				int configLevel = PlayerManager.getPlayerConfigInt(player, "player.playerLVL");
+		      	
+				if (level != configLevel) {
+					//Set the players level in their config.
+					PlayerManager.setPlayerConfigInt(player, "player.playerLVL", level);
+				}
 			} //END Run method.
 		}, 5); //(20 ticks = 1 second)
 	}
