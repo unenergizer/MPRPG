@@ -5,6 +5,7 @@ import java.io.IOException;
 
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.entity.EntityType;
 
 import com.minepile.mprpg.MPRPG;
 
@@ -46,7 +47,8 @@ public class MonsterCreatorManager {
         playerConfig.get("mob");
         playerConfig.get("mob.mobLVL");
         playerConfig.get("mob.mobHP");
-
+        playerConfig.get("mob.runRadius");
+        
         try {
             playerConfig.save(configFile);
         } catch (IOException e) {
@@ -58,14 +60,15 @@ public class MonsterCreatorManager {
 		
 	}
 	
-	public static void createNewMonster(String mobName, String entityType, int mobLevel, int mobHP) {
+	public static void createNewMonster(String mobName, EntityType entityType, int mobLevel, int mobHP, int runRadius) {
     	
         File configFile = new File("plugins/MPRPG/mobs/monsterType.yml");
         FileConfiguration playerConfig =  YamlConfiguration.loadConfiguration(configFile);
-        playerConfig.set("mob", mobName);
-        playerConfig.set("mob.entity", entityType);
-        playerConfig.set("mob.mobLVL", mobLevel);
-        playerConfig.set("mob.mobHP", mobLevel);
+        playerConfig.set(mobName, mobName);
+        playerConfig.set(mobName + ".entity", entityType.toString());
+        playerConfig.set(mobName + ".mobLVL", mobLevel);
+        playerConfig.set(mobName + ".mobHP", mobLevel);
+        playerConfig.set(mobName + ".runRadius", runRadius);
 
         try {
             playerConfig.save(configFile);

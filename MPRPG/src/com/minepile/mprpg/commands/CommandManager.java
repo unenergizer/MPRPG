@@ -1,11 +1,14 @@
 package com.minepile.mprpg.commands;
 
+import java.util.Arrays;
+
 import net.md_5.bungee.api.ChatColor;
 
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 
 import com.minepile.mprpg.MPRPG;
@@ -14,6 +17,7 @@ import com.minepile.mprpg.managers.ChatManager;
 import com.minepile.mprpg.managers.DiceRollManager;
 import com.minepile.mprpg.managers.LagManager;
 import com.minepile.mprpg.managers.MessageManager;
+import com.minepile.mprpg.monsters.MonsterCreatorManager;
 import com.minepile.mprpg.player.PlayerManager;
 
 public class CommandManager implements CommandExecutor{
@@ -31,6 +35,10 @@ public class CommandManager implements CommandExecutor{
 		if (sender instanceof Player) {
 
 			Player player = (Player) sender;
+			
+			//TODO: Remove debug messages.
+			player.sendMessage("DEBUG: args.length = " + Integer.toString(args.length));
+			player.sendMessage("DEBUG: args = " + Arrays.toString(args));
 
 			if (label.equalsIgnoreCase("c")) {
 				if (args.length == 0) {
@@ -334,18 +342,20 @@ public class CommandManager implements CommandExecutor{
 				PlayerManager.teleportPlayerToSpawn(player);
 			}
 
-			//Defines a mob location.
+			//Monster Creator and Manager commands.
 			if (cmd.getLabel().equalsIgnoreCase("mm")) {
 				if (player.isOp()) {
-					if (args.length == 1 && args[0].toString().equals("set")) {
 
-					} else {
-						player.sendMessage(" ");
-						player.sendMessage(ChatColor.DARK_GRAY + "" + ChatColor.BOLD + "---------------" +
-								ChatColor.DARK_GRAY + "<[" +
-								ChatColor.GOLD + " Monster Manager " + ChatColor.DARK_GRAY + "]>" +
-								ChatColor.BOLD + "--------------");
-						player.sendMessage(" ");
+					//Show mm header text and borders.
+					player.sendMessage(" ");
+					player.sendMessage(ChatColor.DARK_GRAY + "" + ChatColor.BOLD + "---------------" +
+							ChatColor.DARK_GRAY + "<[" +
+							ChatColor.GOLD + " Monster Manager " + ChatColor.DARK_GRAY + "]>" +
+							ChatColor.BOLD + "--------------");
+					player.sendMessage(" ");
+
+
+					if (args.length == 1 && args[0].toString().equals("entities")) {
 						player.sendMessage(ChatColor.RED + "  " + ChatColor.BOLD + "! " +
 								ChatColor.GREEN + ChatColor.BOLD + "Please specify the monster and its properties.");
 						player.sendMessage(" ");
@@ -400,12 +410,119 @@ public class CommandManager implements CommandExecutor{
 								ChatColor.WHITE + "and " + "zombie villager" + 
 								ChatColor.DARK_GRAY + ".");
 						player.sendMessage(" ");
+
+						//TODO: Fix this to use new mob creating features!
+
 						player.sendMessage(ChatColor.GRAY + "  " + ChatColor.BOLD + 
-								"Example" + ChatColor.DARK_GRAY + ChatColor.BOLD + ": " + 
-								ChatColor.WHITE + "/" + label + " set <entity> <lvl> <tier> <dropTableId>");
-						player.sendMessage(ChatColor.DARK_GRAY + "" + ChatColor.BOLD +"---------------------------------------------");
+								"NOTE" + ChatColor.DARK_GRAY + ChatColor.BOLD + ": " + 
+								ChatColor.WHITE + "Create your own mobs with this command" + ChatColor.DARK_GRAY + "." + ChatColor.GREEN + " /mm manager");
+
+					} else if (args.length == 1 && args[0].toString().equals("manager")) {
+
+						player.sendMessage(ChatColor.RED + "  " + ChatColor.BOLD + "! " +
+								ChatColor.GREEN + ChatColor.BOLD + "Please specify what you want to do.");
+						player.sendMessage(" ");
+						//Display Command prompt.
+						player.sendMessage(ChatColor.BLUE + "  " + ChatColor.BOLD + 
+								"Commands" + ChatColor.DARK_GRAY + ChatColor.BOLD + ": ");
+						//Add command
+						player.sendMessage("     " + ChatColor.GREEN + "/mm manager add <name> <entity> <LVL> <HP> <radius>");
+						player.sendMessage("          " + ChatColor.GRAY + "This will add a new mobType to the database.");
+
+						//Edit command
+						player.sendMessage("");
+						player.sendMessage("     " + ChatColor.YELLOW + "/mm manager edit <mobType>");
+						player.sendMessage("          " + ChatColor.GRAY + "This will edit existing mobTypes.");
+
+						//Delete command
+						player.sendMessage("");
+						player.sendMessage("     " + ChatColor.RED + "/mm manager delete <mobType>");
+						player.sendMessage("          " + ChatColor.GRAY + "This will perminantly delete a mobType.");
+
+						//Set mob
+						player.sendMessage("");
+						player.sendMessage("     " + ChatColor.LIGHT_PURPLE + "/mm manager set <mobType>");
+						player.sendMessage("          " + ChatColor.GRAY + "Sets a monster at your current location.");
+
+						//Spacer
+						player.sendMessage("");
+
+						player.sendMessage(ChatColor.GRAY + "  " + ChatColor.BOLD + 
+								"NOTE" + ChatColor.DARK_GRAY + ChatColor.BOLD + ": " + 
+								ChatColor.WHITE + "To set a mob, create or use existing mobTypes" + 
+								ChatColor.RED + "!");
+						player.sendMessage(ChatColor.GRAY + "  " + ChatColor.BOLD + 
+								"NOTE" + ChatColor.DARK_GRAY + ChatColor.BOLD + ": " + 
+								ChatColor.WHITE + "List of mobTypes" + ChatColor.DARK_GRAY + "." + ChatColor.LIGHT_PURPLE + " /mm mobTypes");
+					} else if (args.length >= 1 && args[0].toString().equals("manager")) {
+
+						if (args.length == 7 && args[1].toString().equals("add")) {
+							
+							player.sendMessage(ChatColor.RED + "  " + ChatColor.BOLD + "> " +
+									ChatColor.GREEN + ChatColor.BOLD + "Please specify what you want to do.");
+							player.sendMessage(" ");
+							//Display Command prompt.
+							player.sendMessage(ChatColor.BLUE + "  " + ChatColor.BOLD + 
+									"Commands" + ChatColor.DARK_GRAY + ChatColor.BOLD + ": ");
+							//Add command
+							player.sendMessage("     " + ChatColor.GREEN + "/mm manager add <name> <entity> <LVL> <HP> <radius>");
+							player.sendMessage("          " + ChatColor.GRAY + "This will add a new mobType to the database.");
+
+							player.sendMessage("");
+
+							player.sendMessage(ChatColor.GRAY + "  " + ChatColor.BOLD + 
+									"NOTE" + ChatColor.DARK_GRAY + ChatColor.BOLD + ": " + 
+									ChatColor.WHITE + "To set a mob, create or use existing mobTypes" + 
+									ChatColor.RED + "!");
+							player.sendMessage(ChatColor.GRAY + "  " + ChatColor.BOLD + 
+									"NOTE" + ChatColor.DARK_GRAY + ChatColor.BOLD + ": " + 
+									ChatColor.WHITE + "List of mobTypes" + ChatColor.DARK_GRAY + "." + ChatColor.LIGHT_PURPLE + " /mm mobTypes");
+							
+							String name = args[2].toString();
+							EntityType entity = EntityType.fromName(args[3].toString());
+							int lvl = Integer.parseInt(args[4]);
+							int hp = Integer.parseInt(args[5]);
+							int radius = Integer.parseInt(args[6]);
+
+							MonsterCreatorManager.createNewMonster(name, entity, lvl, hp, radius);
+
+						} else if (args.length == 2 && args[1].toString().equals("edit")) {
+							player.sendMessage("This will let your edit a mobType that was created.");
+						} else if (args.length == 2 && args[1].toString().equals("delete")) {
+							player.sendMessage("This will let you delete a mobType that was created.");
+						} else if (args.length == 2 && args[1].toString().equals("set")) {
+							player.sendMessage("This will set a mob on the ground in your location.");
+							
+						} else {
+							player.sendMessage("Something didn't work right.");
+						}
+					} else if (args.length == 1 && args[0].toString().equals("mobs")) {
+						player.sendMessage("This will contain the a list of info for mobs. Coming soon.");
+
+					} else if (args.length == 1 && args[0].toString().equals("mobTypes")) {
+						player.sendMessage("Displays a list of the custom mob types. Coming soon.");
+
+					} else {
+						//Default info text when "/mm" command is run.
+						player.sendMessage(ChatColor.RED + "  " + ChatColor.BOLD + "! " +
+								ChatColor.GREEN + ChatColor.BOLD + "Please specify what you want to do.");
+						player.sendMessage(" ");
+						player.sendMessage(ChatColor.BLUE + "  " + ChatColor.BOLD + 
+								"Commands" + ChatColor.DARK_GRAY + ChatColor.BOLD + ": ");
+						player.sendMessage("     " + ChatColor.YELLOW + "/mm entities");
+						player.sendMessage("          " + ChatColor.GRAY + "Display a reference of entity types.");
+						player.sendMessage("     " + ChatColor.GREEN + "/mm manager");
+						player.sendMessage("          " + ChatColor.GRAY + "Adding, editing, and deleting of mobs.");
+						player.sendMessage("     " + ChatColor.BLUE + "/mm mobs");
+						player.sendMessage("          " + ChatColor.GRAY + "Displays a list of info for mobs.");
+						player.sendMessage("     " + ChatColor.LIGHT_PURPLE + "/mm mobTypes");
+						player.sendMessage("          " + ChatColor.GRAY + "Displays a list of the custom mob types.");
 					}
-				}	
+
+				}
+
+				//Show footer message.
+				player.sendMessage(ChatColor.DARK_GRAY + "" + ChatColor.BOLD +"---------------------------------------------");
 			}
 
 
