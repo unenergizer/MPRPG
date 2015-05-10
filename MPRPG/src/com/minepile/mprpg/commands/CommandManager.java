@@ -5,6 +5,7 @@ import java.util.Arrays;
 import net.md_5.bungee.api.ChatColor;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -426,7 +427,7 @@ public class CommandManager implements CommandExecutor{
 						player.sendMessage(ChatColor.BLUE + "  " + ChatColor.BOLD + 
 								"Commands" + ChatColor.DARK_GRAY + ChatColor.BOLD + ": ");
 						//Add command
-						player.sendMessage("     " + ChatColor.GREEN + "/mm manager add <name> <entity> <LVL> <HP> <radius>");
+						player.sendMessage("     " + ChatColor.GREEN + "/mm manager add <name> <color> <entity> <LVL> <HP> <radius>");
 						player.sendMessage("          " + ChatColor.GRAY + "This will add a new mobType to the database.");
 
 						//Edit command
@@ -456,7 +457,7 @@ public class CommandManager implements CommandExecutor{
 								ChatColor.WHITE + "List of mobTypes" + ChatColor.DARK_GRAY + "." + ChatColor.LIGHT_PURPLE + " /mm mobTypes");
 					} else if (args.length >= 1 && args[0].toString().equals("manager")) {
 
-						if (args.length == 7 && args[1].toString().equals("add")) {
+						if (args.length == 8 && args[1].toString().equals("add")) {
 							
 							player.sendMessage(ChatColor.RED + "  " + ChatColor.BOLD + "> " +
 									ChatColor.GREEN + ChatColor.BOLD + "Please specify what you want to do.");
@@ -465,7 +466,7 @@ public class CommandManager implements CommandExecutor{
 							player.sendMessage(ChatColor.BLUE + "  " + ChatColor.BOLD + 
 									"Commands" + ChatColor.DARK_GRAY + ChatColor.BOLD + ": ");
 							//Add command
-							player.sendMessage("     " + ChatColor.GREEN + "/mm manager add <name> <entity> <LVL> <HP> <radius>");
+							player.sendMessage("     " + ChatColor.GREEN + "/mm manager add <name> <color> <entity> <LVL> <HP> <radius>");
 							player.sendMessage("          " + ChatColor.GRAY + "This will add a new mobType to the database.");
 
 							player.sendMessage("");
@@ -479,22 +480,27 @@ public class CommandManager implements CommandExecutor{
 									ChatColor.WHITE + "List of mobTypes" + ChatColor.DARK_GRAY + "." + ChatColor.LIGHT_PURPLE + " /mm mobTypes");
 							
 							String name = args[2].toString();
-							EntityType entity = EntityType.fromName(args[3].toString());
-							int lvl = Integer.parseInt(args[4]);
-							int hp = Integer.parseInt(args[5]);
-							int radius = Integer.parseInt(args[6]);
+							String nameColor = args[3].toString();
+							EntityType entity = EntityType.fromName(args[4].toString());
+							int lvl = Integer.parseInt(args[5]);
+							int hp = Integer.parseInt(args[6]);
+							int radius = Integer.parseInt(args[7]);
 
-							MonsterCreatorManager.createNewMonster(name, entity, lvl, hp, radius);
+							MonsterCreatorManager.createNewMonster(player, name, nameColor, entity, lvl, hp, radius);
 
 						} else if (args.length == 2 && args[1].toString().equals("edit")) {
 							player.sendMessage("This will let your edit a mobType that was created.");
 						} else if (args.length == 2 && args[1].toString().equals("delete")) {
 							player.sendMessage("This will let you delete a mobType that was created.");
-						} else if (args.length == 2 && args[1].toString().equals("set")) {
+						} else if (args.length == 3 && args[1].toString().equals("set")) {
 							player.sendMessage("This will set a mob on the ground in your location.");
 							
+							String mobType =  args[2].toString();
+							Location loc = player.getLocation();
+							
+							MonsterCreatorManager.setMonster(player, mobType, loc);
 						} else {
-							player.sendMessage("Something didn't work right.");
+							player.sendMessage("Something went wrong. Please try again.");
 						}
 					} else if (args.length == 1 && args[0].toString().equals("mobs")) {
 						player.sendMessage("This will contain the a list of info for mobs. Coming soon.");

@@ -3,9 +3,15 @@ package com.minepile.mprpg.monsters;
 import java.io.File;
 import java.io.IOException;
 
+import net.md_5.bungee.api.ChatColor;
+
+import org.bukkit.Color;
+import org.bukkit.Location;
+import org.bukkit.World;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Player;
 
 import com.minepile.mprpg.MPRPG;
 
@@ -14,6 +20,7 @@ public class MonsterCreatorManager {
 	//setup instance variables
 	public static MPRPG plugin;
 	static MonsterCreatorManager monsterCreatorManagerInstance = new MonsterCreatorManager();
+	
 	
 	//Create instance
 	public static MonsterCreatorManager getInstance() {
@@ -41,30 +48,58 @@ public class MonsterCreatorManager {
         }
 	}
 	
-	public static void spawnMonster(String mobName) {
-        File configFile = new File("plugins/MPRPG/mobs/monsterType.yml");
-        FileConfiguration playerConfig =  YamlConfiguration.loadConfiguration(configFile);
-        playerConfig.get("mob");
-        playerConfig.get("mob.mobLVL");
-        playerConfig.get("mob.mobHP");
-        playerConfig.get("mob.runRadius");
-        
+	public static void setMonster(Player player, String mobName, Location location) {
+		
+		
+		
+		World world = player.getWorld();
+		double x = location.getBlockX();
+		double y = location.getBlockY() + 2;
+		double z = location.getBlockZ();
+		Location newLoc = new Location(player.getWorld(), x, y, z);
+		
+		//Set monster and add to config.
+        File monsterIdConfigFile = new File("plugins/MPRPG/mobs/monsterId.yml");
+        FileConfiguration monsterIdConfig =  YamlConfiguration.loadConfiguration(monsterIdConfigFile);
+        monsterIdConfig.set(mobName, mobName);
+        monsterIdConfig.set(mobName + ".player", player.getName());
+        monsterIdConfig.set(mobName + ".X", x);
+        monsterIdConfig.set(mobName + ".Y", y);
+        monsterIdConfig.set(mobName + ".Z", z);
+
         try {
-            playerConfig.save(configFile);
+        	monsterIdConfig.save(monsterIdConfigFile);
         } catch (IOException e) {
             e.printStackTrace();
         } 
+		
+        
+        
+        //Get mobType config values
+        File monsterTypeConfigFile = new File("plugins/MPRPG/mobs/monsterType.yml");
+        FileConfiguration monsterTypeConfig =  YamlConfiguration.loadConfiguration(monsterTypeConfigFile);
+        String color = monsterTypeConfig.getString(mobName + ".mobNameColor");
+        EntityType entity = EntityType.fromName(monsterTypeConfig.getString(mobName + ".entity"));
+        int lvl = monsterTypeConfig.getInt(mobName + ".mobLVL");
+        int hp = monsterTypeConfig.getInt(mobName + ".mobHP");
+        int runRadius = monsterTypeConfig.getInt(mobName + ".mobRadius");
+        
+        //Spawn the monster in the game.
+        MonsterManager.spawnMob(world, newLoc, entity, color, mobName, lvl, hp, runRadius);
+
 	}
 	
 	public static void respawnMonster() {
 		
 	}
 	
-	public static void createNewMonster(String mobName, EntityType entityType, int mobLevel, int mobHP, int runRadius) {
+	public static void createNewMonster(Player player, String mobName, String nameColor, EntityType entityType, int mobLevel, int mobHP, int runRadius) {
     	
         File configFile = new File("plugins/MPRPG/mobs/monsterType.yml");
         FileConfiguration playerConfig =  YamlConfiguration.loadConfiguration(configFile);
         playerConfig.set(mobName, mobName);
+        playerConfig.set(mobName + ".player", player.getName());
+        playerConfig.set(mobName + ".mobNameColor", nameColor);
         playerConfig.set(mobName + ".entity", entityType.toString());
         playerConfig.set(mobName + ".mobLVL", mobLevel);
         playerConfig.set(mobName + ".mobHP", mobLevel);
@@ -75,6 +110,25 @@ public class MonsterCreatorManager {
         } catch (IOException e) {
             e.printStackTrace();
         } 
+        
+        //Success message!
+        player.sendMessage(" ");
+    	player.sendMessage(ChatColor.DARK_GRAY + "" + ChatColor.BOLD +"-" + ChatColor.DARK_GRAY + 
+    			"<[ " + ChatColor.AQUA + "Success!! " + ChatColor.DARK_GRAY + "]>" + 
+    			ChatColor.DARK_GRAY + ChatColor.BOLD + "---------------------------------");
+    	player.sendMessage("   " + ChatColor.GREEN + player.getName() + ChatColor.RESET + 
+    			", your mobType has been added" + ChatColor.DARK_GRAY + ". " +
+    			ChatColor.RESET + "You can now" + ChatColor.DARK_GRAY + ":");
+    	player.sendMessage("");
+    	player.sendMessage(ChatColor.YELLOW + "    1" + ChatColor.DARK_GRAY + ". " + 
+    			ChatColor.RESET + "Edit this mobType" + ChatColor.DARK_GRAY + ". " +
+    			ChatColor.YELLOW + "   /mm manager edit " + mobName);
+    	player.sendMessage(ChatColor.RED + "    2" + ChatColor.DARK_GRAY + ". " + 
+    			ChatColor.RESET + "Delete this mobType" + ChatColor.DARK_GRAY + ". " +
+    			ChatColor.RED + "/mm manager delete " + mobName);
+    	player.sendMessage(ChatColor.LIGHT_PURPLE + "    3" + ChatColor.DARK_GRAY + ". " + 
+    			ChatColor.RESET + "Set this mobType" + ChatColor.DARK_GRAY + ". " +
+    			ChatColor.LIGHT_PURPLE + "    /mm manager set " + mobName);
 	}
 	
 	public static void editMonster() {

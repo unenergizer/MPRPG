@@ -63,19 +63,13 @@ public class NPCManager {
 		entityHealth.put(spawnerUtil.getEntityID(), health);
 		entityLevel.put(spawnerUtil.getEntityID(), level);
 	}
-	
-	public static void setupNPC(Location location, EntityType entity, ChatColor nameColor, String kitName) {
-		spawnerUtil.spawnEntity(world.getName(), location, entity, nameColor + kitName);
-		entityLocation.put(spawnerUtil.getEntityID(), location);
-		//entityTeam.put(spawnerUtil.getEntityID(), team);
-	}
 
 	public static void spawnNPC() {	
 		//ShopMaster.
 		spawnerUtil.spawnEntity(world.getName(), npc0Location, EntityType.VILLAGER, ChatColor.LIGHT_PURPLE + "" + "Island Villager");
 		entityLocation.put(spawnerUtil.getEntityID(), npc0Location);
 	}
-
+	
 	public static void teleportNPC() {
 		//Lets start a repeating task
 		taskID = Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, new Runnable() {

@@ -13,18 +13,23 @@ import org.bukkit.World;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import com.minepile.mprpg.MPRPG;
 import com.minepile.mprpg.managers.MessageManager;
+import com.minepile.mprpg.util.LivingEntitySpawnerUtil;
 
 public class MonsterManager {
 
 	//setup instance variables
 	public static MPRPG plugin;
+	private static LivingEntitySpawnerUtil spawnerUtil = new LivingEntitySpawnerUtil();
 	static MonsterManager monsterManagerInstance = new MonsterManager();
 
 	private static World world = Bukkit.getWorld("world");
+	
+	private static boolean eventStatus = true;
 	
 	static HashMap<UUID, Location> mobSpawnLocation = new HashMap<UUID, Location>();
 	static HashMap<UUID, String> mobName = new HashMap<UUID, String>();
@@ -80,7 +85,71 @@ public class MonsterManager {
 		}
 		*/
 	}
-
+	
+	public static void spawnMob(World world, Location loc, EntityType entity, String color, String name, int lvl, int hp, int runRadius) {	
+		
+		ChatColor nameColor = null;
+		
+		if (color.equalsIgnoreCase("Aqua")) {
+			nameColor = ChatColor.AQUA;
+		} else if (color.equalsIgnoreCase("Black")) {
+			nameColor = ChatColor.BLACK;
+		} else if (color.equalsIgnoreCase("Blue")) {
+			nameColor = ChatColor.BLUE;
+		} else if (color.equalsIgnoreCase("Dark_Aqua")) {
+			nameColor = ChatColor.DARK_AQUA;
+		} else if (color.equalsIgnoreCase("Dark_Blue")) {
+			nameColor = ChatColor.DARK_BLUE;
+		} else if (color.equalsIgnoreCase("Dark_Gray")) {
+			nameColor = ChatColor.DARK_GRAY;
+		} else if (color.equalsIgnoreCase("Dark_Green")) {
+			nameColor = ChatColor.DARK_GREEN;
+		} else if (color.equalsIgnoreCase("Dark_Blue")) {
+			nameColor = ChatColor.DARK_PURPLE;
+		} else if (color.equalsIgnoreCase("Dark_Red")) {
+			nameColor = ChatColor.DARK_RED;
+		} else if (color.equalsIgnoreCase("Gold")) {
+			nameColor = ChatColor.GOLD;
+		} else if (color.equalsIgnoreCase("Gray")) {
+			nameColor = ChatColor.GRAY;
+		} else if (color.equalsIgnoreCase("Green")) {
+			nameColor = ChatColor.GREEN;
+		} else if (color.equalsIgnoreCase("Light_Purple")) {
+			nameColor = ChatColor.LIGHT_PURPLE;
+		} else if (color.equalsIgnoreCase("Red")) {
+			nameColor = ChatColor.RED;
+		} else if (color.equalsIgnoreCase("White")) {
+			nameColor = ChatColor.WHITE;
+		} else if (color.equalsIgnoreCase("Yellow")) {
+			nameColor = ChatColor.YELLOW;
+		} else {
+			nameColor = ChatColor.GRAY;
+		}
+		
+		String colorName = nameColor + name;
+		String mobNameBase = ChatColor.GRAY + "[" + ChatColor.RED + lvl + ChatColor.GRAY +"] " + colorName;
+		
+		//Set evenStatus for mobs spawning to false to allow them.
+		setEventStatus(false);
+		
+		//Spawn the mob
+		spawnerUtil.spawnEntity(world.getName(), loc, entity, mobNameBase);
+		
+		//Set evenStatus for mobs spawning to true to cancel them.
+		setEventStatus(true);
+		
+		//Setup various mob attributes.
+		UUID entityId = spawnerUtil.getEntityID();
+		mobName.put(entityId, colorName);
+		mobLevel.put(entityId, lvl);
+		mobHealthPoints.put(entityId, hp);
+		mobMaxHealthPoints.put(entityId, hp);
+	}
+	
+	public static void respawnMob () {
+		
+	}
+	
 	public static void toggleDamage(UUID id, double damage) {
 		
 		if (mobHealthPoints.get(id) == null) {
@@ -156,6 +225,14 @@ public class MonsterManager {
 
 	public static void setMobMaxHealthPoints(UUID id, int mobMaxHealthPoints) {
 		MonsterManager.mobMaxHealthPoints.put(id, mobMaxHealthPoints);
+	}
+	
+	public static boolean getEventStatus() {
+		return eventStatus;
+	}
+
+	public static void setEventStatus(boolean status) {
+		eventStatus = status;
 	}
 	
 	//This creates the configuration file that will hold data to save mob attributes.
