@@ -5,7 +5,6 @@ import java.io.IOException;
 
 import net.md_5.bungee.api.ChatColor;
 
-import org.bukkit.Color;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -20,7 +19,7 @@ public class MonsterCreatorManager {
 	//setup instance variables
 	public static MPRPG plugin;
 	static MonsterCreatorManager monsterCreatorManagerInstance = new MonsterCreatorManager();
-	
+	static String mobTypeFilePath = "plugins/MPRPG/mobs/monsterType.yml";
 	
 	//Create instance
 	public static MonsterCreatorManager getInstance() {
@@ -36,11 +35,11 @@ public class MonsterCreatorManager {
 		this.plugin = plugin;
 		
 		//If monster configuration does not exist, create it. Otherwise lets load the config.
-		if(!(new File("plugins/MPRPG/mobs/monsterType.yml")).exists()){
+		if(!(new File(mobTypeFilePath)).exists()){
 			createMonsterConfig();
         } else {
         	//lets load the configuration file.
-        	File configFile = new File("plugins/MPRPG/mobs/monsterType.yml");
+        	File configFile = new File(mobTypeFilePath);
             monsterConfig =  YamlConfiguration.loadConfiguration(configFile);
 
             //setup and spawn monsters
@@ -76,7 +75,7 @@ public class MonsterCreatorManager {
         
         
         //Get mobType config values
-        File monsterTypeConfigFile = new File("plugins/MPRPG/mobs/monsterType.yml");
+        File monsterTypeConfigFile = new File(mobTypeFilePath);
         FileConfiguration monsterTypeConfig =  YamlConfiguration.loadConfiguration(monsterTypeConfigFile);
         String color = monsterTypeConfig.getString(mobName + ".mobNameColor");
         EntityType entity = EntityType.fromName(monsterTypeConfig.getString(mobName + ".entity"));
@@ -95,7 +94,7 @@ public class MonsterCreatorManager {
 	
 	public static void createNewMonster(Player player, String mobName, String nameColor, EntityType entityType, int mobLevel, int mobHP, int runRadius) {
     	
-        File configFile = new File("plugins/MPRPG/mobs/monsterType.yml");
+        File configFile = new File(mobTypeFilePath);
         FileConfiguration playerConfig =  YamlConfiguration.loadConfiguration(configFile);
         playerConfig.set(mobName, mobName);
         playerConfig.set(mobName + ".player", player.getName());
@@ -142,7 +141,7 @@ public class MonsterCreatorManager {
 	//This creates the configuration file that will hold data to save mob attributes.
     private static void createMonsterConfig() {
     	
-        File configFile = new File("plugins/MPRPG/mobs/monsterType.yml");
+        File configFile = new File(mobTypeFilePath);
         FileConfiguration monsterConfig =  YamlConfiguration.loadConfiguration(configFile);
 
         try {
@@ -153,7 +152,7 @@ public class MonsterCreatorManager {
     }
     
 	public static void setMobConfigInt(String mobName, String config, int value) {
-        File configFile = new File("plugins/MPRPG/mobs/monsterType.yml");
+        File configFile = new File(mobTypeFilePath);
         FileConfiguration mobConfig =  YamlConfiguration.loadConfiguration(configFile);
         mobConfig.set(config, value);
 
@@ -165,13 +164,13 @@ public class MonsterCreatorManager {
 	}
     
 	public static int getMobConfigInt(String mobName, String value) {
-        File configFile = new File("plugins/MPRPG/mobs/monsterType.yml");
+        File configFile = new File(mobTypeFilePath);
         FileConfiguration mobConfig =  YamlConfiguration.loadConfiguration(configFile);
         return (int) mobConfig.get(value);
 	}
 	
 	public static void setMobConfigString(String mobName, String config, String value) {
-        File configFile = new File("plugins/MPRPG/mobs/monsterType.yml");
+        File configFile = new File(mobTypeFilePath);
         FileConfiguration mobConfig =  YamlConfiguration.loadConfiguration(configFile);
         mobConfig.set(config, value);
 
@@ -183,7 +182,7 @@ public class MonsterCreatorManager {
 	}
 	
 	public static String getMobConfigString(String mobName, String value) {
-        File configFile = new File("plugins/MPRPG/mobs/monsterType.yml");
+        File configFile = new File(mobTypeFilePath);
         FileConfiguration mobConfig =  YamlConfiguration.loadConfiguration(configFile);
         return  (String) mobConfig.get(value);
 	}

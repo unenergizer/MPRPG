@@ -188,20 +188,22 @@ public class EntityDamageByEntityListener implements Listener{
 	
 	public static String mobHealthChangeMessage(Player player, Entity victim, int playerHealth, int damage, int playerMaxHealth) {
 		
+		UUID id = victim.getUniqueId();
 		int newHP = playerHealth - damage;
 		int hpPercent = (int) ((100 * newHP) / playerMaxHealth);
 		
-		String name = victim.getType().toString();
+		String name = MonsterManager.getMobName(id);
 		String dmg = Integer.toString(damage);
 		String hpPrc = Integer.toString(hpPercent);
 		String hp = Integer.toString(newHP);
 		String maxHP = Integer.toString(playerMaxHealth);
-		String hpMessage = ChatColor.GRAY + "          " + ChatColor.BOLD + name + ": " +
+		String hpMessage = ChatColor.GRAY + "          " + 
+				ChatColor.BOLD + name + ChatColor.GRAY + ": " +
 				ChatColor.GRAY + ChatColor.BOLD + hpPrc + "%" +
 				ChatColor.GRAY + " [" + ChatColor.LIGHT_PURPLE + hp +
 				ChatColor.GRAY + " / " + ChatColor.DARK_PURPLE + maxHP +
 				ChatColor.GRAY + "]" + ChatColor.RED + " -" + 
-						ChatColor.GRAY + dmg + " hp";
+				ChatColor.GRAY + dmg + " hp";
 		return hpMessage;
 	}
 }

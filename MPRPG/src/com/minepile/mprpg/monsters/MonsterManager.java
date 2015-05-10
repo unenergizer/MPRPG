@@ -29,7 +29,8 @@ public class MonsterManager {
 
 	private static World world = Bukkit.getWorld("world");
 	
-	private static boolean eventStatus = true;
+	private static boolean cancelCreatureSpawn = true;
+	static String mobTypeIdPath = "plugins/MPRPG/mobs/monstersId.yml";
 	
 	static HashMap<UUID, Location> mobSpawnLocation = new HashMap<UUID, Location>();
 	static HashMap<UUID, String> mobName = new HashMap<UUID, String>();
@@ -51,18 +52,27 @@ public class MonsterManager {
 		this.plugin = plugin;
 
 		//If monster configuration does not exist, create it. Otherwise lets load the config.
-		if(!(new File("plugins/MPRPG/mobs/monstersId.yml")).exists()){
+		if(!(new File(mobTypeIdPath)).exists()){
 			createMonsterConfig();
         } else {
         	//lets load the configuration file.
-        	File configFile = new File("plugins/MPRPG/mobs/monsterId.yml");
+        	File configFile = new File(mobTypeIdPath);
             monsterConfig =  YamlConfiguration.loadConfiguration(configFile);
 
             //setup and spawn monsters
             
         }
+		
+		//Loop through entity list and remove them.
+		//This is mainly for clearing mobs on server reload.
+		for (Entity mob : world.getEntities()) {
+			if (!(mob.getType().equals(EntityType.ENDER_DRAGON)) && 
+					!(mob.getType().equals(EntityType.PLAYER))){
+				mob.remove();
+			}
+		}
 	}	
-	
+
 	public static void setupMonster(UUID id) {
 		
 		//spawn monster from config at location
@@ -205,6 +215,10 @@ public class MonsterManager {
 		}.runTaskLater(plugin, 1); //run after 1 tick
 	}
 
+	public static String getMobName(UUID id) {
+		return mobName.get(id);
+	}
+
 	public static int getMobHealthPoints(UUID id) {
 		if (mobHealthPoints.get(id) == null) {
 			setupMonster(id);
@@ -228,17 +242,17 @@ public class MonsterManager {
 	}
 	
 	public static boolean getEventStatus() {
-		return eventStatus;
+		return cancelCreatureSpawn;
 	}
 
 	public static void setEventStatus(boolean status) {
-		eventStatus = status;
+		cancelCreatureSpawn = status;
 	}
 	
 	//This creates the configuration file that will hold data to save mob attributes.
     private static void createMonsterConfig() {
     	
-        File configFile = new File("plugins/MPRPG/mobs/monsterId.yml");
+        File configFile = new File(mobTypeIdPath);
         FileConfiguration monsterConfig =  YamlConfiguration.loadConfiguration(configFile);
 
         try {
