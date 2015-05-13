@@ -141,7 +141,7 @@ public class MonsterManager {
 	public static void spawnMob() {
 		
 		//set mobSpawning to true.
-        setEventStatus(true);
+        setEventStatus(false);
 		
 		
 		//Get id
@@ -151,7 +151,7 @@ public class MonsterManager {
         monsterConfig.get("settings");
         int totalMonsters = monsterConfig.getInt("settings.countTotal");
 		
-        for (int i = 1; i < totalMonsters; i++) {
+        for (int i = 1; i <= totalMonsters; i++) {
 	        
 	        //Get id config values.
 	        File monsterIdConfigFile = new File(mobTypeIdPath);
@@ -178,7 +178,7 @@ public class MonsterManager {
         }
         
         //setMobSpawning status to false
-        setEventStatus(false);
+        setEventStatus(true);
 	}
 	
 	public static void respawnMob () {
