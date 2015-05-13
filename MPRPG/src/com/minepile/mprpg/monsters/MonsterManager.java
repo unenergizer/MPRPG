@@ -30,7 +30,7 @@ public class MonsterManager {
 	private static World world = Bukkit.getWorld("world");
 	
 	private static boolean cancelCreatureSpawn = true;
-	static String mobTypeIdPath = "plugins/MPRPG/mobs/monstersId.yml";
+	static String mobTypeIdPath = "plugins/MPRPG/mobs/monsterId.yml";
 	
 	static HashMap<UUID, Location> mobSpawnLocation = new HashMap<UUID, Location>();
 	static HashMap<UUID, String> mobName = new HashMap<UUID, String>();
@@ -50,18 +50,6 @@ public class MonsterManager {
 	@SuppressWarnings("static-access")
 	public void setup(MPRPG plugin) {
 		this.plugin = plugin;
-
-		//If monster configuration does not exist, create it. Otherwise lets load the config.
-		if(!(new File(mobTypeIdPath)).exists()){
-			createMonsterConfig();
-        } else {
-        	//lets load the configuration file.
-        	File configFile = new File(mobTypeIdPath);
-            monsterConfig =  YamlConfiguration.loadConfiguration(configFile);
-
-            //setup and spawn monsters
-            
-        }
 		
 		//Loop through entity list and remove them.
 		//This is mainly for clearing mobs on server reload.
@@ -71,72 +59,66 @@ public class MonsterManager {
 				mob.remove();
 			}
 		}
-	}	
+		
+		//If monster configuration does not exist, create it. Otherwise lets load the config.
+		if(!(new File(mobTypeIdPath)).exists()){
+			createMonsterConfig();
+        } else {
+        	//lets load the configuration file.
+        	File configFile = new File(mobTypeIdPath);
+            monsterConfig =  YamlConfiguration.loadConfiguration(configFile);
 
-	public static void setupMonster(UUID id) {
-		
-		//spawn monster from config at location
-		//get monster uuid
-		//set monster hp
-		//set monster maxhp
-		//set monster level
-		//set monster name
-		
-        for (int i = 1; i < 100; i++) {
-        	String z = Integer.toString(i);
-        	//int totalEXPforLVL = (int) monsterConfig.get(z);
-        	//configFishingLevel.put(i, totalEXPforLVL);
+            //setup and spawn monsters
+            spawnMob();
         }
-        /*
-		if (mobHealthPoints.get(id) == null) {
-			//Bukkit.broadcastMessage(ChatColor.AQUA + "Added monster: " + id.toString());
-			mobHealthPoints.put(id, baseMaxHP);
-			mobMaxHealthPoints.put(id, baseMaxHP);
+	}	
+	
+	public static ChatColor stringToColor(String colorName) {
+		
+		ChatColor color = null;
+		
+		if (colorName.equalsIgnoreCase("Aqua")) {
+			color = ChatColor.AQUA;
+		} else if (colorName.equalsIgnoreCase("Black")) {
+			color = ChatColor.BLACK;
+		} else if (colorName.equalsIgnoreCase("Blue")) {
+			color = ChatColor.BLUE;
+		} else if (colorName.equalsIgnoreCase("Dark_Aqua")) {
+			color = ChatColor.DARK_AQUA;
+		} else if (colorName.equalsIgnoreCase("Dark_Blue")) {
+			color = ChatColor.DARK_BLUE;
+		} else if (colorName.equalsIgnoreCase("Dark_Gray")) {
+			color = ChatColor.DARK_GRAY;
+		} else if (colorName.equalsIgnoreCase("Dark_Green")) {
+			color = ChatColor.DARK_GREEN;
+		} else if (colorName.equalsIgnoreCase("Dark_Blue")) {
+			color = ChatColor.DARK_PURPLE;
+		} else if (colorName.equalsIgnoreCase("Dark_Red")) {
+			color = ChatColor.DARK_RED;
+		} else if (colorName.equalsIgnoreCase("Gold")) {
+			color = ChatColor.GOLD;
+		} else if (colorName.equalsIgnoreCase("Gray")) {
+			color = ChatColor.GRAY;
+		} else if (colorName.equalsIgnoreCase("Green")) {
+			color = ChatColor.GREEN;
+		} else if (colorName.equalsIgnoreCase("Light_Purple")) {
+			color = ChatColor.LIGHT_PURPLE;
+		} else if (colorName.equalsIgnoreCase("Red")) {
+			color = ChatColor.RED;
+		} else if (colorName.equalsIgnoreCase("White")) {
+			color = ChatColor.WHITE;
+		} else if (colorName.equalsIgnoreCase("Yellow")) {
+			color = ChatColor.YELLOW;
+		} else {
+			color = ChatColor.GRAY;
 		}
-		*/
+		
+		return color;
 	}
 	
-	public static void spawnMob(World world, Location loc, EntityType entity, String color, String name, int lvl, int hp, int runRadius) {	
+	public static void setupMob(World world, Location loc, EntityType entity, String color, String name, int lvl, int hp, int runRadius) {	
 		
-		ChatColor nameColor = null;
-		
-		if (color.equalsIgnoreCase("Aqua")) {
-			nameColor = ChatColor.AQUA;
-		} else if (color.equalsIgnoreCase("Black")) {
-			nameColor = ChatColor.BLACK;
-		} else if (color.equalsIgnoreCase("Blue")) {
-			nameColor = ChatColor.BLUE;
-		} else if (color.equalsIgnoreCase("Dark_Aqua")) {
-			nameColor = ChatColor.DARK_AQUA;
-		} else if (color.equalsIgnoreCase("Dark_Blue")) {
-			nameColor = ChatColor.DARK_BLUE;
-		} else if (color.equalsIgnoreCase("Dark_Gray")) {
-			nameColor = ChatColor.DARK_GRAY;
-		} else if (color.equalsIgnoreCase("Dark_Green")) {
-			nameColor = ChatColor.DARK_GREEN;
-		} else if (color.equalsIgnoreCase("Dark_Blue")) {
-			nameColor = ChatColor.DARK_PURPLE;
-		} else if (color.equalsIgnoreCase("Dark_Red")) {
-			nameColor = ChatColor.DARK_RED;
-		} else if (color.equalsIgnoreCase("Gold")) {
-			nameColor = ChatColor.GOLD;
-		} else if (color.equalsIgnoreCase("Gray")) {
-			nameColor = ChatColor.GRAY;
-		} else if (color.equalsIgnoreCase("Green")) {
-			nameColor = ChatColor.GREEN;
-		} else if (color.equalsIgnoreCase("Light_Purple")) {
-			nameColor = ChatColor.LIGHT_PURPLE;
-		} else if (color.equalsIgnoreCase("Red")) {
-			nameColor = ChatColor.RED;
-		} else if (color.equalsIgnoreCase("White")) {
-			nameColor = ChatColor.WHITE;
-		} else if (color.equalsIgnoreCase("Yellow")) {
-			nameColor = ChatColor.YELLOW;
-		} else {
-			nameColor = ChatColor.GRAY;
-		}
-		
-		String colorName = nameColor + name;
+		String colorName = stringToColor(color) + name;
 		String mobNameBase = ChatColor.GRAY + "[" + ChatColor.RED + lvl + ChatColor.GRAY +"] " + colorName;
 		
 		//Set evenStatus for mobs spawning to false to allow them.
@@ -156,16 +138,54 @@ public class MonsterManager {
 		mobMaxHealthPoints.put(entityId, hp);
 	}
 	
+	public static void spawnMob() {
+		
+		//set mobSpawning to true.
+        setEventStatus(true);
+		
+		
+		//Get id
+        File configFile = new File(mobTypeIdPath);
+        FileConfiguration monsterConfig =  YamlConfiguration.loadConfiguration(configFile);
+        
+        monsterConfig.get("settings");
+        int totalMonsters = monsterConfig.getInt("settings.countTotal");
+		
+        for (int i = 1; i < totalMonsters; i++) {
+	        
+	        //Get id config values.
+	        File monsterIdConfigFile = new File(mobTypeIdPath);
+	        FileConfiguration monsterIdConfig =  YamlConfiguration.loadConfiguration(monsterIdConfigFile);
+	        String mobType = monsterIdConfig.getString(Integer.toString(i) + ".mobType");
+	        int x = monsterIdConfig.getInt(Integer.toString(i) + ".X");
+	        int y = monsterIdConfig.getInt(Integer.toString(i) + ".Y");
+	        int z = monsterIdConfig.getInt(Integer.toString(i) + ".Z");
+	        
+	        //Get mobType config values.
+	        File monsterTypeConfigFile = new File(MonsterCreatorManager.getMobTypeFilePath());
+	        FileConfiguration monsterTypeConfig =  YamlConfiguration.loadConfiguration(monsterTypeConfigFile);
+	        String stringColor = monsterTypeConfig.getString(mobType + ".mobNameColor");
+	        EntityType entity = EntityType.fromName(monsterTypeConfig.getString(mobType + ".entity"));
+	        int lvl = monsterTypeConfig.getInt(mobType + ".mobLVL");
+	        int hp = monsterTypeConfig.getInt(mobType + ".mobHP");
+	        int runRadius = monsterTypeConfig.getInt(mobType + ".mobRadius");
+	        
+	        //misc vars
+	        Location loc = new Location(world, x + .5, y + .5, z + .5);
+	        
+			//Spawn the mob
+			setupMob(world, loc, entity, stringColor, mobType, lvl, hp, runRadius);
+        }
+        
+        //setMobSpawning status to false
+        setEventStatus(false);
+	}
+	
 	public static void respawnMob () {
 		
 	}
 	
 	public static void toggleDamage(UUID id, double damage) {
-		
-		if (mobHealthPoints.get(id) == null) {
-			setupMonster(id);
-		}
-
 		int currentHP = mobHealthPoints.get(id);
 		int newHP = (int) (currentHP - damage);
 		mobHealthPoints.put(id, newHP);
@@ -220,9 +240,6 @@ public class MonsterManager {
 	}
 
 	public static int getMobHealthPoints(UUID id) {
-		if (mobHealthPoints.get(id) == null) {
-			setupMonster(id);
-		}
 		return mobHealthPoints.get(id);
 	}
 
@@ -231,9 +248,6 @@ public class MonsterManager {
 	}
 
 	public static int getMobMaxHealthPoints(UUID id) {
-		if (mobMaxHealthPoints.get(id) == null) {
-			setupMonster(id);
-		}
 		return mobMaxHealthPoints.get(id);
 	}
 
@@ -249,12 +263,19 @@ public class MonsterManager {
 		cancelCreatureSpawn = status;
 	}
 	
+	public static String getMobTypeIdPath() {
+		return mobTypeIdPath;
+	}
+	
 	//This creates the configuration file that will hold data to save mob attributes.
     private static void createMonsterConfig() {
     	
         File configFile = new File(mobTypeIdPath);
         FileConfiguration monsterConfig =  YamlConfiguration.loadConfiguration(configFile);
-
+        
+        monsterConfig.set("settings", "settings");
+        monsterConfig.set("settings.countTotal", 0);
+        
         try {
         	monsterConfig.save(configFile);	//Save the file.
         } catch (IOException e) {

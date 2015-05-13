@@ -49,30 +49,32 @@ public class MonsterCreatorManager {
 	
 	public static void setMonster(Player player, String mobName, Location location) {
 		
-		
-		
 		World world = player.getWorld();
+		int currentCount = getMobIdTotals();
+		int newCount = currentCount + 1;
 		double x = location.getBlockX();
 		double y = location.getBlockY() + 2;
 		double z = location.getBlockZ();
 		Location newLoc = new Location(player.getWorld(), x, y, z);
 		
 		//Set monster and add to config.
-        File monsterIdConfigFile = new File("plugins/MPRPG/mobs/monsterId.yml");
+        File monsterIdConfigFile = new File(MonsterManager.mobTypeIdPath);
         FileConfiguration monsterIdConfig =  YamlConfiguration.loadConfiguration(monsterIdConfigFile);
-        monsterIdConfig.set(mobName, mobName);
-        monsterIdConfig.set(mobName + ".player", player.getName());
-        monsterIdConfig.set(mobName + ".X", x);
-        monsterIdConfig.set(mobName + ".Y", y);
-        monsterIdConfig.set(mobName + ".Z", z);
+        monsterIdConfig.set("settings", "settings");
+        monsterIdConfig.set("settings.countTotal", newCount);
+        monsterIdConfig.set(Integer.toString(newCount), mobName);
+        monsterIdConfig.set(Integer.toString(newCount) + ".player", player.getName());
+        monsterIdConfig.set(Integer.toString(newCount) + ".mobType", mobName);
+        monsterIdConfig.set(Integer.toString(newCount) + ".Y", y);
+        monsterIdConfig.set(Integer.toString(newCount) + ".X", x);
+        monsterIdConfig.set(Integer.toString(newCount) + ".Y", y);
+        monsterIdConfig.set(Integer.toString(newCount) + ".Z", z);
 
         try {
         	monsterIdConfig.save(monsterIdConfigFile);
         } catch (IOException e) {
             e.printStackTrace();
-        } 
-		
-        
+        }
         
         //Get mobType config values
         File monsterTypeConfigFile = new File(mobTypeFilePath);
@@ -84,12 +86,22 @@ public class MonsterCreatorManager {
         int runRadius = monsterTypeConfig.getInt(mobName + ".mobRadius");
         
         //Spawn the monster in the game.
-        MonsterManager.spawnMob(world, newLoc, entity, color, mobName, lvl, hp, runRadius);
+        MonsterManager.setupMob(world, newLoc, entity, color, mobName, lvl, hp, runRadius);
 
 	}
 	
 	public static void respawnMonster() {
 		
+	}
+	
+	public static int getMobIdTotals() {
+        
+		//Get mobType config values
+        File monsterTypeConfigFile = new File(MonsterManager.mobTypeIdPath);
+        FileConfiguration monsterTypeConfig =  YamlConfiguration.loadConfiguration(monsterTypeConfigFile);
+        int countTotal = monsterTypeConfig.getInt("settings.countTotal");
+        
+		return countTotal;
 	}
 	
 	public static void createNewMonster(Player player, String mobName, String nameColor, EntityType entityType, int mobLevel, int mobHP, int runRadius) {
@@ -101,7 +113,7 @@ public class MonsterCreatorManager {
         playerConfig.set(mobName + ".mobNameColor", nameColor);
         playerConfig.set(mobName + ".entity", entityType.toString());
         playerConfig.set(mobName + ".mobLVL", mobLevel);
-        playerConfig.set(mobName + ".mobHP", mobLevel);
+        playerConfig.set(mobName + ".mobHP", mobHP);
         playerConfig.set(mobName + ".runRadius", runRadius);
 
         try {
@@ -185,5 +197,9 @@ public class MonsterCreatorManager {
         File configFile = new File(mobTypeFilePath);
         FileConfiguration mobConfig =  YamlConfiguration.loadConfiguration(configFile);
         return  (String) mobConfig.get(value);
+	}
+
+	public static String getMobTypeFilePath() {
+		return mobTypeFilePath;
 	}
 }

@@ -1,7 +1,5 @@
 package com.minepile.mprpg.commands;
 
-import java.util.Arrays;
-
 import net.md_5.bungee.api.ChatColor;
 
 import org.bukkit.Bukkit;
@@ -38,8 +36,8 @@ public class CommandManager implements CommandExecutor{
 			Player player = (Player) sender;
 			
 			//TODO: Remove debug messages.
-			player.sendMessage("DEBUG: args.length = " + Integer.toString(args.length));
-			player.sendMessage("DEBUG: args = " + Arrays.toString(args));
+			//player.sendMessage("DEBUG: args.length = " + Integer.toString(args.length));
+			//player.sendMessage("DEBUG: args = " + Arrays.toString(args));
 
 			if (label.equalsIgnoreCase("c")) {
 				if (args.length == 0) {
