@@ -7,6 +7,7 @@ import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -131,7 +132,7 @@ public class EntityDamageByEntityListener implements Listener{
 						PlayerHealthTagManager.updateHealthTag(player);
 					}
 				}
-			} else if (event.getEntity() instanceof LivingEntity) {
+			} else if (event.getEntity() instanceof LivingEntity && !event.getEntity().getType().equals(EntityType.ARMOR_STAND)) {
 				//Living entity is not a player, so it must be some type of mob.				
 				UUID victimID = victim.getUniqueId();
 				Entity damager = event.getDamager();

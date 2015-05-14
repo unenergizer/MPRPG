@@ -5,6 +5,7 @@ import java.util.UUID;
 import net.md_5.bungee.api.ChatColor;
 
 import org.bukkit.Material;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -57,16 +58,16 @@ public class EntityDamageListener implements Listener{
 				int damage = (int) event.getDamage();
 				int healthBarPercent = (int) (20 * (playerHealth - damage) / playerMaxHealth);
 				int newHealthTotal = (int) (playerHealth - damage);
-				
+
 				//Cancel regular event damage
 				event.setDamage(0);
-				
+
 				//Print out the type of damage done.
 				//player.sendMessage(ChatColor.AQUA + "DmgCause: " + event.getCause().toString());
-				
+
 				//Show player damage message.
 				hpChangeMessage(player, playerHealth, (int) damage, playerMaxHealth);
-				
+
 				if (player.getHealth() > 1 && playerHealth > 0) {
 					if (healthBarPercent <= 1) {
 						player.setHealth(healthBarPercent);
@@ -83,40 +84,42 @@ public class EntityDamageListener implements Listener{
 					//Kill the player
 					player.setHealth(0);
 				}
-				
+
 				//Update the players health tag
 				PlayerHealthTagManager.updateHealthTag(player);
 			} else {
-				//Living entity is not a player, so it must be some type of mob.
-				UUID victimID = victim.getUniqueId();
-				int victimHealth = MonsterManager.getMobHealthPoints(victimID);
-				int damage = (int) event.getDamage();
-				
-				//Set the entities health to 20.
-				//We need this if the entity default 
-				//health is less than 20. Example is 
-				//chickens with 4 hit points.
-				if (victim.getHealth() < 20) {
-					victim.setMaxHealth(20);
-				}
-				
-				if (victimHealth <= 1) {
-					victim.setHealth(0);
-					MonsterManager.toggleDeath(victimID);
-				} else {
-					victim.setHealth(15);
-					MonsterManager.toggleDamage(victimID, damage);
-					
+				if (!victim.getType().equals(EntityType.ARMOR_STAND)) {
+					//Living entity is not a player, so it must be some type of mob.
+					UUID victimID = victim.getUniqueId();
+					int victimHealth = MonsterManager.getMobHealthPoints(victimID);
+					int damage = (int) event.getDamage();
+
+					//Set the entities health to 20.
+					//We need this if the entity default 
+					//health is less than 20. Example is 
+					//chickens with 4 hit points.
+					if (victim.getHealth() < 20) {
+						victim.setMaxHealth(20);
+					}
+
+					if (victimHealth <= 1) {
+						victim.setHealth(0);
+						MonsterManager.toggleDeath(victimID);
+					} else {
+						victim.setHealth(15);
+						MonsterManager.toggleDamage(victimID, damage);
+
+					}
 				}
 			}
 		}
 	}
-	
+
 	public static void hpChangeMessage(Player player, int playerHealth, int damage, int playerMaxHealth) {
-		
+
 		int newHP = playerHealth - damage;
 		int hpPercent = (int) ((100 * newHP) / playerMaxHealth);
-		
+
 		String dmg = Integer.toString(damage);
 		String hpPrc = Integer.toString(hpPercent);
 		String hp = Integer.toString(newHP);

@@ -225,7 +225,7 @@ public class PlayerInteractListener implements Listener{
 			event.setCancelled(true);
 
 			//Mailbox.
-			player.sendMessage(ChatColor.GRAY + "     " +ChatColor.ITALIC +"You have clicked an Anvil.");
+			player.sendMessage(ChatColor.GRAY + "     " +ChatColor.ITALIC +"You have clicked an Potion Stand.");
 		}
 		
 		//If player clicks a Anvil (Blacksmithing profession).

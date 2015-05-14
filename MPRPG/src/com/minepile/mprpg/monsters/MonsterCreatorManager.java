@@ -86,7 +86,7 @@ public class MonsterCreatorManager {
         int runRadius = monsterTypeConfig.getInt(mobName + ".mobRadius");
         
         //Spawn the monster in the game.
-        MonsterManager.setupMob(world, newLoc, entity, color, mobName, lvl, hp, runRadius);
+        MonsterManager.setupMob(world, newLoc, entity, color, mobName, lvl, hp, runRadius, newCount);
 
 	}
 	
