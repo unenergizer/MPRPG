@@ -8,7 +8,6 @@ import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import com.minepile.mprpg.MPRPG;
-import com.minepile.mprpg.equipment.ItemDropManager;
 import com.minepile.mprpg.player.PlayerManager;
 
 public class EntityDeathListener implements Listener{
@@ -48,7 +47,6 @@ public class EntityDeathListener implements Listener{
 			event.getDrops().clear();
 			
 			String entityName = event.getEntity().getName();
-			ItemDropManager.toggleItemDrops(entityName);
 		}
 	}
 }

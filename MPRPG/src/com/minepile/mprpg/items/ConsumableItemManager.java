@@ -7,6 +7,7 @@ public class ConsumableItemManager {
 	//setup instance variables
 	public static MPRPG plugin;
 	static ConsumableItemManager consumableItemManagerInstance = new ConsumableItemManager();
+	static String consumableItemsFilePath = "plugins/MPRPG/items/Consumable.yml";
 	
 	//Create instance
 	public static ConsumableItemManager getInstance() {

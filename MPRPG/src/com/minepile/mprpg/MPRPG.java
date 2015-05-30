@@ -14,12 +14,10 @@ import com.minepile.mprpg.chat.DiceRollManager;
 import com.minepile.mprpg.chat.LagManager;
 import com.minepile.mprpg.chat.MessageManager;
 import com.minepile.mprpg.commands.CommandManager;
-import com.minepile.mprpg.entities.EntityTierManager;
 import com.minepile.mprpg.entities.MonsterCreatorManager;
 import com.minepile.mprpg.entities.MonsterManager;
 import com.minepile.mprpg.entities.NPCManager;
 import com.minepile.mprpg.equipment.ArmorManager;
-import com.minepile.mprpg.equipment.ItemDropManager;
 import com.minepile.mprpg.equipment.ItemQualityManager;
 import com.minepile.mprpg.equipment.LoreManager;
 import com.minepile.mprpg.equipment.WeaponManager;
@@ -27,6 +25,7 @@ import com.minepile.mprpg.inventory.BankChestManager;
 import com.minepile.mprpg.inventory.ShopChestManager;
 import com.minepile.mprpg.items.ArmorItemManager;
 import com.minepile.mprpg.items.ConsumableItemManager;
+import com.minepile.mprpg.items.CurrencyItemManager;
 import com.minepile.mprpg.items.ItemGeneratorManager;
 import com.minepile.mprpg.items.MiscItemManager;
 import com.minepile.mprpg.items.WeaponItemManager;
@@ -88,7 +87,6 @@ public class MPRPG extends JavaPlugin {
         	reloadConfig();
         }
         
-        
         /////////////////////////////
         /// Setup Class Instances ///
         /////////////////////////////
@@ -100,14 +98,12 @@ public class MPRPG extends JavaPlugin {
         MessageManager.getInstance().setup(this);
         
         //setup entities manager instances
-        EntityTierManager.getInstance().setup(this);
         MonsterCreatorManager.getInstance().setup(this);
         MonsterManager.getInstance().setup(this);
         NPCManager.getInstance().setup(this);
         
         //setup equipment manager instances
         ArmorManager.getInstance().setup(this);
-        ItemDropManager.getInstance().setup(this);
         ItemQualityManager.getInstance().setup(this);
         LoreManager.getInstance().setup(this);
         WeaponManager.getInstance().setup(this);
@@ -119,6 +115,7 @@ public class MPRPG extends JavaPlugin {
         //setup item manager instances
         ArmorItemManager.getInstance().setup(this);
         ConsumableItemManager.getInstance().setup(this);
+        CurrencyItemManager.getInstance().setup(this);
         ItemGeneratorManager.getInstance().setup(this);
         MiscItemManager.getInstance().setup(this);
         WeaponItemManager.getInstance().setup(this);
@@ -213,7 +210,7 @@ public class MPRPG extends JavaPlugin {
         ///////////////////
         
         //Notify that plugin is fully finished loading.
-        Bukkit.getConsoleSender().sendMessage(ChatColor.AQUA + "[MPRPG] Start up has finished for MinePile:RPG!");
+        Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + "[MPRPG] Start up has finished for MinePile:RPG!");
 	}
 	
 	@Override
@@ -250,7 +247,7 @@ public class MPRPG extends JavaPlugin {
         ////////////////////
 		
 		//Show the administrator that the plugin is finished closing.
-		Bukkit.getConsoleSender().sendMessage("[MPRPG] Shut down of MinePile:RPG is complete!");
+		Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + "[MPRPG] Shut down of MinePile:RPG is complete!");
 	}
 	
 }

@@ -7,6 +7,7 @@ public class MiscItemManager {
 	//setup instance variables
 	public static MPRPG plugin;
 	static MiscItemManager itemManagerInstance = new MiscItemManager();
+	static String miscItemsFilePath = "plugins/MPRPG/items/MiscItems.yml";
 	
 	//Create instance
 	public static MiscItemManager getInstance() {

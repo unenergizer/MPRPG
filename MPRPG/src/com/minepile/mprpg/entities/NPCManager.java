@@ -12,7 +12,6 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 
 import com.minepile.mprpg.MPRPG;
-import com.minepile.mprpg.entities.EntityTierManager.EntityTier;
 import com.minepile.mprpg.util.LivingEntitySpawnerUtil;
 
 public class NPCManager {
@@ -22,7 +21,6 @@ public class NPCManager {
 
 	private static World world = Bukkit.getWorld("world");
 	public static HashMap<UUID, Integer> entityHealth = new HashMap<UUID, Integer>();
-	public static HashMap<UUID, EntityTier> entityTier = new HashMap<UUID, EntityTier>();
 	public static HashMap<UUID, Integer> entityLevel = new HashMap<UUID, Integer>();
 	public static HashMap<UUID, Location> entityLocation = new HashMap<UUID, Location>();
 	
@@ -56,10 +54,9 @@ public class NPCManager {
 		teleportNPC();
 	}
 
-	public static void setupMob(Location location, EntityType entity, String entityName, EntityTier tier, int health, int level) {
+	public static void setupMob(Location location, EntityType entity, String entityName, int health, int level) {
 		spawnerUtil.spawnEntity(world.getName(), location, entity, entityName);
 		entityLocation.put(spawnerUtil.getEntityID(), location);
-		entityTier.put(spawnerUtil.getEntityID(), tier);
 		entityHealth.put(spawnerUtil.getEntityID(), health);
 		entityLevel.put(spawnerUtil.getEntityID(), level);
 	}
