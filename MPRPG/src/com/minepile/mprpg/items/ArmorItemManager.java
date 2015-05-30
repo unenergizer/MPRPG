@@ -50,4 +50,44 @@ public class ArmorItemManager {
             e.printStackTrace();
         } 
     }
+    
+    //TODO: 
+    /*
+    Attributes:
+    
+    Armor Percentages
+	HP Bonus
+	HP Regeneration
+	Energy/Stamina Regeneration
+	Dodge %
+	Reflection
+	Block %
+	Thorns
+	Item Find %
+	Gold Find %
+
+	Example:
+	
+    itemName: Tattered Helm of the Weak
+    itemName.amor = Armor Percentages
+	itemName.hpMin = 5
+	itemName.hpMax = 10
+	itemName.hpRegenMin = 0
+	itemName.hpRegenMax = 3
+	itemName.staminaRegenMin = 0
+	itemName.staminaRegenMax = 3
+	itemName.dodgeMin = 0
+	itemName.dodgeMax = 1
+	itemName.reflectionMin = 0
+	itemName.reflectionMax = 1
+	itemName.blockMin = 0
+	itemName.blockMax = 1
+	itemName.thornsMin = 0
+	itemName.thornsMax = 3
+	itemName.itemFindMin = 0
+	itemName.itemFindMax = 0
+	itemName.goldFindMin = 0
+	itemName.goldFindMax = 1
+     
+     */
 }
