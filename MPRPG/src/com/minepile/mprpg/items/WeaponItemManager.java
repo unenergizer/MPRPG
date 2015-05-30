@@ -18,6 +18,20 @@ public class WeaponItemManager {
 	@SuppressWarnings("static-access")
 	public void setup(MPRPG plugin) {
 		this.plugin = plugin;
-	}	
+	}
+	
+	//TODO:
+	/*
+	Weapon attributes:
+	
+	Knockback %
+	Fire
+	Critical Hit Bonus
+	Poison
+	Slow
+	Blindness
+	Life Steal
+	Ice
+	 */
 	
 }
