@@ -7,7 +7,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockPlaceEvent;
 
 import com.minepile.mprpg.MPRPG;
-import com.minepile.mprpg.managers.MessageManager;
+import com.minepile.mprpg.chat.MessageManager;
 
 public class BlockPlaceListener implements Listener{
 

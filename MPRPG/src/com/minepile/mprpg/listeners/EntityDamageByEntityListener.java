@@ -16,8 +16,8 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.inventory.ItemStack;
 
 import com.minepile.mprpg.MPRPG;
+import com.minepile.mprpg.entities.MonsterManager;
 import com.minepile.mprpg.equipment.LoreManager;
-import com.minepile.mprpg.monsters.MonsterManager;
 import com.minepile.mprpg.player.PlayerHealthTagManager;
 import com.minepile.mprpg.player.PlayerManager;
 

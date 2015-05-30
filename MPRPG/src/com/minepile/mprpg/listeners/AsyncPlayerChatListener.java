@@ -8,7 +8,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 
 import com.minepile.mprpg.MPRPG;
-import com.minepile.mprpg.managers.ChatManager;
+import com.minepile.mprpg.chat.ChatManager;
 import com.minepile.mprpg.player.PlayerManager;
 
 public class AsyncPlayerChatListener implements Listener{

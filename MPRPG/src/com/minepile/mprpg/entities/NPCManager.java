@@ -1,4 +1,4 @@
-package com.minepile.mprpg.managers;
+package com.minepile.mprpg.entities;
 
 import java.util.HashMap;
 import java.util.Map.Entry;
@@ -12,7 +12,7 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 
 import com.minepile.mprpg.MPRPG;
-import com.minepile.mprpg.monsters.EntityTierManager.EntityTier;
+import com.minepile.mprpg.entities.EntityTierManager.EntityTier;
 import com.minepile.mprpg.util.LivingEntitySpawnerUtil;
 
 public class NPCManager {

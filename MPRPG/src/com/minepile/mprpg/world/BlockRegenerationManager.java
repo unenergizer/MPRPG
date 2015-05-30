@@ -1,4 +1,4 @@
-package com.minepile.mprpg.managers;
+package com.minepile.mprpg.world;
 
 import java.util.HashMap;
 

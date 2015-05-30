@@ -16,7 +16,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import com.minepile.mprpg.MPRPG;
-import com.minepile.mprpg.managers.MessageManager;
+import com.minepile.mprpg.chat.MessageManager;
 
 public class Fishing {
 	

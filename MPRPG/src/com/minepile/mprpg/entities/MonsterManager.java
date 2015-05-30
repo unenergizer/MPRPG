@@ -1,4 +1,4 @@
-package com.minepile.mprpg.monsters;
+package com.minepile.mprpg.entities;
 
 import java.io.File;
 import java.io.IOException;
@@ -17,7 +17,7 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import com.minepile.mprpg.MPRPG;
-import com.minepile.mprpg.managers.MessageManager;
+import com.minepile.mprpg.chat.MessageManager;
 import com.minepile.mprpg.util.LivingEntitySpawnerUtil;
 
 public class MonsterManager {

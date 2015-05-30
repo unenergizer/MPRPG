@@ -1,4 +1,4 @@
-package com.minepile.mprpg.managers;
+package com.minepile.mprpg.chat;
 
 import org.bukkit.Bukkit;
 import org.bukkit.scheduler.BukkitScheduler;

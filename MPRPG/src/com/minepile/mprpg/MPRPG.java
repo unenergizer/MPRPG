@@ -2,12 +2,22 @@ package com.minepile.mprpg;
 
 import java.io.File;
 
+import net.md_5.bungee.api.ChatColor;
+
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import com.minepile.mprpg.chat.ChatManager;
+import com.minepile.mprpg.chat.DiceRollManager;
+import com.minepile.mprpg.chat.LagManager;
+import com.minepile.mprpg.chat.MessageManager;
 import com.minepile.mprpg.commands.CommandManager;
+import com.minepile.mprpg.entities.EntityTierManager;
+import com.minepile.mprpg.entities.MonsterCreatorManager;
+import com.minepile.mprpg.entities.MonsterManager;
+import com.minepile.mprpg.entities.NPCManager;
 import com.minepile.mprpg.equipment.ArmorManager;
 import com.minepile.mprpg.equipment.ItemDropManager;
 import com.minepile.mprpg.equipment.ItemQualityManager;
@@ -15,6 +25,11 @@ import com.minepile.mprpg.equipment.LoreManager;
 import com.minepile.mprpg.equipment.WeaponManager;
 import com.minepile.mprpg.inventory.BankChestManager;
 import com.minepile.mprpg.inventory.ShopChestManager;
+import com.minepile.mprpg.items.ArmorItemManager;
+import com.minepile.mprpg.items.ConsumableItemManager;
+import com.minepile.mprpg.items.ItemGeneratorManager;
+import com.minepile.mprpg.items.MiscItemManager;
+import com.minepile.mprpg.items.WeaponItemManager;
 import com.minepile.mprpg.listeners.AsyncPlayerChatListener;
 import com.minepile.mprpg.listeners.BlockBreakListener;
 import com.minepile.mprpg.listeners.BlockPlaceListener;
@@ -42,15 +57,6 @@ import com.minepile.mprpg.listeners.PlayerPickupItemListener;
 import com.minepile.mprpg.listeners.PlayerQuitListener;
 import com.minepile.mprpg.listeners.PlayerRespawnListener;
 import com.minepile.mprpg.listeners.WeatherChangeListener;
-import com.minepile.mprpg.managers.BlockRegenerationManager;
-import com.minepile.mprpg.managers.ChatManager;
-import com.minepile.mprpg.managers.DiceRollManager;
-import com.minepile.mprpg.managers.LagManager;
-import com.minepile.mprpg.managers.MessageManager;
-import com.minepile.mprpg.managers.NPCManager;
-import com.minepile.mprpg.monsters.EntityTierManager;
-import com.minepile.mprpg.monsters.MonsterCreatorManager;
-import com.minepile.mprpg.monsters.MonsterManager;
 import com.minepile.mprpg.player.PlayerHealthTagManager;
 import com.minepile.mprpg.player.PlayerMailManager;
 import com.minepile.mprpg.player.PlayerManager;
@@ -61,6 +67,7 @@ import com.minepile.mprpg.professions.Cooking;
 import com.minepile.mprpg.professions.Fishing;
 import com.minepile.mprpg.professions.Herbalism;
 import com.minepile.mprpg.professions.Mining;
+import com.minepile.mprpg.world.BlockRegenerationManager;
 
 public class MPRPG extends JavaPlugin {
 	
@@ -72,7 +79,7 @@ public class MPRPG extends JavaPlugin {
 		this.pluginManager = getServer().getPluginManager();
 		
 		//Notify that plugin is starting to load all components
-		Bukkit.getConsoleSender().sendMessage("�b�lStarting up MinePile:RPG now!");
+		Bukkit.getConsoleSender().sendMessage(ChatColor.AQUA + "[MPRPG] Starting up MinePile:RPG now!");
 		
         //Save config.yml if it doesn't exist. Reload it, if it does.
         if(!(new File("plugins/MPRPG/config.yml")).exists()){
@@ -86,37 +93,52 @@ public class MPRPG extends JavaPlugin {
         /// Setup Class Instances ///
         /////////////////////////////
         
-        //setup manager instances
-        BankChestManager.getInstance().setup(this);
-        BlockRegenerationManager.getInstance().setup(this);
+        //setup chat manager instances
         ChatManager.getInstance().setup(this);
         DiceRollManager.getInstance().setup(this);
-        EntityTierManager.getInstance().setup(this);
-        ItemDropManager.getInstance().setup(this);
-        ItemQualityManager.getInstance().setup(this);
         LagManager.getInstance().setup(this);
         MessageManager.getInstance().setup(this);
+        
+        //setup entities manager instances
+        EntityTierManager.getInstance().setup(this);
         MonsterCreatorManager.getInstance().setup(this);
         MonsterManager.getInstance().setup(this);
         NPCManager.getInstance().setup(this);
+        
+        //setup equipment manager instances
+        ArmorManager.getInstance().setup(this);
+        ItemDropManager.getInstance().setup(this);
+        ItemQualityManager.getInstance().setup(this);
+        LoreManager.getInstance().setup(this);
+        WeaponManager.getInstance().setup(this);
+        
+        //setup inventory manager instances
+        BankChestManager.getInstance().setup(this);
+        ShopChestManager.getInstance().setup(this);
+        
+        //setup item manager instances
+        ArmorItemManager.getInstance().setup(this);
+        ConsumableItemManager.getInstance().setup(this);
+        ItemGeneratorManager.getInstance().setup(this);
+        MiscItemManager.getInstance().setup(this);
+        WeaponItemManager.getInstance().setup(this);
+        
+        //setup player manager instances
         PlayerMailManager.getInstance().setup(this);
         PlayerManager.getInstance().setup(this);
         PlayerHealthTagManager.getInstance().setup(this);
         PlayerMenuManager.getInstance().setup(this);
-        ShopChestManager.getInstance().setup(this);
         
-        //setup equipment instances
-        ArmorManager.getInstance().setup(this);
-        LoreManager.getInstance().setup(this);
-        WeaponManager.getInstance().setup(this);
-        
-        //setup professions (game jobs) instances
+        //setup profession manager instances
         Alchemy.getInstance().setup(this);
         Blacksmithing.getInstance().setup(this);
         Cooking.getInstance().setup(this);
         Fishing.getInstance().setup(this);
         Herbalism.getInstance().setup(this);
         Mining.getInstance().setup(this);
+        
+        //setup world manager instances
+        BlockRegenerationManager.getInstance().setup(this);
         
         /////////////////////////////
         /// Setup Event Listeners ///
@@ -186,23 +208,24 @@ public class MPRPG extends JavaPlugin {
         //sends operator to the spawn location.
         getCommand("spawn").setExecutor(new CommandManager(this));
         
+        ///////////////////
+        /// Startup End ///
+        ///////////////////
+        
         //Notify that plugin is fully finished loading.
-        Bukkit.getConsoleSender().sendMessage("�b�lStart up has finished for MinePile:RPG!");
+        Bukkit.getConsoleSender().sendMessage(ChatColor.AQUA + "[MPRPG] Start up has finished for MinePile:RPG!");
 	}
 	
 	@Override
 	public void onDisable() {
 		//Show the administrator the plugin closing message.
-		Bukkit.getConsoleSender().sendMessage("�c�lShutting down MinePile:RPG!");
+		Bukkit.getConsoleSender().sendMessage(ChatColor.AQUA + "[MPRPG] Shutting down MinePile:RPG!");
 		
 		//Reset all plants and blocks that have been picked or mined.
 		BlockRegenerationManager.resetAllBlocks();
 		
 		//Clear LoreManager Log
 		LoreManager.staminaLog.clear();
-		
-		//Show the administrator that the plugin is finished closing.
-		Bukkit.getConsoleSender().sendMessage("�c�lShut down of MinePile:RPG is complete!");
 		
 		//Remove any existing Holograms
 		BankChestManager.removeBankHolograms();
@@ -221,6 +244,13 @@ public class MPRPG extends JavaPlugin {
 			int logoutHP = PlayerManager.getHealthPoints(players.getName());
 			PlayerManager.setPlayerConfigInt(players, "player.logoutHP", logoutHP);
 		}
+        
+		////////////////////
+        /// Shutdown End ///
+        ////////////////////
+		
+		//Show the administrator that the plugin is finished closing.
+		Bukkit.getConsoleSender().sendMessage("[MPRPG] Shut down of MinePile:RPG is complete!");
 	}
 	
 }

@@ -5,7 +5,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 
 import com.minepile.mprpg.MPRPG;
-import com.minepile.mprpg.monsters.MonsterManager;
+import com.minepile.mprpg.entities.MonsterManager;
 
 
 public class CreatureSpawnListener  implements Listener {

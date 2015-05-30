@@ -1,4 +1,4 @@
-package com.minepile.mprpg.managers;
+package com.minepile.mprpg.chat;
 
 import java.util.HashMap;
 

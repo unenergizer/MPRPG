@@ -9,10 +9,10 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 
 import com.minepile.mprpg.MPRPG;
-import com.minepile.mprpg.managers.BlockRegenerationManager;
-import com.minepile.mprpg.managers.MessageManager;
+import com.minepile.mprpg.chat.MessageManager;
 import com.minepile.mprpg.professions.Herbalism;
 import com.minepile.mprpg.professions.Mining;
+import com.minepile.mprpg.world.BlockRegenerationManager;
 
 public class BlockBreakListener implements Listener{
 

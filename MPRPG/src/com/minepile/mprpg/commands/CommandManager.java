@@ -11,12 +11,12 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 
 import com.minepile.mprpg.MPRPG;
+import com.minepile.mprpg.chat.ChatManager;
+import com.minepile.mprpg.chat.DiceRollManager;
+import com.minepile.mprpg.chat.LagManager;
+import com.minepile.mprpg.chat.MessageManager;
+import com.minepile.mprpg.entities.MonsterCreatorManager;
 import com.minepile.mprpg.equipment.LoreManager;
-import com.minepile.mprpg.managers.ChatManager;
-import com.minepile.mprpg.managers.DiceRollManager;
-import com.minepile.mprpg.managers.LagManager;
-import com.minepile.mprpg.managers.MessageManager;
-import com.minepile.mprpg.monsters.MonsterCreatorManager;
 import com.minepile.mprpg.player.PlayerManager;
 
 public class CommandManager implements CommandExecutor{
@@ -354,7 +354,7 @@ public class CommandManager implements CommandExecutor{
 					player.sendMessage(" ");
 
 
-					if (args.length == 1 && args[0].toString().equals("entities")) {
+					if (args.length == 1 && args[0].toString().equalsIgnoreCase("entities")) {
 						player.sendMessage(ChatColor.RED + "  " + ChatColor.BOLD + "! " +
 								ChatColor.GREEN + ChatColor.BOLD + "Please specify the monster and its properties.");
 						player.sendMessage(" ");
@@ -416,7 +416,7 @@ public class CommandManager implements CommandExecutor{
 								"NOTE" + ChatColor.DARK_GRAY + ChatColor.BOLD + ": " + 
 								ChatColor.WHITE + "Create your own mobs with this command" + ChatColor.DARK_GRAY + "." + ChatColor.GREEN + " /mm manager");
 
-					} else if (args.length == 1 && args[0].toString().equals("manager")) {
+					} else if (args.length == 1 && args[0].toString().equalsIgnoreCase("manager")) {
 
 						player.sendMessage(ChatColor.RED + "  " + ChatColor.BOLD + "! " +
 								ChatColor.GREEN + ChatColor.BOLD + "Please specify what you want to do.");
@@ -453,9 +453,9 @@ public class CommandManager implements CommandExecutor{
 						player.sendMessage(ChatColor.GRAY + "  " + ChatColor.BOLD + 
 								"NOTE" + ChatColor.DARK_GRAY + ChatColor.BOLD + ": " + 
 								ChatColor.WHITE + "List of mobTypes" + ChatColor.DARK_GRAY + "." + ChatColor.LIGHT_PURPLE + " /mm mobTypes");
-					} else if (args.length >= 1 && args[0].toString().equals("manager")) {
+					} else if (args.length >= 1 && args[0].toString().equalsIgnoreCase("manager")) {
 
-						if (args.length == 8 && args[1].toString().equals("add")) {
+						if (args.length == 8 && args[1].toString().equalsIgnoreCase("add")) {
 							
 							player.sendMessage(ChatColor.RED + "  " + ChatColor.BOLD + "> " +
 									ChatColor.GREEN + ChatColor.BOLD + "Please specify what you want to do.");
@@ -486,11 +486,11 @@ public class CommandManager implements CommandExecutor{
 
 							MonsterCreatorManager.createNewMonster(player, name, nameColor, entity, lvl, hp, radius);
 
-						} else if (args.length == 2 && args[1].toString().equals("edit")) {
+						} else if (args.length == 2 && args[1].toString().equalsIgnoreCase("edit")) {
 							player.sendMessage("This will let your edit a mobType that was created.");
-						} else if (args.length == 2 && args[1].toString().equals("delete")) {
+						} else if (args.length == 2 && args[1].toString().equalsIgnoreCase("delete")) {
 							player.sendMessage("This will let you delete a mobType that was created.");
-						} else if (args.length == 3 && args[1].toString().equals("set")) {
+						} else if (args.length == 3 && args[1].toString().equalsIgnoreCase("set")) {
 							player.sendMessage("This will set a mob on the ground in your location.");
 							
 							String mobType =  args[2].toString();
@@ -500,10 +500,10 @@ public class CommandManager implements CommandExecutor{
 						} else {
 							player.sendMessage("Something went wrong. Please try again.");
 						}
-					} else if (args.length == 1 && args[0].toString().equals("mobs")) {
+					} else if (args.length == 1 && args[0].toString().equalsIgnoreCase("mobs")) {
 						player.sendMessage("This will contain the a list of info for mobs. Coming soon.");
 
-					} else if (args.length == 1 && args[0].toString().equals("mobTypes")) {
+					} else if (args.length == 1 && args[0].toString().equalsIgnoreCase("mobTypes")) {
 						player.sendMessage("Displays a list of the custom mob types. Coming soon.");
 
 					} else {

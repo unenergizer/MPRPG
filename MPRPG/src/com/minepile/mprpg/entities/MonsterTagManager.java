@@ -1,4 +1,4 @@
-package com.minepile.mprpg.monsters;
+package com.minepile.mprpg.entities;
 
 import com.minepile.mprpg.MPRPG;
 
