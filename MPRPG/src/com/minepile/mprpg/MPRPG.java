@@ -5,6 +5,8 @@ import java.io.File;
 import net.md_5.bungee.api.ChatColor;
 
 import org.bukkit.Bukkit;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -93,6 +95,12 @@ public class MPRPG extends JavaPlugin {
         /// Setup Class Instances ///
         /////////////////////////////
         
+        //setup player manager instances
+        PlayerMailManager.getInstance().setup(this);
+        PlayerManager.getInstance().setup(this);
+        PlayerHealthTagManager.getInstance().setup(this);
+        PlayerMenuManager.getInstance().setup(this);
+        
         //setup chat manager instances
         ChatManager.getInstance().setup(this);
         DiceRollManager.getInstance().setup(this);
@@ -123,12 +131,6 @@ public class MPRPG extends JavaPlugin {
         MiscItemManager.getInstance().setup(this);
         MobDropTablesManager.getInstance().setup(this);
         WeaponItemManager.getInstance().setup(this);
-        
-        //setup player manager instances
-        PlayerMailManager.getInstance().setup(this);
-        PlayerManager.getInstance().setup(this);
-        PlayerHealthTagManager.getInstance().setup(this);
-        PlayerMenuManager.getInstance().setup(this);
         
         //setup profession manager instances
         Alchemy.getInstance().setup(this);
@@ -246,6 +248,16 @@ public class MPRPG extends JavaPlugin {
 			PlayerManager.setPlayerConfigInt(players, "player.logoutHP", logoutHP);
 		}
         
+		//Loop through entity list and remove them.
+		//This is mainly for clearing mobs on server reload.
+		for (Entity mob : Bukkit.getWorld("world").getEntities()) {
+			if (!(mob.getType().equals(EntityType.ENDER_DRAGON)) && 
+					!(mob.getType().equals(EntityType.PLAYER)) && 
+					!(mob.getType().equals(EntityType.ITEM_FRAME))) {
+				mob.remove();
+			}
+		}
+		
 		////////////////////
         /// Shutdown End ///
         ////////////////////

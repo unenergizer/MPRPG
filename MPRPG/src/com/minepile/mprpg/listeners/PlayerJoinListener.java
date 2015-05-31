@@ -32,9 +32,6 @@ public class PlayerJoinListener implements Listener {
 		Player player = event.getPlayer();
 		String playerName = player.getName();
 		
-		//Load the player
-		PlayerManager.setupPlayer(player);
-		
 		//Show the user the welcome message.
 		MessageManager.displayWelcomeMessage(player);
 		
@@ -46,23 +43,28 @@ public class PlayerJoinListener implements Listener {
 		//This message is not displayed to all users.
 		player.sendMessage(ChatColor.GRAY + "Welcome " + playerName + "!");
 		
-		updatePlayerArmor(player);
-		
-		//Add the players health tag below their name.
-		PlayerHealthTagManager.addPlayer(player);
-		PlayerHealthTagManager.updateHealthTag(player);
+		delayedUpdate(player);
 	}
 	
 	//It seems that the client responds better if we give it time to
 	//set the experience, then update the players armor..
-	public void updatePlayerArmor(final Player player) {
+	public void delayedUpdate(final Player player) {
 		//Lets start a  task
 		taskID = Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
 			@Override
 			public void run() {
+				
+				//Load the player
+				PlayerManager.setupPlayer(player);
+				
 				//Update the players armor.
 				LoreManager.applyHpBonus(player, false);
 				PlayerHealthTagManager.updateHealthTag(player);
+				
+				//Add the players health tag below their name.
+				PlayerHealthTagManager.addPlayer(player);
+				PlayerHealthTagManager.updateHealthTag(player);
+				
 			} //END Run method.
 		}, 5); //(20 ticks = 1 second)
 	}

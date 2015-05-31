@@ -45,25 +45,20 @@ public class CurrencyItemManager {
 	public static Material getCurrencyType(String type) {
 		if (type.equalsIgnoreCase("copper")) {
 			int itemId = currencyItemConfig.getInt("copper.itemId");
-			return convertItemIdToMaterial(itemId);
+			return ItemGeneratorManager.convertItemIdToMaterial(itemId);
 		} else if (type.equalsIgnoreCase("silver")) {
 			int itemId = currencyItemConfig.getInt("silver.itemId");
-			return convertItemIdToMaterial(itemId);
+			return ItemGeneratorManager.convertItemIdToMaterial(itemId);
 		} else if (type.equalsIgnoreCase("gold")) {
 			int itemId = currencyItemConfig.getInt("gold.itemId");
-			return convertItemIdToMaterial(itemId);
+			return ItemGeneratorManager.convertItemIdToMaterial(itemId);
 		} else if (type.equalsIgnoreCase("premium")) {
 			int itemId = currencyItemConfig.getInt("premium.itemId");
-			return convertItemIdToMaterial(itemId);
+			return ItemGeneratorManager.convertItemIdToMaterial(itemId);
 		} else {
 			Bukkit.broadcastMessage(ChatColor.RED + "getCurrencyType - unable to get currency type.");
 			return null;
 		}
-	}
-	
-	private static Material convertItemIdToMaterial(int itemId) {
-		Material item = Material.getMaterial(itemId);
-		return item;
 	}
 	
 	//This creates the configuration file that will hold data to save currency information.

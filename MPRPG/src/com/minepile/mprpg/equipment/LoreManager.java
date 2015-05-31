@@ -355,6 +355,9 @@ public class LoreManager {
 					//entity.sendMessage("healthPercent: " + healthPercent);
 					
 					entity.setHealth(20);
+					
+				} else if (healthPercent < 1) {
+					entity.setHealth(0);
 				} else {
 					entity.setHealth(healthPercent);
 				}
@@ -364,7 +367,6 @@ public class LoreManager {
 					((Player) entity).playSound(entity.getLocation(), Sound.ANVIL_LAND, .5F, 1F);
 				}
 			}
-
 			//Update the players health tag.
 			PlayerHealthTagManager.updateHealthTag(player);
 		}
