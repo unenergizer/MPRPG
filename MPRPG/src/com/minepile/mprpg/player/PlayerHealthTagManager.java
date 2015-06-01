@@ -16,6 +16,9 @@ public class PlayerHealthTagManager {
 	public static MPRPG plugin;
 	static PlayerHealthTagManager playerHealthTagManagerInstance = new PlayerHealthTagManager();
 	
+	@SuppressWarnings("unused")
+	private static int taskID; 
+	
 	static Scoreboard sb;
 	static Team team;
 	private static Objective obj;
@@ -55,15 +58,25 @@ public class PlayerHealthTagManager {
 		team.setAllowFriendlyFire(true);
 		team.setPrefix("");
 	}
-	
+
+	@SuppressWarnings("deprecation")
 	public static void addPlayer(Player player) {
 		player.setScoreboard(sb);
 		team.addPlayer(player);
+		obj.getScore(player).setScore(PlayerManager.getHealthPoints(player.getName()));
 	}
 	
 	@SuppressWarnings("deprecation")
-	public static void updateHealthTag(Player player) {
-		obj.getScore(player).setScore(PlayerManager.getHealthPoints(player.getName()));
+	public static void updateHealthTag(final Player player) {
+		//Lets start a  task
+		taskID = Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
+			@Override
+			public void run() {
+				
+				obj.getScore(player).setScore(PlayerManager.getHealthPoints(player.getName()));
+				
+			} //END Run method.
+		}, 5); //(20 ticks = 1 second)
 	}
 
 	public static Scoreboard getSb() {

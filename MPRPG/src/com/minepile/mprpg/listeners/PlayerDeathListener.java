@@ -30,7 +30,7 @@ public class PlayerDeathListener implements Listener {
 		//update the players health tag.
 		PlayerHealthTagManager.updateHealthTag(player);
 		
-		if(!(killer instanceof Player) && player.getLastDamageCause().getCause() != null){
+		if(!(killer instanceof Player) && player.getLastDamageCause().getCause() != null) {
 			//Get damage type so we can build a death message.
 			switch(player.getLastDamageCause().getCause()){
 			case BLOCK_EXPLOSION:
@@ -103,9 +103,11 @@ public class PlayerDeathListener implements Listener {
 				deathCause = "by something crazy";
 				break;
 			}
+		} else if (player.getLastDamageCause().getCause() == null) {
+			deathCause = "by a coding bug";
 		} else {
 			killerName = killer.getName();
-			deathCause = ChatColor.GOLD + "by " + ChatColor.AQUA + killerName;
+			deathCause = ChatColor.GOLD + "by " + ChatColor.RED + killerName;
 		}
 		
 		event.setDeathMessage(ChatColor.GOLD + "" + ChatColor.BOLD + "MPRPG" + ChatColor.GOLD + "> " 

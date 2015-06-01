@@ -34,6 +34,7 @@ public class CommandManager implements CommandExecutor{
 		if (sender instanceof Player) {
 
 			Player player = (Player) sender;
+			String playerName = player.getName();
 			
 			//TODO: Remove debug messages.
 			//player.sendMessage("DEBUG: args.length = " + Integer.toString(args.length));
@@ -529,7 +530,12 @@ public class CommandManager implements CommandExecutor{
 				player.sendMessage(ChatColor.DARK_GRAY + "" + ChatColor.BOLD +"---------------------------------------------");
 			}
 
-
+			if (cmd.getLabel().equalsIgnoreCase("gethp")) {
+				if (args.length == 0) {
+					player.sendMessage(ChatColor.RED + "Your current HP" + ChatColor.DARK_GRAY + ": " + 
+							ChatColor.RESET + Integer.toString(PlayerManager.getHealthPoints(playerName)));
+				}
+			}
 
 		} else { //The command sent was not by a player.
 			sender.sendMessage("Please do not use the console to run this command.");

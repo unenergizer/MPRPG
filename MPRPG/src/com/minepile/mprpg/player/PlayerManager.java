@@ -80,7 +80,7 @@ public class PlayerManager {
 	
 	public static void teleportPlayerToSpawn(Player player) {
     	//Player must be new, lets teleport them to the new player starting point.
-    	player.teleport(new Location(Bukkit.getWorld("world"), 43, 78, -35));
+    	player.teleport(new Location(Bukkit.getWorld("world"), 43.5, 79, -35.5));
     	
     	//Play a sound effect for the player.
     	player.playSound(player.getLocation(), Sound.AMBIENCE_CAVE, .8f, .8f);
@@ -259,7 +259,7 @@ public class PlayerManager {
         playerConfig.set("playerName", playerName);
         playerConfig.set("player.playerLVL", 1);
         playerConfig.set("player.playerEXP", 0);
-        playerConfig.set("player.logoutHP", 0);
+        playerConfig.set("player.logoutHP", baseHealthPoints);
         
         playerConfig.set("permissions.admin", 0);
         playerConfig.set("permissions.dev", 0);

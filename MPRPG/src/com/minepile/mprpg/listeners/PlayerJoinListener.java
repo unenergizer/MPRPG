@@ -59,11 +59,6 @@ public class PlayerJoinListener implements Listener {
 				
 				//Update the players armor.
 				LoreManager.applyHpBonus(player, false);
-				PlayerHealthTagManager.updateHealthTag(player);
-				
-				//Add the players health tag below their name.
-				PlayerHealthTagManager.addPlayer(player);
-				PlayerHealthTagManager.updateHealthTag(player);
 				
 			} //END Run method.
 		}, 5); //(20 ticks = 1 second)

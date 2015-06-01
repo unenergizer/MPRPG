@@ -191,8 +191,9 @@ public class MPRPG extends JavaPlugin {
         //get the server lag
         getCommand("lag").setExecutor(new CommandManager(this));
         
-        //get the server lag
+        //get player stats
         getCommand("armorstats").setExecutor(new CommandManager(this));
+        getCommand("gethp").setExecutor(new CommandManager(this));
         
         //commands to define monsters in the world
         getCommand("mm").setExecutor(new CommandManager(this));

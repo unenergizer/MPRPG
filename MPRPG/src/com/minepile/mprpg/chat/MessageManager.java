@@ -46,8 +46,26 @@ public class MessageManager {
 	 * @param the player the welcome message will be displayed too
 	 */
 	public static void displayWelcomeMessage(Player player) {
+		
+		//Insert Blank lines to clear previous chat from other servers
+		//or the players last session.
+		player.sendMessage("");
+		player.sendMessage("");
+		player.sendMessage("");
+		player.sendMessage("");
+		player.sendMessage("");
+		player.sendMessage("");
+		player.sendMessage("");
+		player.sendMessage("");
+		player.sendMessage("");
+		player.sendMessage("");
+		player.sendMessage("");
+		player.sendMessage("");
+		player.sendMessage("");
+		player.sendMessage("");
+		
 		String welcomeMessage = " \n" + " \n" + ChatColor.GOLD + "                        " + ChatColor.BOLD 
-				+ "MinePile: " + ChatColor.WHITE + "" + ChatColor.BOLD + "RPGMMO v0.0.1 \n" + 
+				+ "MinePile: " + ChatColor.WHITE + "" + ChatColor.BOLD + "RPGMMO v0.6.8 \n" + 
 				ChatColor.RESET + ChatColor.GRAY + "                          http://www.MinePile.com/" + " \n" + 
 				" \n" + " \n";
 		player.sendMessage(welcomeMessage);

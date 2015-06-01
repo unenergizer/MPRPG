@@ -26,4 +26,6 @@ commands:
       description: Sends the player to spawn, if they are OP.
    mm:
       description: Used to edit monsters in the world.
+   gethp:
+      description: Displays your current HP in number form.
   
