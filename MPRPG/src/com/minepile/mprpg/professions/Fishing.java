@@ -17,6 +17,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import com.minepile.mprpg.MPRPG;
 import com.minepile.mprpg.chat.MessageManager;
+import com.minepile.mprpg.player.PlayerManager;
 
 public class Fishing {
 	
@@ -166,7 +167,9 @@ public class Fishing {
 			setLore(player, totalEXP, currentRodLVL);
 			
 			//Send EXP up message.
-			player.sendMessage(MessageManager.showEXPLevel(expGain, totalEXP, expGoal));
+			if (PlayerManager.getPlayerConfigInt(player, "setting.chat.professionDebug") == 1) {
+				player.sendMessage(MessageManager.showEXPLevel(expGain, totalEXP, expGoal));
+			}
 		}
 	}
 	

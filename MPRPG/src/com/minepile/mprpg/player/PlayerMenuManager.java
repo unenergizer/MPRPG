@@ -22,7 +22,7 @@ public class PlayerMenuManager {
 	
 	//Define inventory menu's here.
 	public static Inventory mainMenu = Bukkit.createInventory(null, 27, ChatColor.DARK_GRAY + 
-			"" + ChatColor.BOLD + "Player Menu!" + ChatColor.BLUE + " Not Ready Yet");
+			"" + ChatColor.BOLD + "Game Menu" + ChatColor.BLUE + " Not Ready Yet");
 	public static Inventory settingsMenu = Bukkit.createInventory(null, 27, ChatColor.GREEN + "Game Settings");
 	
 	//Create instance
@@ -90,6 +90,33 @@ public class PlayerMenuManager {
 			tool.setItemMeta(meta);
 			
 			playerInv.setItem(8, tool);
+		}
+	}
+	
+	public static void playerInteractMenu(Player player, String menuName, ItemStack item) {
+		player.sendMessage("Game Menu - playerInteractMenu method toggle");
+		
+		if (item.getType().equals(Material.ENCHANTMENT_TABLE)) {
+			player.sendMessage("Game Menu - You clicked the enchant table.");
+		}
+		
+		if (item.getType().equals(Material.REDSTONE_COMPARATOR)) {
+			int debugMessages = PlayerManager.getPlayerConfigInt(player, "setting.chat.professionDebug");
+			
+			//Toggles debug messages on and off.
+			if (debugMessages == 1) {
+				//Set player config setting to 0 for debug messages off.
+				PlayerManager.setPlayerConfigInt(player, "setting.chat.professionDebug", 0);
+				PlayerManager.setPlayerConfigInt(player, "setting.chat.monsterDebug", 0);
+				//Send player a notification. 
+				player.sendMessage(ChatColor.RED + "Game Menu - debug messages are now off.");
+			} else {
+				//Set player config setting to 0 for debug messages on.
+				PlayerManager.setPlayerConfigInt(player, "setting.chat.professionDebug", 1);
+				PlayerManager.setPlayerConfigInt(player, "setting.chat.monsterDebug", 1);
+				//Send player a notification.
+				player.sendMessage(ChatColor.RED + "Game Menu - debug messages are now on.");
+			}
 		}
 	}
 }

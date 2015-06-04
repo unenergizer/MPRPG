@@ -153,7 +153,9 @@ public class EntityDamageByEntityListener implements Listener{
 				
 				//Show monster damage message.
 				if (damager instanceof Player) {
-					damager.sendMessage(mobHealthChangeMessage((Player)damager, victim, victimHealth, (int) damage, victimMaxHealth));
+					if (PlayerManager.getPlayerConfigInt((Player) damager, "setting.chat.monsterDebug") == 1) {
+						damager.sendMessage(mobHealthChangeMessage((Player)damager, victim, victimHealth, (int) damage, victimMaxHealth));
+					}
 				}
 				
 				if (victimHealth <= 1) {

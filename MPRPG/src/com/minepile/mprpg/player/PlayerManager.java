@@ -276,6 +276,9 @@ public class PlayerManager {
         playerConfig.set("setting.chat.focus", "local");
         playerConfig.set("setting.chat.lastpm", null);
         
+        playerConfig.set("setting.chat.monsterDebug", 1);
+        playerConfig.set("setting.chat.professionDebug", 1);
+        
         playerConfig.set("setting.chatchannel.admin", 1);
         playerConfig.set("setting.chatchannel.global", 1);
         playerConfig.set("setting.chatchannel.guild", 1);

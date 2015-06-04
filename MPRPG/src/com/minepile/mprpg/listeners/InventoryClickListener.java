@@ -1,13 +1,17 @@
 package com.minepile.mprpg.listeners;
 
+import net.md_5.bungee.api.ChatColor;
+
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.inventory.ItemStack;
 
 import com.minepile.mprpg.MPRPG;
 import com.minepile.mprpg.equipment.LoreManager;
+import com.minepile.mprpg.player.PlayerMenuManager;
 
 public class InventoryClickListener implements Listener{
 
@@ -31,6 +35,14 @@ public class InventoryClickListener implements Listener{
 				delayedSlotUpdate(player);
 				break;
 			case CONTAINER:
+				String invName = event.getClickedInventory().getName();
+				
+				if (invName.startsWith(ChatColor.DARK_GRAY + "" + ChatColor.BOLD + "Game Menu")) {
+					player.sendMessage("Game Menu - Click toggle");
+					ItemStack clickedItem = event.getCurrentItem();
+					PlayerMenuManager.playerInteractMenu(player, invName, clickedItem);
+				}
+				event.setCancelled(true);
 				break;
 			case CRAFTING:
 				event.setCancelled(true);
@@ -57,7 +69,6 @@ public class InventoryClickListener implements Listener{
 			}
 		}
 	}
-	
 	
 	
 	//It seems that the client responds better if we give it time to
