@@ -19,6 +19,8 @@ public class WeaponManager {
 	//setup instance variables
 	public static MPRPG plugin;
 	static WeaponManager weaponManagerInstance = new WeaponManager();
+	private static String FILE_PATH = "plugins/MPRPG/items/weapons.yml";
+	
 	
 	//Create instance
 	public static WeaponManager getInstance() {
@@ -31,11 +33,11 @@ public class WeaponManager {
 		this.plugin = plugin;
 		
 		//If mining configuration does not exist, create it. Otherwise lets load the config.
-		if(!(new File("plugins/MPRPG/item/weapons.yml")).exists()){
+		if(!(new File(FILE_PATH)).exists()){
 			createWeaponConfiguration();
         } else {
         	//lets load the configuration file.
-        	File configFile = new File("plugins/MPRPG/item/weapons.yml");
+        	File configFile = new File(FILE_PATH);
             FileConfiguration weaponConfig =  YamlConfiguration.loadConfiguration(configFile);
 
             //TODO: 
@@ -131,7 +133,7 @@ public class WeaponManager {
 	
 	public static void createWeaponConfiguration() {
     	
-        File configFile = new File("plugins/MPRPG/item/weapons.yml");
+        File configFile = new File(FILE_PATH);
         FileConfiguration playerConfig =  YamlConfiguration.loadConfiguration(configFile);
         playerConfig.set("quality.junk.damageMin", 1);
         playerConfig.set("quality.junk.damageMax", 20);

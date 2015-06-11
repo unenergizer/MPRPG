@@ -45,8 +45,6 @@ public class EntityDeathListener implements Listener{
 			}.runTaskLater(plugin, 1); //run after 1 tick
 		} else {
 			event.getDrops().clear();
-			
-			String entityName = event.getEntity().getName();
 		}
 	}
 }

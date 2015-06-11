@@ -1,22 +1,15 @@
 package com.minepile.mprpg.equipment;
 
 import java.util.ArrayList;
-import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
-import org.bukkit.entity.EntityType;
-import org.bukkit.entity.HumanEntity;
-import org.bukkit.entity.Item;
 import org.bukkit.entity.LivingEntity;
-import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import com.minepile.mprpg.MPRPG;
-import com.minepile.mprpg.player.PlayerManager;
+import com.minepile.mprpg.equipment.ItemQualityManager.ItemQuality;
 
 public class ArmorManager {
 	
@@ -68,105 +61,70 @@ public class ArmorManager {
 	public void getItemFind (LivingEntity entity) {}
 	public void getGoldFind (LivingEntity entity) {}
 	
-	public static void makeArmor(Player player, Item item) {
-		EntityType armorType = item.getType();
-		setLore(player, item);
+	
+	public static void makeArmor(ItemStack item) {
+		Material armorType = item.getType();
+		
 		// TODO Auto-generated method stub
 		if (armorType.equals(Material.LEATHER_BOOTS)) {
-			setLore(player, item);
-		} else if (armorType.equals(Material.LEATHER_CHESTPLATE)) {
-			setLore(player, item);
-		} else if (armorType.equals(Material.LEATHER_HELMET)) {
-			setLore(player, item);
-		} else if (armorType.equals(Material.LEATHER_LEGGINGS)) {
-			setLore(player, item);
-		}
-	}
-	
-	public static int getLore(HumanEntity entity) {
-		
-		Player player = (Player) entity;
-		
-    	player.sendMessage("resetting player");
-    	PlayerManager.resetPlayerHashMap(player);
-    	
-		for (ItemStack item : player.getEquipment().getArmorContents()) {
-        	player.sendMessage(ChatColor.GRAY + "Armor loop");
+			setLore(item, ItemQuality.JUNK);
 			
-        	if (item != null && item.hasItemMeta() && item.getItemMeta().hasLore()) {
-	        	ItemMeta im = item.getItemMeta();
-				player.sendMessage(ChatColor.GRAY + "hasItemMeta == true");
-				
-				List<String> lore = im.getLore();
-				String allLore = lore.toString().toLowerCase();
-				
-				player.sendMessage(allLore);
-				
-				Pattern pattern = Pattern.compile("(hp:)[ ][0-9]+");
-				Matcher matcher = pattern.matcher(allLore);
-				
-		        if (matcher.find()) {
-		        	String getNums = matcher.group(0).toString();
-		        	
-		        	player.sendMessage("matcher string: " + getNums);
-		        	
-		        	Pattern numsOnly = Pattern.compile("[0-9]+");
-		        	Matcher numMatch = numsOnly.matcher(getNums);
-		        	
-		        	player.sendMessage("fist: " + matcher.group(0));
-		        	
-		        	if (numMatch.find()) {
-		        		player.sendMessage("second: " + numMatch.group(0));
-		        		player.sendMessage(ChatColor.GREEN + "HP updated!! match: " + numMatch.group(0).toString());
-			        	PlayerManager.updatePlayerHashMap((Player) player, "hp", Integer.valueOf(numMatch.group(0)).intValue());
-		        	}
-		        	
-		        	//int match = Integer.valueOf(matcher.group(1));
-		        	//player.sendMessage(ChatColor.GREEN + "HP updated!! match: " + Integer.toString(match));
-		        	//PlayerManager.updateHashMap((Player) player, "hp", Integer.valueOf(matcher.group(1)).intValue());
-		        }
-	        } else {
-	        	player.sendMessage("resetting player");
-	        	PlayerManager.resetPlayerHashMap(player);
-	        }
+		} else if (armorType.equals(Material.LEATHER_CHESTPLATE)) {
+			setLore(item, ItemQuality.COMMON);
+			
+		} else if (armorType.equals(Material.LEATHER_HELMET)) {
+			setLore(item, ItemQuality.UNCOMMON);
+			
+		} else if (armorType.equals(Material.LEATHER_LEGGINGS)) {
+			setLore(item, ItemQuality.RARE);
+		} else {
+			setLore(item, ItemQuality.LEGENDARY);
 		}
-		return 0;
 	}
 	
-	public static void setLore(Player player, Item item) {
-		
-		ItemStack is = item.getItemStack();
-		ItemMeta im = is.getItemMeta();
+	
+	/**
+	 * Sets the item's lore. This lore will be read to calculate different attributes.
+	 * 
+	 * @param item the item that is going to get lore added to it
+	 * @param quality the quality of the item. Example: junk, uncommon, common, rare, epic, and legendary.
+	 */
+	public static void setLore(ItemStack item, ItemQuality quality) {
+
+		ItemMeta im = item.getItemMeta();
 		boolean cointainsLore = im.hasLore();
 		
 		if (cointainsLore == false) {
 			
 			//Setup variables
-			int hp = 20;
+			int hp = (int) (Math.random() * 100) + 1;
 			int dmg = 5;
 			int goldFind = 1;
 			
-			String itemDescription = "This is a test for armor.";
+			String itemName = "Armor test";
+			String nameFormatting = ItemQualityManager.getStringFormatting(quality);
+			String itemDescription = "This is a test for armor.";	//Sets the item's description
 			
-			//Set the item name
-			im.setDisplayName(ChatColor.RED + "Armor test");
+			//Set the items Name
+			im.setDisplayName(nameFormatting + itemName);
 			
-				
 			//Set the item lore
 			ArrayList<String> lore = new ArrayList<String>();
-			lore.add(ChatColor.GRAY + "" + ChatColor.BOLD + "+" + hp + " health");
-			lore.add(ChatColor.GRAY + "" + ChatColor.BOLD + "+" + dmg + " damage");
-			lore.add(ChatColor.RED + "" + ChatColor.BOLD + "Gold Find: " + goldFind + "%");
-			lore.add(" ");//create blank space
+			lore.add(ItemQualityManager.getQualityName(quality)); 			//Define the quality of item.
+			lore.add("");									//create blank space
+			lore.add(ChatColor.DARK_PURPLE + "+" + hp + " HEALTH");
+			lore.add(ChatColor.DARK_PURPLE + "+" + dmg + " DAMAGE");
+			lore.add(ChatColor.GREEN + "GOLD FIND: " + goldFind + "%");
+			lore.add(" ");													//create blank space
 			
-			
+			//Set the items description
 			lore.add(ChatColor.GRAY + "" + ChatColor.ITALIC + itemDescription);
 			
 			
 			//Set the item lore
 			im.setLore(lore);
 			//Set the item meta
-			is.setItemMeta(im);
+			item.setItemMeta(im);
 		}
 	}
 }

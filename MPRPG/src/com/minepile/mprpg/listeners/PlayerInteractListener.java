@@ -181,7 +181,7 @@ public class PlayerInteractListener implements Listener{
 					break;
 				case COMPASS:
 					//Open players main menu.
-					player.openInventory(PlayerMenuManager.mainMenu);
+					PlayerMenuManager.createMenu(player);
 					break;
 				case WORKBENCH:
 					//Disable item crafting.

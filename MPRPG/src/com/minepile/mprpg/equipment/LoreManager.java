@@ -38,8 +38,6 @@ public class LoreManager {
 	private static Pattern critDamageRegex = Pattern.compile("[+](\\d+)[ ](crit damage)");
 	private static Pattern lifestealRegex = Pattern.compile("[+](\\d+)[ ](life steal)");
 	private static Pattern armorRegex = Pattern.compile("[+](\\d+)[ ](armor)");
-	private static Pattern restrictionRegex = Pattern.compile("(restriction:)[ ][0-9]+");
-	private static Pattern levelRegex = Pattern.compile("level (\\d+)()");
 	public static HashMap<String, Timestamp> staminaLog = new HashMap<String, Timestamp>();
 	private static Random generator = new Random();
 
@@ -57,97 +55,125 @@ public class LoreManager {
 			applyHpBonus(players, false);
 		}
 	}
-
-	public static boolean canUse(Player player, ItemStack item){
-		if ((item != null) && (item.hasItemMeta()) && (item.getItemMeta().hasLore())) {
-			List<String> lore = item.getItemMeta().getLore();
-			String allLore = lore.toString().toLowerCase();
-			Matcher valueMatcher = levelRegex.matcher(allLore);
-			if (valueMatcher.find()) {
-				if (player.getLevel() < Integer.valueOf(valueMatcher.group(1)).intValue()) {
-					player.sendMessage("Item was not able to be equipped.");
-					return false;
-				}
-			}
-			valueMatcher = restrictionRegex.matcher(allLore);
-			if (valueMatcher.find()) {
-				if (player.hasPermission("loreattributes." + valueMatcher.group(2))) {
-					return true;
-				}
-				player.sendMessage(item.getType().toString());
-				return false;
-			}
-		}
-		return true;
-	}
-
+	
+	/**
+	 * Returns the dodge bonus from all of the players equipped armor and the
+	 * weapon that is currently in the players hand.  
+	 * 
+	 * @param entity the player entity that is wearing armor or holding a weapon
+	 * @param return the total amount of dodge bonus from all armor slots and current weapon
+	 */
 	public static int getDodgeBonus(LivingEntity entity) {
 		Integer dodgeBonus = Integer.valueOf(0);
+		
+		//Loop through players armor slots
 		for (ItemStack item : entity.getEquipment().getArmorContents()) {
+			//If the item exists and has lore, continue.
 			if ((item != null) && (item.hasItemMeta()) && (item.getItemMeta().hasLore())) {
-				List<String> lore = item.getItemMeta().getLore();
-				String allLore = lore.toString().toLowerCase();
+				List<String> lore = item.getItemMeta().getLore();	//Array lists of lore strings
+				String allLore = lore.toString().toLowerCase();		//Put's all lore in one lowercase string
 
+				//Get the matcher pattern to find "Dodge bonus"
 				Matcher valueMatcher = dodgeRegex.matcher(allLore);
 				if (valueMatcher.find()) {
+					//If a match was found, add that value to the variable dodgeBonus.
 					dodgeBonus = Integer.valueOf(dodgeBonus.intValue() + Integer.valueOf(valueMatcher.group(1)).intValue());
 				}
 			}
 		}
+		//Get Dodge value from item in hand.
 		ItemStack item = entity.getEquipment().getItemInHand();
+		//If the item exists and has lore, continue.
 		if ((item != null) && (item.hasItemMeta()) && (item.getItemMeta().hasLore())) {
-			Object lore = item.getItemMeta().getLore();
-			String allLore = lore.toString().toLowerCase();
-
+			Object lore = item.getItemMeta().getLore();			//Array lists of lore strings
+			String allLore = lore.toString().toLowerCase();		//Put's all lore in one lowercase string
+			
+			//Get the matcher pattern to find "Dodge bonus"
 			Matcher valueMatcher = dodgeRegex.matcher(allLore);
 			if (valueMatcher.find()) {
+				//If a match was found, add that value to the variable dodgeBonus.
 				dodgeBonus = Integer.valueOf(dodgeBonus.intValue() + Integer.valueOf(valueMatcher.group(1)).intValue());
 			}
 		}
+		//Returns the dodge bonus of armor and weapons.
 		return dodgeBonus.intValue();
 	}
-
+	
+	/**
+	 * This method will calculate if the player has dodged an attack from another entity.
+	 * 
+	 * @param entity the entity that may or may not dodge an attack
+	 * @param return returns true if the player dodged an attack
+	 */
 	public static boolean dodgedAttack(LivingEntity entity) {
+		//If not a valid entity, cancel a dodged attack.
 		if (!entity.isValid()) {
 			return false;
 		}
+		//Gets the dodge bonus (if any) from the entites armor and weapon
 		Integer chance = Integer.valueOf(getDodgeBonus(entity));
 
-
+		//Get the roll for dodge. 1-100
 		Integer roll = Integer.valueOf(generator.nextInt(100) + 1);
 		if (chance.intValue() >= roll.intValue()) {
+			//If the dodge value was greater than the roll
+			//then return true. Dodge was a success!
 			return true;
 		}
+		//The player didn't dodge the attack.
 		return false;
 	}
-
+	
+	/**
+	 * Returns the critical hit chance from all of the players equipped armor and the
+	 * weapon that is currently in the players hand.  
+	 * 
+	 * @param entity the player entity that is wearing armor or holding a weapon
+	 * @param return the total amount of "critical chance" from all armor slots and current weapon
+	 */
 	private static int getCritChance(LivingEntity entity) {
 		Integer chance = Integer.valueOf(0);
+		
+		//Loop through the players armor slots
 		for (ItemStack item : entity.getEquipment().getArmorContents()) {
+			//If the item exists and has lore, continue.
 			if ((item != null) && (item.hasItemMeta()) && (item.getItemMeta().hasLore())) {
-				List<String> lore = item.getItemMeta().getLore();
-				String allLore = lore.toString().toLowerCase();
-
+				List<String> lore = item.getItemMeta().getLore();	//Array lists of lore strings
+				String allLore = lore.toString().toLowerCase();		//Put's all lore in one lowercase string
+				
+				//Get the matcher pattern to find "critical hit chance"
 				Matcher valueMatcher = critChanceRegex.matcher(allLore);
 				if (valueMatcher.find()) {
+					//If a match was found, add that value to the variable "chance."
 					chance = Integer.valueOf(chance.intValue() + Integer.valueOf(valueMatcher.group(1)).intValue());
 				}
 			}
 		}
+		//Get critical hit chance value from item in hand.
 		ItemStack item = entity.getEquipment().getItemInHand();
+		//If the item exists and has lore, continue.
 		if ((item != null) && (item.hasItemMeta()) && (item.getItemMeta().hasLore())) {
-			Object lore = item.getItemMeta().getLore();
-			String allLore = lore.toString().toLowerCase();
-
+			Object lore = item.getItemMeta().getLore();			//Array lists of lore strings
+			String allLore = lore.toString().toLowerCase();		//Put's all lore in one lowercase string
+			
+			//Get the matcher pattern to find "critical hit chance"
 			Matcher valueMatcher = critChanceRegex.matcher(allLore);
 			if (valueMatcher.find()) {
+				//If a match was found, add that value to the variable "chance."
 				chance = Integer.valueOf(chance.intValue() + Integer.valueOf(valueMatcher.group(1)).intValue());
 			}
 		}
+		//Returns the critical hit chance of armor and weapons.
 		return chance.intValue();
 	}
-
-	private static boolean critStamina(LivingEntity entity) {
+	
+	/**
+	 * This method will calculate if the player has landed a critical attack on another entity.
+	 * 
+	 * @param entity the entity that may or may not have made a critical attack
+	 * @param return returns true if the player has landed a critical attack
+	 */
+	private static boolean critAttack(LivingEntity entity) {
 		if (!entity.isValid()) {
 			return false;
 		}
@@ -155,37 +181,62 @@ public class LoreManager {
 
 		Integer roll = Integer.valueOf(generator.nextInt(100) + 1);
 		if (chance.intValue() >= roll.intValue()) {
+			//If the critical hit chance value was greater than the roll
+			//then return true. Critical attack was a success!
 			return true;
 		}
+		//The player didn't land a critical hit.
 		return false;
 	}
-
+	
+	/**
+	 * Get's the players total armor bonus from all armor slots and the item being held in the players hand.
+	 * 
+	 * @param entity the player entity that is wearing armor or holding a weapon 
+	 * @return return the total amount of "armor bonus" from all armor slots and current weapon
+	 */
 	public static int getArmorBonus(LivingEntity entity) {
 		Integer armor = Integer.valueOf(0);
+		
+		//Loop through the players armor slots
 		for (ItemStack item : entity.getEquipment().getArmorContents()) {
+			//If the item exists and has lore, continue.
 			if ((item != null) && (item.hasItemMeta()) && (item.getItemMeta().hasLore())) {
-				List<String> lore = item.getItemMeta().getLore();
-				String allLore = lore.toString().toLowerCase();
-
+				List<String> lore = item.getItemMeta().getLore();	//Array lists of lore strings
+				String allLore = lore.toString().toLowerCase();		//Put's all lore in one lowercase string
+				
+				//Get the matcher pattern to find "armor" attribute
 				Matcher valueMatcher = armorRegex.matcher(allLore);
 				if (valueMatcher.find()) {
+					//If a match was found, add that value to the variable "armor."
 					armor = Integer.valueOf(armor.intValue() + Integer.valueOf(valueMatcher.group(1)).intValue());
 				}
 			}
 		}
+		//Get armor value from item in hand.
 		ItemStack item = entity.getEquipment().getItemInHand();
+		//If the item exists and has lore, continue.
 		if ((item != null) && (item.hasItemMeta()) && (item.getItemMeta().hasLore())) {
-			Object lore = item.getItemMeta().getLore();
-			String allLore = lore.toString().toLowerCase();
+			Object lore = item.getItemMeta().getLore();			//Array lists of lore strings
+			String allLore = lore.toString().toLowerCase();		//Put's all lore in one lowercase string
 
+			//Get the matcher pattern to find "armor" attribute
 			Matcher valueMatcher = armorRegex.matcher(allLore);
 			if (valueMatcher.find()) {
+				//If a match was found, add that value to the variable "armor."
 				armor = Integer.valueOf(armor.intValue() + Integer.valueOf(valueMatcher.group(1)).intValue());
 			}
 		}
+		//Returns the "armor value" of armor and weapons.
 		return armor.intValue();
 	}
-
+	
+	/**
+	 * Gets the amount of "life steal" a weapon has.
+	 * 
+	 * @param entity entity the player entity that is wearing armor or holding a weapon
+	 * @return return the total amount of "life steal" from all armor slots and current weapon
+	 */
 	public static int getLifeSteal(LivingEntity entity) {
 		Integer steal = Integer.valueOf(0);
 		for (ItemStack item : entity.getEquipment().getArmorContents()) {
@@ -212,11 +263,12 @@ public class LoreManager {
 				steal = Integer.valueOf(steal.intValue() + Integer.valueOf(valueMatcher.group(1)).intValue());
 			}
 		}
+		//Returns the life steal value of armor and weapons.
 		return steal.intValue();
 	}
 
 	public static int getCritDamage(LivingEntity entity) {
-		if (!critStamina(entity)) {
+		if (!critAttack(entity)) {
 			return 0;
 		}
 		Integer damage = Integer.valueOf(0);
@@ -294,8 +346,8 @@ public class LoreManager {
 		return speed;
 	}
 
-	/*
-	 * Applies a players HP ARMOR + HP Base to get total HP.
+	/**
+	 * Applies a players HP ARMOR + "default HP Base" to get the players total HP.
 	 * 
 	 * @param entity A living entity.
 	 */
@@ -414,7 +466,7 @@ public class LoreManager {
 		return hp;
 	}
 
-	/*
+	/**
 	 * Get the players regeneration bonuses.
 	 * 
 	 * @param entity A living entity.
@@ -537,8 +589,8 @@ public class LoreManager {
 		return false;
 	}
 
-	/*
-	 * This method displays the users current equipped armor and weapon lore statistics.
+	/**
+	 * Displays the users current equipped armor and weapon lore statistics.
 	 * 
 	 * @param player The player who ran the "/armorstats" or "/lorestats" command.
 	 */

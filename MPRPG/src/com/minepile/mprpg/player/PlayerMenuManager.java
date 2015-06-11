@@ -21,9 +21,9 @@ public class PlayerMenuManager {
 	static PlayerMenuManager menuManagerInstance = new PlayerMenuManager();
 	
 	//Define inventory menu's here.
-	public static Inventory mainMenu = Bukkit.createInventory(null, 27, ChatColor.DARK_GRAY + 
-			"" + ChatColor.BOLD + "Game Menu" + ChatColor.BLUE + " Not Ready Yet");
-	public static Inventory settingsMenu = Bukkit.createInventory(null, 27, ChatColor.GREEN + "Game Settings");
+	//public static Inventory mainMenu = Bukkit.createInventory(null, 27, ChatColor.DARK_GRAY + 
+			//"" + ChatColor.BOLD + "Game Menu" + ChatColor.BLUE + " Not Ready Yet");
+	//public static Inventory settingsMenu = Bukkit.createInventory(null, 27, ChatColor.GREEN + "Game Settings");
 	
 	//Create instance
 	public static PlayerMenuManager getInstance() {
@@ -36,9 +36,33 @@ public class PlayerMenuManager {
 		this.plugin = plugin;
 		
 		//Lets add all the items (menu options) to the (chest) menu's.
-		addItemsToMenu();
+		//addItemsToMenu();
 	}
 	
+	public static void createMenu(Player player) {
+		String playerName = player.getName();
+		
+		Inventory mainMenu = Bukkit.createInventory(player, 27, playerName + "'s" + ChatColor.GOLD + "Game Menu");
+		//Define the items in the Main Menu.
+		mainMenu.setItem(0, new ItemStack(Material.BOOK, 1));
+        mainMenu.setItem(1, new ItemStack(Material.ENCHANTED_BOOK, 1));
+        mainMenu.setItem(2, new ItemStack(Material.MAP));
+        mainMenu.setItem(3, new ItemStack(Material.WOOD_SWORD));
+        mainMenu.setItem(6, new ItemStack(Material.ENDER_CHEST));
+        mainMenu.setItem(7, new ItemStack(Material.MONSTER_EGG));
+        mainMenu.setItem(8, new ItemStack(Material.REDSTONE_COMPARATOR));
+        
+        mainMenu.setItem(18, new ItemStack(Material.COMPASS));
+        mainMenu.setItem(19, new ItemStack(Material.WATCH));
+        mainMenu.setItem(21, new ItemStack(Material.GOLD_INGOT));
+        mainMenu.setItem(22, new ItemStack(Material.IRON_INGOT));
+        mainMenu.setItem(23, new ItemStack(Material.CLAY_BRICK));
+
+        mainMenu.setItem(25, new ItemStack(Material.DIAMOND));
+        mainMenu.setItem(26, new ItemStack(Material.ENCHANTMENT_TABLE));
+	}
+	
+	/*
 	public static void addItemsToMenu() {
 		//Define the items in the Main Menu.
 		mainMenu.setItem(0, new ItemStack(Material.BOOK, 1));
@@ -61,6 +85,7 @@ public class PlayerMenuManager {
 		//Define the items in the Settings Menu.
 		
 	}
+	*/
 	
 	//This will give the player the menu, if they don't already have it.
 	public static void givePlayerMenu(Player player) {

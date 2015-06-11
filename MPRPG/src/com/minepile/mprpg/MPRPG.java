@@ -36,7 +36,6 @@ import com.minepile.mprpg.items.WeaponItemManager;
 import com.minepile.mprpg.listeners.AsyncPlayerChatListener;
 import com.minepile.mprpg.listeners.BlockBreakListener;
 import com.minepile.mprpg.listeners.BlockPlaceListener;
-import com.minepile.mprpg.listeners.CraftItemListener;
 import com.minepile.mprpg.listeners.CreatureSpawnListener;
 import com.minepile.mprpg.listeners.EntityChangeBlockListener;
 import com.minepile.mprpg.listeners.EntityCombustListener;
@@ -152,7 +151,6 @@ public class MPRPG extends JavaPlugin {
         pluginManager.registerEvents(new BlockBreakListener(this), this);
         pluginManager.registerEvents(new BlockPlaceListener(this), this);
 
-        pluginManager.registerEvents(new CraftItemListener(this), this);
         pluginManager.registerEvents(new CreatureSpawnListener(this), this);
 
         pluginManager.registerEvents(new EntityChangeBlockListener(this), this);
