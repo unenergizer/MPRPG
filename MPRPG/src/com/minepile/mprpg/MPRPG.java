@@ -21,17 +21,18 @@ import com.minepile.mprpg.entities.MonsterManager;
 import com.minepile.mprpg.entities.NPCManager;
 import com.minepile.mprpg.equipment.ArmorManager;
 import com.minepile.mprpg.equipment.ItemQualityManager;
+import com.minepile.mprpg.equipment.ItemTierManager;
 import com.minepile.mprpg.equipment.LoreManager;
 import com.minepile.mprpg.equipment.WeaponManager;
 import com.minepile.mprpg.inventory.BankChestManager;
 import com.minepile.mprpg.inventory.ShopChestManager;
 import com.minepile.mprpg.items.ArmorItemManager;
-import com.minepile.mprpg.items.ChestLootTablesManager;
+import com.minepile.mprpg.items.LootTableChestManager;
 import com.minepile.mprpg.items.ConsumableItemManager;
 import com.minepile.mprpg.items.CurrencyItemManager;
 import com.minepile.mprpg.items.ItemGeneratorManager;
 import com.minepile.mprpg.items.MiscItemManager;
-import com.minepile.mprpg.items.MobDropTablesManager;
+import com.minepile.mprpg.items.LootTableMobManager;
 import com.minepile.mprpg.items.WeaponItemManager;
 import com.minepile.mprpg.listeners.AsyncPlayerChatListener;
 import com.minepile.mprpg.listeners.BlockBreakListener;
@@ -114,6 +115,7 @@ public class MPRPG extends JavaPlugin {
         //setup equipment manager instances
         ArmorManager.getInstance().setup(this);
         ItemQualityManager.getInstance().setup(this);
+        ItemTierManager.getInstance().setup(this);
         LoreManager.getInstance().setup(this);
         WeaponManager.getInstance().setup(this);
         
@@ -123,12 +125,12 @@ public class MPRPG extends JavaPlugin {
         
         //setup item manager instances
         ArmorItemManager.getInstance().setup(this);
-        ChestLootTablesManager.getInstance().setup(this);
+        LootTableChestManager.getInstance().setup(this);
         ConsumableItemManager.getInstance().setup(this);
         CurrencyItemManager.getInstance().setup(this);
         ItemGeneratorManager.getInstance().setup(this);
         MiscItemManager.getInstance().setup(this);
-        MobDropTablesManager.getInstance().setup(this);
+        LootTableMobManager.getInstance().setup(this);
         WeaponItemManager.getInstance().setup(this);
         
         //setup profession manager instances

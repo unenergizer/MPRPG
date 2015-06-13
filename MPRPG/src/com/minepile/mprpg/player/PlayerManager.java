@@ -24,6 +24,8 @@ public class PlayerManager {
 	//setup instance variables
 	public static MPRPG plugin;
 	static PlayerManager playerManagerInstance = new PlayerManager();
+	static String playerFilePathStart = "plugins/MPRPG/players/";
+	static String playerFilePathEnd = ".yml";
 	
 	//MAIN STATS
 	static HashMap<String, Integer> healthPoints = new HashMap<String, Integer>();
@@ -130,7 +132,7 @@ public class PlayerManager {
 		
 		//Check to make sure the player configuration exists.
 		//Player configurations are saved with the UUID (Mojang's Unique User Identifier).
-        if(!new File("plugins/MPRPG/players/" + uuid + ".yml").exists()){
+        if(!new File(playerFilePathStart + uuid + playerFilePathEnd).exists()){
         	//The players file does not exist. Lets create the player file now.
         	createPlayerConfig(player);
         	
@@ -254,7 +256,7 @@ public class PlayerManager {
     	String uuid = player.getUniqueId().toString();
     	String playerName = player.getName();
     	
-        File configFile = new File("plugins/MPRPG/players/" + uuid + ".yml");
+        File configFile = new File(playerFilePathStart + uuid + playerFilePathEnd);
         FileConfiguration playerConfig =  YamlConfiguration.loadConfiguration(configFile);
         playerConfig.set("playerName", playerName);
         playerConfig.set("player.playerLVL", 1);
@@ -310,7 +312,7 @@ public class PlayerManager {
     	
 		String uuid = player.getUniqueId().toString();
     	
-        File configFile = new File("plugins/MPRPG/players/" + uuid + ".yml");
+        File configFile = new File(playerFilePathStart + uuid + playerFilePathEnd);
         FileConfiguration playerConfig =  YamlConfiguration.loadConfiguration(configFile);
         playerConfig.set(config, value);
 
@@ -325,7 +327,7 @@ public class PlayerManager {
     	
 		String uuid = player.getUniqueId().toString();
     	
-        File configFile = new File("plugins/MPRPG/players/" + uuid + ".yml");
+        File configFile = new File(playerFilePathStart + uuid + playerFilePathEnd);
         FileConfiguration playerConfig =  YamlConfiguration.loadConfiguration(configFile);
         return (int) playerConfig.get(value);
 	}
@@ -334,7 +336,7 @@ public class PlayerManager {
     	
 		String uuid = player.getUniqueId().toString();
     	
-        File configFile = new File("plugins/MPRPG/players/" + uuid + ".yml");
+        File configFile = new File(playerFilePathStart + uuid + playerFilePathEnd);
         FileConfiguration playerConfig =  YamlConfiguration.loadConfiguration(configFile);
         playerConfig.set(config, value);
 
@@ -349,7 +351,7 @@ public class PlayerManager {
     	
 		String uuid = player.getUniqueId().toString();
     	
-        File configFile = new File("plugins/MPRPG/players/" + uuid + ".yml");
+        File configFile = new File(playerFilePathStart + uuid + playerFilePathEnd);
         FileConfiguration playerConfig =  YamlConfiguration.loadConfiguration(configFile);
         return  (String) playerConfig.get(value);
 	}

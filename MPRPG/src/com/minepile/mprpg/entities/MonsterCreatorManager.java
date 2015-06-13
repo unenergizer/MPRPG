@@ -84,9 +84,10 @@ public class MonsterCreatorManager {
         int lvl = monsterTypeConfig.getInt(mobName + ".mobLVL");
         int hp = monsterTypeConfig.getInt(mobName + ".mobHP");
         int runRadius = monsterTypeConfig.getInt(mobName + ".mobRadius");
+        String loot = monsterTypeConfig.getString(mobName + ".lootTable");
         
         //Spawn the monster in the game.
-        MonsterManager.setupMob(world, newLoc, entity, color, mobName, lvl, hp, runRadius, newCount);
+        MonsterManager.setupMob(world, newLoc, entity, color, mobName, lvl, hp, runRadius, newCount, loot);
 
 	}
 	
@@ -104,7 +105,7 @@ public class MonsterCreatorManager {
 		return countTotal;
 	}
 	
-	public static void createNewMonster(Player player, String mobName, String nameColor, EntityType entityType, int mobLevel, int mobHP, int runRadius) {
+	public static void createNewMonster(Player player, String mobName, String nameColor, EntityType entityType, int mobLevel, int mobHP, int runRadius, String lootTable) {
     	
         File configFile = new File(mobTypeFilePath);
         FileConfiguration playerConfig =  YamlConfiguration.loadConfiguration(configFile);
@@ -115,6 +116,7 @@ public class MonsterCreatorManager {
         playerConfig.set(mobName + ".mobLVL", mobLevel);
         playerConfig.set(mobName + ".mobHP", mobHP);
         playerConfig.set(mobName + ".runRadius", runRadius);
+        playerConfig.set(mobName + ".lootTable", lootTable);
 
         try {
             playerConfig.save(configFile);

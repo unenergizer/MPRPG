@@ -8,40 +8,40 @@ import org.bukkit.configuration.file.YamlConfiguration;
 
 import com.minepile.mprpg.MPRPG;
 
-public class WeaponItemManager {
+public class LootTableChestManager {
 	
 	//setup instance variables
 	public static MPRPG plugin;
-	static WeaponItemManager weaponItemManagerInstance = new WeaponItemManager();
-	static String weaponItemsFilePath = "plugins/MPRPG/items/Weapons.yml";
+	static LootTableChestManager LootTableChestManagerInstance = new LootTableChestManager();
+	static String LootTableFilePath = "plugins/MPRPG/items/LootTableChests.yml";
 	
-	//Configuration file that holds weapon information.
-	static FileConfiguration weaponItemConfig;
+	//Configuration file that holds currency information.
+	static FileConfiguration lootTableConfig;
 	
 	//Create instance
-	public static WeaponItemManager getInstance() {
-		return weaponItemManagerInstance;
+	public static LootTableChestManager getInstance() {
+		return LootTableChestManagerInstance;
 	}
 	
-	//Setup Weapon item manager
+	//Setup Chest Loot Tables Manager
 	@SuppressWarnings("static-access")
 	public void setup(MPRPG plugin) {
 		this.plugin = plugin;
 
 		//If configuration does not exist, create it. Otherwise lets load the config.
-		if(!(new File(weaponItemsFilePath)).exists()){
+		if(!(new File(LootTableFilePath)).exists()){
 			createConfig();
         } else {
         	//lets load the configuration file.
-        	File configFile = new File(weaponItemsFilePath);
-        	weaponItemConfig =  YamlConfiguration.loadConfiguration(configFile);
+        	File configFile = new File(LootTableFilePath);
+        	lootTableConfig =  YamlConfiguration.loadConfiguration(configFile);
         }
 	}	
 	
-	//This creates the configuration file that will hold data to save weapon information.
+	//This creates the configuration file that will hold data to save loot table information.
     private static void createConfig() {
     	
-        File configFile = new File(weaponItemsFilePath);
+        File configFile = new File(LootTableFilePath);
         FileConfiguration currencyItemsConfig =  YamlConfiguration.loadConfiguration(configFile);
         
         //set copper currency
@@ -66,19 +66,16 @@ public class WeaponItemManager {
             e.printStackTrace();
         } 
     }
-	
 	//TODO:
 	/*
-	Weapon attributes:
-	
-	Knockback %
-	Fire
-	Critical Hit Bonus
-	Poison
-	Slow
-	Blindness
-	Life Steal
-	Ice
+	 	Possible loot table configuration:
+	 	
+	 	tableName:   (junk drops, epic drops, etc)
+	 		tableName.armor = id1, id2, id3, etc
+	 		tableName.weapon = id1, id2, id3, etc
+	 		tableName.consumables = id1, id2, id3, etc
+	 		tableName.currency = id1
+	 		tableName.misc = id1
 	 */
 	
 }

@@ -104,17 +104,19 @@ public class ArmorManager {
 			String itemName = "Armor test";
 			String nameFormatting = ItemQualityManager.getStringFormatting(quality);
 			String itemDescription = "This is a test for armor.";	//Sets the item's description
+			String itemQuality =  ItemQualityManager.getItemQualityString(quality);
+			String tier = "T1";
 			
 			//Set the items Name
 			im.setDisplayName(nameFormatting + itemName);
 			
 			//Set the item lore
 			ArrayList<String> lore = new ArrayList<String>();
-			lore.add(ItemQualityManager.getQualityName(quality)); 			//Define the quality of item.
-			lore.add("");									//create blank space
-			lore.add(ChatColor.DARK_PURPLE + "+" + hp + " HEALTH");
-			lore.add(ChatColor.DARK_PURPLE + "+" + dmg + " DAMAGE");
-			lore.add(ChatColor.GREEN + "GOLD FIND: " + goldFind + "%");
+			lore.add(ChatColor.DARK_GRAY + "" + ChatColor.ITALIC + tier + ": " + itemQuality);	//Define the quality of item.
+			lore.add("");																		//create blank space
+			lore.add(ChatColor.RED + "+" + hp + " HEALTH");
+			lore.add(ChatColor.RED + "+" + dmg + " DAMAGE");
+			lore.add(ChatColor.RED + "" + goldFind + "%" + " GOLD FIND");
 			lore.add(" ");													//create blank space
 			
 			//Set the items description

@@ -21,6 +21,7 @@ public class WeaponManager {
 	static WeaponManager weaponManagerInstance = new WeaponManager();
 	private static String FILE_PATH = "plugins/MPRPG/items/weapons.yml";
 	
+	FileConfiguration weaponConfig;
 	
 	//Create instance
 	public static WeaponManager getInstance() {
@@ -34,11 +35,11 @@ public class WeaponManager {
 		
 		//If mining configuration does not exist, create it. Otherwise lets load the config.
 		if(!(new File(FILE_PATH)).exists()){
-			createWeaponConfiguration();
+			//createWeaponConfiguration();
         } else {
         	//lets load the configuration file.
         	File configFile = new File(FILE_PATH);
-            FileConfiguration weaponConfig =  YamlConfiguration.loadConfiguration(configFile);
+            weaponConfig =  YamlConfiguration.loadConfiguration(configFile);
 
             //TODO: 
         }

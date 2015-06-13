@@ -4,14 +4,14 @@ import net.md_5.bungee.api.ChatColor;
 
 import com.minepile.mprpg.MPRPG;
 
-public class ItemQualityManager {
+public class ItemTierManager {
 	
 	//setup instance variables
 	public static MPRPG plugin;
-	static ItemQualityManager itemQualityManagerInstance = new ItemQualityManager();
+	static ItemTierManager itemQualityManagerInstance = new ItemTierManager();
 	
 	//Create instance
-	public static ItemQualityManager getInstance() {
+	public static ItemTierManager getInstance() {
 		return itemQualityManagerInstance;
 	}
 	
@@ -22,22 +22,22 @@ public class ItemQualityManager {
 	}	
 	
 	/**
-	 * The type of item qualities that can be found in game.
+	 * The item's Tier in game.
 	 * 
 	 * @author Andrew
 	 */
-	public static enum ItemQuality {
+	public static enum ItemTier {
 		
-		JUNK (ChatColor.GRAY + ""),
-		COMMON (ChatColor.WHITE + ""),
-		UNCOMMON (ChatColor.GREEN + ""),
-		RARE (ChatColor.BLUE + ""),
-		EPIC (ChatColor.DARK_PURPLE + ""),
-		LEGENDARY (ChatColor.GOLD + "");
+		T1 (ChatColor.GRAY + ""),
+		T2 (ChatColor.WHITE + ""),
+		T3 (ChatColor.GREEN + ""),
+		T4 (ChatColor.BLUE + ""),
+		T5 (ChatColor.DARK_PURPLE + ""),
+		T6 (ChatColor.GOLD + "");
 
 		private String name;
 
-		ItemQuality(String s) {
+		ItemTier(String s) {
 			this.name = s;
 		}
 
@@ -52,6 +52,7 @@ public class ItemQualityManager {
 	 * @param quality the quality of the item.
 	 * @return the String formatting used to dress up an item name.
 	 */
+	/*
 	public static String getStringFormatting(ItemQuality quality) {
 		String nameFormatting = "";
 		
@@ -76,67 +77,69 @@ public class ItemQualityManager {
 		
 		return nameFormatting;
 	}
-	
+	*/
 	/**
 	 * Gets the String of the ItemQuality name.
 	 * 
 	 * @param quality the quality of the item.
 	 * @return the name String of the ItemQuality.
 	 */
-	public static String getItemQualityString(ItemQuality quality) {
+	/*
+	public static String getQualityName(ItemQuality quality) {
 		String nameFormatting = "";
 		
 		if (quality.equals(ItemQuality.JUNK)) {
-			nameFormatting = "Junk";
+			nameFormatting = ChatColor.GRAY + "" + ChatColor.ITALIC + "Junk";
 			
 		} else if (quality.equals(ItemQuality.COMMON)) {
-			nameFormatting = "Common";
+			nameFormatting = ChatColor.GRAY + "" + ChatColor.ITALIC + "Common";
 			
 		} else if (quality.equals(ItemQuality.UNCOMMON)) {
-			nameFormatting = "Uncommon";
+			nameFormatting = ChatColor.GRAY + "" + ChatColor.ITALIC + "Uncommon";
 			
 		} else if (quality.equals(ItemQuality.RARE)) {
-			nameFormatting = "Rare";
+			nameFormatting = ChatColor.GRAY + "" + ChatColor.ITALIC + "Rare";
 			
 		} else if (quality.equals(ItemQuality.EPIC)) {
-			nameFormatting = "Epic";
+			nameFormatting = ChatColor.GRAY + "" + ChatColor.ITALIC + "Epic";
 			
 		} else if (quality.equals(ItemQuality.LEGENDARY)) {
-			nameFormatting = "Legendary";
+			nameFormatting = ChatColor.GRAY + "" + ChatColor.ITALIC + "Legendary";
 		}
 		
 		return nameFormatting;
 	}
+	*/
 	
 	/**
-	 * Gets the ItemQuality Enum from a String.
+	 * Gets the ItemTier Enum from a String.
 	 * 
-	 * @param quality the String name for a ItemQualty Enum.
+	 * @param tier the String name for a ItemQualty Enum.
 	 * @return the ItemQuality Enum.
 	 */
-	public static ItemQuality getItemQualityEnum(String quality) {
-		ItemQuality qualtiyTypeEnum = null;
+	public static ItemTier getItemTierEnum(String tier) {
+		ItemTier itemTierEnum = null;
 		
-		if (quality.equalsIgnoreCase("junk")) {
-			qualtiyTypeEnum = ItemQuality.JUNK;
+		if (tier.equalsIgnoreCase("t1")) {
+			itemTierEnum = ItemTier.T1;
 			
-		} else if (quality.equalsIgnoreCase("common")) {
-			qualtiyTypeEnum = ItemQuality.COMMON;
+		} else if (tier.equalsIgnoreCase("t2")) {
+			itemTierEnum = ItemTier.T2;
 			
-		} else if (quality.equalsIgnoreCase("uncommon")) {
-			qualtiyTypeEnum = ItemQuality.UNCOMMON;
+		} else if (tier.equalsIgnoreCase("t3")) {
+			itemTierEnum = ItemTier.T3;
 			
-		} else if (quality.equalsIgnoreCase("rare")) {
-			qualtiyTypeEnum = ItemQuality.RARE;
+		} else if (tier.equalsIgnoreCase("t4")) {
+			itemTierEnum = ItemTier.T4;
 			
-		} else if (quality.equalsIgnoreCase("epic")) {
-			qualtiyTypeEnum = ItemQuality.EPIC;
+		} else if (tier.equalsIgnoreCase("t5")) {
+			itemTierEnum = ItemTier.T5;
 			
-		} else if (quality.equalsIgnoreCase("legendary")) {
-			qualtiyTypeEnum = ItemQuality.LEGENDARY;
+		} else if (tier.equalsIgnoreCase("t6")) {
+			itemTierEnum = ItemTier.T6;
 		}
 		
-		return qualtiyTypeEnum;
+		return itemTierEnum;
 	}
 }
 

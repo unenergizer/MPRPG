@@ -456,7 +456,7 @@ public class CommandManager implements CommandExecutor{
 								ChatColor.WHITE + "List of mobTypes" + ChatColor.DARK_GRAY + "." + ChatColor.LIGHT_PURPLE + " /mm mobTypes");
 					} else if (args.length >= 1 && args[0].toString().equalsIgnoreCase("manager")) {
 
-						if (args.length == 8 && args[1].toString().equalsIgnoreCase("add")) {
+						if (args.length == 9 && args[1].toString().equalsIgnoreCase("add")) {
 							
 							player.sendMessage(ChatColor.RED + "  " + ChatColor.BOLD + "> " +
 									ChatColor.GREEN + ChatColor.BOLD + "Please specify what you want to do.");
@@ -484,8 +484,9 @@ public class CommandManager implements CommandExecutor{
 							int lvl = Integer.parseInt(args[5]);
 							int hp = Integer.parseInt(args[6]);
 							int radius = Integer.parseInt(args[7]);
+							String lootTable = args[8].toString();
 
-							MonsterCreatorManager.createNewMonster(player, name, nameColor, entity, lvl, hp, radius);
+							MonsterCreatorManager.createNewMonster(player, name, nameColor, entity, lvl, hp, radius, lootTable);
 
 						} else if (args.length == 2 && args[1].toString().equalsIgnoreCase("edit")) {
 							player.sendMessage("This will let your edit a mobType that was created.");

@@ -103,8 +103,12 @@ public class EntityDamageListener implements Listener{
 					}
 
 					if (victimHealth <= 1) {
+						int x = victim.getLocation().getBlockX();
+						int y = victim.getLocation().getBlockY();
+						int z = victim.getLocation().getBlockZ();
+						
 						victim.setHealth(0);
-						MonsterManager.toggleDeath(victimID);
+						MonsterManager.toggleDeath(victimID, x, y, z);
 					} else {
 						victim.setHealth(15);
 						MonsterManager.toggleDamage(victimID, damage);

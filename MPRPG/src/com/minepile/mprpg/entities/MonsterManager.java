@@ -18,6 +18,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import com.minepile.mprpg.MPRPG;
 import com.minepile.mprpg.chat.MessageManager;
+import com.minepile.mprpg.items.LootTableMobManager;
 import com.minepile.mprpg.util.LivingEntitySpawnerUtil;
 
 public class MonsterManager {
@@ -42,6 +43,7 @@ public class MonsterManager {
 	static HashMap<UUID, Integer> mobHealthPoints = new HashMap<UUID, Integer>();
 	static HashMap<UUID, Integer> mobMaxHealthPoints = new HashMap<UUID, Integer>();
 	static HashMap<UUID, Integer> respawnTime = new HashMap<UUID, Integer>();
+	static HashMap<UUID, String> lootTable = new HashMap<UUID, String>();
 	
 	//Configuration file that holds monster information.
 	static FileConfiguration monsterConfig;
@@ -112,7 +114,7 @@ public class MonsterManager {
 		return color;
 	}
 	
-	public static void setupMob(World world, Location loc, EntityType entity, String color, String name, int lvl, int hp, int runRadius, int id) {	
+	public static void setupMob(World world, Location loc, EntityType entity, String color, String name, int lvl, int hp, int runRadius, int id, String loot) {	
 		
 		String colorName = stringToColor(color) + name;
 		String mobNameBase = ChatColor.GRAY + "[" + ChatColor.RED + lvl + ChatColor.GRAY +"] " + colorName;
@@ -133,6 +135,7 @@ public class MonsterManager {
 		mobLevel.put(entityId, lvl);
 		mobHealthPoints.put(entityId, hp);
 		mobMaxHealthPoints.put(entityId, hp);
+		lootTable.put(entityId, loot);
 	}
 	
 	public static void spawnAllMobs() {
@@ -190,12 +193,13 @@ public class MonsterManager {
         int lvl = monsterTypeConfig.getInt(mobType + ".mobLVL");
         int hp = monsterTypeConfig.getInt(mobType + ".mobHP");
         int runRadius = monsterTypeConfig.getInt(mobType + ".mobRadius");
+        String loot = monsterTypeConfig.getString(mobType + ".lootTable");
         
         //misc vars
         Location loc = new Location(world, x + .5, y + .5, z + .5);
         
 		//Spawn the mob
-		setupMob(world, loc, entity, stringColor, mobType, lvl, hp, runRadius, id);
+		setupMob(world, loc, entity, stringColor, mobType, lvl, hp, runRadius, id, loot);
 	}
 	
 	public static void respawnMob (int id) {
@@ -246,13 +250,21 @@ public class MonsterManager {
 		}
 	}
 
-	public static void toggleDeath(final UUID id) {
+	public static void toggleDeath(final UUID id, int x, int y, int z) {
+		
+		//Drop Item(s)
+		String lootTableName = lootTable.get(id);
+		
+		Location loc = new Location(world, x, y+1, z);
+		
+		LootTableMobManager.toggleLootTableDrop(lootTableName, loc);
 		
 		//Get mob config Id before we remove it.
 		//This will allow us to respawn that specific mob
 		//when its dead.
 		int configId = mobId.get(id);
 		spawnMob(configId);
+		
 		
 		new BukkitRunnable() {
 			@Override
