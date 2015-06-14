@@ -107,7 +107,10 @@ public class EntityDamageListener implements Listener{
 						int y = victim.getLocation().getBlockY();
 						int z = victim.getLocation().getBlockZ();
 						
-						victim.setHealth(0);
+						victim.remove(); //Removes the entity
+						
+						//Cleanup for MinePile plugin
+						//Also gets location for loot drop
 						MonsterManager.toggleDeath(victimID, x, y, z);
 					} else {
 						victim.setHealth(15);

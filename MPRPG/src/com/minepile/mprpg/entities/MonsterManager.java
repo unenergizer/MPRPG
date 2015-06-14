@@ -241,33 +241,28 @@ public class MonsterManager {
 	}
 
 	public static void toggleDeath(final UUID id, int x, int y, int z) {
-		
-		//Drop Item(s)
-		String lootTableName = lootTable.get(id);
-		
-		Location loc = new Location(world, x, y+1, z);
-		
-		LootTableMobManager.toggleLootTableDrop(lootTableName, loc);
-		
-		//Get mob config Id before we remove it.
-		//This will allow us to respawn that specific mob
-		//when its dead.
-		int configId = mobId.get(id);
-		spawnMob(configId);
-		
-		
-		new BukkitRunnable() {
-			@Override
-			public void run() {
-				//Bukkit.broadcastMessage(ChatColor.DARK_AQUA + "Mob removed because of death.");
-				mobSpawnLocation.remove(id);
-				mobId.remove(id);
-				mobName.remove(id);
-				mobLevel.remove(id);
-				mobHealthPoints.remove(id);
-				mobMaxHealthPoints.remove(id);
-			}
-		}.runTaskLater(plugin, 1); //run after 1 tick
+		//Make sure the mob exists in the hashmap.
+		//If the mob does not exist, do nothing.
+		if (mobId.get(id) != null) {
+			//Setup variables
+			int configId = mobId.get(id);
+			String lootTableName = lootTable.get(id);
+			Location loc = new Location(world, x, y+1, z);
+	
+			//Drop Item(s)
+			LootTableMobManager.toggleLootTableDrop(lootTableName, loc);
+			
+			//Remove mob
+			mobSpawnLocation.remove(id);
+			mobId.remove(id);
+			mobName.remove(id);
+			mobLevel.remove(id);
+			mobHealthPoints.remove(id);
+			mobMaxHealthPoints.remove(id);
+			
+			//Respawn mob
+			spawnMob(configId);
+		}
 	}
 
 	public static FileConfiguration getMonsterIdConfig() {
@@ -279,7 +274,11 @@ public class MonsterManager {
 	}
 
 	public static int getMobHealthPoints(UUID id) {
-		return mobHealthPoints.get(id);
+		if (mobHealthPoints.get(id) == null) {
+			return 0;
+		} else {
+			return mobHealthPoints.get(id);
+		}
 	}
 
 	public static void setMobHealthPoints(UUID id, int mobHealthPoints) {
