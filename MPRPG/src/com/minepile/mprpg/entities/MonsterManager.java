@@ -87,8 +87,9 @@ public class MonsterManager {
 	 */
 	public static void spawnEntitie(World world, Location loc, EntityType entity, String color, String name, int lvl, int hp, int runRadius, int id, String loot) {	
 		
-		String colorName = (stringToColor(color) + name).replaceAll("_", " ");;
-		String mobNameBase = ChatColor.GRAY + "[" + ChatColor.RED + lvl + ChatColor.GRAY +"] " + colorName;
+		String colorName = (stringToColor(color) + name);
+		String finalName = colorName.replaceAll("_", " ");
+		String mobNameBase = ChatColor.GRAY + "[" + ChatColor.RED + lvl + ChatColor.GRAY +"] " + finalName;
 		
 		//Set evenStatus for mobs spawning to false to allow them.
 		setEventStatus(false);
@@ -102,7 +103,7 @@ public class MonsterManager {
 		//Setup various mob attributes.
 		UUID entityId = spawnerUtil.getEntityID();
 		mobId.put(entityId, id);
-		mobName.put(entityId, colorName);
+		mobName.put(entityId, finalName);
 		mobLevel.put(entityId, lvl);
 		mobHealthPoints.put(entityId, hp);
 		mobMaxHealthPoints.put(entityId, hp);
