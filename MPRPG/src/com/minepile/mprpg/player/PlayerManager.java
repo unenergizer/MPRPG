@@ -184,6 +184,9 @@ public class PlayerManager {
       		PlayerHealthTagManager.updateHealthTag(player);
       	}
       	
+      	//Give the player a Menu!
+      	PlayerMenuManager.createMenu(player);
+      	
 	}
 	
 	public static void updatePlayerHashMap(Player player, String attribute, int x) {
@@ -249,6 +252,9 @@ public class PlayerManager {
     	personalityMap.remove(playerName);
     	strengthMap.remove(playerName);
     	vitalityMap.remove(playerName);
+    	
+    	//Remove players game menu
+    	PlayerMenuManager.deleteMenu(player);
 	}
 
     public static void createPlayerConfig(Player player) {
@@ -277,9 +283,10 @@ public class PlayerManager {
         playerConfig.set("setting.chat.languagefilter", 1);
         playerConfig.set("setting.chat.focus", "local");
         playerConfig.set("setting.chat.lastpm", null);
-        
-        playerConfig.set("setting.chat.monsterDebug", 1);
-        playerConfig.set("setting.chat.professionDebug", 1);
+
+        playerConfig.set("setting.chat.healthDebug", true);
+        playerConfig.set("setting.chat.monsterDebug", true);
+        playerConfig.set("setting.chat.professionDebug", true);
         
         playerConfig.set("setting.chatchannel.admin", 1);
         playerConfig.set("setting.chatchannel.global", 1);
@@ -309,6 +316,30 @@ public class PlayerManager {
     }
     
 	public static void setPlayerConfigInt(Player player, String config, int value) {
+    	
+		String uuid = player.getUniqueId().toString();
+    	
+        File configFile = new File(playerFilePathStart + uuid + playerFilePathEnd);
+        FileConfiguration playerConfig =  YamlConfiguration.loadConfiguration(configFile);
+        playerConfig.set(config, value);
+
+        try {
+            playerConfig.save(configFile);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } 
+	}
+    
+	public static boolean getPlayerConfigBoolean(Player player, String value) {
+    	
+		String uuid = player.getUniqueId().toString();
+    	
+        File configFile = new File(playerFilePathStart + uuid + playerFilePathEnd);
+        FileConfiguration playerConfig =  YamlConfiguration.loadConfiguration(configFile);
+        return playerConfig.getBoolean(value);
+	}
+	
+	public static void setPlayerConfigBoolean(Player player, String config, boolean value) {
     	
 		String uuid = player.getUniqueId().toString();
     	

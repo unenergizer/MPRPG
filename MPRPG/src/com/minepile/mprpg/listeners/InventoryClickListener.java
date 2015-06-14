@@ -1,7 +1,5 @@
 package com.minepile.mprpg.listeners;
 
-import net.md_5.bungee.api.ChatColor;
-
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -37,12 +35,14 @@ public class InventoryClickListener implements Listener{
 			case CONTAINER:
 				String invName = event.getClickedInventory().getName();
 				
-				if (invName.startsWith(ChatColor.DARK_GRAY + "" + ChatColor.BOLD + "Game Menu")) {
-					player.sendMessage("Game Menu - Click toggle");
+				//Don't allow the player to move items in inventories.
+				//The players default inventory is called "container.inventory"
+				//We should not stop them from moving items in that inventory.
+				if (!(invName.equalsIgnoreCase("container.inventory"))) {
 					ItemStack clickedItem = event.getCurrentItem();
 					PlayerMenuManager.playerInteractMenu(player, invName, clickedItem);
+					event.setCancelled(true);
 				}
-				event.setCancelled(true);
 				break;
 			case CRAFTING:
 				event.setCancelled(true);

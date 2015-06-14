@@ -46,7 +46,8 @@ public class MonsterManager {
 	static HashMap<UUID, String> lootTable = new HashMap<UUID, String>();
 	
 	//Configuration file that holds monster information.
-	static FileConfiguration monsterConfig;
+	static File configFile;
+	static FileConfiguration monsterIdConfig;
 
 	//Create instance
 	public static MonsterManager getInstance() {
@@ -63,8 +64,8 @@ public class MonsterManager {
 			createMonsterConfig();
         } else {
         	//lets load the configuration file.
-        	File configFile = new File(mobTypeIdPath);
-            monsterConfig =  YamlConfiguration.loadConfiguration(configFile);
+        	configFile = new File(mobTypeIdPath);
+            monsterIdConfig =  YamlConfiguration.loadConfiguration(configFile);
 
             //setup and spawn monsters
             spawnAllMobs();
@@ -161,12 +162,9 @@ public class MonsterManager {
 				////////////////////
 				/// RESPAWN MOBS ///
 				////////////////////
-				
-		        File configFile = new File(mobTypeIdPath);
-		        FileConfiguration monsterConfig =  YamlConfiguration.loadConfiguration(configFile);
 		        
-		        monsterConfig.get("settings");
-		        int totalMonsters = monsterConfig.getInt("settings.countTotal");
+		        monsterIdConfig.get("settings");
+		        int totalMonsters = monsterIdConfig.getInt("settings.countTotal");
 				
 		        for (int i = 1; i <= totalMonsters; i++) {
 		        	spawnMob(i);
@@ -178,22 +176,20 @@ public class MonsterManager {
 	
 	public static void spawnMob(int id) {
         //Get id config values.
-        File monsterIdConfigFile = new File(mobTypeIdPath);
-        FileConfiguration monsterIdConfig =  YamlConfiguration.loadConfiguration(monsterIdConfigFile);
+
         String mobType = monsterIdConfig.getString(Integer.toString(id) + ".mobType");
         int x = monsterIdConfig.getInt(Integer.toString(id) + ".X");
         int y = monsterIdConfig.getInt(Integer.toString(id) + ".Y");
         int z = monsterIdConfig.getInt(Integer.toString(id) + ".Z");
         
         //Get mobType config values.
-        File monsterTypeConfigFile = new File(MonsterCreatorManager.getMobTypeFilePath());
-        FileConfiguration monsterTypeConfig =  YamlConfiguration.loadConfiguration(monsterTypeConfigFile);
-        String stringColor = monsterTypeConfig.getString(mobType + ".mobNameColor");
-        EntityType entity = EntityType.fromName(monsterTypeConfig.getString(mobType + ".entity"));
-        int lvl = monsterTypeConfig.getInt(mobType + ".mobLVL");
-        int hp = monsterTypeConfig.getInt(mobType + ".mobHP");
-        int runRadius = monsterTypeConfig.getInt(mobType + ".mobRadius");
-        String loot = monsterTypeConfig.getString(mobType + ".lootTable");
+
+        String stringColor = MonsterCreatorManager.getMonsterConfig().getString(mobType + ".mobNameColor");
+        EntityType entity = EntityType.fromName(MonsterCreatorManager.getMonsterConfig().getString(mobType + ".entity"));
+        int lvl = MonsterCreatorManager.getMonsterConfig().getInt(mobType + ".mobLVL");
+        int hp = MonsterCreatorManager.getMonsterConfig().getInt(mobType + ".mobHP");
+        int runRadius = MonsterCreatorManager.getMonsterConfig().getInt(mobType + ".mobRadius");
+        String loot = MonsterCreatorManager.getMonsterConfig().getString(mobType + ".lootTable");
         
         //misc vars
         Location loc = new Location(world, x + .5, y + .5, z + .5);
@@ -204,16 +200,10 @@ public class MonsterManager {
 	
 	public static void respawnMob (int id) {
         //Get id config values.
-        File monsterIdConfigFile = new File(mobTypeIdPath);
-        FileConfiguration monsterIdConfig =  YamlConfiguration.loadConfiguration(monsterIdConfigFile);
         String mobType = monsterIdConfig.getString(Integer.toString(id) + ".mobType");
         
         //Get mobType config values.
-        File monsterTypeConfigFile = new File(MonsterCreatorManager.getMobTypeFilePath());
-        FileConfiguration monsterTypeConfig =  YamlConfiguration.loadConfiguration(monsterTypeConfigFile);
-        int respawnTime = monsterTypeConfig.getInt(mobType + ".respawnTime");
-        
-        
+        int respawnTime = MonsterCreatorManager.getMonsterConfig().getInt(mobType + ".respawnTime");
 	}
 	
 	public static void toggleDamage(UUID id, double damage) {
@@ -278,6 +268,10 @@ public class MonsterManager {
 				mobMaxHealthPoints.remove(id);
 			}
 		}.runTaskLater(plugin, 1); //run after 1 tick
+	}
+
+	public static FileConfiguration getMonsterIdConfig() {
+		return monsterIdConfig;
 	}
 
 	public static String getMobName(UUID id) {

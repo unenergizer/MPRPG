@@ -2,6 +2,8 @@ package com.minepile.mprpg.items;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Random;
 
 import org.bukkit.Location;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -16,7 +18,10 @@ public class LootTableMobManager {
 	static LootTableMobManager mobDropTablesManagerInstance = new LootTableMobManager();
 	static String LootTableFilePath = "plugins/MPRPG/items/LootTableMobs.yml";
 	
+	static int dropPercentage = 50;
+	
 	//Configuration file that holds currency information.
+	static File configFile;
 	static FileConfiguration lootTableConfig;
 	
 	//Create instance
@@ -34,37 +39,55 @@ public class LootTableMobManager {
 			createConfig();
         } else {
         	//lets load the configuration file.
-        	File configFile = new File(LootTableFilePath);
+        	configFile = new File(LootTableFilePath);
         	lootTableConfig =  YamlConfiguration.loadConfiguration(configFile);
         }
 	}
 	
 	public static void toggleLootTableDrop(String lootTable, Location loc) {
 		
-        File configFile = new File(LootTableFilePath);
-        FileConfiguration lootTableConfig =  YamlConfiguration.loadConfiguration(configFile);
+        //configFile = new File(LootTableFilePath);
+        //lootTableConfig =  YamlConfiguration.loadConfiguration(configFile);
         
-        String itemName = lootTableConfig.getString(lootTable + ".armorItem");
-        ArmorItemManager.dropItem(itemName, loc);
+        
+        ArrayList itemName = (ArrayList) lootTableConfig.getList(lootTable + ".armorItem");
+        
+        for (int i = 0; i < itemName.size(); i++) {
+        	if (dropItem() == true) {
+        		ArmorItemManager.dropItem((String) itemName.get(i), loc);
+        	}
+        }
+	}
+	
+	private static boolean dropItem() {
+		Random rand = new Random();
+		
+		int randomNum = rand.nextInt() * 100 + 1;
+		
+		if (randomNum > dropPercentage) { 
+			return true;
+		} else {
+			return false;
+		}
 	}
 	
 	//This creates the configuration file that will hold data to save loot table information.
     private static void createConfig() {
     	
-        File configFile = new File(LootTableFilePath);
-        FileConfiguration currencyItemsConfig =  YamlConfiguration.loadConfiguration(configFile);
+        configFile = new File(LootTableFilePath);
+        lootTableConfig =  YamlConfiguration.loadConfiguration(configFile);
         
         //set a default loot table
-        currencyItemsConfig.set("junk01", "junk01");
-        currencyItemsConfig.set("junk01.armorItem", "testArmorDrop");
-        currencyItemsConfig.set("junk01.currency", "copper");
-        currencyItemsConfig.set("junk01.currencyDropMin", 0);
-        currencyItemsConfig.set("junk01.currencyDropMax", 10);
+        lootTableConfig.set("junk01", "junk01");
+        lootTableConfig.set("junk01.armorItem", "testArmorDrop");
+        lootTableConfig.set("junk01.currency", "copper");
+        lootTableConfig.set("junk01.currencyDropMin", 0);
+        lootTableConfig.set("junk01.currencyDropMax", 10);
         
 
         
         try {
-        	currencyItemsConfig.save(configFile);	//Save the file.
+        	lootTableConfig.save(configFile);	//Save the file.
         } catch (IOException e) {
             e.printStackTrace();
         } 

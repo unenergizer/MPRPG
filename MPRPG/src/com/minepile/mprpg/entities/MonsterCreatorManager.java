@@ -27,7 +27,8 @@ public class MonsterCreatorManager {
 	}
 	
 	//Configuration file that holds monster information.
-	FileConfiguration monsterConfig;
+	static File configFile;
+	static FileConfiguration monsterConfig;
 	
 	//Setup MobManager
 	@SuppressWarnings("static-access")
@@ -39,7 +40,7 @@ public class MonsterCreatorManager {
 			createMonsterConfig();
         } else {
         	//lets load the configuration file.
-        	File configFile = new File(mobTypeFilePath);
+        	configFile = new File(mobTypeFilePath);
             monsterConfig =  YamlConfiguration.loadConfiguration(configFile);
 
             //setup and spawn monsters
@@ -98,28 +99,24 @@ public class MonsterCreatorManager {
 	public static int getMobIdTotals() {
         
 		//Get mobType config values
-        File monsterTypeConfigFile = new File(MonsterManager.mobTypeIdPath);
-        FileConfiguration monsterTypeConfig =  YamlConfiguration.loadConfiguration(monsterTypeConfigFile);
-        int countTotal = monsterTypeConfig.getInt("settings.countTotal");
+        int countTotal = MonsterManager.getMonsterIdConfig().getInt("settings.countTotal");
         
 		return countTotal;
 	}
 	
 	public static void createNewMonster(Player player, String mobName, String nameColor, EntityType entityType, int mobLevel, int mobHP, int runRadius, String lootTable) {
     	
-        File configFile = new File(mobTypeFilePath);
-        FileConfiguration playerConfig =  YamlConfiguration.loadConfiguration(configFile);
-        playerConfig.set(mobName, mobName);
-        playerConfig.set(mobName + ".player", player.getName());
-        playerConfig.set(mobName + ".mobNameColor", nameColor);
-        playerConfig.set(mobName + ".entity", entityType.toString());
-        playerConfig.set(mobName + ".mobLVL", mobLevel);
-        playerConfig.set(mobName + ".mobHP", mobHP);
-        playerConfig.set(mobName + ".runRadius", runRadius);
-        playerConfig.set(mobName + ".lootTable", lootTable);
+        monsterConfig.set(mobName, mobName);
+        monsterConfig.set(mobName + ".player", player.getName());
+        monsterConfig.set(mobName + ".mobNameColor", nameColor);
+        monsterConfig.set(mobName + ".entity", entityType.toString());
+        monsterConfig.set(mobName + ".mobLVL", mobLevel);
+        monsterConfig.set(mobName + ".mobHP", mobHP);
+        monsterConfig.set(mobName + ".runRadius", runRadius);
+        monsterConfig.set(mobName + ".lootTable", lootTable);
 
         try {
-            playerConfig.save(configFile);
+        	monsterConfig.save(configFile);
         } catch (IOException e) {
             e.printStackTrace();
         } 
@@ -165,40 +162,40 @@ public class MonsterCreatorManager {
         } 
     }
     
+	public static FileConfiguration getMonsterConfig() {
+		return monsterConfig;
+	}
+
 	public static void setMobConfigInt(String mobName, String config, int value) {
-        File configFile = new File(mobTypeFilePath);
-        FileConfiguration mobConfig =  YamlConfiguration.loadConfiguration(configFile);
-        mobConfig.set(config, value);
+
+        monsterConfig.set(config, value);
 
         try {
-            mobConfig.save(configFile);
+            monsterConfig.save(configFile);
         } catch (IOException e) {
             e.printStackTrace();
         } 
 	}
     
 	public static int getMobConfigInt(String mobName, String value) {
-        File configFile = new File(mobTypeFilePath);
-        FileConfiguration mobConfig =  YamlConfiguration.loadConfiguration(configFile);
-        return (int) mobConfig.get(value);
+
+        return (int) monsterConfig.get(value);
 	}
 	
 	public static void setMobConfigString(String mobName, String config, String value) {
-        File configFile = new File(mobTypeFilePath);
-        FileConfiguration mobConfig =  YamlConfiguration.loadConfiguration(configFile);
-        mobConfig.set(config, value);
+
+        monsterConfig.set(config, value);
 
         try {
-            mobConfig.save(configFile);
+            monsterConfig.save(configFile);
         } catch (IOException e) {
             e.printStackTrace();
         } 
 	}
 	
 	public static String getMobConfigString(String mobName, String value) {
-        File configFile = new File(mobTypeFilePath);
-        FileConfiguration mobConfig =  YamlConfiguration.loadConfiguration(configFile);
-        return  (String) mobConfig.get(value);
+
+        return  (String) monsterConfig.get(value);
 	}
 
 	public static String getMobTypeFilePath() {

@@ -42,6 +42,7 @@ public class PlayerJoinListener implements Listener {
 		//This message is not displayed to all users.
 		player.sendMessage(ChatColor.GRAY + "Welcome " + playerName + "!");
 		
+		//Delay some important player updates to make sure they will work correctly.
 		delayedUpdate(player);
 	}
 	
