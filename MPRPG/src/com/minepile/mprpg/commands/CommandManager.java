@@ -16,7 +16,7 @@ import com.minepile.mprpg.chat.DiceRollManager;
 import com.minepile.mprpg.chat.LagManager;
 import com.minepile.mprpg.chat.MessageManager;
 import com.minepile.mprpg.entities.MonsterCreatorManager;
-import com.minepile.mprpg.equipment.LoreManager;
+import com.minepile.mprpg.items.LoreManager;
 import com.minepile.mprpg.player.PlayerManager;
 
 public class CommandManager implements CommandExecutor{
@@ -498,7 +498,7 @@ public class CommandManager implements CommandExecutor{
 							String mobType =  args[2].toString();
 							Location loc = player.getLocation();
 							
-							MonsterCreatorManager.setMonster(player, mobType, loc);
+							MonsterCreatorManager.setEntitie(player, mobType, loc);
 						} else {
 							player.sendMessage("Something went wrong. Please try again.");
 						}

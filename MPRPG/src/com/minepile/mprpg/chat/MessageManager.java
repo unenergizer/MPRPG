@@ -27,7 +27,7 @@ public class MessageManager {
 		this.plugin = plugin;
 	}
 	
-	/*
+	/**
 	 * Prefixes: DEBUG, GLOBAL, HELP, PM, TIP, & USER
 	 * 
 	 * @param the prefix the message should use
@@ -40,10 +40,10 @@ public class MessageManager {
 		}
 	}
 	
-	/*
+	/**
 	 * Displays the welcome message everyone see's when they login to the server.
 	 * 
-	 * @param the player the welcome message will be displayed too
+	 * @param player The player the welcome message will be displayed too
 	 */
 	public static void displayWelcomeMessage(Player player) {
 		
@@ -65,13 +65,20 @@ public class MessageManager {
 		player.sendMessage("");
 		
 		String welcomeMessage = " \n" + " \n" + ChatColor.GOLD + "                        " + ChatColor.BOLD 
-				+ "MinePile: " + ChatColor.WHITE + "" + ChatColor.BOLD + "RPGMMO v0.6.8 \n" + 
+				+ "MinePile: " + ChatColor.WHITE + "" + ChatColor.BOLD + "RPGMMO " + plugin.getPluginVersion() +  " \n" + 
 				ChatColor.RESET + ChatColor.GRAY + "                          http://www.MinePile.com/" + " \n" + 
 				" \n" + " \n";
 		player.sendMessage(welcomeMessage);
 	}
 	
-	//EXP level formatting for chat.
+	/**
+	 * EXP level formatting for chat.
+	 * 
+	 * @param exp The amount of experience added.
+	 * @param currentExp The experience amount before new total.
+	 * @param expGoal The experience needed to level.
+	 * @return Fancy String displaying colored experience level.
+	 */
 	public static String showEXPLevel(int exp, int currentExp, int expGoal){
 		int expPercent = ((100 * currentExp) / expGoal);
 	
@@ -85,7 +92,12 @@ public class MessageManager {
 				+ ChatColor.GREEN + "+" + ChatColor.GRAY+ exp + " EXP";
 	}
 	
-	//Precent bar for chat leveling bar.
+	/**
+	 * Percent bar for chat leveling bar.
+	 * 
+	 * @param expPercent The percent to display.
+	 * @return Fancy String with colored percentage bar.
+	 */
 	public static String percentBar(int expPercent) {
 		if (expPercent <= 5) {
 			return ChatColor.RED + "" + ChatColor.BOLD + "|" + ChatColor.GRAY + ChatColor.BOLD + "|||||||||||||||||||";
@@ -144,7 +156,7 @@ public class MessageManager {
 		MessageManager.showAdminDebugMessage = showAdminDebugMessage;
 	}
 
-	/*
+	/**
 	 * Returns a boolean if the debug messages
 	 * are turned on or off.
 	 */
@@ -152,10 +164,10 @@ public class MessageManager {
 		return showDebugMessage;
 	}
 	
-	/*
+	/**
 	 * Set the boolean to turn debug messages on or off.
 	 * 
-	 * @param showDebugMessage sets debug messages on or off
+	 * @param showDebugMessage Sets debug messages on or off
 	 */
 	public void setShowDebugMessage(boolean showDebugMessage) {
 		MessageManager.showDebugMessage = showDebugMessage;

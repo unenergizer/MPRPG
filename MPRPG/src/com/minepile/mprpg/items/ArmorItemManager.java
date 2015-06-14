@@ -15,10 +15,8 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import com.minepile.mprpg.MPRPG;
-import com.minepile.mprpg.equipment.ItemQualityManager;
-import com.minepile.mprpg.equipment.ItemQualityManager.ItemQuality;
-import com.minepile.mprpg.equipment.ItemTierManager;
-import com.minepile.mprpg.equipment.ItemTierManager.ItemTier;
+import com.minepile.mprpg.items.ItemQualityManager.ItemQuality;
+import com.minepile.mprpg.items.ItemTierManager.ItemTier;
 
 public class ArmorItemManager {
 	
@@ -28,7 +26,8 @@ public class ArmorItemManager {
 	static String armorItemsFilePath = "plugins/MPRPG/items/Armor.yml";
 	
 	//Configuration file that holds armor information.
-	FileConfiguration armorItemConfig;
+	static File configFile;
+	static FileConfiguration armorItemConfig;
 	
 	//Create instance
 	public static ArmorItemManager getInstance() {
@@ -63,33 +62,33 @@ public class ArmorItemManager {
 		/// GRAB ITEM FROM CONFIG ///
 		/////////////////////////////
         File configFile = new File(armorItemsFilePath);
-        FileConfiguration armorItemsConfig =  YamlConfiguration.loadConfiguration(configFile);
+        FileConfiguration armorItemConfig =  YamlConfiguration.loadConfiguration(configFile);
         //armorItemConfig.get(value);
         
-        ItemTier tier = ItemTierManager.getItemTierEnum(armorItemsConfig.getString(itemName + ".itemTier"));
-        ItemQuality quality = ItemQualityManager.getItemQualityEnum(armorItemsConfig.getString(itemName + ".itemQuality"));
-        String itemDescription = armorItemsConfig.getString(itemName + ".itemDescription");
-        int itemNumber = armorItemsConfig.getInt(itemName + ".item");
-        int hpMin = armorItemsConfig.getInt(itemName + ".hpMin");
-        int hpMax = armorItemsConfig.getInt(itemName + ".hpMax");
-        int hpRegenMin = armorItemsConfig.getInt(itemName + ".hpRegenMin");
-        int hpRegenMax = armorItemsConfig.getInt(itemName + ".hpRegenMax");
-        //int damageMin = armorItemsConfig.getInt(itemName + ".damageMin");
-        //int damageMax = armorItemsConfig.getInt(itemName + ".damageMax");
-        int staminaMin = armorItemsConfig.getInt(itemName + ".staminaMin");
-        int staminaMax = armorItemsConfig.getInt(itemName + ".staminaMax");
-        int dodgeMin = armorItemsConfig.getInt(itemName + ".dodgeMin");
-        int dodgeMax = armorItemsConfig.getInt(itemName + ".dodgeMax");
-        int reflectionMin = armorItemsConfig.getInt(itemName + ".reflectionMin");
-        int reflectionMax = armorItemsConfig.getInt(itemName + ".reflectionMax");
-        int blockMin = armorItemsConfig.getInt(itemName + ".blockMin");
-        int blockMax = armorItemsConfig.getInt(itemName + ".blockMax");
-        int thornsMin = armorItemsConfig.getInt(itemName + ".thornsMin");
-        int thornsMax = armorItemsConfig.getInt(itemName + ".thornsMax");
-        int itemFindMin = armorItemsConfig.getInt(itemName + ".itemFindMin");
-        int itemFindMax = armorItemsConfig.getInt(itemName + ".itemFindMax");
-        int goldFindMin = armorItemsConfig.getInt(itemName + ".goldFindMin");
-        int goldFindMax = armorItemsConfig.getInt(itemName + ".goldFindMax");
+        ItemTier tier = ItemTierManager.getItemTierEnum(armorItemConfig.getString(itemName + ".itemTier"));
+        ItemQuality quality = ItemQualityManager.getItemQualityEnum(armorItemConfig.getString(itemName + ".itemQuality"));
+        String itemDescription = armorItemConfig.getString(itemName + ".itemDescription");
+        int itemNumber = armorItemConfig.getInt(itemName + ".item");
+        int hpMin = armorItemConfig.getInt(itemName + ".hpMin");
+        int hpMax = armorItemConfig.getInt(itemName + ".hpMax");
+        int hpRegenMin = armorItemConfig.getInt(itemName + ".hpRegenMin");
+        int hpRegenMax = armorItemConfig.getInt(itemName + ".hpRegenMax");
+        //int damageMin = armorItemConfig.getInt(itemName + ".damageMin");
+        //int damageMax = armorItemConfig.getInt(itemName + ".damageMax");
+        int staminaMin = armorItemConfig.getInt(itemName + ".staminaMin");
+        int staminaMax = armorItemConfig.getInt(itemName + ".staminaMax");
+        int dodgeMin = armorItemConfig.getInt(itemName + ".dodgeMin");
+        int dodgeMax = armorItemConfig.getInt(itemName + ".dodgeMax");
+        int reflectionMin = armorItemConfig.getInt(itemName + ".reflectionMin");
+        int reflectionMax = armorItemConfig.getInt(itemName + ".reflectionMax");
+        int blockMin = armorItemConfig.getInt(itemName + ".blockMin");
+        int blockMax = armorItemConfig.getInt(itemName + ".blockMax");
+        int thornsMin = armorItemConfig.getInt(itemName + ".thornsMin");
+        int thornsMax = armorItemConfig.getInt(itemName + ".thornsMax");
+        int itemFindMin = armorItemConfig.getInt(itemName + ".itemFindMin");
+        int itemFindMax = armorItemConfig.getInt(itemName + ".itemFindMax");
+        int goldFindMin = armorItemConfig.getInt(itemName + ".goldFindMin");
+        int goldFindMax = armorItemConfig.getInt(itemName + ".goldFindMax");
         
         ////////////////////////////
         /// Calculate Item Stats ///
@@ -166,40 +165,42 @@ public class ArmorItemManager {
 		return randomNum;
 	}
 	
-	//This creates the configuration file that will hold data to save armor information.
+	/**
+	 * This creates the configuration file that will hold data to save armor information.
+	 */
     private static void createConfig() {
     	
-        File configFile = new File(armorItemsFilePath);
-        FileConfiguration armorItemsConfig =  YamlConfiguration.loadConfiguration(configFile);
+        configFile = new File(armorItemsFilePath);
+        armorItemConfig =  YamlConfiguration.loadConfiguration(configFile);
         
-        armorItemsConfig.set("testArmorDrop", "testArmorDrop");
-        armorItemsConfig.set("testArmorDrop" + ".itemTier", "t1");
-        armorItemsConfig.set("testArmorDrop" + ".itemQuality", "junk");
-        armorItemsConfig.set("testArmorDrop" + ".itemDescription", "This is a custom item that came from the config!");
-        armorItemsConfig.set("testArmorDrop" + ".item", 298);
-        armorItemsConfig.set("testArmorDrop" + ".hpMin", 1);
-        armorItemsConfig.set("testArmorDrop" + ".hpMax", 30);
-        armorItemsConfig.set("testArmorDrop" + ".hpRegenMin", 0);
-        armorItemsConfig.set("testArmorDrop" + ".hpRegenMax", 3);
-        //armorItemsConfig.set("testArmorDrop" + ".damageMin", 0);
-        //armorItemsConfig.set("testArmorDrop" + ".damageMax", 1);
-        armorItemsConfig.set("testArmorDrop" + ".staminaMin", 0);
-        armorItemsConfig.set("testArmorDrop" + ".staminaMax", 1);
-        armorItemsConfig.set("testArmorDrop" + ".dodgeMin", 0);
-        armorItemsConfig.set("testArmorDrop" + ".dodgeMax", 1);
-        armorItemsConfig.set("testArmorDrop" + ".reflectionMin", 0);
-        armorItemsConfig.set("testArmorDrop" + ".reflectionMax", 1);
-        armorItemsConfig.set("testArmorDrop" + ".blockMin", 0);
-        armorItemsConfig.set("testArmorDrop" + ".blockMax", 1);
-        armorItemsConfig.set("testArmorDrop" + ".thornsMin", 0);
-        armorItemsConfig.set("testArmorDrop" + ".thornsMax", 1);
-        armorItemsConfig.set("testArmorDrop" + ".itemFindMin", 0);
-        armorItemsConfig.set("testArmorDrop" + ".itemFindMax", 1);
-        armorItemsConfig.set("testArmorDrop" + ".goldFindMin", 0);
-        armorItemsConfig.set("testArmorDrop" + ".goldFindMax", 1);
+        armorItemConfig.set("testArmorDrop", "testArmorDrop");
+        armorItemConfig.set("testArmorDrop" + ".itemTier", "t1");
+        armorItemConfig.set("testArmorDrop" + ".itemQuality", "junk");
+        armorItemConfig.set("testArmorDrop" + ".itemDescription", "This is a custom item that came from the config!");
+        armorItemConfig.set("testArmorDrop" + ".item", 298);
+        armorItemConfig.set("testArmorDrop" + ".hpMin", 1);
+        armorItemConfig.set("testArmorDrop" + ".hpMax", 30);
+        armorItemConfig.set("testArmorDrop" + ".hpRegenMin", 0);
+        armorItemConfig.set("testArmorDrop" + ".hpRegenMax", 3);
+        //armorItemConfig.set("testArmorDrop" + ".damageMin", 0);
+        //armorItemConfig.set("testArmorDrop" + ".damageMax", 1);
+        armorItemConfig.set("testArmorDrop" + ".staminaMin", 0);
+        armorItemConfig.set("testArmorDrop" + ".staminaMax", 1);
+        armorItemConfig.set("testArmorDrop" + ".dodgeMin", 0);
+        armorItemConfig.set("testArmorDrop" + ".dodgeMax", 1);
+        armorItemConfig.set("testArmorDrop" + ".reflectionMin", 0);
+        armorItemConfig.set("testArmorDrop" + ".reflectionMax", 1);
+        armorItemConfig.set("testArmorDrop" + ".blockMin", 0);
+        armorItemConfig.set("testArmorDrop" + ".blockMax", 1);
+        armorItemConfig.set("testArmorDrop" + ".thornsMin", 0);
+        armorItemConfig.set("testArmorDrop" + ".thornsMax", 1);
+        armorItemConfig.set("testArmorDrop" + ".itemFindMin", 0);
+        armorItemConfig.set("testArmorDrop" + ".itemFindMax", 1);
+        armorItemConfig.set("testArmorDrop" + ".goldFindMin", 0);
+        armorItemConfig.set("testArmorDrop" + ".goldFindMax", 1);
 
         try {
-        	armorItemsConfig.save(configFile);	//Save the file.
+        	armorItemConfig.save(configFile);	//Save the file.
         } catch (IOException e) {
             e.printStackTrace();
         } 

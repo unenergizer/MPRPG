@@ -48,7 +48,14 @@ public class MonsterCreatorManager {
         }
 	}
 	
-	public static void setMonster(Player player, String mobName, Location location) {
+	/**
+	 * Sets an entitie the player has created.
+	 * 
+	 * @param player The player who created the entitie.
+	 * @param mobName The entities name.
+	 * @param location The XYZ location in the World the entitie will spawn.
+	 */
+	public static void setEntitie(Player player, String mobName, Location location) {
 		
 		World world = player.getWorld();
 		int currentCount = getMobIdTotals();
@@ -92,10 +99,9 @@ public class MonsterCreatorManager {
 
 	}
 	
-	public static void respawnMonster() {
-		
-	}
-	
+	/**
+	 * Gets the total entities in the configuration file.
+	 */
 	public static int getMobIdTotals() {
         
 		//Get mobType config values
@@ -104,6 +110,18 @@ public class MonsterCreatorManager {
 		return countTotal;
 	}
 	
+	/**
+	 * This will create a new entry in the monser configuration file.
+	 * 
+	 * @param player The player who created the entry.
+	 * @param mobName The name of the entitie.
+	 * @param nameColor The color of the entities name.
+	 * @param entityType The type of entitie to spawn.
+	 * @param mobLevel The level displayed next to the entities name.
+	 * @param mobHP The hitpoints that are assigned to the entitie.
+	 * @param runRadius How far the entitie can move away from its spawn location.
+	 * @param lootTable A list of items that might drop when the entitie dies.
+	 */
 	public static void createNewMonster(Player player, String mobName, String nameColor, EntityType entityType, int mobLevel, int mobHP, int runRadius, String lootTable) {
     	
         monsterConfig.set(mobName, mobName);
@@ -141,19 +159,27 @@ public class MonsterCreatorManager {
     			ChatColor.LIGHT_PURPLE + "    /mm manager set " + mobName);
 	}
 	
+	/**
+	 * TODO: This will edit a previously made monster in the monster configuration file.
+	 */
 	public static void editMonster() {
 		
 	}
 	
+	/**
+	 * TODO: This will delete an entry from the monster configuration file.
+	 */
 	public static void deleteMonster() {
 		
 	}
 	
-	//This creates the configuration file that will hold data to save mob attributes.
+	/**
+	 * This creates the configuration file that will hold data to save mob attributes.
+	 */
     private static void createMonsterConfig() {
     	
-        File configFile = new File(mobTypeFilePath);
-        FileConfiguration monsterConfig =  YamlConfiguration.loadConfiguration(configFile);
+        configFile = new File(mobTypeFilePath);
+        monsterConfig =  YamlConfiguration.loadConfiguration(configFile);
 
         try {
         	monsterConfig.save(configFile);	//Save the file.

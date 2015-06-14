@@ -45,6 +45,9 @@ public class BlockRegenerationManager {
 		resetBlock();
 	}
 	
+	/**
+	 * Resets a block back to its original state.
+	 */
 	public void resetBlock() {
 		
         BukkitScheduler scheduler = Bukkit.getServer().getScheduler();
@@ -74,6 +77,11 @@ public class BlockRegenerationManager {
         }, 0L, blockRegenTick);
 	}
 	
+	/**
+	 * Resets all blocks back to their original state.
+	 * <p>
+	 * This is used for server reloads.
+	 */
 	public static void resetAllBlocks() {
 		for (int i = blockIDsRemoved; i < blockID; i++) {
 			Block block = Bukkit.getWorld("world").getBlockAt(blockX.get(i), blockY.get(i), blockZ.get(i));
@@ -89,6 +97,14 @@ public class BlockRegenerationManager {
 		}
 	}
 	
+	/**
+	 * This will set a temporary block in a broken blocks location.
+	 * 
+	 * @param player Player who broke the block.
+	 * @param type The type of block broken.
+	 * @param tempBlock The temporary block to replace the broken block.
+	 * @param location The XYZ location in the world the block was broken.
+	 */
 	public static void setBlock(Player player, Material type, Material tempBlock, Location location) {
 		
 		Block block = location.getBlock();

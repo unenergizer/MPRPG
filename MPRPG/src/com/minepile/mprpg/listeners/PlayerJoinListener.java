@@ -10,7 +10,7 @@ import org.bukkit.event.player.PlayerJoinEvent;
 
 import com.minepile.mprpg.MPRPG;
 import com.minepile.mprpg.chat.MessageManager;
-import com.minepile.mprpg.equipment.LoreManager;
+import com.minepile.mprpg.items.LoreManager;
 import com.minepile.mprpg.player.PlayerManager;
 
 public class PlayerJoinListener implements Listener {

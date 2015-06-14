@@ -17,7 +17,7 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
 import com.minepile.mprpg.MPRPG;
-import com.minepile.mprpg.equipment.LoreManager;
+import com.minepile.mprpg.items.LoreManager;
 
 public class PlayerManager {
 	
@@ -80,6 +80,11 @@ public class PlayerManager {
 		}
 	}
 	
+	/**
+	 * This will teleport the specified player to the main player Spawn location.
+	 * 
+	 * @param player The player that will be teleported.
+	 */
 	public static void teleportPlayerToSpawn(Player player) {
     	//Player must be new, lets teleport them to the new player starting point.
     	player.teleport(new Location(Bukkit.getWorld("world"), 43.5, 79, -35.5));
@@ -104,6 +109,11 @@ public class PlayerManager {
 	}
 	*/
 	
+	/**
+	 * This will update the players UI bar at the top of the screen.
+	 * 
+	 * @param player The player who's UI will be updated.
+	 */
 	public static void updatePlayerBossbar(Player player) {
 		
 		int playerlvlexp = player.getLevel();
@@ -122,9 +132,12 @@ public class PlayerManager {
 				"  -  " + ChatColor.GREEN + ChatColor.BOLD + "Stamina " + ChatColor.GREEN + playerStaminaString + "%");
 	}
 	
-	//This performs the necessary steps to load in a player.
-	//Creates a configuration file for new players and loads 
-	//players statistics into the hashMaps.
+	/**
+	 * This performs the necessary steps to load in a player.
+	 * Creates a configuration file for new players and loads players statistics into the hashMaps.
+	 * 
+	 * @param player The player that will be setup.
+	 */
 	public static void setupPlayer(Player player) {
 		
 		String playerName = player.getName();
@@ -189,12 +202,19 @@ public class PlayerManager {
       	
 	}
 	
-	public static void updatePlayerHashMap(Player player, String attribute, int x) {
+	/**
+	 * This will update the players HashMap's to contain new important attribute information.
+	 * 
+	 * @param player The player to update.
+	 * @param attribute The attribute to update.
+	 * @param value The new attribute value.
+	 */
+	public static void updatePlayerHashMap(Player player, String attribute, int value) {
         String playerName = player.getName();
 		
 		healthPoints.put(playerName, baseHealthPoints);
 		
-        maxHealthPoints.put(playerName, maxHealthPoints.get(playerName) + x);
+        maxHealthPoints.put(playerName, maxHealthPoints.get(playerName) + value);
 		player.sendMessage("new hp: " + maxHealthPoints.get(playerName).toString());
 		
         staminaPoints.put(playerName, baseStaminaPoints);
@@ -211,6 +231,13 @@ public class PlayerManager {
     	vitalityMap.put(playerName, getPlayerConfigInt(player, "attribute.vitality"));
 	}
 	
+	/**
+	 * This will reset the players important HashMap attributes.
+	 * <p>
+	 * This is mainly used for server reloads.
+	 * 
+	 * @param player The player to reset.
+	 */
 	public static void resetPlayerHashMap(Player player) {
         String playerName = player.getName();
 		
@@ -231,8 +258,11 @@ public class PlayerManager {
     	vitalityMap.put(playerName, getPlayerConfigInt(player, "attribute.vitality"));
 	}
 	
-	//Remove players from the game. Will remove players
-	//from hashMaps and saves any data if necessary.
+	/**
+	 * Remove players from the game. Will remove players from hashMaps and saves any data if necessary.
+	 * 
+	 * @param player The player to remove from the server.
+	 */
 	public static void removePlayer(Player player) {
 		//Get Player's name.
 		String playerName = player.getName();
@@ -256,7 +286,10 @@ public class PlayerManager {
     	//Remove players game menu
     	PlayerMenuManager.deleteMenu(player);
 	}
-
+	
+	/**
+	 * Creates a new configuration file on a players first visit to the server.
+	 */
     public static void createPlayerConfig(Player player) {
  	
     	String uuid = player.getUniqueId().toString();

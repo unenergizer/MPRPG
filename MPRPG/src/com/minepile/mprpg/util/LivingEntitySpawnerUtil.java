@@ -12,6 +12,14 @@ public class LivingEntitySpawnerUtil {
 	private UUID entityID;
 	private EntityType entityType;
 	
+	/**
+	 * Spawns a living entity.
+	 * 
+	 * @param world The world to spawn the entitie.
+	 * @param location The location to spawn the entitie.
+	 * @param entityType The type of entitie to spawn.
+	 * @param entityName The name of the entitie.
+	 */
 	public void spawnEntity(String world, Location location, EntityType entityType, String entityName) {
 		LivingEntity entity = (LivingEntity) Bukkit.getWorld(world).spawnEntity(location, entityType);
 		entity.setCustomName(entityName);

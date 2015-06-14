@@ -20,6 +20,7 @@ public class CurrencyItemManager {
 	static String currencyItemsFilePath = "plugins/MPRPG/items/Currency.yml";
 	
 	//Configuration file that holds currency information.
+	static File configFile;
 	static FileConfiguration currencyItemConfig;
 	
 	//Create instance
@@ -37,54 +38,71 @@ public class CurrencyItemManager {
 			createConfig();
         } else {
         	//lets load the configuration file.
-        	File configFile = new File(currencyItemsFilePath);
+        	configFile = new File(currencyItemsFilePath);
             currencyItemConfig =  YamlConfiguration.loadConfiguration(configFile);
         }
 	}	
 	
+	/**
+	 * Converts a currency String to a Material.
+	 * 
+	 * @param type A type of currency.
+	 * @return A Material that can be converted to an ItemStack.
+	 */
 	public static Material getCurrencyType(String type) {
+		//Convert Copper from a String to a Material.
 		if (type.equalsIgnoreCase("copper")) {
-			int itemId = currencyItemConfig.getInt("copper.itemId");
-			return ItemGeneratorManager.convertItemIdToMaterial(itemId);
+			int itemId = currencyItemConfig.getInt("copper.itemId");	//Gets the Minecraft item ID from the config file.
+			return ItemGeneratorManager.convertItemIdToMaterial(itemId);//Returns the Material for copper.
+		
+		//Convert Silver from a String to a Material.	
 		} else if (type.equalsIgnoreCase("silver")) {
-			int itemId = currencyItemConfig.getInt("silver.itemId");
-			return ItemGeneratorManager.convertItemIdToMaterial(itemId);
+			int itemId = currencyItemConfig.getInt("silver.itemId");	//Gets the Minecraft item ID from the config file.
+			return ItemGeneratorManager.convertItemIdToMaterial(itemId);//Returns the Material for silver.
+		
+		//Convert Gold from a String to a Material.	
 		} else if (type.equalsIgnoreCase("gold")) {
-			int itemId = currencyItemConfig.getInt("gold.itemId");
-			return ItemGeneratorManager.convertItemIdToMaterial(itemId);
+			int itemId = currencyItemConfig.getInt("gold.itemId");		//Gets the Minecraft item ID from the config file.
+			return ItemGeneratorManager.convertItemIdToMaterial(itemId);//Returns the Material for gold.
+			
+		//Convert "Premium Currency" from a String to a Material.			
 		} else if (type.equalsIgnoreCase("premium")) {
-			int itemId = currencyItemConfig.getInt("premium.itemId");
-			return ItemGeneratorManager.convertItemIdToMaterial(itemId);
+			int itemId = currencyItemConfig.getInt("premium.itemId");	//Gets the Minecraft item ID from the config file.
+			return ItemGeneratorManager.convertItemIdToMaterial(itemId);//Returns the Material for "premium currency."
+		
+		//Could not get the currency from the parameter String.	
 		} else {
 			Bukkit.broadcastMessage(ChatColor.RED + "getCurrencyType - unable to get currency type.");
 			return null;
 		}
 	}
 	
-	//This creates the configuration file that will hold data to save currency information.
+	/**
+	 * This creates the configuration file that will hold data to save currency information.
+	 */
     private static void createConfig() {
     	
-        File configFile = new File(currencyItemsFilePath);
-        FileConfiguration currencyItemsConfig =  YamlConfiguration.loadConfiguration(configFile);
+        configFile = new File(currencyItemsFilePath);
+        currencyItemConfig =  YamlConfiguration.loadConfiguration(configFile);
         
         //set copper currency
-        currencyItemsConfig.set("copper", "copper");
-        currencyItemsConfig.set("copper.itemId", 366); //366 = Clay_Brick
+        currencyItemConfig.set("copper", "copper");
+        currencyItemConfig.set("copper.itemId", 366); //366 = Clay_Brick
         
         //set silver currency
-        currencyItemsConfig.set("silver", "silver");
-        currencyItemsConfig.set("silver.itemId", 265); //265 = Iron_ingot
-        
+        currencyItemConfig.set("silver", "silver");
+        currencyItemConfig.set("silver.itemId", 265); //265 = Iron_ingot
+       
         //set gold currency
-        currencyItemsConfig.set("gold", "gold");
-        currencyItemsConfig.set("gold.itemId", 266); //266 = Gold_ingot
+        currencyItemConfig.set("gold", "gold");
+        currencyItemConfig.set("gold.itemId", 266); //266 = Gold_ingot
 
         //set premium currency
-        currencyItemsConfig.set("premium", "premium");
-        currencyItemsConfig.set("premium.itemId", 388); //388 = Emerald
+        currencyItemConfig.set("premium", "premium");
+        currencyItemConfig.set("premium.itemId", 388); //388 = Emerald
         
         try {
-        	currencyItemsConfig.save(configFile);	//Save the file.
+        	currencyItemConfig.save(configFile);	//Save the file.
         } catch (IOException e) {
             e.printStackTrace();
         } 

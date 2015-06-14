@@ -23,7 +23,7 @@ public class Blacksmithing {
 		return blacksmithingManagerInstance;
 	}
 	
-	//Setup PlayerManager
+	//Setup BlacksmithingManager
 	@SuppressWarnings("static-access")
 	public void setup(MPRPG plugin) {
 		this.plugin = plugin;
@@ -31,6 +31,9 @@ public class Blacksmithing {
 		setupAnvilHolograms();
 	}	
 	
+	/**
+	 * This will create a hologram that will display over the Blacksmith Anvil.
+	 */
     public static void setupAnvilHolograms() {
     	Location bank01 = new Location(Bukkit.getWorld("world"), 28.5, 80.5, 16.5);
     	
@@ -38,6 +41,9 @@ public class Blacksmithing {
     	bankHologram01.appendTextLine(ChatColor.DARK_AQUA + "" + ChatColor.BOLD + "Blacksmith Anvil");
     }
     
+    /**
+     * This will delete the hologram on server reload or shut down.
+     */
     public static void removeHolograms() {
     	bankHologram01.delete();
     }

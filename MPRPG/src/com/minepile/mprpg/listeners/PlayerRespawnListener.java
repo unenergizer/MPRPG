@@ -7,7 +7,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerRespawnEvent;
 
 import com.minepile.mprpg.MPRPG;
-import com.minepile.mprpg.equipment.LoreManager;
+import com.minepile.mprpg.items.LoreManager;
 import com.minepile.mprpg.player.PlayerManager;
 
 public class PlayerRespawnListener implements Listener {

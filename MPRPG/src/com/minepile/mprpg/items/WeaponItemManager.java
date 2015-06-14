@@ -16,6 +16,7 @@ public class WeaponItemManager {
 	static String weaponItemsFilePath = "plugins/MPRPG/items/Weapons.yml";
 	
 	//Configuration file that holds weapon information.
+	static File configFile;
 	static FileConfiguration weaponItemConfig;
 	
 	//Create instance
@@ -33,35 +34,34 @@ public class WeaponItemManager {
 			createConfig();
         } else {
         	//lets load the configuration file.
-        	File configFile = new File(weaponItemsFilePath);
+        	configFile = new File(weaponItemsFilePath);
         	weaponItemConfig =  YamlConfiguration.loadConfiguration(configFile);
         }
 	}	
 	
-	//This creates the configuration file that will hold data to save weapon information.
+	/**
+	 * This creates the configuration file that will hold data to save weapon information.
+	 */
     private static void createConfig() {
     	
-        File configFile = new File(weaponItemsFilePath);
-        FileConfiguration currencyItemsConfig =  YamlConfiguration.loadConfiguration(configFile);
+        configFile = new File(weaponItemsFilePath);
+        weaponItemConfig =  YamlConfiguration.loadConfiguration(configFile);
         
-        //set copper currency
-        currencyItemsConfig.set("copper", "copper");
-        currencyItemsConfig.set("copper.itemId", 366); //366 = Clay_Brick
-        
-        //set silver currency
-        currencyItemsConfig.set("silver", "silver");
-        currencyItemsConfig.set("silver.itemId", 265); //265 = Iron_ingot
-        
-        //set gold currency
-        currencyItemsConfig.set("gold", "gold");
-        currencyItemsConfig.set("gold.itemId", 266); //266 = Gold_ingot
-
-        //set premium currency
-        currencyItemsConfig.set("premium", "premium");
-        currencyItemsConfig.set("premium.itemId", 388); //388 = Emerald
+        weaponItemConfig.set("quality.junk.damageMin", 1);
+        weaponItemConfig.set("quality.junk.damageMax", 20);
+        weaponItemConfig.set("quality.common.damageMin", 10);
+        weaponItemConfig.set("quality.common.damageMax", 40);
+        weaponItemConfig.set("quality.uncommon.damageMin", 30);
+        weaponItemConfig.set("quality.uncommon.damageMax", 60);
+        weaponItemConfig.set("quality.rare.damageMin", 50);
+        weaponItemConfig.set("quality.rare.damageMax", 120);
+        weaponItemConfig.set("quality.epic.damageMin", 100);
+        weaponItemConfig.set("quality.epic.damageMax", 200);
+        weaponItemConfig.set("quality.legendary.damageMin", 150);
+        weaponItemConfig.set("quality.legendary.damageMax", 400);
         
         try {
-        	currencyItemsConfig.save(configFile);	//Save the file.
+        	weaponItemConfig.save(configFile);	//Save the file.
         } catch (IOException e) {
             e.printStackTrace();
         } 

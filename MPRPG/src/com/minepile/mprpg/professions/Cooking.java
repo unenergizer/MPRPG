@@ -13,10 +13,11 @@ public class Cooking {
 		return cookingManagerInstance;
 	}
 	
-	//Setup PlayerManager
+	//Setup CookingManager
 	@SuppressWarnings("static-access")
 	public void setup(MPRPG plugin) {
 		this.plugin = plugin;
 	}	
 	
+	//TODO: Implement this profession!
 }

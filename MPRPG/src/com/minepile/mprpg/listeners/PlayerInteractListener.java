@@ -13,8 +13,8 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 
 import com.minepile.mprpg.MPRPG;
-import com.minepile.mprpg.equipment.LoreManager;
 import com.minepile.mprpg.inventory.BankChestManager;
+import com.minepile.mprpg.items.LoreManager;
 import com.minepile.mprpg.player.PlayerMenuManager;
 
 public class PlayerInteractListener implements Listener{

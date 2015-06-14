@@ -24,6 +24,11 @@ public class Mining {
 	//setup instance variables
 	public static MPRPG plugin;
 	static Mining miningInstance = new Mining();
+	static String FILE_PATH = "plugins/MPRPG/professions/mining.yml";
+	
+	static File configFile;
+    static FileConfiguration miningConfig;
+	
 	
 	//hashmap to hold levels in memory.
 	static HashMap<Integer, Integer> configMiningLevel = new HashMap<Integer, Integer>();
@@ -33,18 +38,18 @@ public class Mining {
 		return miningInstance;
 	}
 	
-	//Setup MessageManager
+	//Setup MinigManager
 	@SuppressWarnings("static-access")
 	public void setup(MPRPG plugin) {
 		this.plugin = plugin;
 		
 		//If mining configuration does not exist, create it. Otherwise lets load the config.
-		if(!(new File("plugins/MPRPG/professions/mining.yml")).exists()){
+		if(!(new File(FILE_PATH)).exists()){
 			createMiningConfig();
         } else {
         	//lets load the configuration file.
-        	File configFile = new File("plugins/MPRPG/professions/mining.yml");
-            FileConfiguration miningConfig =  YamlConfiguration.loadConfiguration(configFile);
+        	configFile = new File(FILE_PATH);
+            miningConfig =  YamlConfiguration.loadConfiguration(configFile);
             for (int i = 1; i < 100; i++) {
             	String z = Integer.toString(i);
             	int totalEXPforLVL = (int) miningConfig.get(z);
@@ -53,8 +58,13 @@ public class Mining {
         }
 	}
 	
-	//This method is called by the BlockBreakEvent if the player has
-	//broken an ORE using a Pickaxe.
+	/**
+	 * This method is called by the BlockBreakEvent if the player has broken an ORE using a Pickaxe.
+	 * 
+	 * @param player The player who mined a block.
+	 * @param tool The player's pickaxe.
+	 * @param ore The ore the player mined with the pickaxe.
+	 */
 	public static void toggleOreMined(Player player, Material tool, Material ore) {
 
 		ItemStack is = player.getInventory().getItemInHand();
@@ -300,7 +310,15 @@ public class Mining {
 		}
 	}
 	
-	//Updates a players pickaxe with new statistical information.
+	/**
+	 * Updates a players pickaxe with new statistical information.
+	 * 
+	 * @param player The player with the tool to update.
+	 * @param tool The tool that is going to be updated.
+	 * @param expGain The experience the tool has earned.
+	 * @param currentPickEXP The current experience the tool has before its updated.
+	 * @param currentPickLVL The current level the tool has before its updated.
+	 */
 	public static void togglePickUpdate(Player player, Material tool, int expGain, int currentPickEXP, int currentPickLVL) {
 		
 		//Additional variables.
@@ -374,7 +392,12 @@ public class Mining {
 		}
 	}
 	
-	//Chat Message for mining
+	/**
+	 * Chat Message for mining.
+	 * 
+	 * @param player The player who will be shown the message.
+	 * @param expGain The experience change the player will be shown.
+	 */
 	public static void chatMiningMessage(Player player, int expGain) {
 		//If expGain is 0, let the user know the mine was not successful.
 		//If the expGain is any other number, let them know it was successful.
@@ -401,6 +424,12 @@ public class Mining {
 		}
 	}	
 	
+	/**
+	 * Gets the tools current experience.
+	 * 
+	 * @param player The player with the tool to get the experience from.
+	 * @return The current tools experience count.
+	 */
 	public static int getLoreEXP(Player player) {
 		ItemStack item = player.getItemInHand();
 		
@@ -433,6 +462,12 @@ public class Mining {
 		return 0;
 	}
 	
+	/**
+	 * Gets the tools current level.
+	 * 
+	 * @param player The player with the tool to get the level from.
+	 * @return The current tools level.
+	 */
 	public static int getLoreLVL(Player player) {
 		ItemStack item = player.getItemInHand();
 		
@@ -462,6 +497,16 @@ public class Mining {
 		return 1;
 	}
 	
+	/**
+	 * Sets lore on the players tool.
+	 * <p>
+	 * This is very useful information for the player.
+	 * 
+	 * @param player The player with the tool.
+	 * @param tool The tool to have lore set to it.
+	 * @param exp The experience to put on the tool.
+	 * @param lvl The level to put on the tool.
+	 */
 	public static void setLore(Player player, Material tool, int exp, int lvl) {
 		
 		ItemStack is = player.getInventory().getItemInHand();
@@ -518,6 +563,11 @@ public class Mining {
 		}
 	}
 	
+	/**
+	 * This creates a new pickaxe for the player!
+	 * 
+	 * @param player The player to create the tool for.
+	 */
 	public static void createPickaxe(Player player) {
 		ItemStack tool = player.getInventory().getItemInHand();
 		ItemMeta meta = tool.getItemMeta();
@@ -544,10 +594,15 @@ public class Mining {
 		tool.setItemMeta(meta);
 	}
 	
-	//Calculates how much EXP the player should get from mining.
-	//If the calculation is less than a certain percentage, then
-	//the mining attempt will not be successful and EXP will not be
-	//earned.  Default success rate is 70%.
+	/**
+	 * Calculates how much EXP the player should get from mining. 
+	 * If the calculation is less than a certain percentage, then the 
+	 * mining attempt will not be successful and EXP will not be earned.  
+	 * Default success rate is 70%.
+	 * 
+	 * @param multiplier The success rate of a mining attempt.
+	 * @return The experience gained from a mining attempt.
+	 */
 	public static int calculateExpGain(int multiplier){
 		double random = (Math.random() * 10);
 		if(random > 3) {
@@ -559,11 +614,13 @@ public class Mining {
 		}
 	}
 	
-	//This creates the configuration file that has the EXP leveling requirements.
+	/**
+	 * This creates the configuration file that has the EXP leveling requirements.
+	 */
     private static void createMiningConfig() {
     	
-        File configFile = new File("plugins/MPRPG/professions/mining.yml");
-        FileConfiguration miningConfig =  YamlConfiguration.loadConfiguration(configFile);
+        configFile = new File(FILE_PATH);
+        miningConfig =  YamlConfiguration.loadConfiguration(configFile);
         
         //Loop through and create each level for mining.
         for (int i = 1; i <= 100; i++ ) {

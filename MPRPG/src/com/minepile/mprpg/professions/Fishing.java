@@ -24,7 +24,12 @@ public class Fishing {
 	//setup instance variables
 	public static MPRPG plugin;
 	static Fishing fishingManagerInstance = new Fishing();
-	
+    static String FILE_PATH = "plugins/MPRPG/professions/fishing.yml";
+    
+    //Config file.
+    static File configFile;
+    static FileConfiguration fishingConfig;
+    
 	//HashMap to hold levels in memory.
 	static HashMap<Integer, Integer> configFishingLevel = new HashMap<Integer, Integer>();
 	
@@ -33,18 +38,18 @@ public class Fishing {
 		return fishingManagerInstance;
 	}
 	
-	//Setup PlayerManager
+	//Setup FishingManager
 	@SuppressWarnings("static-access")
 	public void setup(MPRPG plugin) {
 		this.plugin = plugin;
 		
 		//If fishing configuration does not exist, create it. Otherwise lets load the config.
-		if(!(new File("plugins/MPRPG/professions/fishing.yml")).exists()){
+		if(!(new File(FILE_PATH)).exists()){
 			createFishingConfig();
         } else {
         	//lets load the configuration file.
-        	File configFile = new File("plugins/MPRPG/professions/fishing.yml");
-            FileConfiguration fishingConfig =  YamlConfiguration.loadConfiguration(configFile);
+        	configFile = new File(FILE_PATH);
+            fishingConfig =  YamlConfiguration.loadConfiguration(configFile);
             for (int i = 1; i < 100; i++) {
             	String z = Integer.toString(i);
             	int totalEXPforLVL = (int) fishingConfig.get(z);
@@ -54,6 +59,11 @@ public class Fishing {
 		
 	}
 	
+	/**
+	 * Instructions for what to do when a player is fishing.
+	 * 
+	 * @param player The player who is fishing.
+	 */
 	public static void toggleFishing(Player player) {
 		
 		ItemStack is = player.getInventory().getItemInHand();
@@ -78,7 +88,7 @@ public class Fishing {
 				player.getInventory().addItem(new ItemStack(Material.RAW_FISH, 1));
 				toggleRodUpdate(player, expGain, currentRodEXP, currentRodLVL);
 			} else {
-				//Let user know mining was not successful.
+				//Let user know fishing attempt was not successful.
 				player.sendMessage(ChatColor.GRAY + "        " + ChatColor.ITALIC + "Fishing attempt was not successful.");
 			}
 		} else if (currentRodLVL > 19 && currentRodLVL <= 39) {
@@ -90,7 +100,7 @@ public class Fishing {
 				player.getInventory().addItem(new ItemStack(Material.RAW_FISH, 1, (short) 1));
 				toggleRodUpdate(player, expGain, currentRodEXP, currentRodLVL);
 			} else {
-				//Let user know mining was not successful.
+				//Let user know fishing was not successful.
 				player.sendMessage(ChatColor.GRAY + "        " + ChatColor.ITALIC + "Fishing attempt was not successful.");
 			}
 		} else if (currentRodLVL > 39 && currentRodLVL <= 59) {
@@ -102,7 +112,7 @@ public class Fishing {
 				player.getInventory().addItem(new ItemStack(Material.RAW_FISH, 1, (short) 2));
 				toggleRodUpdate(player, expGain, currentRodEXP, currentRodLVL);
 			} else {
-				//Let user know mining was not successful.
+				//Let user know fishing was not successful.
 				player.sendMessage(ChatColor.GRAY + "        " + ChatColor.ITALIC + "Fishing attempt was not successful.");
 			}
 		} else if (currentRodLVL > 59 && currentRodLVL <= 79) {
@@ -114,13 +124,20 @@ public class Fishing {
 				player.getInventory().addItem(new ItemStack(Material.RAW_FISH, 1, (short) 3));
 				toggleRodUpdate(player, expGain, currentRodEXP, currentRodLVL);
 			} else {
-				//Let user know mining was not successful.
+				//Let user know fishing was not successful.
 				player.sendMessage(ChatColor.GRAY + "        " + ChatColor.ITALIC + "Fishing attempt was not successful.");
 			}
 		}
 	}
 	
-	//Updates a players fishing rod with new statistical information.
+	/**
+	 * Updates a players fishing rod with new statistical information.
+	 * 
+	 * @param player The player with the fishing rod that will receive updates.
+	 * @param expGain The amount of experience the fishing rod has gained.
+	 * @param currentRodEXP The current fishing rods experience before the update is applied.
+	 * @param currentRodLVL The current level of the fishing rod before the update is applied.
+	 */
 	public static void toggleRodUpdate(Player player, int expGain, int currentRodEXP, int currentRodLVL) {
 		
 		//Additional variables.
@@ -173,8 +190,13 @@ public class Fishing {
 		}
 	}
 	
-	//Chat Message for mining
-	public static void chatMiningMessage(Player player, int expGain) {
+	/**
+	 * Chat Message for the fishing rod.
+	 * 
+	 * @param player The player to show the fishing message.
+	 * @param expGain The experience gain of the fishing rod.
+	 */
+	public static void chatfishingMessage(Player player, int expGain) {
 		//If expGain is 0, let the user know the fishing attempt was not successful.
 		//If the expGain is any other number, let them know it was successful.
 		if (expGain != 0) {
@@ -200,6 +222,12 @@ public class Fishing {
 		}
 	}	
 	
+	/**
+	 * Gets the Fishing rods experience from the ItemStack's Lore.
+	 * 
+	 * @param player The player with the fishing rod.
+	 * @return The experience the fishing rod currently has.
+	 */
 	public static int getLoreEXP(Player player) {
 		ItemStack item = player.getItemInHand();
 
@@ -228,6 +256,12 @@ public class Fishing {
 		return 0;
 	}
 	
+	/**
+	 * Gets the level from the fishing rods ItemStack lore.
+	 * 
+	 * @param player The player with the fishing rod.
+	 * @return The current level of the fishing rod.
+	 */
 	public static int getLoreLVL(Player player) {
 		ItemStack item = player.getItemInHand();
 
@@ -254,6 +288,15 @@ public class Fishing {
 		return 1;
 	}
 	
+	/**
+	 * Sets the fishing rods ItemStack lore.
+	 * <p>
+	 * This is useful information for the player. It shows the items statics.
+	 * 
+	 * @param player The player that has a fishing rod waiting to have lore set to it.
+	 * @param exp The experience that the fishing rod's lore will contain.
+	 * @param lvl The level the fishing rod's lore will contain.
+	 */
 	public static void setLore(Player player, int exp, int lvl) {
 		
 		ItemStack is = player.getInventory().getItemInHand();
@@ -310,6 +353,11 @@ public class Fishing {
 		}
 	}
 	
+	/**
+	 * Creates a new fishing rod!
+	 * 
+	 * @param player The player with the new fishing rod.
+	 */
 	public static void createFishingRod(Player player) {
 		ItemStack tool = player.getInventory().getItemInHand();
 		ItemMeta meta = tool.getItemMeta();
@@ -336,10 +384,15 @@ public class Fishing {
 		tool.setItemMeta(meta);
 	}
 	
-	//Calculates how much EXP the player should get from fishing.
-	//If the calculation is less than a certain percentage, then
-	//the fishing attempt will not be successful and EXP will not be
-	//earned.  Default success rate is 70%.
+	/**
+	 * Calculates how much EXP the player should get from fishing. 
+	 * If the calculation is less than a certain percentage, then the 
+	 * fishing attempt will not be successful and EXP will not be earned.  
+	 * Default success rate is 70%.
+	 * 
+	 * @param multiplier The success rate of the fishing attempt.
+	 * @return
+	 */
 	public static int calculateExpGain(int multiplier){
 		double random = (Math.random() * 10);
 		if(random > 3) {
@@ -351,21 +404,23 @@ public class Fishing {
 		}
 	}
 	
-	//This creates the configuration file that has the EXP leveling requirements.
+	/**
+	 * This creates the configuration file that has the EXP leveling requirements.
+	 */
     private static void createFishingConfig() {
     	
-        File configFile = new File("plugins/MPRPG/professions/fishing.yml");
-        FileConfiguration miningConfig =  YamlConfiguration.loadConfiguration(configFile);
+        configFile = new File(FILE_PATH);
+        fishingConfig =  YamlConfiguration.loadConfiguration(configFile);
         
-        //Loop through and create each level for mining.
+        //Loop through and create each level for fishing.
         for (int i = 1; i <= 100; i++ ) {
         	int y = 167;					//This is the first level.
         	String z = Integer.toString(i);	//Convert i to string for yml format.
-        	miningConfig.set(z, i * y);		//For every level multiply the first level x the number in the loop.
+        	fishingConfig.set(z, i * y);		//For every level multiply the first level x the number in the loop.
         }
 
         try {
-            miningConfig.save(configFile);	//Save the file.
+            fishingConfig.save(configFile);	//Save the file.
         } catch (IOException e) {
             e.printStackTrace();
         } 

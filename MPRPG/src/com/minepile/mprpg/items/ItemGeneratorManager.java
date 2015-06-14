@@ -21,11 +21,25 @@ public class ItemGeneratorManager {
 		this.plugin = plugin;
 	}	
 	
+	/**
+	 * This will convert an item ID to the Material.
+	 * 
+	 * @param itemId A integer that represents a Minecraft item.
+	 * @return A Material that can be converted to an ItemStack.
+	 */
 	public static Material convertItemIdToMaterial(int itemId) {
 		Material item = Material.getMaterial(itemId);
 		return item;
 	}
 	
+	/**
+	 * This will convert a Material to the Minecraft ID associated with that item.
+	 * 
+	 * TODO: Finish this.
+	 * 
+	 * @param item The Material to convert to a Integer ID.
+	 * @return An integer to be used for configuration files.
+	 */
 	public static double convertMaterialToItemId(Material item) {
 		double itemId = 0;
 		

@@ -1,4 +1,4 @@
-package com.minepile.mprpg.equipment;
+package com.minepile.mprpg.items;
 
 import java.sql.Timestamp;
 import java.util.Date;
@@ -46,7 +46,7 @@ public class LoreManager {
 		return loreManagerInstance;
 	}
 
-	//Setup PlayerManager
+	//Setup LoreManager
 	@SuppressWarnings("static-access")
 	public void setup(MPRPG plugin) {
 		this.plugin = plugin;

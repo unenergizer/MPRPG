@@ -31,6 +31,9 @@ public class PlayerMailManager {
 		setupMailHolograms();
 	}	
 	
+	/**
+	 * This creates a Hologram to show over the Mailbox.
+	 */
     public static void setupMailHolograms() {
     	Location bank01 = new Location(Bukkit.getWorld("world"), 21.5, 81.6, -8.5);
     	
@@ -38,6 +41,9 @@ public class PlayerMailManager {
     	bankHologram01.appendTextLine(ChatColor.YELLOW + "" + ChatColor.BOLD + "Mailbox");
     }
     
+    /**
+     * This will delete the Hologram when server reloads or shuts down.
+     */
     public static void removeMailHolograms() {
     	bankHologram01.delete();
     }

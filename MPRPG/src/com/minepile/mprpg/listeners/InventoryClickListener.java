@@ -8,7 +8,7 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 
 import com.minepile.mprpg.MPRPG;
-import com.minepile.mprpg.equipment.LoreManager;
+import com.minepile.mprpg.items.LoreManager;
 import com.minepile.mprpg.player.PlayerMenuManager;
 
 public class InventoryClickListener implements Listener{

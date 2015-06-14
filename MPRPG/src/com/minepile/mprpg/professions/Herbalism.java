@@ -24,6 +24,11 @@ public class Herbalism {
 	//setup instance variables
 	public static MPRPG plugin;
 	static Herbalism herbalismManagerInstance = new Herbalism();
+	static String FILE_PATH = "plugins/MPRPG/professions/herbalism.yml";
+	
+	//Config file
+	static File configFile;
+    static FileConfiguration herbalismConfig;
 	
 	//HashMap to hold levels in memory.
 	static HashMap<Integer, Integer> configHerbalismLevel = new HashMap<Integer, Integer>();
@@ -33,18 +38,18 @@ public class Herbalism {
 		return herbalismManagerInstance;
 	}
 	
-	//Setup PlayerManager
+	//Setup HerbalismManager
 	@SuppressWarnings("static-access")
 	public void setup(MPRPG plugin) {
 		this.plugin = plugin;
 		
 		//If herbalism configuration does not exist, create it. Otherwise lets load the config.
-		if(!(new File("plugins/MPRPG/professions/herbalism.yml")).exists()){
+		if(!(new File(FILE_PATH)).exists()){
 			createHerbalismConfig();
         } else {
         	//lets load the configuration file.
-        	File configFile = new File("plugins/MPRPG/professions/herbalism.yml");
-            FileConfiguration herbalismConfig =  YamlConfiguration.loadConfiguration(configFile);
+        	configFile = new File(FILE_PATH);
+            herbalismConfig =  YamlConfiguration.loadConfiguration(configFile);
             for (int i = 1; i < 100; i++) {
             	String z = Integer.toString(i);
             	int totalEXPforLVL = (int) herbalismConfig.get(z);
@@ -54,6 +59,12 @@ public class Herbalism {
 		
 	}
 	
+	/**
+	 * Instructions for what to do when a player is cutting plants.
+	 * 
+	 * @param player The player who is cutting plants.
+	 * @param plant The plant that was cut.
+	 */
 	public static void toggleHerbalism(Player player, Material plant) {
 		
 		ItemStack is = player.getInventory().getItemInHand();
@@ -78,7 +89,7 @@ public class Herbalism {
 				player.getInventory().addItem(new ItemStack(plant, 1));
 				toggleToolUpdate(player, expGain, currentToolEXP, currentToolLVL);
 			} else {
-				//Let user know mining was not successful.
+				//Let user know herbalism attempt was not successful.
 				player.sendMessage(ChatColor.GRAY + "        " + ChatColor.ITALIC + "Harvest attempt was not successful.");
 			}
 		} else if (currentToolLVL > 19 && currentToolLVL <= 39) {
@@ -90,7 +101,7 @@ public class Herbalism {
 				player.getInventory().addItem(new ItemStack(plant, 1));
 				toggleToolUpdate(player, expGain, currentToolEXP, currentToolLVL);
 			} else {
-				//Let user know mining was not successful.
+				//Let user know herbalism attempt was not successful.
 				player.sendMessage(ChatColor.GRAY + "        " + ChatColor.ITALIC + "Harvest attempt was not successful.");
 			}
 		} else if (currentToolLVL > 39 && currentToolLVL <= 59) {
@@ -102,7 +113,7 @@ public class Herbalism {
 				player.getInventory().addItem(new ItemStack(plant, 1));
 				toggleToolUpdate(player, expGain, currentToolEXP, currentToolLVL);
 			} else {
-				//Let user know mining was not successful.
+				//Let user know herbalism attempt was not successful.
 				player.sendMessage(ChatColor.GRAY + "        " + ChatColor.ITALIC + "Harvest attempt was not successful.");
 			}
 		} else if (currentToolLVL > 59 && currentToolLVL <= 79) {
@@ -114,13 +125,20 @@ public class Herbalism {
 				player.getInventory().addItem(new ItemStack(plant, 1));
 				toggleToolUpdate(player, expGain, currentToolEXP, currentToolLVL);
 			} else {
-				//Let user know mining was not successful.
+				//Let user know herbalism attempt was not successful.
 				player.sendMessage(ChatColor.GRAY + "        " + ChatColor.ITALIC + "Harvest attempt was not successful.");
 			}
 		}
 	}
 	
-	//Updates a players herbalism tool with new statistical information.
+	/**
+	 * Updates a players herbalism tool with new statistical information.
+	 * 
+	 * @param player The player with the tool to update.
+	 * @param expGain The experience that is going to be added to the tool.
+	 * @param currentToolEXP The current experience of the tool before the change is made.
+	 * @param currentToolLVL The current level of the tool before the change is made.
+	 */
 	public static void toggleToolUpdate(Player player, int expGain, int currentToolEXP, int currentToolLVL) {
 		
 		//Additional variables.
@@ -173,8 +191,13 @@ public class Herbalism {
 		}
 	}
 	
-	//Chat Message for mining
-	public static void chatMiningMessage(Player player, int expGain) {
+	/**
+	 * Chat Message for herbalism.
+	 * 
+	 * @param player The player to show the message to.
+	 * @param expGain The experience gain for the tool.
+	 */
+	public static void chatHerbalismMessage(Player player, int expGain) {
 		//If expGain is 0, let the user know the herbalism attempt was not successful.
 		//If the expGain is any other number, let them know it was successful.
 		if (expGain != 0) {
@@ -200,6 +223,12 @@ public class Herbalism {
 		}
 	}	
 	
+	/**
+	 * Gets the experience of the cutting tool from the ItemStack's lore.
+	 * 
+	 * @param player The player who has the item.
+	 * @return The experience the item has.
+	 */
 	public static int getLoreEXP(Player player) {
 		ItemStack item = player.getItemInHand();
 
@@ -228,6 +257,12 @@ public class Herbalism {
 		return 0;
 	}
 	
+	/**
+	 * Gets the level of the cutting tool from the ItemStack's lore.
+	 * 
+	 * @param player The player who has the item.
+	 * @return The level the item has.
+	 */
 	public static int getLoreLVL(Player player) {
 		ItemStack item = player.getItemInHand();
 
@@ -254,6 +289,15 @@ public class Herbalism {
 		return 1;
 	}
 	
+	/**
+	 * Sets lore on the players Shears.
+	 * <p>
+	 * This is useful information for the player. It shows the items statics.
+	 * 
+	 * @param player The player with the shears.
+	 * @param exp The experience to place on the shears.
+	 * @param lvl The level to place on the shears.
+	 */
 	public static void setLore(Player player, int exp, int lvl) {
 		
 		ItemStack is = player.getInventory().getItemInHand();
@@ -314,6 +358,11 @@ public class Herbalism {
 		}
 	}
 	
+	/**
+	 * This creates a new herbalism tool for the player!
+	 * 
+	 * @param player The player to recieve the tool.
+	 */
 	public static void createHerbalismTool(Player player) {
 		ItemStack tool = player.getInventory().getItemInHand();
 		ItemMeta meta = tool.getItemMeta();
@@ -340,10 +389,15 @@ public class Herbalism {
 		tool.setItemMeta(meta);
 	}
 	
-	//Calculates how much EXP the player should get from herbalism.
-	//If the calculation is less than a certain percentage, then
-	//the herbalism attempt will not be successful and EXP will not be
-	//earned.  Default success rate is 70%.
+	/**
+	 * Calculates how much EXP the player should get from herbalism. 
+	 * If the calculation is less than a certain percentage, then the 
+	 * herbalism attempt will not be successful and EXP will not be earned.  
+	 * Default success rate is 70%.
+	 * 
+	 * @param multiplier The success rate for the attempt.
+	 * @return The experience earned by the player.
+	 */
 	public static int calculateExpGain(int multiplier){
 		double random = (Math.random() * 10);
 		if(random > 3) {
@@ -355,21 +409,23 @@ public class Herbalism {
 		}
 	}
 	
-	//This creates the configuration file that has the EXP leveling requirements.
+	/**
+	 * This creates the configuration file that has the EXP leveling requirements.
+	 */
     private static void createHerbalismConfig() {
     	
-        File configFile = new File("plugins/MPRPG/professions/herbalism.yml");
-        FileConfiguration miningConfig =  YamlConfiguration.loadConfiguration(configFile);
+        configFile = new File(FILE_PATH);
+        herbalismConfig =  YamlConfiguration.loadConfiguration(configFile);
         
-        //Loop through and create each level for mining.
+        //Loop through and create each level for Herbalism configuration.
         for (int i = 1; i <= 100; i++ ) {
         	int y = 167;					//This is the first level.
         	String z = Integer.toString(i);	//Convert i to string for yml format.
-        	miningConfig.set(z, i * y);		//For every level multiply the first level x the number in the loop.
+        	herbalismConfig.set(z, i * y);		//For every level multiply the first level x the number in the loop.
         }
 
         try {
-            miningConfig.save(configFile);	//Save the file.
+        	herbalismConfig.save(configFile);	//Save the file.
         } catch (IOException e) {
             e.printStackTrace();
         } 

@@ -18,7 +18,6 @@ public class ChatManager {
 	//MAIN STATS
 	static HashMap<String, Integer> healthPoints = new HashMap<String, Integer>();
 
-	
 	//Create instance
 	public static ChatManager getInstance() {
 		return chatManagerInstance;
@@ -30,6 +29,12 @@ public class ChatManager {
 		this.plugin = plugin;
 	}
 	
+	/**
+	 * Displays the players clan tag in the chat console.
+	 * 
+	 * @param player The player to assign a clan tag.
+	 * @return The players clan tag, if one exists.
+	 */
 	public static String getClanTag(Player player) {
 		String clanTag = PlayerManager.getPlayerConfigString(player, "clan.tag");
 		
@@ -40,6 +45,12 @@ public class ChatManager {
 		}
 	}
 	
+	/**
+	 * Sets a staff members prefix in the chat console.
+	 * 
+	 * @param player The player to assign a staff tag to.
+	 * @return The players staff tag, if one exists.
+	 */
 	public static String getStaffPrefix(Player player) {
 		int isAdmin = PlayerManager.getPlayerConfigInt(player, "permissions.admin");
 		int isDev = PlayerManager.getPlayerConfigInt(player, "permissions.dev");

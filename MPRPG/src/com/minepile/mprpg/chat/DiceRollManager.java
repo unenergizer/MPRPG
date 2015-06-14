@@ -19,6 +19,12 @@ public class DiceRollManager {
 		this.plugin = plugin;
 	}
 	
+	/**
+	 * Displays a virtual dice roll in the players chat console.
+	 * 
+	 * @param diceSize How big the dice should be.
+	 * @return The number the dice landed on after it was rolled.
+	 */
 	public static int onDiceRoll(int diceSize) {
 		if (diceSize < 10000) {
 			int roll = (int) (Math.random() * diceSize);

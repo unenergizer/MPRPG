@@ -53,7 +53,7 @@ public class MonsterManager {
 		return monsterManagerInstance;
 	}
 
-	//Setup PlayerManager
+	//Setup MonsterManager
 	@SuppressWarnings("static-access")
 	public void setup(MPRPG plugin) {
 		this.plugin = plugin;
@@ -320,6 +320,24 @@ public class MonsterManager {
 		
 		return color;
 	}
+	
+	/**
+	 * This creates the configuration file that will hold data to save mob attributes.
+	 */
+    private static void createMonsterConfig() {
+    	
+        configFile = new File(mobTypeIdPath);
+        monsterIdConfig =  YamlConfiguration.loadConfiguration(configFile);
+        
+        monsterIdConfig.set("settings", "settings");
+        monsterIdConfig.set("settings.countTotal", 0);
+        
+        try {
+        	monsterIdConfig.save(configFile);	//Save the file.
+        } catch (IOException e) {
+            e.printStackTrace();
+        } 
+    }
 
 	public static FileConfiguration getMonsterIdConfig() {
 		return monsterIdConfig;
@@ -360,20 +378,4 @@ public class MonsterManager {
 	public static String getMobTypeIdPath() {
 		return mobTypeIdPath;
 	}
-	
-	//This creates the configuration file that will hold data to save mob attributes.
-    private static void createMonsterConfig() {
-    	
-        File configFile = new File(mobTypeIdPath);
-        FileConfiguration monsterConfig =  YamlConfiguration.loadConfiguration(configFile);
-        
-        monsterConfig.set("settings", "settings");
-        monsterConfig.set("settings.countTotal", 0);
-        
-        try {
-        	monsterConfig.save(configFile);	//Save the file.
-        } catch (IOException e) {
-            e.printStackTrace();
-        } 
-    }
 }

@@ -54,6 +54,11 @@ public class PlayerMenuManager {
 		off = dyeOff.toItemStack(1);
 	}
 	
+	/**
+	 * This will create various menu's for the player logging in.
+	 * 
+	 * @param player The player who is getting menus created for them.
+	 */
 	public static void createMenu(Player player) {
 		String playerName = player.getName();
 		
@@ -117,6 +122,11 @@ public class PlayerMenuManager {
         
 	}
 	
+	/**
+	 * Deletes a player menu from the HashMap.
+	 * 
+	 * @param player The player's who will have their menu's deleted.
+	 */
 	public static void deleteMenu(Player player) {
 		UUID id = player.getUniqueId();
 		
@@ -124,7 +134,11 @@ public class PlayerMenuManager {
 		playerSettingsMenu.remove(id);
 	}
 	
-	//This will give the player the menu, if they don't already have it.
+	/**
+	 * This will give the player the menu, if they don't already have it.
+	 * 
+	 * @param player The player to give the Game Menu to.
+	 */
 	public static void givePlayerMenu(Player player) {
 		PlayerInventory playerInv = player.getInventory();
 		
@@ -155,10 +169,22 @@ public class PlayerMenuManager {
 		}
 	}
 	
+	/**
+	 * Opens the players menu.
+	 * 
+	 * @param player The player to open the menu for.
+	 */
 	public static void openPlayerMenu(Player player) {
 		player.openInventory(playerMainMenu.get(player.getUniqueId()));
 	}
 	
+	/**
+	 * Instructions on what will happen when a player interacts with the menu.
+	 * 
+	 * @param player The player interacting with the menu.
+	 * @param menuName The name of the menu being interacted with.
+	 * @param item The item in the menu that has been clicked.
+	 */
 	public static void playerInteractMenu(Player player, String menuName, ItemStack item) {
 		if (menuName.endsWith(gameMenu)) {
 			if (item.getType().equals(Material.ENCHANTMENT_TABLE)) {

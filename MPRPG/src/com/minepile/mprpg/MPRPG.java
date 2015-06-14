@@ -19,20 +19,18 @@ import com.minepile.mprpg.commands.CommandManager;
 import com.minepile.mprpg.entities.MonsterCreatorManager;
 import com.minepile.mprpg.entities.MonsterManager;
 import com.minepile.mprpg.entities.NPCManager;
-import com.minepile.mprpg.equipment.ArmorManager;
-import com.minepile.mprpg.equipment.ItemQualityManager;
-import com.minepile.mprpg.equipment.ItemTierManager;
-import com.minepile.mprpg.equipment.LoreManager;
-import com.minepile.mprpg.equipment.WeaponManager;
 import com.minepile.mprpg.inventory.BankChestManager;
 import com.minepile.mprpg.inventory.ShopChestManager;
 import com.minepile.mprpg.items.ArmorItemManager;
-import com.minepile.mprpg.items.LootTableChestManager;
 import com.minepile.mprpg.items.ConsumableItemManager;
 import com.minepile.mprpg.items.CurrencyItemManager;
 import com.minepile.mprpg.items.ItemGeneratorManager;
-import com.minepile.mprpg.items.MiscItemManager;
+import com.minepile.mprpg.items.ItemQualityManager;
+import com.minepile.mprpg.items.ItemTierManager;
+import com.minepile.mprpg.items.LootTableChestManager;
 import com.minepile.mprpg.items.LootTableMobManager;
+import com.minepile.mprpg.items.LoreManager;
+import com.minepile.mprpg.items.MiscItemManager;
 import com.minepile.mprpg.items.WeaponItemManager;
 import com.minepile.mprpg.listeners.AsyncPlayerChatListener;
 import com.minepile.mprpg.listeners.BlockBreakListener;
@@ -77,6 +75,9 @@ public class MPRPG extends JavaPlugin {
 	public static MPRPG plugin;
 	private PluginManager pluginManager;
 	
+	//A few setup variables.
+	String pluginVersion = "v0.7.4";
+	
 	@Override
 	public void onEnable() {
 		this.pluginManager = getServer().getPluginManager();
@@ -112,25 +113,21 @@ public class MPRPG extends JavaPlugin {
         MonsterManager.getInstance().setup(this);
         NPCManager.getInstance().setup(this);
         
-        //setup equipment manager instances
-        ArmorManager.getInstance().setup(this);
-        ItemQualityManager.getInstance().setup(this);
-        ItemTierManager.getInstance().setup(this);
-        LoreManager.getInstance().setup(this);
-        WeaponManager.getInstance().setup(this);
-        
         //setup inventory manager instances
         BankChestManager.getInstance().setup(this);
         ShopChestManager.getInstance().setup(this);
         
         //setup item manager instances
         ArmorItemManager.getInstance().setup(this);
-        LootTableChestManager.getInstance().setup(this);
         ConsumableItemManager.getInstance().setup(this);
         CurrencyItemManager.getInstance().setup(this);
         ItemGeneratorManager.getInstance().setup(this);
-        MiscItemManager.getInstance().setup(this);
+        ItemQualityManager.getInstance().setup(this);
+        ItemTierManager.getInstance().setup(this);
+        LootTableChestManager.getInstance().setup(this);
         LootTableMobManager.getInstance().setup(this);
+        LoreManager.getInstance().setup(this);
+        MiscItemManager.getInstance().setup(this);
         WeaponItemManager.getInstance().setup(this);
         
         //setup profession manager instances
@@ -265,6 +262,10 @@ public class MPRPG extends JavaPlugin {
 		
 		//Show the administrator that the plugin is finished closing.
 		Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + "[MPRPG] Shut down of MinePile:RPG is complete!");
+	}
+
+	public String getPluginVersion() {
+		return pluginVersion;
 	}
 	
 }

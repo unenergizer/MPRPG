@@ -46,27 +46,41 @@ public class NPCManager {
 	@SuppressWarnings("static-access")
 	public void setup(MPRPG plugin) {
 		this.plugin = plugin;		
-		
-		
+		//Spawns an NPC
 		spawnNPC();
 		
-		//TP Mobs
+		//TP NPC
 		teleportNPC();
 	}
-
+	
+	/**
+	 * This will setup an NPC entitie.
+	 * 
+	 * @param location The XYZ location to spawn the entitie in a world.
+	 * @param entity The type of entitie to spawn.
+	 * @param entityName The name of the entitie.
+	 * @param health The hitpoints a NPC will have.
+	 * @param level The level of the NPC.
+	 */
 	public static void setupMob(Location location, EntityType entity, String entityName, int health, int level) {
 		spawnerUtil.spawnEntity(world.getName(), location, entity, entityName);
 		entityLocation.put(spawnerUtil.getEntityID(), location);
 		entityHealth.put(spawnerUtil.getEntityID(), health);
 		entityLevel.put(spawnerUtil.getEntityID(), level);
 	}
-
+	
+	/**
+	 * This will spawn an NPC.
+	 */
 	public static void spawnNPC() {	
 		//ShopMaster.
 		spawnerUtil.spawnEntity(world.getName(), npc0Location, EntityType.VILLAGER, ChatColor.LIGHT_PURPLE + "" + "Island Villager");
 		entityLocation.put(spawnerUtil.getEntityID(), npc0Location);
 	}
 	
+	/**
+	 * This teleports an NPC back to their spawn location if they try to walk from it.
+	 */
 	public static void teleportNPC() {
 		//Lets start a repeating task
 		taskID = Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, new Runnable() {
@@ -87,16 +101,4 @@ public class NPCManager {
 			} //END Run method.
 		}, 0, 5); //(20 ticks = 1 second)
 	}
-	/*
-	public static void onPlayerInteract(Player player, UUID mobID) {
-		//Set player kit if npc is a Kit NPC.
-		if (entityKit.containsKey(mobID) == true) {
-			setPlayerKit(player, mobID);
-		}
-		//Set player team if npc is a Team NPC.
-		if (entityTeam.containsKey(mobID) == true) {
-			setPlayerTeam(player, mobID);
-		}
-	}
- 	*/
 }

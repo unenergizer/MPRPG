@@ -1,4 +1,4 @@
-package com.minepile.mprpg.equipment;
+package com.minepile.mprpg.items;
 
 import net.md_5.bungee.api.ChatColor;
 

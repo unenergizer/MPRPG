@@ -29,6 +29,22 @@ public class LagManager {
 		startClock();
 	}
 	
+	/**
+	 * Starts a clock that will calculate the lag in the server.
+	 */
+	private static void startClock() {
+		
+        BukkitScheduler scheduler = Bukkit.getServer().getScheduler();
+        scheduler.scheduleSyncRepeatingTask(plugin, new Runnable() {
+            @Override
+            public void run() {
+            	TICKS[(TICK_COUNT % TICKS.length)] = System.currentTimeMillis();
+           	 
+                TICK_COUNT += 1;
+            }
+        }, 100L, 1L);
+	}
+	
 	public static double getTPS() {
 		  return getTPS(100);
 	}
@@ -54,18 +70,5 @@ public class LagManager {
 	public static double getLagPercent() {
 		double tps = getTPS();
 	    return Math.round((1.0D - tps / 20.0D) * 100.0D);
-	}
-	
-	private static void startClock() {
-		
-        BukkitScheduler scheduler = Bukkit.getServer().getScheduler();
-        scheduler.scheduleSyncRepeatingTask(plugin, new Runnable() {
-            @Override
-            public void run() {
-            	TICKS[(TICK_COUNT % TICKS.length)] = System.currentTimeMillis();
-           	 
-                TICK_COUNT += 1;
-            }
-        }, 100L, 1L);
 	}
 }

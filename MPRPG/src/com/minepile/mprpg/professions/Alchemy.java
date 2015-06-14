@@ -23,7 +23,7 @@ public class Alchemy {
 		return AlchemyManagerInstance;
 	}
 	
-	//Setup PlayerManager
+	//Setup AlchemyManager
 	@SuppressWarnings("static-access")
 	public void setup(MPRPG plugin) {
 		this.plugin = plugin;
@@ -31,6 +31,9 @@ public class Alchemy {
 		setupAlchemyHolograms();
 	}	
 	
+	/**
+	 * This will create a hologram that will display over the Alchemy stand.
+	 */
     public static void setupAlchemyHolograms() {
     	Location bank01 = new Location(Bukkit.getWorld("world"), 47.5, 81.5, -4.5);
     	
@@ -38,6 +41,9 @@ public class Alchemy {
     	bankHologram01.appendTextLine(ChatColor.DARK_AQUA + "" + ChatColor.BOLD + "Alchemy Stand");
     }
     
+    /**
+     * This will delete the hologram on server reload or shut down.
+     */
     public static void removeHolograms() {
     	bankHologram01.delete();
     }
