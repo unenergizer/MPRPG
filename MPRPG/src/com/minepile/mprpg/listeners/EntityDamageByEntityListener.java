@@ -164,7 +164,7 @@ public class EntityDamageByEntityListener implements Listener{
 					int z = victim.getLocation().getBlockZ();
 					
 					victim.remove();
-					MonsterManager.toggleDeath(victimID, x, y, z);
+					MonsterManager.toggleEntitieDeath(victimID, x, y, z);
 				} else {
 					victim.setHealth(15);
 					MonsterManager.toggleDamage(victimID, damage);

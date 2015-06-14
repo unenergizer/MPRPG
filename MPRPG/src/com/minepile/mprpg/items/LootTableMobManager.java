@@ -44,12 +44,14 @@ public class LootTableMobManager {
         }
 	}
 	
+	/**
+	 * Drops random loot from the configuration file.
+	 * 
+	 * @param lootTable The specific loot table that contains items to drop
+	 * @param loc The location that items should drop in the World
+	 */
 	public static void toggleLootTableDrop(String lootTable, Location loc) {
-		
-        //configFile = new File(LootTableFilePath);
-        //lootTableConfig =  YamlConfiguration.loadConfiguration(configFile);
-        
-        
+
         ArrayList itemName = (ArrayList) lootTableConfig.getList(lootTable + ".armorItem");
         
         for (int i = 0; i < itemName.size(); i++) {
@@ -59,6 +61,11 @@ public class LootTableMobManager {
         }
 	}
 	
+	/**
+	 * Calculates if an item should drop or not.
+	 * 
+	 * @return A boolean value. True will drop an item. False will NOT drop items.
+	 */
 	private static boolean dropItem() {
 		Random rand = new Random();
 		
@@ -92,17 +99,4 @@ public class LootTableMobManager {
             e.printStackTrace();
         } 
     }
-	
-	//TODO:
-	/*
-	 	Possible loot table configuration:
-	 	
-	 	tableName:   (junk drops, epic drops, etc)
-	 		tableName.armor = id1, id2, id3, etc
-	 		tableName.weapon = id1, id2, id3, etc
-	 		tableName.consumables = id1, id2, id3, etc
-	 		tableName.currency = id1
-	 		tableName.misc = id1
-	 */
-	
 }

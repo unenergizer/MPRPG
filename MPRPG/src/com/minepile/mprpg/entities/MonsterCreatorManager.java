@@ -88,7 +88,7 @@ public class MonsterCreatorManager {
         String loot = monsterTypeConfig.getString(mobName + ".lootTable");
         
         //Spawn the monster in the game.
-        MonsterManager.setupMob(world, newLoc, entity, color, mobName, lvl, hp, runRadius, newCount, loot);
+        MonsterManager.spawnEntitie(world, newLoc, entity, color, mobName, lvl, hp, runRadius, newCount, loot);
 
 	}
 	

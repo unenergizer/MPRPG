@@ -152,6 +152,13 @@ public class ArmorItemManager {
 		}
 	}
 	
+	/**
+	 * Generates a random integer between the min value and the max value.
+	 * 
+	 * @param min the minimal value
+	 * @param max the maximum value
+	 * @return a random value between the min value and the max value
+	 */
 	public static int randomInt(int min, int max) {
 		Random rand = new Random();
 		
@@ -212,95 +219,5 @@ public class ArmorItemManager {
 	Thorns
 	Item Find %
 	Gold Find %
-
-	Example:
-	
-    itemName: Tattered Helm of the Weak
-    itemName.amor = Armor Percentages
-	itemName.hpMin = 5
-	itemName.hpMax = 10
-	itemName.hpRegenMin = 0
-	itemName.hpRegenMax = 3
-	itemName.staminaRegenMin = 0
-	itemName.staminaRegenMax = 3
-	itemName.dodgeMin = 0
-	itemName.dodgeMax = 1
-	itemName.reflectionMin = 0
-	itemName.reflectionMax = 1
-	itemName.blockMin = 0
-	itemName.blockMax = 1
-	itemName.thornsMin = 0
-	itemName.thornsMax = 3
-	itemName.itemFindMin = 0
-	itemName.itemFindMax = 0
-	itemName.goldFindMin = 0
-	itemName.goldFindMax = 1
-     
      */
-    
-    //Creating items from the command line might not be a good idea. Needs 21 arguments...
-    /* 
-	public static void createNewArmor(Player player, String itemName, String itemNameColor, Material armor, int mobLevel, int mobHP, int runRadius) {
-    	
-		if (armor.equals(Material.LEATHER_BOOTS) || armor.equals(Material.LEATHER_CHESTPLATE) || 
-				armor.equals(Material.LEATHER_HELMET) || armor.equals(Material.LEATHER_LEGGINGS) || 
-				armor.equals(Material.CHAINMAIL_BOOTS) || armor.equals(Material.CHAINMAIL_CHESTPLATE) || 
-				armor.equals(Material.CHAINMAIL_HELMET) || armor.equals(Material.CHAINMAIL_LEGGINGS) || 
-				armor.equals(Material.IRON_BOOTS) || armor.equals(Material.IRON_CHESTPLATE) || 
-				armor.equals(Material.IRON_HELMET) || armor.equals(Material.IRON_LEGGINGS) || 
-				armor.equals(Material.DIAMOND_BOOTS) || armor.equals(Material.DIAMOND_CHESTPLATE) || 
-				armor.equals(Material.DIAMOND_HELMET) || armor.equals(Material.DIAMOND_LEGGINGS) || 
-				armor.equals(Material.GOLD_BOOTS) || armor.equals(Material.GOLD_CHESTPLATE) || 
-				armor.equals(Material.GOLD_HELMET) || armor.equals(Material.GOLD_LEGGINGS)) {
-		
-	        File configFile = new File(armorItemsFilePath);
-	        FileConfiguration armorItemsConfig =  YamlConfiguration.loadConfiguration(configFile);
-	        armorItemsConfig.set(itemName, itemName);
-	        armorItemsConfig.set(itemName + ".player", player.getName());
-	        armorItemsConfig.set(itemName + ".itemNameColor", itemNameColor);
-	        armorItemsConfig.set(itemName + ".armorType", armorId);
-	        armorItemsConfig.set(itemName + ".hpMin", x);
-	        armorItemsConfig.set(itemName + ".hpMax", x);
-	        armorItemsConfig.set(itemName + ".hpRegenMin", x);
-	        armorItemsConfig.set(itemName + ".hpRegenMax", x);
-	        armorItemsConfig.set(itemName + ".staminaMin", x);
-	        armorItemsConfig.set(itemName + ".staminaMax", x);
-	        armorItemsConfig.set(itemName + ".dodgeMin", x);
-	        armorItemsConfig.set(itemName + ".dodgeMax", x);
-	        armorItemsConfig.set(itemName + ".reflectionMin", x);
-	        armorItemsConfig.set(itemName + ".reflectionMax", x);
-	        armorItemsConfig.set(itemName + ".blockMin", x);
-	        armorItemsConfig.set(itemName + ".blockMax", x);
-	        armorItemsConfig.set(itemName + ".thornsMin", x);
-	        armorItemsConfig.set(itemName + ".thornsMax", x);
-	        armorItemsConfig.set(itemName + ".itemFindMin", x);
-	        armorItemsConfig.set(itemName + ".itemFindMax", x);
-	        armorItemsConfig.set(itemName + ".goldFindMin", x);
-	        armorItemsConfig.set(itemName + ".goldFindMax", x);
-	        
-	
-	
-	        try {
-	            armorItemsConfig.save(configFile);
-	        } catch (IOException e) {
-	            e.printStackTrace();
-	        } 
-	        
-	        //Success message!
-	        player.sendMessage(" ");
-	    	player.sendMessage(ChatColor.DARK_GRAY + "" + ChatColor.BOLD +"-" + ChatColor.DARK_GRAY + 
-	    			"<[ " + ChatColor.AQUA + "Success!! " + ChatColor.DARK_GRAY + "]>" + 
-	    			ChatColor.DARK_GRAY + ChatColor.BOLD + "---------------------------------");
-	    	player.sendMessage("   " + ChatColor.GREEN + player.getName() + ChatColor.RESET + 
-	    			", your new Armor has been added to the config" + ChatColor.DARK_GRAY + ". ");
-		} else {
-	        player.sendMessage(" ");
-	    	player.sendMessage(ChatColor.DARK_GRAY + "" + ChatColor.BOLD +"-" + ChatColor.DARK_GRAY + 
-	    			"<[ " + ChatColor.RED + "ERROR!! " + ChatColor.DARK_GRAY + "]>" + 
-	    			ChatColor.DARK_GRAY + ChatColor.BOLD + "---------------------------------");
-	    	player.sendMessage("   " + ChatColor.GREEN + player.getName() + ChatColor.RESET + 
-	    			", you must use an armor items to create new armor types." + ChatColor.DARK_GRAY + ". ");
-		}
-	}
-	*/
 }
