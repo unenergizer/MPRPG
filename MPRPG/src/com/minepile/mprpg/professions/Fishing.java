@@ -184,7 +184,7 @@ public class Fishing {
 			setLore(player, totalEXP, currentRodLVL);
 			
 			//Send EXP up message.
-			if (PlayerManager.getPlayerConfigInt(player, "setting.chat.professionDebug") == 1) {
+			if (PlayerManager.getPlayerConfigBoolean(player, "setting.chat.professionDebug") == true) {
 				player.sendMessage(MessageManager.showEXPLevel(expGain, totalEXP, expGoal));
 			}
 		}

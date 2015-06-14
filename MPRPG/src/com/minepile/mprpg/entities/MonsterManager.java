@@ -87,7 +87,7 @@ public class MonsterManager {
 	 */
 	public static void spawnEntitie(World world, Location loc, EntityType entity, String color, String name, int lvl, int hp, int runRadius, int id, String loot) {	
 		
-		String colorName = stringToColor(color) + name;
+		String colorName = (stringToColor(color) + name).replaceAll("_", " ");;
 		String mobNameBase = ChatColor.GRAY + "[" + ChatColor.RED + lvl + ChatColor.GRAY +"] " + colorName;
 		
 		//Set evenStatus for mobs spawning to false to allow them.

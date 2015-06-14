@@ -3,6 +3,7 @@ package com.minepile.mprpg.items;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 import org.bukkit.Bukkit;
@@ -61,10 +62,10 @@ public class ArmorItemManager {
 		/////////////////////////////
 		/// GRAB ITEM FROM CONFIG ///
 		/////////////////////////////
-        File configFile = new File(armorItemsFilePath);
-        FileConfiguration armorItemConfig =  YamlConfiguration.loadConfiguration(configFile);
-        //armorItemConfig.get(value);
+        configFile = new File(armorItemsFilePath);
+        armorItemConfig =  YamlConfiguration.loadConfiguration(configFile);
         
+        String name = itemName.replaceAll("_", " ");
         ItemTier tier = ItemTierManager.getItemTierEnum(armorItemConfig.getString(itemName + ".itemTier"));
         ItemQuality quality = ItemQualityManager.getItemQualityEnum(armorItemConfig.getString(itemName + ".itemQuality"));
         String itemDescription = armorItemConfig.getString(itemName + ".itemDescription");
@@ -105,6 +106,8 @@ public class ArmorItemManager {
         int itemFind = randomInt(itemFindMin, itemFindMax);
         int goldFind = randomInt(goldFindMin, goldFindMax);
 		
+
+        
 		/////////////////////
 		/// SET ITEM LORE ///
 		/////////////////////
@@ -120,7 +123,7 @@ public class ArmorItemManager {
 			String itemQuality =  ItemQualityManager.getItemQualityString(quality);
 			
 			//Set the items Name
-			im.setDisplayName(nameFormatting + itemName);
+			im.setDisplayName(nameFormatting + name);
 			
 			//Set the item lore
 			ArrayList<String> lore = new ArrayList<String>();

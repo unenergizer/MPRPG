@@ -40,9 +40,9 @@ public class PlayerInteractListener implements Listener{
 
 				switch(event.getItem().getType()) {
 
-				//////////
-				//Armor //
-				//////////
+				///////////
+				// Armor //
+				///////////
 
 				//Tier #1
 				case LEATHER_BOOTS:
@@ -114,10 +114,9 @@ public class PlayerInteractListener implements Listener{
 					delayedSlotUpdate(player);
 					break;
 
-
-				/////////
-				//Axes //
-				/////////
+				//////////
+				// Axes //
+				//////////
 				case WOOD_AXE: //Tier #1
 					break;
 				case STONE_AXE: //Tier #2
@@ -129,9 +128,9 @@ public class PlayerInteractListener implements Listener{
 				case DIAMOND_AXE: //Tier #5
 					break;		
 
-				//////////////////////
-				//Polearms / Spears //
-				//////////////////////
+				///////////////////////
+				// Polearms / Spears //
+				///////////////////////
 				case WOOD_SPADE: //Tier #1
 					break;
 				case STONE_SPADE: //Tier #2
@@ -143,9 +142,9 @@ public class PlayerInteractListener implements Listener{
 				case DIAMOND_SPADE: //Tier #5
 					break;
 
-				///////////
-				//Swords //
-				///////////
+				////////////
+				// Swords //
+				////////////
 				case WOOD_SWORD: //Tier #1
 					break;
 				case STONE_SWORD: //Tier #2
@@ -157,9 +156,9 @@ public class PlayerInteractListener implements Listener{
 				case DIAMOND_SWORD: //Tier #5
 					break;
 
-				//////////
-				//Wands //
-				//////////
+				///////////
+				// Wands //
+				///////////
 				case WOOD_HOE: //Tier #1
 					break;
 				case STONE_HOE: //Tier #2
@@ -171,10 +170,9 @@ public class PlayerInteractListener implements Listener{
 				case DIAMOND_HOE: //Tier #5
 					break;
 
-
-				//////////////
-				//Craftable //
-				//////////////
+				///////////////
+				// Craftable //
+				///////////////
 				case ANVIL:
 					//Disable item renaming.
 					event.setCancelled(true);
@@ -189,9 +187,7 @@ public class PlayerInteractListener implements Listener{
 					break;
 				default:
 					break;
-
 				}
-				
 			}
 		}
 		

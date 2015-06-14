@@ -18,6 +18,7 @@ public class LootTableMobManager {
 	static LootTableMobManager mobDropTablesManagerInstance = new LootTableMobManager();
 	static String LootTableFilePath = "plugins/MPRPG/items/LootTableMobs.yml";
 	
+	//Drop percentage
 	static int dropPercentage = 50;
 	
 	//Configuration file that holds currency information.
@@ -90,8 +91,6 @@ public class LootTableMobManager {
         lootTableConfig.set("junk01.currency", "copper");
         lootTableConfig.set("junk01.currencyDropMin", 0);
         lootTableConfig.set("junk01.currencyDropMax", 10);
-        
-
         
         try {
         	lootTableConfig.save(configFile);	//Save the file.

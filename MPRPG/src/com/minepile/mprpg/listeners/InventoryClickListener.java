@@ -35,6 +35,8 @@ public class InventoryClickListener implements Listener{
 			case CONTAINER:
 				String invName = event.getClickedInventory().getName();
 				
+				//player.sendMessage("invName: " + invName);
+				
 				//Don't allow the player to move items in inventories.
 				//The players default inventory is called "container.inventory"
 				//We should not stop them from moving items in that inventory.

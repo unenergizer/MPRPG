@@ -38,7 +38,14 @@ public class BlockBreakListener implements Listener{
 		event.setExpToDrop(0);
 
 		switch(blockType) {
-
+		
+		///////////////////
+		/// Loot Chests ///
+		///////////////////
+		case CHEST:
+			event.setCancelled(false);
+			break;
+			
 		/////////////////////////
 		/// Mining Profession ///
 		/////////////////////////
