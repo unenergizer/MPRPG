@@ -30,17 +30,20 @@ public class InventoryClickListener implements Listener{
 
 			switch(event.getSlotType()) {
 			case ARMOR:
+				//Armor was moved into our out of this slot.
+				//Lets update the players attributes.
 				delayedSlotUpdate(player);
 				break;
 			case CONTAINER:
 				String invName = event.getClickedInventory().getName();
 				
-				//player.sendMessage("invName: " + invName);
+				player.sendMessage("invName: " + invName);
 				
 				//Don't allow the player to move items in inventories.
 				//The players default inventory is called "container.inventory"
+				//Loot chests are called "container.chest"
 				//We should not stop them from moving items in that inventory.
-				if (!(invName.equalsIgnoreCase("container.inventory"))) {
+				if ((!(invName.equalsIgnoreCase("container.inventory"))) && (!(invName.equalsIgnoreCase("container.chest")))) {
 					ItemStack clickedItem = event.getCurrentItem();
 					PlayerMenuManager.playerInteractMenu(player, invName, clickedItem);
 					event.setCancelled(true);

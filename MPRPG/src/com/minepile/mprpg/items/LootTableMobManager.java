@@ -2,12 +2,14 @@ package com.minepile.mprpg.items;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.inventory.ItemStack;
 
 import com.minepile.mprpg.MPRPG;
 
@@ -53,11 +55,14 @@ public class LootTableMobManager {
 	 */
 	public static void toggleLootTableDrop(String lootTable, Location loc) {
 
-        ArrayList itemName = (ArrayList) lootTableConfig.getList(lootTable + ".armorItem");
+        List<String> itemName = (List<String>) lootTableConfig.getList(lootTable + ".armorItem");
         
         for (int i = 0; i < itemName.size(); i++) {
         	if (dropItem() == true) {
-        		ArmorItemManager.dropItem((String) itemName.get(i), loc);
+        		ItemStack armorItem = ArmorItemManager.makeItem((String) itemName.get(i));
+        		
+        		//Generate drops
+        		Bukkit.getWorld("world").dropItemNaturally(loc, armorItem);
         	}
         }
 	}

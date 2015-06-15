@@ -9,6 +9,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
 
 import com.minepile.mprpg.MPRPG;
 
@@ -46,18 +47,24 @@ public class LootTableChestManager {
         }
 	}	
 	
-	public static void toggleChestLoot(Player player) {
+	public static void toggleChestLoot(Player player, Inventory inv) {
 		
-		String lootTable = "junk01";
-		Inventory chest = player.getInventory();
-		
-        ArrayList itemName = (ArrayList) lootTableConfig.getList(lootTable + ".armorItem");
-        
-        for (int i = 0; i < itemName.size(); i++) {
-        	if (dropItem() == true) {
-        		//ArmorItemManager.dropItem((String) itemName.get(i), loc);
-        	}
-        }
+		if (inv.getContents() != null) {
+			String lootTable = "junk01";
+			
+	        ArrayList armorItems = (ArrayList) lootTableConfig.getList(lootTable + ".armorItem");
+	        
+	        for (int i = 0; i < armorItems.size(); i++) {
+	        	if (dropItem() == true) {
+	        		
+	        		ItemStack armorItem = ArmorItemManager.makeItem((String) armorItems.get(i));
+	        		//Place items in chest
+	        		inv.setItem(i, armorItem);
+	        	}
+	        }
+		} else {
+			player.sendMessage("This chest has items in it!");
+		}
 	}
 	
 	/**

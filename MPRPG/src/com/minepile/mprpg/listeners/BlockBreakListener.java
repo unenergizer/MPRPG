@@ -32,8 +32,6 @@ public class BlockBreakListener implements Listener{
 		Block block = event.getBlock();						//Gets the actual block broken.
 		Material blockType = event.getBlock().getType();	//The block type that is being broken.
 
-
-
 		//Cancel experience drops
 		event.setExpToDrop(0);
 
@@ -43,6 +41,9 @@ public class BlockBreakListener implements Listener{
 		/// Loot Chests ///
 		///////////////////
 		case CHEST:
+			//Chest was broken. Lets reset it after some time.
+			BlockRegenerationManager.setBlock(player, blockType, Material.AIR, block.getLocation());
+			
 			event.setCancelled(false);
 			break;
 			
@@ -153,6 +154,7 @@ public class BlockBreakListener implements Listener{
 				}
 			}
 			break;
+			
 			////////////////////////////
 			/// Herbalism Profession ///
 			////////////////////////////
