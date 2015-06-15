@@ -101,7 +101,6 @@ public class BlockRegenerationManager {
 	/**
 	 * This will set a temporary block in a broken blocks location.
 	 * 
-	 * @param player Player who broke the block.
 	 * @param type The type of block broken.
 	 * @param tempBlock The temporary block to replace the broken block.
 	 * @param location The XYZ location in the world the block was broken.
