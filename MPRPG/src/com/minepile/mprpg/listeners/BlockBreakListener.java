@@ -42,7 +42,7 @@ public class BlockBreakListener implements Listener{
 		///////////////////
 		case CHEST:
 			//Chest was broken. Lets reset it after some time.
-			BlockRegenerationManager.setBlock(player, blockType, Material.AIR, block.getLocation());
+			BlockRegenerationManager.setBlock(blockType, Material.AIR, block.getLocation());
 			
 			event.setCancelled(false);
 			break;
@@ -58,7 +58,7 @@ public class BlockBreakListener implements Listener{
 				//The player used the right tool, so lets try to add EXP.
 				Mining.toggleOreMined(player, tool, Material.COAL_ORE);
 				//Lets add the block to the ore regeneration list to be replaced later.
-				BlockRegenerationManager.setBlock(player, blockType, Material.STONE, block.getLocation());
+				BlockRegenerationManager.setBlock(blockType, Material.STONE, block.getLocation());
 
 				//Now cancel the event.
 				event.setCancelled(true);
@@ -78,7 +78,7 @@ public class BlockBreakListener implements Listener{
 				Mining.toggleOreMined(player, tool, Material.DIAMOND_ORE);
 
 				//Lets add the block to the ore regeneration list to be replaced later.
-				BlockRegenerationManager.setBlock(player, blockType, Material.STONE, block.getLocation());
+				BlockRegenerationManager.setBlock(blockType, Material.STONE, block.getLocation());
 
 				//Now cancel the event.
 				event.setCancelled(true);
@@ -99,7 +99,7 @@ public class BlockBreakListener implements Listener{
 				Mining.toggleOreMined(player, tool,  Material.EMERALD_ORE);
 
 				//Lets add the block to the ore regeneration list to be replaced later.
-				BlockRegenerationManager.setBlock(player, blockType, Material.STONE, block.getLocation());
+				BlockRegenerationManager.setBlock(blockType, Material.STONE, block.getLocation());
 
 				//Now cancel the event.
 				event.setCancelled(true);
@@ -119,7 +119,7 @@ public class BlockBreakListener implements Listener{
 				Mining.toggleOreMined(player, tool,  Material.GOLD_ORE);
 
 				//Lets add the block to the ore regeneration list to be replaced later.
-				BlockRegenerationManager.setBlock(player, blockType, Material.STONE, block.getLocation());
+				BlockRegenerationManager.setBlock(blockType, Material.STONE, block.getLocation());
 
 				//Now cancel the event.
 				event.setCancelled(true);
@@ -140,7 +140,7 @@ public class BlockBreakListener implements Listener{
 				Mining.toggleOreMined(player, tool, Material.IRON_ORE);
 
 				//Lets add the block to the ore regeneration list to be replaced later.
-				BlockRegenerationManager.setBlock(player, blockType, Material.STONE, block.getLocation());
+				BlockRegenerationManager.setBlock(blockType, Material.STONE, block.getLocation());
 
 				//Now cancel the event.
 				event.setCancelled(true);
@@ -183,7 +183,7 @@ public class BlockBreakListener implements Listener{
 				Herbalism.toggleHerbalism(player, blockType);
 
 				//Lets add the block to the ore regeneration list to be replaced later.
-				BlockRegenerationManager.setBlock(player, blockType, Material.AIR, block.getLocation());
+				BlockRegenerationManager.setBlock(blockType, Material.AIR, block.getLocation());
 
 				//Now cancel the event.
 				event.setCancelled(true);
@@ -260,7 +260,7 @@ public class BlockBreakListener implements Listener{
 				Herbalism.toggleHerbalism(player, blockType);
 
 				//Lets add the block to the ore regeneration list to be replaced later.
-				BlockRegenerationManager.setBlock(player, blockType, Material.AIR, block.getLocation());
+				BlockRegenerationManager.setBlock(blockType, Material.AIR, block.getLocation());
 
 				//Now cancel the event.
 				event.setCancelled(true);
@@ -301,7 +301,7 @@ public class BlockBreakListener implements Listener{
 				Herbalism.toggleHerbalism(player, blockType);
 
 				//Lets add the block to the ore regeneration list to be replaced later.
-				BlockRegenerationManager.setBlock(player, blockType, Material.AIR, block.getLocation());
+				BlockRegenerationManager.setBlock(blockType, Material.AIR, block.getLocation());
 
 				//Now cancel the event.
 				event.setCancelled(true);

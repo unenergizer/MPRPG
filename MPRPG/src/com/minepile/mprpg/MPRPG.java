@@ -42,6 +42,7 @@ import com.minepile.mprpg.listeners.EntityCombustListener;
 import com.minepile.mprpg.listeners.EntityDamageByEntityListener;
 import com.minepile.mprpg.listeners.EntityDamageListener;
 import com.minepile.mprpg.listeners.EntityDeathListener;
+import com.minepile.mprpg.listeners.EntityExplodeListener;
 import com.minepile.mprpg.listeners.EntityRegainHealthListener;
 import com.minepile.mprpg.listeners.EntityShootBowListener;
 import com.minepile.mprpg.listeners.EntityTargetListener;
@@ -159,6 +160,7 @@ public class MPRPG extends JavaPlugin {
         pluginManager.registerEvents(new EntityDamageByEntityListener(this), this);
         pluginManager.registerEvents(new EntityDamageListener(this), this);
         pluginManager.registerEvents(new EntityDeathListener(this), this);
+        pluginManager.registerEvents(new EntityExplodeListener(this), this);
         pluginManager.registerEvents(new EntityRegainHealthListener(this), this);
         pluginManager.registerEvents(new EntityShootBowListener(this), this);
         pluginManager.registerEvents(new EntityTargetListener(this), this);

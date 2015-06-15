@@ -18,6 +18,7 @@ public class BlockRegenerationManager {
 	static BlockRegenerationManager blockRegenManagerInstance = new BlockRegenerationManager();
 	
 	//Setup regeneration variables
+	public static int chestRegenTime = 60 * 15;			//Time it takes for a chest to regenerate. 60 seconds * 15 (15 minutes)
 	public static int blockRegenTime = 120; 			//Time it takes for an block to regenerate. 120 = 2 Minutes (60*2)
 	public static int blockRegenRate = 5; 				//Default between 90 and 200 seconds intervals.
 	public static int blockRegenTick = blockRegenRate * 20; //Time it takes for an block to regenerate.
@@ -105,7 +106,7 @@ public class BlockRegenerationManager {
 	 * @param tempBlock The temporary block to replace the broken block.
 	 * @param location The XYZ location in the world the block was broken.
 	 */
-	public static void setBlock(Player player, Material type, Material tempBlock, Location location) {
+	public static void setBlock(Material type, Material tempBlock, Location location) {
 		
 		Block block = location.getBlock();
 		
@@ -114,7 +115,14 @@ public class BlockRegenerationManager {
 		
 		//Save the block's information.
 		blockType.put(blockID, type);
-		blockTimeLeft.put(blockID, blockRegenTime);
+		
+		//This will set the respawn times for chests and broken items.
+		if (type.equals(Material.CHEST)) {
+			blockTimeLeft.put(blockID, chestRegenTime);
+		} else {
+			blockTimeLeft.put(blockID, blockRegenTime);
+		}
+		
 		blockX.put(blockID, location.getBlockX());
 		blockY.put(blockID, location.getBlockY());
 		blockZ.put(blockID, location.getBlockZ());
