@@ -40,7 +40,7 @@ public class BlockPlaceListener implements Listener{
 				} else {
 					//If the block is not powered, do not let player set TNT.
 					//This will prevent griefing of plants and random placement of TNT.
-					player.sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "You can not set TNT here!");
+					player.sendMessage(ChatColor.RED + "You can not set TNT here!");
 					event.setCancelled(true);
 				}
 			} else {

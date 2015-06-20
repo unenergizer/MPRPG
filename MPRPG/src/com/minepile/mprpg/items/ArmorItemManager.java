@@ -113,7 +113,6 @@ public class ArmorItemManager {
 		ItemStack item = new ItemStack(itemMaterial, 1);
 		ItemMeta im = item.getItemMeta();
 
-		//String itemName = "Armor test";
 		String nameFormatting = ItemQualityManager.getStringFormatting(quality);
 		String itemQuality =  ItemQualityManager.getItemQualityString(quality);
 

@@ -35,9 +35,8 @@ public class InventoryClickListener implements Listener{
 				delayedSlotUpdate(player);
 				break;
 			case CONTAINER:
+				//Name of the inventory.
 				String invName = event.getClickedInventory().getName();
-				
-				player.sendMessage("invName: " + invName);
 				
 				//Don't allow the player to move items in inventories.
 				//The players default inventory is called "container.inventory"
