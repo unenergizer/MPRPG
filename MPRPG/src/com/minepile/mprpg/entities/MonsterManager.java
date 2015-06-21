@@ -3,6 +3,8 @@ package com.minepile.mprpg.entities;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map.Entry;
 import java.util.UUID;
 
 import net.md_5.bungee.api.ChatColor;
@@ -27,14 +29,23 @@ public class MonsterManager {
 	private static LivingEntitySpawnerUtil spawnerUtil = new LivingEntitySpawnerUtil();
 	static MonsterManager monsterManagerInstance = new MonsterManager();
 
+	//@SuppressWarnings("unused")
+	//private static int taskID01;
 	@SuppressWarnings("unused")
-	private static int taskID;
-	
+	private static int taskID02;
+
 	private static World world = Bukkit.getWorld("world");
-	
+
 	private static boolean cancelCreatureSpawn = true;
 	static String mobTypeIdPath = "plugins/MPRPG/mobs/monsterId.yml";
-	
+
+	//Entity respawn
+	public static int entityRespawnTime = 60 * 5; 						//Time it takes for an entity to respawn. 120 = 2 Minutes (60*2)
+	public static int entityRespawnRate = 5; 						//Default between 90 and 200 seconds intervals.
+	public static int entityRespawnTicks = entityRespawnRate * 20; 	//Time it takes for an block to regenerate.
+	public static HashMap<Integer, Integer> respawnTimeLeft = new HashMap<Integer, Integer>(); //ID > TimeLeft
+
+	//Entity attributes
 	static HashMap<UUID, Integer> mobId = new HashMap<UUID, Integer>();
 	static HashMap<UUID, Location> mobSpawnLocation = new HashMap<UUID, Location>();
 	static HashMap<UUID, String> mobName = new HashMap<UUID, String>();
@@ -43,7 +54,7 @@ public class MonsterManager {
 	static HashMap<UUID, Integer> mobMaxHealthPoints = new HashMap<UUID, Integer>();
 	static HashMap<UUID, Integer> respawnTime = new HashMap<UUID, Integer>();
 	static HashMap<UUID, String> lootTable = new HashMap<UUID, String>();
-	
+
 	//Configuration file that holds monster information.
 	static File configFile;
 	static FileConfiguration monsterIdConfig;
@@ -57,20 +68,23 @@ public class MonsterManager {
 	@SuppressWarnings("static-access")
 	public void setup(MPRPG plugin) {
 		this.plugin = plugin;
-		
+
 		//If monster configuration does not exist, create it. Otherwise lets load the config.
 		if(!(new File(mobTypeIdPath)).exists()){
 			createMonsterConfig();
-        } else {
-        	//lets load the configuration file.
-        	configFile = new File(mobTypeIdPath);
-            monsterIdConfig =  YamlConfiguration.loadConfiguration(configFile);
+		} else {
+			//lets load the configuration file.
+			configFile = new File(mobTypeIdPath);
+			monsterIdConfig =  YamlConfiguration.loadConfiguration(configFile);
 
-            //setup and spawn monsters
-            spawnAllMobs();
-        }
+			//setup and spawn monsters
+			spawnAllMobs();
+			
+			//Start mob respawn thread.
+			respawnMob();
+		}
 	}	
-	
+
 	/**
 	 * This will spawn an entitie in the World.
 	 * 
@@ -86,20 +100,20 @@ public class MonsterManager {
 	 * @param loot The loot table of items that the entite should drop on death.
 	 */
 	public static void spawnEntitie(World world, Location loc, EntityType entity, String color, String name, int lvl, int hp, int runRadius, int id, String loot) {	
-		
+
 		String colorName = (stringToColor(color) + name);
 		String finalName = colorName.replaceAll("_", " ");
 		String mobNameBase = ChatColor.GRAY + "[" + ChatColor.RED + lvl + ChatColor.GRAY +"] " + finalName;
-		
+
 		//Set evenStatus for mobs spawning to false to allow them.
 		setEventStatus(false);
-		
+
 		//Spawn the mob
 		spawnerUtil.spawnEntity(world.getName(), loc, entity, mobNameBase);
-		
+
 		//Set evenStatus for mobs spawning to true to cancel them.
 		setEventStatus(true);
-		
+
 		//Setup various mob attributes.
 		UUID entityId = spawnerUtil.getEntityID();
 		mobId.put(entityId, id);
@@ -109,87 +123,103 @@ public class MonsterManager {
 		mobMaxHealthPoints.put(entityId, hp);
 		lootTable.put(entityId, loot);
 	}
-	
+
 	/**
 	 * Respawns all the mobs in the world after a Server Reload.
 	 */
 	private static void spawnAllMobs() {
-		//Get id
-		taskID = Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
-			@Override
-			public void run() {
-				
-				///////////////////
-				/// REMOVE MOBS ///
-				///////////////////
-				
-				//Loop through entity list and remove them.
-				//This is mainly for clearing mobs on server reload.
-				for (Entity mob : Bukkit.getWorld("world").getEntities()) {
-					if (!(mob.getType().equals(EntityType.ENDER_DRAGON)) && 
-							!(mob.getType().equals(EntityType.PLAYER)) && 
-							!(mob.getType().equals(EntityType.ITEM_FRAME))) {
-						mob.remove();
-					}
-				}
-				
-				////////////////////
-				/// RESPAWN MOBS ///
-				////////////////////
-		        
-		        monsterIdConfig.get("settings");
-		        int totalMonsters = monsterIdConfig.getInt("settings.countTotal");
-				
-		        for (int i = 1; i <= totalMonsters; i++) {
-		        	setupEntitie(i);
-		        }
+		///////////////////
+		/// REMOVE MOBS ///
+		///////////////////
 
-			} //END Run method.
-		}, 20 * 10); //(20 ticks = 1 second)
+		//Loop through entity list and remove them.
+		//This is mainly for clearing mobs on server reload.
+		for (Entity mob : Bukkit.getWorld("world").getEntities()) {
+			if (!(mob.getType().equals(EntityType.ENDER_DRAGON)) && 
+					!(mob.getType().equals(EntityType.PLAYER)) && 
+					!(mob.getType().equals(EntityType.ITEM_FRAME))) {
+				mob.remove();
+			}
+		}
+
+		//////////////////
+		/// SPAWN MOBS ///
+		//////////////////
+
+		monsterIdConfig.get("settings");
+		int totalMonsters = monsterIdConfig.getInt("settings.countTotal");
+
+		for (int i = 1; i <= totalMonsters; i++) {
+			setupEntitie(i);
+		}
 	}
-	
+
 	/**
 	 * Spawns a an entite in the world.
 	 * 
 	 * @param id 
 	 */
 	public static void setupEntitie(int id) {
-        //Get id config values.
 
-        String mobType = monsterIdConfig.getString(Integer.toString(id) + ".mobType");
-        int x = monsterIdConfig.getInt(Integer.toString(id) + ".X");
-        int y = monsterIdConfig.getInt(Integer.toString(id) + ".Y");
-        int z = monsterIdConfig.getInt(Integer.toString(id) + ".Z");
-        
-        //Get mobType config values.
+		//Get id config values.
+		String mobType = monsterIdConfig.getString(Integer.toString(id) + ".mobType");
+		int x = monsterIdConfig.getInt(Integer.toString(id) + ".X");
+		int y = monsterIdConfig.getInt(Integer.toString(id) + ".Y");
+		int z = monsterIdConfig.getInt(Integer.toString(id) + ".Z");
 
-        String stringColor = MonsterCreatorManager.getMonsterConfig().getString(mobType + ".mobNameColor");
-        EntityType entity = EntityType.fromName(MonsterCreatorManager.getMonsterConfig().getString(mobType + ".entity"));
-        int lvl = MonsterCreatorManager.getMonsterConfig().getInt(mobType + ".mobLVL");
-        int hp = MonsterCreatorManager.getMonsterConfig().getInt(mobType + ".mobHP");
-        int runRadius = MonsterCreatorManager.getMonsterConfig().getInt(mobType + ".mobRadius");
-        String loot = MonsterCreatorManager.getMonsterConfig().getString(mobType + ".lootTable");
-        
-        //misc vars
-        Location loc = new Location(world, x + .5, y + .5, z + .5);
-        
+		//Get mobType config values.
+		String stringColor = MonsterCreatorManager.getMonsterConfig().getString(mobType + ".mobNameColor");
+		EntityType entity = EntityType.fromName(MonsterCreatorManager.getMonsterConfig().getString(mobType + ".entity"));
+		int lvl = MonsterCreatorManager.getMonsterConfig().getInt(mobType + ".mobLVL");
+		int hp = MonsterCreatorManager.getMonsterConfig().getInt(mobType + ".mobHP");
+		int runRadius = MonsterCreatorManager.getMonsterConfig().getInt(mobType + ".mobRadius");
+		String loot = MonsterCreatorManager.getMonsterConfig().getString(mobType + ".lootTable");
+
+		//misc vars
+		Location loc = new Location(world, x + .5, y + .5, z + .5);
+
 		//Spawn the mob
 		spawnEntitie(world, loc, entity, stringColor, mobType, lvl, hp, runRadius, id, loot);
 	}
-	
+
 	/**
-	 * TODO: This will respawn the Entitie after a given amount of time.
+	 * This will respawn the Entitie after a given amount of time.
+	 * <p>
+	 * This thread is started when this class is loaded at onEnable!
 	 * 
-	 * @param id
+	 * @param id The ID number of the mob to respawn contained in the monsterId.yml file.
 	 */
-	public static void respawnMob (int id) {
-        //Get id config values.
-        String mobType = monsterIdConfig.getString(Integer.toString(id) + ".mobType");
-        
-        //Get mobType config values.
-        int respawnTime = MonsterCreatorManager.getMonsterConfig().getInt(mobType + ".respawnTime");
+	public static void respawnMob () {
+		//Respawn mob
+		taskID02 = Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, new Runnable() {
+			@Override
+			public void run() {
+				//Lets loop through the hashMaps to find any entities that need to be spawned.
+
+				if (respawnTimeLeft.isEmpty() == false) {
+					Iterator<Entry<Integer, Integer>> it = respawnTimeLeft.entrySet().iterator();
+				    while (it.hasNext()) {
+				    	Entry<Integer, Integer> pair = it.next();
+						int spawnID = pair.getKey();
+						int timeLeft = pair.getValue();
+
+						if(timeLeft <= 0) {
+
+							//Spawn entity
+							setupEntitie(spawnID);
+
+							//Remove hashmap and update vars.
+							it.remove();
+
+						} else {
+							respawnTimeLeft.put(spawnID, timeLeft - entityRespawnRate);
+						}
+					}
+				}
+			}
+		}, 0L, entityRespawnTicks);
 	}
-	
+
 	/**
 	 * This will remove HP from the entities Health HashMap.
 	 * 
@@ -203,7 +233,7 @@ public class MonsterManager {
 		//The entitie took damage, show HP bar instead of Entitie name.
 		renameEntitie(id);
 	}
-	
+
 	/**
 	 * This will give the entitie a custom name.
 	 * 
@@ -218,7 +248,7 @@ public class MonsterManager {
 		entity.setCustomName(name);
 		entity.setCustomNameVisible(true);
 	}
-	
+
 	/**
 	 * This will put the entities health as their name.
 	 * 
@@ -240,7 +270,7 @@ public class MonsterManager {
 			}
 		}
 	}
-	
+
 	/**
 	 * This removes the dead Entitie from all the HashMap's that are tracking it.
 	 * 
@@ -257,10 +287,10 @@ public class MonsterManager {
 			int configId = mobId.get(id);
 			String lootTableName = lootTable.get(id);
 			Location loc = new Location(world, x, y+1, z);
-	
+
 			//Drop Item(s)
 			LootTableMobManager.toggleLootTableDrop(lootTableName, loc);
-			
+
 			//Remove mob
 			mobSpawnLocation.remove(id);
 			mobId.remove(id);
@@ -269,20 +299,21 @@ public class MonsterManager {
 			mobHealthPoints.remove(id);
 			mobMaxHealthPoints.remove(id);
 			
-			//Respawn mob
-			setupEntitie(configId);
+			//Setup mob for respawning.
+			//Add spawnID to the Hashmap.
+			respawnTimeLeft.put(configId, entityRespawnTime);
 		}
 	}
-	
+
 	/**
 	 * Converts a String color to a ChatColor enumerator.
 	 * @param colorName A String that represents a ChatColor.
 	 * @return A ChatColor enumerator.
 	 */
 	public static ChatColor stringToColor(String colorName) {
-		
+
 		ChatColor color = null;
-		
+
 		if (colorName.equalsIgnoreCase("Aqua")) {
 			color = ChatColor.AQUA;
 		} else if (colorName.equalsIgnoreCase("Black")) {
@@ -318,27 +349,27 @@ public class MonsterManager {
 		} else {
 			color = ChatColor.GRAY;
 		}
-		
+
 		return color;
 	}
-	
+
 	/**
 	 * This creates the configuration file that will hold data to save mob attributes.
 	 */
-    private static void createMonsterConfig() {
-    	
-        configFile = new File(mobTypeIdPath);
-        monsterIdConfig =  YamlConfiguration.loadConfiguration(configFile);
-        
-        monsterIdConfig.set("settings", "settings");
-        monsterIdConfig.set("settings.countTotal", 0);
-        
-        try {
-        	monsterIdConfig.save(configFile);	//Save the file.
-        } catch (IOException e) {
-            e.printStackTrace();
-        } 
-    }
+	private static void createMonsterConfig() {
+
+		configFile = new File(mobTypeIdPath);
+		monsterIdConfig =  YamlConfiguration.loadConfiguration(configFile);
+
+		monsterIdConfig.set("settings", "settings");
+		monsterIdConfig.set("settings.countTotal", 0);
+
+		try {
+			monsterIdConfig.save(configFile);	//Save the file.
+		} catch (IOException e) {
+			e.printStackTrace();
+		} 
+	}
 
 	public static FileConfiguration getMonsterIdConfig() {
 		return monsterIdConfig;
@@ -367,7 +398,7 @@ public class MonsterManager {
 	public static void setMobMaxHealthPoints(UUID id, int mobMaxHealthPoints) {
 		MonsterManager.mobMaxHealthPoints.put(id, mobMaxHealthPoints);
 	}
-	
+
 	public static boolean getEventStatus() {
 		return cancelCreatureSpawn;
 	}
@@ -375,7 +406,7 @@ public class MonsterManager {
 	public static void setEventStatus(boolean status) {
 		cancelCreatureSpawn = status;
 	}
-	
+
 	public static String getMobTypeIdPath() {
 		return mobTypeIdPath;
 	}

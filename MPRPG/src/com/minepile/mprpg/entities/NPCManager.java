@@ -47,10 +47,10 @@ public class NPCManager {
 	public void setup(MPRPG plugin) {
 		this.plugin = plugin;		
 		//Spawns an NPC
-		spawnNPC();
+		//spawnNPC();
 		
 		//TP NPC
-		teleportNPC();
+		//teleportNPC();
 	}
 	
 	/**

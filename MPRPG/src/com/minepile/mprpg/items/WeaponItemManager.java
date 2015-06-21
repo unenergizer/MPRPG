@@ -15,6 +15,8 @@ import org.bukkit.inventory.meta.ItemMeta;
 import com.minepile.mprpg.MPRPG;
 import com.minepile.mprpg.items.ItemQualityManager.ItemQuality;
 import com.minepile.mprpg.items.ItemTierManager.ItemTier;
+import com.minepile.mprpg.util.StringAlignUtil;
+import com.minepile.mprpg.util.StringAlignUtil.Alignment;
 
 public class WeaponItemManager {
 	
@@ -55,7 +57,10 @@ public class WeaponItemManager {
 	 * @param itemName the item name specified inside the configuration file for this item type
 	 */
 	public static ItemStack makeItem(String itemName) {
-
+		
+		//Util to make sure line length isn't really long for descriptions. 
+		StringAlignUtil util = new StringAlignUtil(25, Alignment.CENTER);
+		
 		/////////////////////////////
 		/// GRAB ITEM FROM CONFIG ///
 		/////////////////////////////
@@ -128,7 +133,7 @@ public class WeaponItemManager {
 		lore.add(" ");													//create blank space
 
 		//Set the items description
-		lore.add(ChatColor.GRAY + "" + ChatColor.ITALIC + itemDescription);
+		lore.add(util.format(ChatColor.GRAY + "" + ChatColor.ITALIC + itemDescription));
 
 
 		//Set the item lore
