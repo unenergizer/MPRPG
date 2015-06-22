@@ -15,6 +15,7 @@ import com.minepile.mprpg.chat.ChatManager;
 import com.minepile.mprpg.chat.DiceRollManager;
 import com.minepile.mprpg.chat.LagManager;
 import com.minepile.mprpg.chat.MessageManager;
+import com.minepile.mprpg.clans.ClanManager;
 import com.minepile.mprpg.commands.CommandManager;
 import com.minepile.mprpg.entities.MonsterCreatorManager;
 import com.minepile.mprpg.entities.MonsterManager;
@@ -114,6 +115,9 @@ public class MPRPG extends JavaPlugin {
         MonsterCreatorManager.getInstance().setup(this);
         MonsterManager.getInstance().setup(this);
         NPCManager.getInstance().setup(this);
+        
+        //setup guild manager instances
+        ClanManager.getInstance().setup(this);
         
         //setup inventory manager instances
         BankChestManager.getInstance().setup(this);
