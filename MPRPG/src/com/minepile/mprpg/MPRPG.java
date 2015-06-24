@@ -15,7 +15,7 @@ import com.minepile.mprpg.chat.ChatManager;
 import com.minepile.mprpg.chat.DiceRollManager;
 import com.minepile.mprpg.chat.LagManager;
 import com.minepile.mprpg.chat.MessageManager;
-import com.minepile.mprpg.clans.ClanManager;
+import com.minepile.mprpg.clans.GangManager;
 import com.minepile.mprpg.commands.CommandManager;
 import com.minepile.mprpg.entities.MonsterCreatorManager;
 import com.minepile.mprpg.entities.MonsterManager;
@@ -108,6 +108,7 @@ public class MPRPG extends JavaPlugin {
         //setup chat manager instances
         ChatManager.getInstance().setup(this);
         DiceRollManager.getInstance().setup(this);
+        GangManager.getInstance().setup(this);
         LagManager.getInstance().setup(this);
         MessageManager.getInstance().setup(this);
         
@@ -116,8 +117,8 @@ public class MPRPG extends JavaPlugin {
         MonsterManager.getInstance().setup(this);
         NPCManager.getInstance().setup(this);
         
-        //setup guild manager instances
-        ClanManager.getInstance().setup(this);
+        //setup gang manager instances
+        GangManager.getInstance().setup(this);
         
         //setup inventory manager instances
         BankChestManager.getInstance().setup(this);
@@ -216,6 +217,9 @@ public class MPRPG extends JavaPlugin {
      
         //sends operator to the spawn location.
         getCommand("spawn").setExecutor(new CommandManager(this));
+     
+        //various commands to manage a gang.
+        getCommand("gang").setExecutor(new CommandManager(this));
         
         ///////////////////
         /// Startup End ///

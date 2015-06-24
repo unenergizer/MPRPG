@@ -15,7 +15,7 @@ commands:
    tell:
       description: Used to send other players private messages.
    r:
-      description: Used to send other players private messages.
+      description: Used to reply to private messages.
    lag:
       description: Get the server TPS and lag percent.
    armorstats:
@@ -27,5 +27,7 @@ commands:
    mm:
       description: Used to edit monsters in the world.
    gethp:
+      description: Displays your current HP as Integer.
+   gang:
       description: Displays your current HP in number form.
   

@@ -15,6 +15,7 @@ import com.minepile.mprpg.chat.ChatManager;
 import com.minepile.mprpg.chat.DiceRollManager;
 import com.minepile.mprpg.chat.LagManager;
 import com.minepile.mprpg.chat.MessageManager;
+import com.minepile.mprpg.clans.GangManager;
 import com.minepile.mprpg.entities.MonsterCreatorManager;
 import com.minepile.mprpg.items.LoreManager;
 import com.minepile.mprpg.player.PlayerManager;
@@ -35,7 +36,7 @@ public class CommandManager implements CommandExecutor{
 
 			Player player = (Player) sender;
 			String playerName = player.getName();
-			
+
 			//TODO: Remove debug messages.
 			//player.sendMessage("DEBUG: args.length = " + Integer.toString(args.length));
 			//player.sendMessage("DEBUG: args = " + Arrays.toString(args));
@@ -457,7 +458,7 @@ public class CommandManager implements CommandExecutor{
 					} else if (args.length >= 1 && args[0].toString().equalsIgnoreCase("manager")) {
 
 						if (args.length == 9 && args[1].toString().equalsIgnoreCase("add")) {
-							
+
 							player.sendMessage(ChatColor.RED + "  " + ChatColor.BOLD + "> " +
 									ChatColor.GREEN + ChatColor.BOLD + "Please specify what you want to do.");
 							player.sendMessage(" ");
@@ -477,7 +478,7 @@ public class CommandManager implements CommandExecutor{
 							player.sendMessage(ChatColor.GRAY + "  " + ChatColor.BOLD + 
 									"NOTE" + ChatColor.DARK_GRAY + ChatColor.BOLD + ": " + 
 									ChatColor.WHITE + "List of mobTypes" + ChatColor.DARK_GRAY + "." + ChatColor.LIGHT_PURPLE + " /mm mobTypes");
-							
+
 							String name = args[2].toString();
 							String nameColor = args[3].toString();
 							EntityType entity = EntityType.fromName(args[4].toString());
@@ -494,10 +495,10 @@ public class CommandManager implements CommandExecutor{
 							player.sendMessage("This will let you delete a mobType that was created.");
 						} else if (args.length == 3 && args[1].toString().equalsIgnoreCase("set")) {
 							player.sendMessage("This will set a mob on the ground in your location.");
-							
+
 							String mobType =  args[2].toString();
 							Location loc = player.getLocation();
-							
+
 							MonsterCreatorManager.setEntitie(player, mobType, loc);
 						} else {
 							player.sendMessage("Something went wrong. Please try again.");
@@ -538,8 +539,84 @@ public class CommandManager implements CommandExecutor{
 				}
 			}
 
-		} else { //The command sent was not by a player.
-			sender.sendMessage("Please do not use the console to run this command.");
+			/////////////////////////////////////////////////////////////////////////////////
+			// GANG COMMANDS : These commands do various actions with player clans //////////
+			/////////////////////////////////////////////////////////////////////////////////
+
+			//Roll command. Used to get a random number.
+			if (cmd.getLabel().equalsIgnoreCase("gang")) {
+
+				//Show mm header text and borders.
+				player.sendMessage(" ");
+				player.sendMessage(ChatColor.DARK_GRAY + "" + ChatColor.BOLD + "----------------" +
+						ChatColor.DARK_GRAY + "<[" +
+						ChatColor.GOLD + " Gang Manager " + ChatColor.DARK_GRAY + "]>" +
+						ChatColor.BOLD + "---------------");
+				player.sendMessage(" ");
+
+				if (GangManager.getGangOwner(player) == true) {
+
+					String gangName = GangManager.getPlayerGang(player);
+
+					if (args.length == 2 && args[0].toString().startsWith("addMember")) {
+						GangManager.addGang(player, gangName);
+					} else if (args.length == 2 && args[0].toString().startsWith("deleteMember")) {
+						GangManager.removePlayer(player, gangName, args[1].toString());
+					} else if (args.length == 2 && args[0].toString().startsWith("promoteMember")) {
+						GangManager.promotePlayer(player, gangName, args[1].toString());
+					} else if (args.length == 2 && args[0].toString().startsWith("demoteMember")) {
+						GangManager.demotePlayer(player, gangName, args[1].toString());
+					} else if (args.length == 2 && args[0].toString().startsWith("setMotd")) {
+						GangManager.setMotd(player, gangName, "< WORK IN PROGRESS >");
+					} else if (args.length == 2 && args[0].toString().startsWith("setTag")) {
+						GangManager.setGangTag(player, gangName, args[1].toString());
+					} else if (args.length == 2 && args[0].toString().startsWith("disband")) {
+						GangManager.disbandGang(player, gangName);
+					} else {
+						//Default info text when "/gang" command is run.
+						player.sendMessage(ChatColor.RED + "  " + ChatColor.BOLD + "! " +
+								ChatColor.GREEN + ChatColor.BOLD + "Please specify what you want to do.");
+						player.sendMessage(" ");
+						player.sendMessage(ChatColor.BLUE + "  " + ChatColor.BOLD + 
+								"Commands" + ChatColor.DARK_GRAY + ChatColor.BOLD + ": ");
+						player.sendMessage("     " + ChatColor.GREEN + "/gang addMember" + ChatColor.WHITE + " <playerName>");
+						player.sendMessage("          " + ChatColor.GRAY + "This will invite a new player to the gang.");
+						player.sendMessage("     " + ChatColor.RED + "/gang deleteMember" + ChatColor.WHITE + " <playerName>");
+						player.sendMessage("          " + ChatColor.GRAY + "This will remove a member of the gang.");
+						player.sendMessage("     " + ChatColor.GREEN + "/gang promoteMember" + ChatColor.WHITE + " <playerName>");
+						player.sendMessage("          " + ChatColor.GRAY + "This will promote a member of the gang.");
+						player.sendMessage("     " + ChatColor.RED + "/gang demoteMember" + ChatColor.WHITE + " <playerName>");
+						player.sendMessage("          " + ChatColor.GRAY + "This will demote a member of the gang.");
+						player.sendMessage("     " + ChatColor.LIGHT_PURPLE + "/gang setMotd" + ChatColor.WHITE + " <Message of the day>");
+						player.sendMessage("          " + ChatColor.GRAY + "This will set the gang's message of the day.");
+						player.sendMessage("     " + ChatColor.LIGHT_PURPLE + "/gang setTag" + ChatColor.WHITE + " <TAG>");
+						player.sendMessage("          " + ChatColor.GRAY + "This will let you set your gang's Tag prefix.");
+						player.sendMessage("     " + ChatColor.RED + "/gang disband");
+						player.sendMessage("          " + ChatColor.GRAY + "This will close your gang and remove the members.");
+					}
+				} else {
+					if (args.length == 2 && args[0].toString().startsWith("new")) {
+						String clanName = args[1].toString();
+						GangManager.addGang(player, clanName);
+					} else {
+						//Default info text when "/gang" command is run.
+						player.sendMessage(ChatColor.RED + "  " + ChatColor.BOLD + "! " +
+								ChatColor.GREEN + ChatColor.BOLD + "Please specify what you want to do.");
+						player.sendMessage(" ");
+						player.sendMessage(ChatColor.BLUE + "  " + ChatColor.BOLD + 
+								"Commands" + ChatColor.DARK_GRAY + ChatColor.BOLD + ": ");
+						player.sendMessage("     " + ChatColor.GREEN + "/gang new" + ChatColor.WHITE + " <gangName>");
+						player.sendMessage("          " + ChatColor.GRAY + "This will create a new gang.");
+					}
+				}
+
+				//Show footer message.
+				player.sendMessage(ChatColor.DARK_GRAY + "" + ChatColor.BOLD +"---------------------------------------------");
+
+			} else { //The command sent was not by a player.
+				sender.sendMessage("Please do not use the console to run this command.");
+			}
+			return false;
 		}
 		return false;
 	}

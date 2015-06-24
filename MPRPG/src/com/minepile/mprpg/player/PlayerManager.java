@@ -302,6 +302,9 @@ public class PlayerManager {
         playerConfig.set("player.playerEXP", 0);
         playerConfig.set("player.logoutHP", baseHealthPoints);
         
+        playerConfig.set("gang.owner", false);
+        playerConfig.set("gang.name", null);
+        
         playerConfig.set("permissions.admin", 0);
         playerConfig.set("permissions.dev", 0);
         playerConfig.set("permissions.mod", 0);
@@ -337,9 +340,6 @@ public class PlayerManager {
         playerConfig.set("economy.portalCash", 0);
         playerConfig.set("economy.bankRows", 1);
         playerConfig.set("economy.shopRows", 1);
-
-        playerConfig.set("clan.id", 0);
-        playerConfig.set("clan.tag", null);
 
         try {
             playerConfig.save(configFile);
