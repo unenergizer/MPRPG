@@ -16,7 +16,7 @@ public class Blacksmithing {
 	static Blacksmithing blacksmithingManagerInstance = new Blacksmithing();
 	
 	//Holograms
-	static Hologram bankHologram01;
+	private static Hologram bankHologram01;
 	
 	//Create instance
 	public static Blacksmithing getInstance() {
@@ -29,12 +29,19 @@ public class Blacksmithing {
 		this.plugin = plugin;
 		
 		setupAnvilHolograms();
+	}
+	
+	/**
+	 * This will disable this class.
+	 */
+	public static void disable() {
+		removeHolograms();
 	}	
 	
 	/**
 	 * This will create a hologram that will display over the Blacksmith Anvil.
 	 */
-    public static void setupAnvilHolograms() {
+    private static void setupAnvilHolograms() {
     	Location bank01 = new Location(Bukkit.getWorld("world"), 28.5, 80.5, 16.5);
     	
     	bankHologram01 = HologramsAPI.createHologram(plugin, bank01);
@@ -44,7 +51,7 @@ public class Blacksmithing {
     /**
      * This will delete the hologram on server reload or shut down.
      */
-    public static void removeHolograms() {
+    private static void removeHolograms() {
     	bankHologram01.delete();
     }
 }

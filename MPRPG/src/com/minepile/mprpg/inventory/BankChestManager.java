@@ -63,6 +63,13 @@ public class BankChestManager {
 		//Display bank holograms
 		setupBankHolograms();
 	}
+	
+	/**
+	 * This will disable this class.
+	 */
+	public static void disable() {
+		removeHolograms();
+	}
 
 	public static Inventory getBank(Player player) {
 		// TODO Auto-generated method stub
@@ -120,7 +127,7 @@ public class BankChestManager {
     	bankHologram02.appendTextLine(ChatColor.GREEN + "" + ChatColor.BOLD + "Player Stash");
     }
     
-    public static void removeBankHolograms() {
+    public static void removeHolograms() {
     	bankHologram01.delete();
     	bankHologram02.delete();
     }

@@ -16,7 +16,7 @@ public class Alchemy {
 	static Alchemy AlchemyManagerInstance = new Alchemy();
 	
 	//Holograms
-	static Hologram bankHologram01;
+	private static Hologram bankHologram01;
 	
 	//Create instance
 	public static Alchemy getInstance() {
@@ -29,12 +29,19 @@ public class Alchemy {
 		this.plugin = plugin;
 		
 		setupAlchemyHolograms();
-	}	
+	}
+	
+	/**
+	 * This will disable this class.
+	 */
+	public static void disable() {
+		removeHolograms();
+	}		
 	
 	/**
 	 * This will create a hologram that will display over the Alchemy stand.
 	 */
-    public static void setupAlchemyHolograms() {
+    private static void setupAlchemyHolograms() {
     	Location bank01 = new Location(Bukkit.getWorld("world"), 47.5, 81.5, -4.5);
     	
     	bankHologram01 = HologramsAPI.createHologram(plugin, bank01);
@@ -44,7 +51,7 @@ public class Alchemy {
     /**
      * This will delete the hologram on server reload or shut down.
      */
-    public static void removeHolograms() {
+    private static void removeHolograms() {
     	bankHologram01.delete();
     }
 }

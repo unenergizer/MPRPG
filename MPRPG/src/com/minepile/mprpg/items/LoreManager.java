@@ -38,7 +38,7 @@ public class LoreManager {
 	private static Pattern critDamageRegex = Pattern.compile("[+](\\d+)[ ](crit damage)");
 	private static Pattern lifestealRegex = Pattern.compile("[+](\\d+)[ ](life steal)");
 	private static Pattern armorRegex = Pattern.compile("[+](\\d+)[ ](armor)");
-	public static HashMap<String, Timestamp> staminaLog = new HashMap<String, Timestamp>();
+	private static HashMap<String, Timestamp> staminaLog = new HashMap<String, Timestamp>();
 	private static Random generator = new Random();
 
 	//Create instance
@@ -54,6 +54,13 @@ public class LoreManager {
 		for (Player players : Bukkit.getOnlinePlayers()) {
 			applyHpBonus(players, false);
 		}
+	}
+	
+	/**
+	 * This will disable this class and perform different tasks for server restart or shut down.
+	 */
+	public static void disable() {
+		staminaLog.clear();
 	}
 	
 	/**

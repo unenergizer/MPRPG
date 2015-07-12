@@ -29,6 +29,13 @@ public class PlayerMailManager {
 		this.plugin = plugin;
 		
 		setupMailHolograms();
+	}
+	
+	/**
+	 * This will disable this class.
+	 */
+	public static void disable() {
+		removeHolograms();
 	}	
 	
 	/**
@@ -44,7 +51,7 @@ public class PlayerMailManager {
     /**
      * This will delete the Hologram when server reloads or shuts down.
      */
-    public static void removeMailHolograms() {
+    public static void removeHolograms() {
     	bankHologram01.delete();
     }
 }

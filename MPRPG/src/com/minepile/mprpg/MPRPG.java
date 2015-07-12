@@ -15,11 +15,11 @@ import com.minepile.mprpg.chat.ChatManager;
 import com.minepile.mprpg.chat.DiceRollManager;
 import com.minepile.mprpg.chat.LagManager;
 import com.minepile.mprpg.chat.MessageManager;
-import com.minepile.mprpg.clans.GangManager;
 import com.minepile.mprpg.commands.CommandManager;
 import com.minepile.mprpg.entities.MonsterCreatorManager;
 import com.minepile.mprpg.entities.MonsterManager;
 import com.minepile.mprpg.entities.NPCManager;
+import com.minepile.mprpg.guild.GuildManager;
 import com.minepile.mprpg.inventory.BankChestManager;
 import com.minepile.mprpg.inventory.ShopChestManager;
 import com.minepile.mprpg.items.ArmorItemManager;
@@ -108,7 +108,7 @@ public class MPRPG extends JavaPlugin {
         //setup chat manager instances
         ChatManager.getInstance().setup(this);
         DiceRollManager.getInstance().setup(this);
-        GangManager.getInstance().setup(this);
+        GuildManager.getInstance().setup(this);
         LagManager.getInstance().setup(this);
         MessageManager.getInstance().setup(this);
         
@@ -118,7 +118,7 @@ public class MPRPG extends JavaPlugin {
         NPCManager.getInstance().setup(this);
         
         //setup gang manager instances
-        GangManager.getInstance().setup(this);
+        GuildManager.getInstance().setup(this);
         
         //setup inventory manager instances
         BankChestManager.getInstance().setup(this);
@@ -235,38 +235,29 @@ public class MPRPG extends JavaPlugin {
 		Bukkit.getConsoleSender().sendMessage(ChatColor.AQUA + "[MPRPG] Shutting down MinePile:RPG!");
 		
 		//Reset all plants and blocks that have been picked or mined.
-		BlockRegenerationManager.resetAllBlocks();
+		BlockRegenerationManager.disable();
 		
 		//Clear LoreManager Log
-		LoreManager.staminaLog.clear();
+		LoreManager.disable();
 		
 		//Remove any existing Holograms
-		BankChestManager.removeBankHolograms();
+		BankChestManager.disable();
 		
 		//Remove mail holograms
-		PlayerMailManager.removeMailHolograms();
+		PlayerMailManager.disable();
+		
+		//Remove Alchemy holograms
+		Alchemy.disable();
 		
 		//Remove Blacksmiting holograms
-		Alchemy.removeHolograms();
-		
-		//Remove Blacksmiting holograms
-		Blacksmithing.removeHolograms();
+		Blacksmithing.disable();
 		
 		//Save players last health
-		for (Player players : Bukkit.getOnlinePlayers()) {
-			int logoutHP = PlayerManager.getHealthPoints(players.getName());
-			PlayerManager.setPlayerConfigInt(players, "player.logoutHP", logoutHP);
-		}
+		PlayerManager.disable();
         
 		//Loop through entity list and remove them.
 		//This is mainly for clearing mobs on server reload.
-		for (Entity mob : Bukkit.getWorld("world").getEntities()) {
-			if (!(mob.getType().equals(EntityType.ENDER_DRAGON)) && 
-					!(mob.getType().equals(EntityType.PLAYER)) && 
-					!(mob.getType().equals(EntityType.ITEM_FRAME))) {
-				mob.remove();
-			}
-		}
+		MonsterManager.disable();
 		
 		////////////////////
         /// Shutdown End ///

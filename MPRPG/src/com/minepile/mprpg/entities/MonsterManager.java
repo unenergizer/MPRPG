@@ -83,6 +83,13 @@ public class MonsterManager {
 			//Start mob respawn thread.
 			respawnMob();
 		}
+	}
+	
+	/**
+	 * This will disable this class.
+	 */
+	public static void disable() {
+		removeAllMobs();
 	}	
 
 	/**
@@ -151,6 +158,19 @@ public class MonsterManager {
 
 		for (int i = 1; i <= totalMonsters; i++) {
 			setupEntitie(i);
+		}
+	}
+	
+	/**
+	 * Removes all the mobs in the world.
+	 */
+	private static void removeAllMobs() {
+		for (Entity mob : Bukkit.getWorld("world").getEntities()) {
+			if (!(mob.getType().equals(EntityType.ENDER_DRAGON)) && 
+					!(mob.getType().equals(EntityType.PLAYER)) && 
+					!(mob.getType().equals(EntityType.ITEM_FRAME))) {
+				mob.remove();
+			}
 		}
 	}
 

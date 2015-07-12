@@ -81,6 +81,16 @@ public class PlayerManager {
 	}
 	
 	/**
+	 * This will disable this class.
+	 */
+	public static void disable() {
+		for (Player players : Bukkit.getOnlinePlayers()) {
+			int logoutHP = PlayerManager.getHealthPoints(players.getName());
+			setPlayerConfigInt(players, "player.logoutHP", logoutHP);
+		}
+	}
+	
+	/**
 	 * This will teleport the specified player to the main player Spawn location.
 	 * 
 	 * @param player The player that will be teleported.
