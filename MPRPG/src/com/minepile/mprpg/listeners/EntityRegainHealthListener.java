@@ -1,5 +1,6 @@
 package com.minepile.mprpg.listeners;
 
+import io.puharesource.mc.titlemanager.api.ActionbarTitleObject;
 import net.md_5.bungee.api.ChatColor;
 
 import org.bukkit.entity.LivingEntity;
@@ -9,6 +10,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityRegainHealthEvent;
 
 import com.minepile.mprpg.MPRPG;
+import com.minepile.mprpg.chat.MessageManager;
 import com.minepile.mprpg.items.LoreManager;
 import com.minepile.mprpg.player.PlayerHealthTagManager;
 import com.minepile.mprpg.player.PlayerManager;
@@ -57,14 +59,23 @@ public class EntityRegainHealthListener implements Listener{
 					player.setHealth(hpBarPercent);
 				}
 				
+				/*
 				player.sendMessage(ChatColor.GREEN + "         +" + 
 						ChatColor.GRAY + healAmount + ChatColor.BOLD + " HP: " +
 						ChatColor.GRAY + ChatColor.BOLD + hpPercent + "%" +
 						ChatColor.GRAY + " [" + ChatColor.GREEN + newHP +
 						ChatColor.GRAY + " / " + ChatColor.GREEN + maxHP +
 						ChatColor.GRAY + "]");
-				
+				*/
 				//Update the players health tag.
+				
+				new ActionbarTitleObject(ChatColor.GREEN + "+" + 
+						ChatColor.GRAY + healAmount + ChatColor.BOLD + " HP: " +
+						MessageManager.percentBar(hpPercent) + 
+						ChatColor.GRAY + " [" + ChatColor.GREEN + newHP +
+						ChatColor.GRAY + " / " + ChatColor.GREEN + maxHP +
+						ChatColor.GRAY + "]").send(player);
+				
 				PlayerHealthTagManager.updateHealthTag(player);
 			}
 		}

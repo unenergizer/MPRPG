@@ -363,8 +363,7 @@ public class Mining {
 				new ActionbarTitleObject(MessageManager.showEXPLevel(expGain, totalEXP, expGoal)).send(player);
 				
 				//Send level up message.
-				player.sendMessage(MessageManager.selectMessagePrefix("debug") +
-						ChatColor.GREEN + "Your pick is now level " + ChatColor.GOLD + newPickLVL + ChatColor.GREEN + ".");
+				player.sendMessage(ChatColor.GREEN + "Your pick is now level " + ChatColor.GOLD + newPickLVL + ChatColor.GREEN + ".");
 				
 				//Play a level up sound.
 				player.playSound(player.getLocation(), Sound.FIREWORK_TWINKLE2, 1F, 1F);

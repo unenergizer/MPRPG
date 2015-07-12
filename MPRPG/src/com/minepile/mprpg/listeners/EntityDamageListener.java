@@ -1,9 +1,11 @@
 package com.minepile.mprpg.listeners;
 
+import io.puharesource.mc.titlemanager.api.ActionbarTitleObject;
+import io.puharesource.mc.titlemanager.api.TitleObject;
+
 import java.util.UUID;
 
-import net.md_5.bungee.api.ChatColor;
-
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
@@ -14,6 +16,7 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.inventory.ItemStack;
 
 import com.minepile.mprpg.MPRPG;
+import com.minepile.mprpg.chat.MessageManager;
 import com.minepile.mprpg.entities.MonsterManager;
 import com.minepile.mprpg.player.PlayerHealthTagManager;
 import com.minepile.mprpg.player.PlayerManager;
@@ -83,6 +86,8 @@ public class EntityDamageListener implements Listener{
 					event.setCancelled(true);
 					//Kill the player
 					player.setHealth(0);
+					
+					new TitleObject(ChatColor.RED + "You have died!", "").send(player);
 				}
 
 				//Update the players health tag
@@ -131,11 +136,19 @@ public class EntityDamageListener implements Listener{
 		String hpPrc = Integer.toString(hpPercent);
 		String hp = Integer.toString(newHP);
 		String maxHP = Integer.toString(playerMaxHealth);
+		/*
 		player.sendMessage(ChatColor.RED + "         -" + 
 				ChatColor.GRAY + dmg + ChatColor.BOLD + " HP: " +
 				ChatColor.GRAY + ChatColor.BOLD + hpPrc + "%" +
 				ChatColor.GRAY + " [" + ChatColor.RED + hp +
 				ChatColor.GRAY + " / " + ChatColor.GREEN + maxHP +
 				ChatColor.GRAY + "]");
+		*/
+		new ActionbarTitleObject(ChatColor.RED + "-" + 
+				ChatColor.GRAY + dmg + ChatColor.BOLD + " HP: " +
+				MessageManager.percentBar(hpPercent) + 
+				ChatColor.GRAY + " [" + ChatColor.RED + hp +
+				ChatColor.GRAY + " / " + ChatColor.GREEN + maxHP +
+				ChatColor.GRAY + "]").send(player);
 	}
 }

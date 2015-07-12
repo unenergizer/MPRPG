@@ -83,7 +83,28 @@ public class MessageManager {
 		int expPercent = ((100 * currentExp) / expGoal);
 	
 		return ChatColor.GRAY + "" + ChatColor.BOLD + 
-				"        EXP: " + 
+				"EXP: " + 
+				percentBar(expPercent) + 
+				ChatColor.GRAY + ChatColor.BOLD + " " + expPercent + "%" + 
+				ChatColor.RESET + ChatColor.GRAY + " [" + 
+				ChatColor.BLUE + currentExp + " / " + expGoal +
+				ChatColor.RESET + ChatColor.GRAY + "] "
+				+ ChatColor.GREEN + "+" + ChatColor.GRAY+ exp + " EXP";
+	}
+	
+	/**
+	 * EXP level formatting for chat.
+	 * 
+	 * @param exp The amount of experience added.
+	 * @param currentExp The experience amount before new total.
+	 * @param expGoal The experience needed to level.
+	 * @return Fancy String displaying colored experience level.
+	 */
+	public static String showHPBar(int exp, int currentExp, int expGoal){
+		int expPercent = ((100 * currentExp) / expGoal);
+	
+		return ChatColor.GRAY + "" + ChatColor.BOLD + 
+				"EXP: " + 
 				percentBar(expPercent) + 
 				ChatColor.GRAY + ChatColor.BOLD + " " + expPercent + "%" + 
 				ChatColor.RESET + ChatColor.GRAY + " [" + 

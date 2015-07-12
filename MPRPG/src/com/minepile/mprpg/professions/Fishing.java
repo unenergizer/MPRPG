@@ -158,7 +158,7 @@ public class Fishing {
 				setLore(player, getLeftOverEXP, newRodkLVL);
 				
 				//Send EXP up message.
-				new ActionbarTitleObject(MessageManager.showEXPLevel(expGain, totalEXP, expGoal));
+				new ActionbarTitleObject(MessageManager.showEXPLevel(expGain, totalEXP, expGoal)).send(player);
 				
 				//Send level up message.
 				player.sendMessage(ChatColor.GREEN + "Your fishing rod is now level " + ChatColor.GOLD + newRodkLVL + ChatColor.GREEN + ".");
@@ -172,7 +172,7 @@ public class Fishing {
 				setLore(player, getLeftOverEXP, newRodkLVL);
 				
 				//Send EXP up message.
-				new ActionbarTitleObject(MessageManager.showEXPLevel(expGain, totalEXP, expGoal));
+				new ActionbarTitleObject(MessageManager.showEXPLevel(expGain, totalEXP, expGoal)).send(player);
 				
 				//Send level up message.
 				player.sendMessage(ChatColor.GREEN + "Your fishing rod is now level " + ChatColor.GOLD + newRodkLVL + ChatColor.GREEN + ".");
@@ -186,7 +186,7 @@ public class Fishing {
 			
 			//Send EXP up message.
 			if (PlayerManager.getPlayerConfigBoolean(player, "setting.chat.professionDebug") == true) {
-				new ActionbarTitleObject(MessageManager.showEXPLevel(expGain, totalEXP, expGoal));
+				new ActionbarTitleObject(MessageManager.showEXPLevel(expGain, totalEXP, expGoal)).send(player);
 			}
 		}
 	}	
