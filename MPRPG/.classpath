@@ -11,5 +11,6 @@
 	<classpathentry kind="lib" path="C:/Users/Andrew/Dropbox/Development/Minecraft MinePile Project/SpigotLibraries/ProtocolLib.jar"/>
 	<classpathentry kind="lib" path="C:/Users/Andrew/Dropbox/Development/Minecraft MinePile Project/SpigotLibraries/HolographicDisplays.jar"/>
 	<classpathentry kind="lib" path="C:/Users/Andrew/Dropbox/Development/Minecraft MinePile Project/SpigotLibraries/citizensapi-2.0.14-SNAPSHOT.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Andrew/Dropbox/Development/Minecraft MinePile Project/SpigotLibraries/TitleManager-1.5.9.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

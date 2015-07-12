@@ -4,7 +4,7 @@ version: 0.1
 description: MinePile RPG
 author: unenergizer
 website: http://www.minepile.com/
-softdepend: [Citizens, HolographicDisplays]
+softdepend: [Citizens, HolographicDisplays, TitleManager]
 commands:
    c:
       description: Used to change players chat channel.

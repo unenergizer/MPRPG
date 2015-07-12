@@ -42,9 +42,10 @@ public class PlayerExpChangeListener implements Listener{
 				int level = player.getLevel();
 				int configLevel = PlayerManager.getPlayerConfigInt(player, "player.playerLVL");
 		      	
+				//Player level has changed.
 				if (level != configLevel) {
-					//Set the players level in their config.
-					PlayerManager.setPlayerConfigInt(player, "player.playerLVL", level);
+					//Show level up.
+					PlayerManager.levelUp(player, level);
 				}
 			} //END Run method.
 		}, 5); //(20 ticks = 1 second)

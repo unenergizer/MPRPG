@@ -1,5 +1,7 @@
 package com.minepile.mprpg.player;
 
+import io.puharesource.mc.titlemanager.api.TitleObject;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
@@ -8,11 +10,17 @@ import me.mgone.bossbarapi.BossbarAPI;
 import net.md_5.bungee.api.ChatColor;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Color;
+import org.bukkit.FireworkEffect;
+import org.bukkit.FireworkEffect.Type;
 import org.bukkit.Location;
 import org.bukkit.Sound;
+import org.bukkit.World;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.entity.Firework;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.meta.FireworkMeta;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
@@ -118,6 +126,54 @@ public class PlayerManager {
 		player.setCustomNameVisible(true);
 	}
 	*/
+	
+	/**
+	 * Things that should happen when a player levels up.
+	 * 
+	 * @param player The player who has leveled up.
+	 * @param level The players new level.
+	 */
+	public static void levelUp(Player player, int playerLevel) {
+		
+		String playerName = player.getName();
+		String level = Integer.toString(playerLevel);
+		World world = player.getWorld();
+		int x = player.getLocation().getBlockX();
+		int y = player.getLocation().getBlockY();
+		int z = player.getLocation().getBlockZ();
+		int hp = maxHealthPoints.get(playerName);
+		
+		//Set the players level in their configuration.
+		setPlayerConfigInt(player, "player.playerLVL", playerLevel);
+		
+		//Show level up message.
+		new TitleObject(ChatColor.GREEN + "Leveled UP!", ChatColor.GOLD + "You are now level " + level).send(player);
+		
+		//Show level up effects.
+		Location loc = new Location(world, x, y - 1, z); //Firework spawn location
+
+		for (int i = 0; i < 2; i++) {
+			Firework fw = (Firework) world.spawn(loc, Firework.class);
+			FireworkMeta fm = fw.getFireworkMeta();
+			fm.addEffect(FireworkEffect.builder()
+					.flicker(false)
+					.trail(false)
+					.with(Type.STAR)
+					.withColor(Color.YELLOW)
+					.withFade(Color.YELLOW)
+					.build());
+			fw.setFireworkMeta(fm);
+		}
+		
+		//Heal the player
+		healthPoints.put(playerName, hp);	//Sets payer HP hashmap
+		player.setHealth(20); 				//Sets player HP bar
+		
+		//Send the player a message
+		player.sendMessage(ChatColor.GREEN + "You have leveled up!"); 
+		player.sendMessage(ChatColor.GREEN + "You are now level " +  ChatColor.GOLD + level + ChatColor.GREEN + ".");
+		player.sendMessage(ChatColor.GREEN + "You have been healed!");
+	}
 	
 	/**
 	 * This will update the players UI bar at the top of the screen.
@@ -573,5 +629,4 @@ public class PlayerManager {
 	public static void setVitality(int vitality) {
 		PlayerManager.vitality = vitality;
 	}
-
 }
