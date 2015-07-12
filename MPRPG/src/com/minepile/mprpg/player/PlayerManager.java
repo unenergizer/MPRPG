@@ -1,5 +1,6 @@
 package com.minepile.mprpg.player;
 
+import io.puharesource.mc.titlemanager.api.TabTitleObject;
 import io.puharesource.mc.titlemanager.api.TitleObject;
 
 import java.io.File;
@@ -266,6 +267,11 @@ public class PlayerManager {
       	//Give the player a Menu!
       	PlayerMenuManager.createMenu(player);
       	
+      	//Set player tab menu text
+      	String header = ChatColor.GREEN + "You are playing on " + ChatColor.GOLD + "MinePile Network" + ChatColor.GREEN + "!";
+      	String footer = ChatColor.RED + "www.MinePile.com" + ChatColor.BLUE + " > Forum, Store, & More!!";
+      	new TabTitleObject(header, footer).send(player);
+      	
 	}
 	
 	/**
@@ -283,33 +289,6 @@ public class PlayerManager {
         maxHealthPoints.put(playerName, maxHealthPoints.get(playerName) + value);
 		player.sendMessage("new hp: " + maxHealthPoints.get(playerName).toString());
 		
-        staminaPoints.put(playerName, baseStaminaPoints);
-        maxStaminaPoints.put(playerName, baseStaminaPoints);
-        manaPoints.put(playerName, baseManaPoints);
-        maxManaPoints.put(playerName, baseManaPoints);
-        
-        //Setup players attributes
-    	dexterityMap.put(playerName, getPlayerConfigInt(player, "attribute.dexterity"));
-    	intellectMap.put(playerName, getPlayerConfigInt(player, "attribute.intellect"));
-    	luckMap.put(playerName, getPlayerConfigInt(player, "attribute.luck"));
-    	personalityMap.put(playerName, getPlayerConfigInt(player, "attribute.personality"));
-    	strengthMap.put(playerName, getPlayerConfigInt(player, "attribute.strength"));
-    	vitalityMap.put(playerName, getPlayerConfigInt(player, "attribute.vitality"));
-	}
-	
-	/**
-	 * This will reset the players important HashMap attributes.
-	 * <p>
-	 * This is mainly used for server reloads.
-	 * 
-	 * @param player The player to reset.
-	 */
-	public static void resetPlayerHashMap(Player player) {
-        String playerName = player.getName();
-		
-		healthPoints.put(playerName, baseHealthPoints);
-		
-        maxHealthPoints.put(playerName, baseHealthPoints);
         staminaPoints.put(playerName, baseStaminaPoints);
         maxStaminaPoints.put(playerName, baseStaminaPoints);
         manaPoints.put(playerName, baseManaPoints);
@@ -356,7 +335,7 @@ public class PlayerManager {
 	/**
 	 * Creates a new configuration file on a players first visit to the server.
 	 */
-    public static void createPlayerConfig(Player player) {
+	private static void createPlayerConfig(Player player) {
  	
     	String uuid = player.getUniqueId().toString();
     	String playerName = player.getName();
