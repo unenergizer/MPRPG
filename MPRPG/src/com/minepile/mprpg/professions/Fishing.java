@@ -1,5 +1,7 @@
 package com.minepile.mprpg.professions;
 
+import io.puharesource.mc.titlemanager.api.ActionbarTitleObject;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -89,7 +91,7 @@ public class Fishing {
 				toggleRodUpdate(player, expGain, currentRodEXP, currentRodLVL);
 			} else {
 				//Let user know fishing attempt was not successful.
-				player.sendMessage(ChatColor.GRAY + "        " + ChatColor.ITALIC + "Fishing attempt was not successful.");
+				new ActionbarTitleObject(ChatColor.GRAY + "" + ChatColor.ITALIC + "Fishing was not successful.").send(player);
 			}
 		} else if (currentRodLVL > 19 && currentRodLVL <= 39) {
 			
@@ -101,7 +103,7 @@ public class Fishing {
 				toggleRodUpdate(player, expGain, currentRodEXP, currentRodLVL);
 			} else {
 				//Let user know fishing was not successful.
-				player.sendMessage(ChatColor.GRAY + "        " + ChatColor.ITALIC + "Fishing attempt was not successful.");
+				new ActionbarTitleObject(ChatColor.GRAY + "" + ChatColor.ITALIC + "Fishing was not successful.").send(player);
 			}
 		} else if (currentRodLVL > 39 && currentRodLVL <= 59) {
 			
@@ -113,7 +115,7 @@ public class Fishing {
 				toggleRodUpdate(player, expGain, currentRodEXP, currentRodLVL);
 			} else {
 				//Let user know fishing was not successful.
-				player.sendMessage(ChatColor.GRAY + "        " + ChatColor.ITALIC + "Fishing attempt was not successful.");
+				new ActionbarTitleObject(ChatColor.GRAY + "" + ChatColor.ITALIC + "Fishing was not successful.").send(player);
 			}
 		} else if (currentRodLVL > 59 && currentRodLVL <= 79) {
 			
@@ -125,7 +127,7 @@ public class Fishing {
 				toggleRodUpdate(player, expGain, currentRodEXP, currentRodLVL);
 			} else {
 				//Let user know fishing was not successful.
-				player.sendMessage(ChatColor.GRAY + "        " + ChatColor.ITALIC + "Fishing attempt was not successful.");
+				new ActionbarTitleObject(ChatColor.GRAY + "" + ChatColor.ITALIC + "Fishing was not successful.").send(player);
 			}
 		}
 	}
@@ -156,11 +158,11 @@ public class Fishing {
 				setLore(player, getLeftOverEXP, newRodkLVL);
 				
 				//Send EXP up message.
-				player.sendMessage(MessageManager.showEXPLevel(expGain, totalEXP, expGoal));
+				new ActionbarTitleObject(MessageManager.showEXPLevel(expGain, totalEXP, expGoal));
 				
 				//Send level up message.
-				player.sendMessage(MessageManager.selectMessagePrefix("debug") +
-						ChatColor.YELLOW + ChatColor.BOLD + "Your fishing rod is now level " + newRodkLVL + ".");
+				player.sendMessage(ChatColor.GREEN + "Your fishing rod is now level " + ChatColor.GOLD + newRodkLVL + ChatColor.GREEN + ".");
+				
 				
 				//Play a level up sound.
 				player.playSound(player.getLocation(), Sound.FIREWORK_TWINKLE2, 1F, 1F);
@@ -170,11 +172,10 @@ public class Fishing {
 				setLore(player, getLeftOverEXP, newRodkLVL);
 				
 				//Send EXP up message.
-				player.sendMessage(MessageManager.showEXPLevel(expGain, totalEXP, expGoal));
+				new ActionbarTitleObject(MessageManager.showEXPLevel(expGain, totalEXP, expGoal));
 				
 				//Send level up message.
-				player.sendMessage(MessageManager.selectMessagePrefix("debug") +
-						ChatColor.YELLOW + ChatColor.BOLD + "Your fishing rod is now level " + newRodkLVL + ".");
+				player.sendMessage(ChatColor.GREEN + "Your fishing rod is now level " + ChatColor.GOLD + newRodkLVL + ChatColor.GREEN + ".");
 				
 				//Play a level up sound.
 				player.playSound(player.getLocation(), Sound.FIREWORK_TWINKLE2, 1F, 1F);
@@ -185,40 +186,8 @@ public class Fishing {
 			
 			//Send EXP up message.
 			if (PlayerManager.getPlayerConfigBoolean(player, "setting.chat.professionDebug") == true) {
-				player.sendMessage(MessageManager.showEXPLevel(expGain, totalEXP, expGoal));
+				new ActionbarTitleObject(MessageManager.showEXPLevel(expGain, totalEXP, expGoal));
 			}
-		}
-	}
-	
-	/**
-	 * Chat Message for the fishing rod.
-	 * 
-	 * @param player The player to show the fishing message.
-	 * @param expGain The experience gain of the fishing rod.
-	 */
-	public static void chatfishingMessage(Player player, int expGain) {
-		//If expGain is 0, let the user know the fishing attempt was not successful.
-		//If the expGain is any other number, let them know it was successful.
-		if (expGain != 0) {
-			//add EXP to tool
-			int currentRodEXP = getLoreEXP(player);
-			int currentRodLVL = getLoreLVL(player);
-			int expToNextLevel = configFishingLevel.get(currentRodLVL);
-			
-			if (currentRodEXP < expToNextLevel) {
-				//Displays the leveling bar when user successfully catches a fish.
-				player.sendMessage(MessageManager.showEXPLevel(expGain, currentRodEXP, expToNextLevel));
-			} else {
-				//level up the players fishing rod.
-				player.sendMessage(MessageManager.showEXPLevel(expGain, currentRodEXP, expToNextLevel));
-				
-				int newRodLVL = currentRodLVL + 1;
-				player.sendMessage(MessageManager.selectMessagePrefix("debug") +
-						ChatColor.YELLOW + ChatColor.BOLD + "Your fishing rod is now level " + newRodLVL + ".");
-			}
-		} else {
-			//Let user know fishing was not successful.
-			player.sendMessage(ChatColor.GRAY + "        " + ChatColor.ITALIC + "Fishing attempt was not successful.");
 		}
 	}	
 	
@@ -228,7 +197,7 @@ public class Fishing {
 	 * @param player The player with the fishing rod.
 	 * @return The experience the fishing rod currently has.
 	 */
-	public static int getLoreEXP(Player player) {
+	private static int getLoreEXP(Player player) {
 		ItemStack item = player.getItemInHand();
 
 		if (item != null) {
@@ -262,7 +231,7 @@ public class Fishing {
 	 * @param player The player with the fishing rod.
 	 * @return The current level of the fishing rod.
 	 */
-	public static int getLoreLVL(Player player) {
+	private static int getLoreLVL(Player player) {
 		ItemStack item = player.getItemInHand();
 
 		if (item != null) {
@@ -297,7 +266,7 @@ public class Fishing {
 	 * @param exp The experience that the fishing rod's lore will contain.
 	 * @param lvl The level the fishing rod's lore will contain.
 	 */
-	public static void setLore(Player player, int exp, int lvl) {
+	private static void setLore(Player player, int exp, int lvl) {
 		
 		ItemStack is = player.getInventory().getItemInHand();
 		ItemMeta im = is.getItemMeta();
@@ -358,7 +327,7 @@ public class Fishing {
 	 * 
 	 * @param player The player with the new fishing rod.
 	 */
-	public static void createFishingRod(Player player) {
+	private static void createFishingRod(Player player) {
 		ItemStack tool = player.getInventory().getItemInHand();
 		ItemMeta meta = tool.getItemMeta();
 
@@ -393,7 +362,7 @@ public class Fishing {
 	 * @param multiplier The success rate of the fishing attempt.
 	 * @return
 	 */
-	public static int calculateExpGain(int multiplier){
+	private static int calculateExpGain(int multiplier){
 		double random = (Math.random() * 10);
 		if(random > 3) {
 			//return successful mine

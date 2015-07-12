@@ -1,5 +1,7 @@
 package com.minepile.mprpg.professions;
 
+import io.puharesource.mc.titlemanager.api.ActionbarTitleObject;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -94,7 +96,7 @@ public class Mining {
 				togglePickUpdate(player, tool, expGain, currentPickEXP, currentPickLVL);
 			} else {
 				//Let user know mining was not successful.
-				player.sendMessage(ChatColor.GRAY + "        " + ChatColor.ITALIC + "Mining was not successful.");
+				new ActionbarTitleObject(ChatColor.GRAY + "" + ChatColor.ITALIC + "Mining was not successful.").send(player);
 			}
 		} else if (tool.equals(Material.STONE_PICKAXE)) {
 			if (ore.equals(Material.COAL_ORE)) {
@@ -109,7 +111,7 @@ public class Mining {
 					togglePickUpdate(player, tool, expGain, currentPickEXP, currentPickLVL);
 				} else {
 					//Let user know mining was not successful.
-					player.sendMessage(ChatColor.GRAY + "        " + ChatColor.ITALIC + "Mining was not successful.");
+					new ActionbarTitleObject(ChatColor.GRAY + "" + ChatColor.ITALIC + "Mining was not successful.").send(player);
 				}
 				
 			} else { //Ore mined must be iron ore.
@@ -124,7 +126,7 @@ public class Mining {
 					togglePickUpdate(player, tool, expGain, currentPickEXP, currentPickLVL);
 				} else {
 					//Let user know mining was not successful.
-					player.sendMessage(ChatColor.GRAY + "        " + ChatColor.ITALIC + "Mining was not successful.");
+					new ActionbarTitleObject(ChatColor.GRAY + "" + ChatColor.ITALIC + "Mining was not successful.").send(player);
 				}
 			}
 		} else if (tool.equals(Material.IRON_PICKAXE)) {
@@ -140,7 +142,7 @@ public class Mining {
 					togglePickUpdate(player, tool, expGain, currentPickEXP, currentPickLVL);
 				} else {
 					//Let user know mining was not successful.
-					player.sendMessage(ChatColor.GRAY + "        " + ChatColor.ITALIC + "Mining was not successful.");
+					new ActionbarTitleObject(ChatColor.GRAY + "" + ChatColor.ITALIC + "Mining was not successful.").send(player);
 				}
 				
 			} else if (ore.equals(Material.IRON_ORE)){ //Ore mined must be iron ore.
@@ -155,7 +157,7 @@ public class Mining {
 					togglePickUpdate(player, tool, expGain, currentPickEXP, currentPickLVL);
 				} else {
 					//Let user know mining was not successful.
-					player.sendMessage(ChatColor.GRAY + "        " + ChatColor.ITALIC + "Mining was not successful.");
+					new ActionbarTitleObject(ChatColor.GRAY + "" + ChatColor.ITALIC + "Mining was not successful.").send(player);
 				}
 			} else { //Ore mined must be emerald ore.
 				//Lets calculate how much EXP we need to add.
@@ -169,7 +171,7 @@ public class Mining {
 					togglePickUpdate(player, tool, expGain, currentPickEXP, currentPickLVL);
 				} else {
 					//Let user know mining was not successful.
-					player.sendMessage(ChatColor.GRAY + "        " + ChatColor.ITALIC + "Mining was not successful.");
+					new ActionbarTitleObject(ChatColor.GRAY + "" + ChatColor.ITALIC + "Mining was not successful.").send(player);
 				}
 			}
 		} else if (tool.equals(Material.GOLD_PICKAXE)) {
@@ -185,7 +187,7 @@ public class Mining {
 					togglePickUpdate(player, tool, expGain, currentPickEXP, currentPickLVL);
 				} else {
 					//Let user know mining was not successful.
-					player.sendMessage(ChatColor.GRAY + "        " + ChatColor.ITALIC + "Mining was not successful.");
+					new ActionbarTitleObject(ChatColor.GRAY + "" + ChatColor.ITALIC + "Mining was not successful.").send(player);
 				}
 				
 			} else if (ore.equals(Material.IRON_ORE)){ //Ore mined must be iron ore.
@@ -200,7 +202,7 @@ public class Mining {
 					togglePickUpdate(player, tool, expGain, currentPickEXP, currentPickLVL);
 				} else {
 					//Let user know mining was not successful.
-					player.sendMessage(ChatColor.GRAY + "        " + ChatColor.ITALIC + "Mining was not successful.");
+					new ActionbarTitleObject(ChatColor.GRAY + "" + ChatColor.ITALIC + "Mining was not successful.").send(player);
 				}
 			} else if (ore.equals(Material.EMERALD_ORE)){ //Ore mined must be iron ore.
 				//Lets calculate how much EXP we need to add.
@@ -214,7 +216,7 @@ public class Mining {
 					togglePickUpdate(player, tool, expGain, currentPickEXP, currentPickLVL);
 				} else {
 					//Let user know mining was not successful.
-					player.sendMessage(ChatColor.GRAY + "        " + ChatColor.ITALIC + "Mining was not successful.");
+					new ActionbarTitleObject(ChatColor.GRAY + "" + ChatColor.ITALIC + "Mining was not successful.").send(player);
 				}
 			} else { //Ore mined must be gold ore.
 				//Lets calculate how much EXP we need to add.
@@ -228,7 +230,7 @@ public class Mining {
 					togglePickUpdate(player, tool, expGain, currentPickEXP, currentPickLVL);
 				} else {
 					//Let user know mining was not successful.
-					player.sendMessage(ChatColor.GRAY + "        " + ChatColor.ITALIC + "Mining was not successful.");
+					new ActionbarTitleObject(ChatColor.GRAY + "" + ChatColor.ITALIC + "Mining was not successful.").send(player);
 				}
 			}
 		} else if (tool.equals(Material.DIAMOND_PICKAXE)) {
@@ -244,7 +246,7 @@ public class Mining {
 					togglePickUpdate(player, tool, expGain, currentPickEXP, currentPickLVL);
 				} else {
 					//Let user know mining was not successful.
-					player.sendMessage(ChatColor.GRAY + "        " + ChatColor.ITALIC + "Mining was not successful.");
+					new ActionbarTitleObject(ChatColor.GRAY + "" + ChatColor.ITALIC + "Mining was not successful.").send(player);
 				}
 				
 			} else if (ore.equals(Material.IRON_ORE)){ //Ore mined must be iron ore.
@@ -259,7 +261,7 @@ public class Mining {
 					togglePickUpdate(player, tool, expGain, currentPickEXP, currentPickLVL);
 				} else {
 					//Let user know mining was not successful.
-					player.sendMessage(ChatColor.GRAY + "        " + ChatColor.ITALIC + "Mining was not successful.");
+					new ActionbarTitleObject(ChatColor.GRAY + "" + ChatColor.ITALIC + "Mining was not successful.").send(player);
 				}
 			} else if (ore.equals(Material.EMERALD_ORE)){ //Ore mined must be iron ore.
 				//Lets calculate how much EXP we need to add.
@@ -273,7 +275,7 @@ public class Mining {
 					togglePickUpdate(player, tool, expGain, currentPickEXP, currentPickLVL);
 				} else {
 					//Let user know mining was not successful.
-					player.sendMessage(ChatColor.GRAY + "        " + ChatColor.ITALIC + "Mining was not successful.");
+					new ActionbarTitleObject(ChatColor.GRAY + "" + ChatColor.ITALIC + "Mining was not successful.").send(player);
 				}
 			} else if (ore.equals(Material.GOLD_ORE)){ //Ore mined must be iron ore.
 				//Lets calculate how much EXP we need to add.
@@ -287,7 +289,7 @@ public class Mining {
 					togglePickUpdate(player, tool, expGain, currentPickEXP, currentPickLVL);
 				} else {
 					//Let user know mining was not successful.
-					player.sendMessage(ChatColor.GRAY + "        " + ChatColor.ITALIC + "Mining was not successful.");
+					new ActionbarTitleObject(ChatColor.GRAY + "" + ChatColor.ITALIC + "Mining was not successful.").send(player);
 				}
 			} else { //Ore mined must be diamond ore.
 				//Lets calculate how much EXP we need to add.
@@ -301,7 +303,7 @@ public class Mining {
 					togglePickUpdate(player, tool, expGain, currentPickEXP, currentPickLVL);
 				} else {
 					//Let user know mining was not successful.
-					player.sendMessage(ChatColor.GRAY + "        " + ChatColor.ITALIC + "Mining was not successful.");
+					new ActionbarTitleObject(ChatColor.GRAY + "" + ChatColor.ITALIC + "Mining was not successful.").send(player);
 				}
 			}
 		} else {
@@ -358,11 +360,11 @@ public class Mining {
 				}
 				
 				//Send EXP up message.
-				player.sendMessage(MessageManager.showEXPLevel(expGain, totalEXP, expGoal));
+				new ActionbarTitleObject(MessageManager.showEXPLevel(expGain, totalEXP, expGoal)).send(player);
 				
 				//Send level up message.
 				player.sendMessage(MessageManager.selectMessagePrefix("debug") +
-						ChatColor.YELLOW + ChatColor.BOLD + "Your pick is now level " + newPickLVL + ".");
+						ChatColor.GREEN + "Your pick is now level " + ChatColor.GOLD + newPickLVL + ChatColor.GREEN + ".");
 				
 				//Play a level up sound.
 				player.playSound(player.getLocation(), Sound.FIREWORK_TWINKLE2, 1F, 1F);
@@ -372,11 +374,10 @@ public class Mining {
 				setLore(player, tool, getLeftOverEXP, newPickLVL);
 				
 				//Send EXP up message.
-				player.sendMessage(MessageManager.showEXPLevel(expGain, totalEXP, expGoal));
+				new ActionbarTitleObject(MessageManager.showEXPLevel(expGain, totalEXP, expGoal)).send(player);
 				
 				//Send level up message.
-				player.sendMessage(MessageManager.selectMessagePrefix("debug") +
-						ChatColor.YELLOW + ChatColor.BOLD + "Your pick is now level " + newPickLVL + ".");
+				player.sendMessage(ChatColor.GREEN + "Your pick is now level " + ChatColor.GOLD + newPickLVL + ChatColor.GREEN + ".");
 				
 				//Play a level up sound.
 				player.playSound(player.getLocation(), Sound.FIREWORK_TWINKLE2, 1F, 1F);
@@ -387,42 +388,10 @@ public class Mining {
 			
 			//Send EXP up message.
 			if (PlayerManager.getPlayerConfigBoolean(player, "setting.chat.professionDebug") == true) {
-				player.sendMessage(MessageManager.showEXPLevel(expGain, totalEXP, expGoal));
+				new ActionbarTitleObject(MessageManager.showEXPLevel(expGain, totalEXP, expGoal)).send(player);
 			}
 		}
 	}
-	
-	/**
-	 * Chat Message for mining.
-	 * 
-	 * @param player The player who will be shown the message.
-	 * @param expGain The experience change the player will be shown.
-	 */
-	public static void chatMiningMessage(Player player, int expGain) {
-		//If expGain is 0, let the user know the mine was not successful.
-		//If the expGain is any other number, let them know it was successful.
-		if (expGain != 0) {
-			//add EXP to tool
-			int currentPickEXP = getLoreEXP(player);
-			int currentPickLVL = getLoreLVL(player);
-			int expToNextLevel = configMiningLevel.get(currentPickLVL);
-			
-			if (currentPickEXP < expToNextLevel) {
-				//Displays the leveling bar when user mines an ore.
-				player.sendMessage(MessageManager.showEXPLevel(expGain, currentPickEXP, expToNextLevel));
-			} else {
-				//level up the players pickaxe.
-				player.sendMessage(MessageManager.showEXPLevel(expGain, currentPickEXP, expToNextLevel));
-				
-				int newPickLVL = currentPickLVL + 1;
-				player.sendMessage(MessageManager.selectMessagePrefix("debug") +
-						ChatColor.YELLOW + ChatColor.BOLD + "Your pick is now level " + newPickLVL + ".");
-			}
-		} else {
-			//Let user know mining was not successful.
-			player.sendMessage(ChatColor.GRAY + "        " + ChatColor.ITALIC + "Mining was not successful.");
-		}
-	}	
 	
 	/**
 	 * Gets the tools current experience.
@@ -430,7 +399,7 @@ public class Mining {
 	 * @param player The player with the tool to get the experience from.
 	 * @return The current tools experience count.
 	 */
-	public static int getLoreEXP(Player player) {
+	private static int getLoreEXP(Player player) {
 		ItemStack item = player.getItemInHand();
 		
 		// I'm not really sure if this could ever be null
@@ -468,7 +437,7 @@ public class Mining {
 	 * @param player The player with the tool to get the level from.
 	 * @return The current tools level.
 	 */
-	public static int getLoreLVL(Player player) {
+	private static int getLoreLVL(Player player) {
 		ItemStack item = player.getItemInHand();
 		
 		// I'm not really sure if this could ever be null
@@ -507,7 +476,7 @@ public class Mining {
 	 * @param exp The experience to put on the tool.
 	 * @param lvl The level to put on the tool.
 	 */
-	public static void setLore(Player player, Material tool, int exp, int lvl) {
+	private static void setLore(Player player, Material tool, int exp, int lvl) {
 		
 		ItemStack is = player.getInventory().getItemInHand();
 		ItemMeta im = is.getItemMeta();
@@ -568,7 +537,7 @@ public class Mining {
 	 * 
 	 * @param player The player to create the tool for.
 	 */
-	public static void createPickaxe(Player player) {
+	private static void createPickaxe(Player player) {
 		ItemStack tool = player.getInventory().getItemInHand();
 		ItemMeta meta = tool.getItemMeta();
 
@@ -603,7 +572,7 @@ public class Mining {
 	 * @param multiplier The success rate of a mining attempt.
 	 * @return The experience gained from a mining attempt.
 	 */
-	public static int calculateExpGain(int multiplier){
+	private static int calculateExpGain(int multiplier){
 		double random = (Math.random() * 10);
 		if(random > 3) {
 			//return successful mine

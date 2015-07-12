@@ -1,5 +1,7 @@
 package com.minepile.mprpg.professions;
 
+import io.puharesource.mc.titlemanager.api.ActionbarTitleObject;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -90,7 +92,7 @@ public class Herbalism {
 				toggleToolUpdate(player, expGain, currentToolEXP, currentToolLVL);
 			} else {
 				//Let user know herbalism attempt was not successful.
-				player.sendMessage(ChatColor.GRAY + "        " + ChatColor.ITALIC + "Harvest attempt was not successful.");
+				new ActionbarTitleObject(ChatColor.GRAY + "" + ChatColor.ITALIC + "Harvest attempt was not successful.").send(player);
 			}
 		} else if (currentToolLVL > 19 && currentToolLVL <= 39) {
 			
@@ -102,7 +104,7 @@ public class Herbalism {
 				toggleToolUpdate(player, expGain, currentToolEXP, currentToolLVL);
 			} else {
 				//Let user know herbalism attempt was not successful.
-				player.sendMessage(ChatColor.GRAY + "        " + ChatColor.ITALIC + "Harvest attempt was not successful.");
+				new ActionbarTitleObject(ChatColor.GRAY + "" + ChatColor.ITALIC + "Harvest attempt was not successful.").send(player);
 			}
 		} else if (currentToolLVL > 39 && currentToolLVL <= 59) {
 			
@@ -114,7 +116,7 @@ public class Herbalism {
 				toggleToolUpdate(player, expGain, currentToolEXP, currentToolLVL);
 			} else {
 				//Let user know herbalism attempt was not successful.
-				player.sendMessage(ChatColor.GRAY + "        " + ChatColor.ITALIC + "Harvest attempt was not successful.");
+				new ActionbarTitleObject(ChatColor.GRAY + "" + ChatColor.ITALIC + "Harvest attempt was not successful.").send(player);
 			}
 		} else if (currentToolLVL > 59 && currentToolLVL <= 79) {
 			
@@ -126,7 +128,7 @@ public class Herbalism {
 				toggleToolUpdate(player, expGain, currentToolEXP, currentToolLVL);
 			} else {
 				//Let user know herbalism attempt was not successful.
-				player.sendMessage(ChatColor.GRAY + "        " + ChatColor.ITALIC + "Harvest attempt was not successful.");
+				new ActionbarTitleObject(ChatColor.GRAY + "" + ChatColor.ITALIC + "Harvest attempt was not successful.").send(player);
 			}
 		}
 	}
@@ -148,34 +150,32 @@ public class Herbalism {
 		//If the players herbalism tool has leveled up, update the lore, and show a message.
 		if (totalEXP > expGoal) {
 			//The herbalism tool has leveled. Lets add 1 level to it.
-			int newToolkLVL = currentToolLVL + 1;
+			int newToolLVL = currentToolLVL + 1;
 			int getLeftOverEXP = totalEXP - expGoal;
 			
-			if (newToolkLVL == 20 || newToolkLVL == 40 || newToolkLVL == 60 || newToolkLVL == 80) {
+			if (newToolLVL == 20 || newToolLVL == 40 || newToolLVL == 60 || newToolLVL == 80) {
 
 				//Update the items meta and add 1 level.
-				setLore(player, getLeftOverEXP, newToolkLVL);
+				setLore(player, getLeftOverEXP, newToolLVL);
 				
 				//Send EXP up message.
-				player.sendMessage(MessageManager.showEXPLevel(expGain, totalEXP, expGoal));
+				new ActionbarTitleObject(MessageManager.showEXPLevel(expGain, totalEXP, expGoal)).send(player);
 				
 				//Send level up message.
-				player.sendMessage(MessageManager.selectMessagePrefix("debug") +
-						ChatColor.YELLOW + ChatColor.BOLD + "Your shears are now level " + newToolkLVL + ".");
+				player.sendMessage(ChatColor.GREEN + "Your plant cutters are now level " + ChatColor.GOLD + newToolLVL + ChatColor.GREEN + ".");
 				
 				//Play a level up sound.
 				player.playSound(player.getLocation(), Sound.FIREWORK_TWINKLE2, 1F, 1F);
 			} else {
 				
 				//Update the items meta and add 1 level.
-				setLore(player, getLeftOverEXP, newToolkLVL);
+				setLore(player, getLeftOverEXP, newToolLVL);
 				
 				//Send EXP up message.
-				player.sendMessage(MessageManager.showEXPLevel(expGain, totalEXP, expGoal));
+				new ActionbarTitleObject(MessageManager.showEXPLevel(expGain, totalEXP, expGoal)).send(player);
 				
 				//Send level up message.
-				player.sendMessage(MessageManager.selectMessagePrefix("debug") +
-						ChatColor.YELLOW + ChatColor.BOLD + "Your shears are now level " + newToolkLVL + ".");
+				player.sendMessage(ChatColor.GREEN + "Your plant cutters are now level " + ChatColor.GOLD + newToolLVL + ChatColor.GREEN + ".");
 				
 				//Play a level up sound.
 				player.playSound(player.getLocation(), Sound.FIREWORK_TWINKLE2, 1F, 1F);
@@ -186,42 +186,10 @@ public class Herbalism {
 			
 			//Send EXP up message.
 			if (PlayerManager.getPlayerConfigBoolean(player, "setting.chat.professionDebug") == true) {
-				player.sendMessage(MessageManager.showEXPLevel(expGain, totalEXP, expGoal));
+				new ActionbarTitleObject(MessageManager.showEXPLevel(expGain, totalEXP, expGoal)).send(player);
 			}
 		}
 	}
-	
-	/**
-	 * Chat Message for herbalism.
-	 * 
-	 * @param player The player to show the message to.
-	 * @param expGain The experience gain for the tool.
-	 */
-	public static void chatHerbalismMessage(Player player, int expGain) {
-		//If expGain is 0, let the user know the herbalism attempt was not successful.
-		//If the expGain is any other number, let them know it was successful.
-		if (expGain != 0) {
-			//add EXP to tool
-			int currentToolEXP = getLoreEXP(player);
-			int currentToolLVL = getLoreLVL(player);
-			int expToNextLevel = configHerbalismLevel.get(currentToolLVL);
-			
-			if (currentToolEXP < expToNextLevel) {
-				//Displays the leveling bar when user successfully catches a fish.
-				player.sendMessage(MessageManager.showEXPLevel(expGain, currentToolEXP, expToNextLevel));
-			} else {
-				//level up the players herbalism tool.
-				player.sendMessage(MessageManager.showEXPLevel(expGain, currentToolEXP, expToNextLevel));
-				
-				int newPickLVL = currentToolLVL + 1;
-				player.sendMessage(MessageManager.selectMessagePrefix("debug") +
-						ChatColor.YELLOW + ChatColor.BOLD + "Your shears are now level " + newPickLVL + ".");
-			}
-		} else {
-			//Let user know herbalism was not successful.
-			player.sendMessage(ChatColor.GRAY + "        " + ChatColor.ITALIC + "Harvest attempt was not successful.");
-		}
-	}	
 	
 	/**
 	 * Gets the experience of the cutting tool from the ItemStack's lore.
@@ -229,7 +197,7 @@ public class Herbalism {
 	 * @param player The player who has the item.
 	 * @return The experience the item has.
 	 */
-	public static int getLoreEXP(Player player) {
+	private static int getLoreEXP(Player player) {
 		ItemStack item = player.getItemInHand();
 
 		if (item != null) {
@@ -263,7 +231,7 @@ public class Herbalism {
 	 * @param player The player who has the item.
 	 * @return The level the item has.
 	 */
-	public static int getLoreLVL(Player player) {
+	private static int getLoreLVL(Player player) {
 		ItemStack item = player.getItemInHand();
 
 		if (item != null) {
@@ -298,7 +266,7 @@ public class Herbalism {
 	 * @param exp The experience to place on the shears.
 	 * @param lvl The level to place on the shears.
 	 */
-	public static void setLore(Player player, int exp, int lvl) {
+	private static void setLore(Player player, int exp, int lvl) {
 		
 		ItemStack is = player.getInventory().getItemInHand();
 		ItemMeta im = is.getItemMeta();
@@ -363,7 +331,7 @@ public class Herbalism {
 	 * 
 	 * @param player The player to recieve the tool.
 	 */
-	public static void createHerbalismTool(Player player) {
+	private static void createHerbalismTool(Player player) {
 		ItemStack tool = player.getInventory().getItemInHand();
 		ItemMeta meta = tool.getItemMeta();
 
@@ -398,7 +366,7 @@ public class Herbalism {
 	 * @param multiplier The success rate for the attempt.
 	 * @return The experience earned by the player.
 	 */
-	public static int calculateExpGain(int multiplier){
+	private static int calculateExpGain(int multiplier){
 		double random = (Math.random() * 10);
 		if(random > 3) {
 			//return successful mine

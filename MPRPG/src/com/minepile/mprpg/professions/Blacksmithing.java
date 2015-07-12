@@ -1,9 +1,14 @@
 package com.minepile.mprpg.professions;
 
+import net.citizensnpcs.api.CitizensAPI;
+import net.citizensnpcs.api.npc.NPC;
+import net.citizensnpcs.api.npc.NPCRegistry;
 import net.md_5.bungee.api.ChatColor;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.World;
+import org.bukkit.entity.EntityType;
 
 import com.gmail.filoghost.holographicdisplays.api.Hologram;
 import com.gmail.filoghost.holographicdisplays.api.HologramsAPI;
@@ -14,6 +19,9 @@ public class Blacksmithing {
 	//setup instance variables
 	public static MPRPG plugin;
 	static Blacksmithing blacksmithingManagerInstance = new Blacksmithing();
+	
+	//NPC
+	private static NPC npc;
 	
 	//Holograms
 	private static Hologram bankHologram01;
@@ -29,6 +37,7 @@ public class Blacksmithing {
 		this.plugin = plugin;
 		
 		setupAnvilHolograms();
+		spawnNPC();
 	}
 	
 	/**
@@ -36,7 +45,26 @@ public class Blacksmithing {
 	 */
 	public static void disable() {
 		removeHolograms();
+		removeNPC();
 	}	
+	
+	/**
+	 * This will spawn an NPC.
+	 */
+	private static void spawnNPC() {
+		World world = Bukkit.getWorld("world");
+		Location bs = new Location(world, 30, 79, 20);
+		
+		//Spawn blacksmith NPC.
+		NPCRegistry registry = CitizensAPI.getNPCRegistry();
+		npc = registry.createNPC(EntityType.PLAYER, "Blacksmith");
+		npc.spawn(bs);
+	}
+	
+	//This will remove an NPC.
+	private static void removeNPC() {
+		npc.destroy();
+	}
 	
 	/**
 	 * This will create a hologram that will display over the Blacksmith Anvil.
