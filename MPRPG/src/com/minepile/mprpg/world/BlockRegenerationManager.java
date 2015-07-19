@@ -1,6 +1,6 @@
 package com.minepile.mprpg.world;
 
-import java.util.HashMap;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -31,9 +31,9 @@ public class BlockRegenerationManager {
 	private static int blockID = 0;							//The current ID of the hashMaps.  Resets on reload.
 	private static int blockIDsRemoved = 0;					//Keep track of how many blocks we have removed from the HashMaps.
 	
-	private static HashMap<Integer, Material> blockType = new HashMap<Integer, Material>();    //ID > BLOCK - They type of block to regenerate.
-	private static HashMap<Integer, Integer>  blockTimeLeft = new HashMap<Integer, Integer>(); //ID > Respawn TimeLeft
-	private static HashMap<Integer, Location> blockLoc = new HashMap<Integer, Location>(); 	   //ID > Block Location
+	private static ConcurrentHashMap<Integer, Material> blockType = new ConcurrentHashMap<Integer, Material>();    //ID > BLOCK - They type of block to regenerate.
+	private static ConcurrentHashMap<Integer, Integer>  blockTimeLeft = new ConcurrentHashMap<Integer, Integer>(); //ID > Respawn TimeLeft
+	private static ConcurrentHashMap<Integer, Location> blockLoc = new ConcurrentHashMap<Integer, Location>(); 	   //ID > Block Location
 	
 	//Create instance
 	public static BlockRegenerationManager getInstance() {
