@@ -51,6 +51,7 @@ import com.minepile.mprpg.listeners.PlayerDeathListener;
 import com.minepile.mprpg.listeners.PlayerDropItemListener;
 import com.minepile.mprpg.listeners.PlayerExpChangeListener;
 import com.minepile.mprpg.listeners.PlayerFishListener;
+import com.minepile.mprpg.listeners.PlayerInteractEntityListener;
 import com.minepile.mprpg.listeners.PlayerInteractListener;
 import com.minepile.mprpg.listeners.PlayerItemBreakListener;
 import com.minepile.mprpg.listeners.PlayerJoinListener;
@@ -175,6 +176,7 @@ public class MPRPG extends JavaPlugin {
         pluginManager.registerEvents(new PlayerDropItemListener(this), this);
         pluginManager.registerEvents(new PlayerExpChangeListener(this), this);
         pluginManager.registerEvents(new PlayerFishListener(this), this);
+        pluginManager.registerEvents(new PlayerInteractEntityListener(this), this);
         pluginManager.registerEvents(new PlayerInteractListener(this), this);
         pluginManager.registerEvents(new PlayerItemBreakListener(this), this);
         pluginManager.registerEvents(new PlayerJoinListener(this), this);
@@ -216,7 +218,7 @@ public class MPRPG extends JavaPlugin {
         getCommand("spawn").setExecutor(new CommandManager(this));
      
         //various commands to manage a gang.
-        getCommand("gang").setExecutor(new CommandManager(this));
+        getCommand("guild").setExecutor(new CommandManager(this));
         
         ///////////////////
         /// Startup End ///

@@ -28,6 +28,6 @@ commands:
       description: Used to edit monsters in the world.
    gethp:
       description: Displays your current HP as Integer.
-   gang:
+   guild:
       description: Displays your current HP in number form.
   

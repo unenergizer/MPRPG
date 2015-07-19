@@ -2,14 +2,14 @@ package com.minepile.mprpg.chat;
 
 import com.minepile.mprpg.MPRPG;
 
-public class gameTipManager {
+public class GameTipManager {
 
 	//setup instance variables
 	public static MPRPG plugin;
-	static gameTipManager gameTipManagerInstance = new gameTipManager();
+	static GameTipManager gameTipManagerInstance = new GameTipManager();
 
 	//Create instance
-	public static gameTipManager getInstance() {
+	public static GameTipManager getInstance() {
 		return gameTipManagerInstance;
 	}
 
