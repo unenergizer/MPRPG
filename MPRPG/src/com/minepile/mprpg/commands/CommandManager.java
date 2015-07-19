@@ -535,7 +535,7 @@ public class CommandManager implements CommandExecutor{
 			if (cmd.getLabel().equalsIgnoreCase("gethp")) {
 				if (args.length == 0) {
 					player.sendMessage(ChatColor.RED + "Your current HP" + ChatColor.DARK_GRAY + ": " + 
-							ChatColor.RESET + Integer.toString(PlayerManager.getHealthPoints(playerName)));
+							ChatColor.RESET + Double.toString(PlayerManager.getHealthPoints(playerName)));
 				}
 			}
 

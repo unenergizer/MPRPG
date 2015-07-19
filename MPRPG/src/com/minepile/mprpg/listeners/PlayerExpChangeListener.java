@@ -40,7 +40,7 @@ public class PlayerExpChangeListener implements Listener{
 				PlayerManager.updatePlayerBossbar(player);
 				
 				int level = player.getLevel();
-				int configLevel = PlayerManager.getPlayerConfigInt(player, "player.playerLVL");
+				int configLevel = (int) PlayerManager.getPlayerConfigInt(player, "player.playerLVL");
 		      	
 				//Player level has changed.
 				if (level != configLevel) {

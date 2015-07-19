@@ -54,8 +54,8 @@ public class EntityDamageByEntityListener implements Listener{
 				Player player = (Player) event.getEntity();
 				String playerName = player.getName();
 				
-				int playerHealth = PlayerManager.getHealthPoints(playerName);
-				int playerMaxHealth = PlayerManager.getMaxHealthPoints(playerName);
+				double playerHealth = PlayerManager.getHealthPoints(playerName);
+				double playerMaxHealth = PlayerManager.getMaxHealthPoints(playerName);
 				
 				//Damager is another player
 				if (event.getDamager() instanceof Player) {
@@ -63,14 +63,14 @@ public class EntityDamageByEntityListener implements Listener{
 					Player damager = (Player) event.getDamager();
 					String damagerName = damager.getName();
 					
-					int damage = Math.max(0, LoreManager.getDamageBonus(damager) - LoreManager.getArmorBonus((LivingEntity)event.getEntity()));
-					int healthBarPercent = (int) (20 * (playerHealth - damage) / playerMaxHealth);
-					int newHealthTotal = (int) (playerHealth - damage);
+					double damage = Math.max(0, LoreManager.getDamageBonus(damager) - LoreManager.getArmorBonus((LivingEntity)event.getEntity()));
+					double healthBarPercent = (20 * (playerHealth - damage) / playerMaxHealth);
+					double newHealthTotal = (playerHealth - damage);
 				
 					LoreManager.addAttackCooldown(damagerName);
 					
 					//Show player damage message.
-					playerHealthChangeMessage(player, playerHealth, (int) damage, playerMaxHealth);
+					playerHealthChangeMessage(player, playerHealth, damage, playerMaxHealth);
 					
 					if (playerHealth == 0) {
 						//kill player
@@ -103,15 +103,15 @@ public class EntityDamageByEntityListener implements Listener{
 						Player damager = (Player) arrow.getShooter();
 						String damagerName = damager.getName();
 						
-						int damage = (int) event.getDamage();
-						int healthBarPercent = (int) (20 * (playerHealth - damage) / playerMaxHealth);
-						int newHealthTotal = (int) (playerHealth - damage);
+						double damage = event.getDamage();
+						double healthBarPercent =(20 * (playerHealth - damage) / playerMaxHealth);
+						double newHealthTotal = playerHealth - damage;
 						
 						
 						LoreManager.addAttackCooldown(damagerName);
 						
 						//Show player damage message.
-						damager.sendMessage(playerHealthChangeMessage(player, playerHealth, (int) damage, playerMaxHealth));
+						damager.sendMessage(playerHealthChangeMessage(player, playerHealth, damage, playerMaxHealth));
 						
 						if (player.getHealth() <= 2) {
 							player.setHealth(2);
@@ -137,10 +137,10 @@ public class EntityDamageByEntityListener implements Listener{
 				UUID victimID = victim.getUniqueId();
 				Entity damager = event.getDamager();
 				
-				int victimHealth = MonsterManager.getMobHealthPoints(victimID);
-				int victimMaxHealth = MonsterManager.getMobMaxHealthPoints(victimID);
+				double victimHealth = MonsterManager.getMobHealthPoints(victimID);
+				double victimMaxHealth = MonsterManager.getMobMaxHealthPoints(victimID);
 				
-				int damage = (int) event.getDamage();
+				double damage = event.getDamage();
 				
 				
 				//Set the entities health to 20.
@@ -154,7 +154,7 @@ public class EntityDamageByEntityListener implements Listener{
 				//Show monster damage message.
 				if (damager instanceof Player) {
 					if (PlayerManager.getPlayerConfigBoolean((Player) damager, "setting.chat.monsterDebug") == true) {
-						damager.sendMessage(mobHealthChangeMessage((Player)damager, victim, victimHealth, (int) damage, victimMaxHealth));
+						damager.sendMessage(mobHealthChangeMessage((Player)damager, victim, victimHealth, damage, victimMaxHealth));
 					}
 				}
 				
@@ -175,15 +175,15 @@ public class EntityDamageByEntityListener implements Listener{
 		
 	}
 	
-	public static String playerHealthChangeMessage(Player player, int playerHealth, int damage, int playerMaxHealth) {
+	public static String playerHealthChangeMessage(Player player, double playerHealth, double damage, double playerMaxHealth) {
 		
-		int newHP = playerHealth - damage;
-		int hpPercent = (int) ((100 * newHP) / playerMaxHealth);
+		double newHP = playerHealth - damage;
+		double hpPercent = ((100 * newHP) / playerMaxHealth);
 		
-		String dmg = Integer.toString(damage);
-		String hpPrc = Integer.toString(hpPercent);
-		String hp = Integer.toString(newHP);
-		String maxHP = Integer.toString(playerMaxHealth);
+		String dmg = Double.toString(damage);
+		String hpPrc = Double.toString(hpPercent);
+		String hp = Double.toString(newHP);
+		String maxHP = Double.toString(playerMaxHealth);
 		String hpMessage = ChatColor.RED + "         -" + 
 				ChatColor.GRAY + dmg + ChatColor.BOLD + " HP: " +
 				ChatColor.GRAY + ChatColor.BOLD + hpPrc + "%" +
@@ -193,17 +193,17 @@ public class EntityDamageByEntityListener implements Listener{
 		return hpMessage;
 	}
 	
-	public static String mobHealthChangeMessage(Player player, Entity victim, int playerHealth, int damage, int playerMaxHealth) {
+	public static String mobHealthChangeMessage(Player player, Entity victim, double playerHealth, double damage, double playerMaxHealth) {
 		
 		UUID id = victim.getUniqueId();
-		int newHP = playerHealth - damage;
-		int hpPercent = (int) ((100 * newHP) / playerMaxHealth);
+		double newHP = playerHealth - damage;
+		double hpPercent = ((100 * newHP) / playerMaxHealth);
 		
 		String name = MonsterManager.getMobName(id);
-		String dmg = Integer.toString(damage);
-		String hpPrc = Integer.toString(hpPercent);
-		String hp = Integer.toString(newHP);
-		String maxHP = Integer.toString(playerMaxHealth);
+		String dmg = Double.toString(damage);
+		String hpPrc = Double.toString(hpPercent);
+		String hp = Double.toString(newHP);
+		String maxHP = Double.toString(playerMaxHealth);
 		String hpMessage = ChatColor.GRAY + "          " + 
 				ChatColor.BOLD + name + ChatColor.GRAY + ": " +
 				ChatColor.GRAY + ChatColor.BOLD + hpPrc + "%" +

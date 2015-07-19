@@ -30,12 +30,12 @@ public class EntityRegainHealthListener implements Listener{
 			Player player = (Player) event.getEntity();
 			String playerName = player.getName();
 			
-			int currentHP = PlayerManager.getHealthPoints(playerName);
-			int maxHP = PlayerManager.getMaxHealthPoints(playerName);
-			int healAmount = (int) (event.getAmount() + LoreManager.getRegenBonus((LivingEntity)event.getEntity()));
-			int newHP = currentHP + healAmount;
-			int hpPercent = (int) ((100 * newHP) / maxHP);
-			int hpBarPercent = (20 * currentHP) / maxHP;
+			double currentHP = PlayerManager.getHealthPoints(playerName);
+			double maxHP = PlayerManager.getMaxHealthPoints(playerName);
+			double healAmount = event.getAmount() + LoreManager.getRegenBonus((LivingEntity)event.getEntity());
+			double newHP = currentHP + healAmount;
+			double hpPercent = ((100 * newHP) / maxHP);
+			double hpBarPercent = (20 * currentHP) / maxHP;
 			
 			
 			if (currentHP == maxHP) {
@@ -58,15 +58,7 @@ public class EntityRegainHealthListener implements Listener{
 				} else {
 					player.setHealth(hpBarPercent);
 				}
-				
-				/*
-				player.sendMessage(ChatColor.GREEN + "         +" + 
-						ChatColor.GRAY + healAmount + ChatColor.BOLD + " HP: " +
-						ChatColor.GRAY + ChatColor.BOLD + hpPercent + "%" +
-						ChatColor.GRAY + " [" + ChatColor.GREEN + newHP +
-						ChatColor.GRAY + " / " + ChatColor.GREEN + maxHP +
-						ChatColor.GRAY + "]");
-				*/
+
 				//Update the players health tag.
 				
 				new ActionbarTitleObject(ChatColor.GREEN + "+" + 

@@ -1,5 +1,7 @@
 package com.minepile.mprpg.items;
 
+import io.puharesource.mc.titlemanager.api.TitleObject;
+
 import java.sql.Timestamp;
 import java.util.Date;
 import java.util.HashMap;
@@ -371,8 +373,8 @@ public class LoreManager {
 
 			Player player = ((Player) entity).getPlayer();
 			String playerName = player.getName();
-			int currentHP = PlayerManager.getHealthPoints(playerName);
-			int newMaxHP = getBaseHealth(player) + hpToAdd.intValue();
+			double currentHP = PlayerManager.getHealthPoints(playerName);
+			double newMaxHP = getBaseHealth(player) + hpToAdd.doubleValue();
 			double oldMaxHP = PlayerManager.getMaxHealthPoints(playerName);
 
 			//If the players HP is greater than the base HP + HP bonus,
@@ -384,15 +386,14 @@ public class LoreManager {
 				entity.sendMessage(ChatColor.BLUE + "" + ChatColor.BOLD + "New HP: " + ChatColor.RESET + newMaxHP);
 				
 				//Set players heart's level to 20 (full health).
-				entity.sendMessage("updatingplayerhp 2");
 				entity.setHealth(20);
 
 			}
 			
 			//Lets grab the players HP again, just incase it was updated above.
-			int updatedHP = PlayerManager.getHealthPoints(playerName);
+			double updatedHP = PlayerManager.getHealthPoints(playerName);
 			//This is the percent determines how many play hearts are shown.
-			int healthPercent = (int) ((20 * updatedHP) / newMaxHP);
+			double healthPercent = ((20 * updatedHP) / newMaxHP);
 			
 			//If the players maximum HP has changed, then lets update
 			//the user on that change.  If the oldMaxHP equals the newMaxHP
@@ -415,8 +416,20 @@ public class LoreManager {
 					
 					entity.setHealth(20);
 					
-				} else if (healthPercent < 1) {
-					entity.setHealth(0);
+				} else if (healthPercent < 0.01) { //Player died.
+					
+					//Teleport the player to spawn
+					PlayerManager.teleportPlayerToSpawn(player);
+					
+					//Play death sound.
+					((Player) entity).playSound(entity.getLocation(), Sound.VILLAGER_DEATH, .5F, 1F);
+					
+					//Show death message.
+					new TitleObject(ChatColor.RED + "You have died!", ChatColor.YELLOW + "You are now being respawned.").send(player);
+					
+					//Reset the players health
+					PlayerManager.setHealthPoints(playerName, newMaxHP);
+					entity.setHealth(20);
 				} else {
 					entity.setHealth(healthPercent);
 				}
@@ -468,8 +481,8 @@ public class LoreManager {
 
 	//Get player base health points.
 	//This is defined in the PlayerManager.
-	public static int getBaseHealth(Player player) {
-		int hp = PlayerManager.getBaseHealthPoints();
+	public static double getBaseHealth(Player player) {
+		double hp = PlayerManager.getBaseHealthPoints();
 		return hp;
 	}
 

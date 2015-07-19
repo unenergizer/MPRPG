@@ -116,49 +116,49 @@ public class MessageManager {
 	/**
 	 * Percent bar for chat leveling bar.
 	 * 
-	 * @param expPercent The percent to display.
+	 * @param hpPercent The percent to display.
 	 * @return Fancy String with colored percentage bar.
 	 */
-	public static String percentBar(int expPercent) {
-		if (expPercent <= 5) {
+	public static String percentBar(double hpPercent) {
+		if (hpPercent <= 5) {
 			return ChatColor.RED + "" + ChatColor.BOLD + "|" + ChatColor.GRAY + ChatColor.BOLD + "|||||||||||||||||||";
-		} else if (expPercent > 5 && expPercent <= 10) {
+		} else if (hpPercent > 5 && hpPercent <= 10) {
 			return ChatColor.RED + "" + ChatColor.BOLD + "||" + ChatColor.GRAY + ChatColor.BOLD + "||||||||||||||||||";
-		} else if (expPercent > 10 && expPercent <= 15) {
+		} else if (hpPercent > 10 && hpPercent <= 15) {
 			return ChatColor.RED + "" + ChatColor.BOLD + "|||" + ChatColor.GRAY + ChatColor.BOLD + "|||||||||||||||||";
-		} else if (expPercent > 15 && expPercent <= 20) {
+		} else if (hpPercent > 15 && hpPercent <= 20) {
 			return ChatColor.RED + "" + ChatColor.BOLD + "||||" + ChatColor.GRAY + ChatColor.BOLD + "||||||||||||||||";
-		} else if (expPercent > 20 && expPercent <= 25) {
+		} else if (hpPercent > 20 && hpPercent <= 25) {
 			return ChatColor.RED + "" + ChatColor.BOLD + "|||||" + ChatColor.GRAY + ChatColor.BOLD + "|||||||||||||||";
-		} else if (expPercent > 25 && expPercent <= 30) {
+		} else if (hpPercent > 25 && hpPercent <= 30) {
 			return ChatColor.RED + "" + ChatColor.BOLD + "||||||" + ChatColor.GRAY + ChatColor.BOLD + "||||||||||||||";
-		} else if (expPercent > 30 && expPercent <= 35) {
+		} else if (hpPercent > 30 && hpPercent <= 35) {
 			return ChatColor.YELLOW + "" + ChatColor.BOLD + "|||||||" + ChatColor.GRAY + ChatColor.BOLD + "|||||||||||||";
-		} else if (expPercent > 35 && expPercent <= 40) {
+		} else if (hpPercent > 35 && hpPercent <= 40) {
 			return ChatColor.YELLOW + "" + ChatColor.BOLD + "||||||||" + ChatColor.GRAY + ChatColor.BOLD + "||||||||||||";
-		} else if (expPercent > 40 && expPercent <= 45) {
+		} else if (hpPercent > 40 && hpPercent <= 45) {
 			return ChatColor.YELLOW + "" + ChatColor.BOLD + "|||||||||" + ChatColor.GRAY + ChatColor.BOLD + "|||||||||||";
-		} else if (expPercent > 45 && expPercent <= 50) {
+		} else if (hpPercent > 45 && hpPercent <= 50) {
 			return ChatColor.YELLOW + "" + ChatColor.BOLD + "||||||||||" + ChatColor.GRAY + ChatColor.BOLD + "||||||||||";
-		} else if (expPercent > 50 && expPercent <= 55) {
+		} else if (hpPercent > 50 && hpPercent <= 55) {
 			return ChatColor.YELLOW + "" + ChatColor.BOLD + "|||||||||||" + ChatColor.GRAY + ChatColor.BOLD + "|||||||||";
-		} else if (expPercent > 55 && expPercent <= 60) {
+		} else if (hpPercent > 55 && hpPercent <= 60) {
 			return ChatColor.YELLOW + "" + ChatColor.BOLD + "||||||||||||" + ChatColor.GRAY + ChatColor.BOLD + "||||||||";
-		} else if (expPercent > 60 && expPercent <= 65) {
+		} else if (hpPercent > 60 && hpPercent <= 65) {
 			return ChatColor.GREEN + "" + ChatColor.BOLD + "|||||||||||||" + ChatColor.GRAY + ChatColor.BOLD + "|||||||";
-		} else if (expPercent > 65 && expPercent <= 70) {
+		} else if (hpPercent > 65 && hpPercent <= 70) {
 			return ChatColor.GREEN + "" + ChatColor.BOLD + "||||||||||||||" + ChatColor.GRAY + ChatColor.BOLD + "||||||";
-		} else if (expPercent > 70 && expPercent <= 75) {
+		} else if (hpPercent > 70 && hpPercent <= 75) {
 			return ChatColor.GREEN + "" + ChatColor.BOLD + "|||||||||||||||" + ChatColor.GRAY + ChatColor.BOLD + "|||||";
-		} else if (expPercent > 75 && expPercent <= 80) {
+		} else if (hpPercent > 75 && hpPercent <= 80) {
 			return ChatColor.GREEN + "" + ChatColor.BOLD + "||||||||||||||||" + ChatColor.GRAY + ChatColor.BOLD + "||||";
-		} else if (expPercent > 80 && expPercent <= 85) {
+		} else if (hpPercent > 80 && hpPercent <= 85) {
 			return ChatColor.GREEN + "" + ChatColor.BOLD + "|||||||||||||||||" + ChatColor.GRAY + ChatColor.BOLD + "|||";
-		} else if (expPercent > 85 && expPercent <= 90) {
+		} else if (hpPercent > 85 && hpPercent <= 90) {
 			return ChatColor.GREEN + "" + ChatColor.BOLD + "||||||||||||||||||" + ChatColor.GRAY + ChatColor.BOLD + "||";
-		} else if (expPercent > 90 && expPercent <= 95) {
+		} else if (hpPercent > 90 && hpPercent <= 95) {
 			return ChatColor.GREEN + "" + ChatColor.BOLD + "||||||||||||||||||" + ChatColor.GRAY + ChatColor.BOLD + "||";
-		} else if (expPercent > 95 && expPercent <= 100) {
+		} else if (hpPercent > 95 && hpPercent <= 100) {
 			return ChatColor.GREEN + "" + ChatColor.BOLD + "|||||||||||||||||||" + ChatColor.GRAY + ChatColor.BOLD + "|";
 		} else {
 			return ChatColor.GREEN + "" + ChatColor.BOLD + "||||||||||||||||||||";

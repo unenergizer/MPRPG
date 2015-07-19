@@ -75,7 +75,7 @@ public class PlayerHealthTagManager {
 	public static void addPlayer(Player player) {
 		player.setScoreboard(sb);
 		team.addPlayer(player);
-		obj.getScore(player).setScore(PlayerManager.getHealthPoints(player.getName()));
+		obj.getScore(player).setScore((int) PlayerManager.getHealthPoints(player.getName()));
 	}
 	
 	/**
@@ -90,7 +90,7 @@ public class PlayerHealthTagManager {
 			@Override
 			public void run() {
 				
-				obj.getScore(player).setScore(PlayerManager.getHealthPoints(player.getName()));
+				obj.getScore(player).setScore((int) PlayerManager.getHealthPoints(player.getName()));
 				
 			} //END Run method.
 		}, 5); //(20 ticks = 1 second)

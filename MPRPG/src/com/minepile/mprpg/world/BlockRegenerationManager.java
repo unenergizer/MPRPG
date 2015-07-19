@@ -46,7 +46,7 @@ public class BlockRegenerationManager {
 		this.plugin = plugin;
 		
 		//Start the timer used to reset blocks.
-		blockResetTimer();
+		startBlockResetTimer();
 	}
 	
 	/**
@@ -59,7 +59,7 @@ public class BlockRegenerationManager {
 	/**
 	 * Resets a block back to its original state.
 	 */
-	private void blockResetTimer() {
+	private void startBlockResetTimer() {
 		
         BukkitScheduler scheduler = Bukkit.getServer().getScheduler();
         scheduler.scheduleSyncRepeatingTask(plugin, new Runnable() {

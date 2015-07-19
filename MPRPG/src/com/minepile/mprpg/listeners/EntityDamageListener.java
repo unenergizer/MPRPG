@@ -55,12 +55,12 @@ public class EntityDamageListener implements Listener{
 				Player player = (Player) event.getEntity();
 				String playerName = player.getName();
 
-				int playerHealth = PlayerManager.getHealthPoints(playerName);
-				int playerMaxHealth = PlayerManager.getMaxHealthPoints(playerName);
+				double playerHealth = PlayerManager.getHealthPoints(playerName);
+				double playerMaxHealth = PlayerManager.getMaxHealthPoints(playerName);
 
-				int damage = (int) event.getDamage();
-				int healthBarPercent = (int) (20 * (playerHealth - damage) / playerMaxHealth);
-				int newHealthTotal = (int) (playerHealth - damage);
+				double damage = event.getDamage();
+				double healthBarPercent = (20 * (playerHealth - damage) / playerMaxHealth);
+				double newHealthTotal = (playerHealth - damage);
 
 				//Cancel regular event damage
 				event.setDamage(0);
@@ -69,12 +69,23 @@ public class EntityDamageListener implements Listener{
 				//player.sendMessage(ChatColor.AQUA + "DmgCause: " + event.getCause().toString());
 
 				//Show player damage message.
-				hpChangeMessage(player, playerHealth, (int) damage, playerMaxHealth);
-
+				hpChangeMessage(player, playerHealth, damage, playerMaxHealth);
+				
+				//Check to make sure the healthBarPercent isn't less than 1.
+				//If it is, we should set it back to 1.
+				if (healthBarPercent < 1) {
+					healthBarPercent = 1;
+				}
+				
+				//If players healthBar is greater than 1 heart and the players healthMap is not 0.
 				if (player.getHealth() > 1 && playerHealth > 0) {
+					
+					//If the percent of HP is less than or equal to 1 continue.
 					if (healthBarPercent <= 1) {
+						//Set the players health based on the percentage.
 						player.setHealth(healthBarPercent);
 					} else {
+						//Set the players health 
 						player.setHealth(healthBarPercent - 1);
 					}
 					PlayerManager.setHealthPoints(playerName, newHealthTotal);
@@ -96,8 +107,8 @@ public class EntityDamageListener implements Listener{
 				if (!victim.getType().equals(EntityType.ARMOR_STAND)) {
 					//Living entity is not a player, so it must be some type of mob.
 					UUID victimID = victim.getUniqueId();
-					int victimHealth = MonsterManager.getMobHealthPoints(victimID);
-					int damage = (int) event.getDamage();
+					double victimHealth = MonsterManager.getMobHealthPoints(victimID);
+					double damage = event.getDamage();
 
 					//Set the entities health to 20.
 					//We need this if the entity default 
@@ -127,23 +138,15 @@ public class EntityDamageListener implements Listener{
 		}
 	}
 
-	public static void hpChangeMessage(Player player, int playerHealth, int damage, int playerMaxHealth) {
+	private static void hpChangeMessage(Player player, double playerHealth, double damage, double playerMaxHealth) {
 
-		int newHP = playerHealth - damage;
-		int hpPercent = (int) ((100 * newHP) / playerMaxHealth);
+		double newHP = playerHealth - damage;
+		double hpPercent = ((100 * newHP) / playerMaxHealth);
 
-		String dmg = Integer.toString(damage);
-		String hpPrc = Integer.toString(hpPercent);
-		String hp = Integer.toString(newHP);
-		String maxHP = Integer.toString(playerMaxHealth);
-		/*
-		player.sendMessage(ChatColor.RED + "         -" + 
-				ChatColor.GRAY + dmg + ChatColor.BOLD + " HP: " +
-				ChatColor.GRAY + ChatColor.BOLD + hpPrc + "%" +
-				ChatColor.GRAY + " [" + ChatColor.RED + hp +
-				ChatColor.GRAY + " / " + ChatColor.GREEN + maxHP +
-				ChatColor.GRAY + "]");
-		*/
+		String dmg = Double.toString(damage);
+		String hp = Double.toString(newHP);
+		String maxHP = Double.toString(playerMaxHealth);
+
 		new ActionbarTitleObject(ChatColor.RED + "-" + 
 				ChatColor.GRAY + dmg + ChatColor.BOLD + " HP: " +
 				MessageManager.percentBar(hpPercent) + 

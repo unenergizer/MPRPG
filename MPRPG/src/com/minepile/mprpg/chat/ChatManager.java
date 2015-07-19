@@ -52,9 +52,9 @@ public class ChatManager {
 	 * @return The players staff tag, if one exists.
 	 */
 	public static String getStaffPrefix(Player player) {
-		int isAdmin = PlayerManager.getPlayerConfigInt(player, "permissions.admin");
-		int isDev = PlayerManager.getPlayerConfigInt(player, "permissions.dev");
-		int isMod = PlayerManager.getPlayerConfigInt(player, "permissions.mod");
+		int isAdmin = (int) PlayerManager.getPlayerConfigInt(player, "permissions.admin");
+		int isDev = (int) PlayerManager.getPlayerConfigInt(player, "permissions.dev");
+		int isMod = (int) PlayerManager.getPlayerConfigInt(player, "permissions.mod");
 
 		if (player.isOp()) {
 			return ChatColor.RED + "" + ChatColor.BOLD + "OP ";

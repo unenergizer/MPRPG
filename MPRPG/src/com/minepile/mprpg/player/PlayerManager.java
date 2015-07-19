@@ -37,35 +37,35 @@ public class PlayerManager {
 	static String playerFilePathEnd = ".yml";
 	
 	//MAIN STATS
-	static HashMap<String, Integer> healthPoints = new HashMap<String, Integer>();
-	static HashMap<String, Integer> maxHealthPoints = new HashMap<String, Integer>();
-	static HashMap<String, Integer> staminaPoints = new HashMap<String, Integer>();
-	static HashMap<String, Integer> maxStaminaPoints = new HashMap<String, Integer>();
-	static HashMap<String, Integer> manaPoints = new HashMap<String, Integer>();
-	static HashMap<String, Integer> maxManaPoints = new HashMap<String, Integer>();
+	static HashMap<String, Double> healthPoints = new HashMap<String, Double>();
+	static HashMap<String, Double> maxHealthPoints = new HashMap<String, Double>();
+	static HashMap<String, Double> staminaPoints = new HashMap<String, Double>();
+	static HashMap<String, Double> maxStaminaPoints = new HashMap<String, Double>();
+	static HashMap<String, Double> manaPoints = new HashMap<String, Double>();
+	static HashMap<String, Double> maxManaPoints = new HashMap<String, Double>();
 	
-	static HashMap<String, Integer> dexterityMap = new HashMap<String, Integer>();
-	static HashMap<String, Integer> intellectMap = new HashMap<String, Integer>();
-	static HashMap<String, Integer> luckMap = new HashMap<String, Integer>();
-	static HashMap<String, Integer> personalityMap = new HashMap<String, Integer>();
-	static HashMap<String, Integer> strengthMap = new HashMap<String, Integer>();
-	static HashMap<String, Integer> vitalityMap = new HashMap<String, Integer>();
+	static HashMap<String, Double> dexterityMap = new HashMap<String, Double>();
+	static HashMap<String, Double> doubleellectMap = new HashMap<String, Double>();
+	static HashMap<String, Double> luckMap = new HashMap<String, Double>();
+	static HashMap<String, Double> personalityMap = new HashMap<String, Double>();
+	static HashMap<String, Double> strengthMap = new HashMap<String, Double>();
+	static HashMap<String, Double> vitalityMap = new HashMap<String, Double>();
 	
 	//Base statistic rates
-	static int baseHealthPoints = 100;
-	static int baseStaminaPoints = 100;
-	static int baseManaPoints = 100;
-	static int baseHealthRegenRate = 1;
-	static int baseStaminaRegenRate = 1;
-	static int baseManaRegenRate = 1;
+	static double baseHealthPoints = 100;
+	static double baseStaminaPoints = 100;
+	static double baseManaPoints = 100;
+	static double baseHealthRegenRate = 1;
+	static double baseStaminaRegenRate = 1;
+	static double baseManaRegenRate = 1;
 	
 	//Base attributes
-	static int dexterity = 8;
-	static int intellect = 8;
-	static int luck = 5;
-	static int personality = 5;
-	static int strength = 10;
-	static int vitality = 9;
+	static double dexterity = 8;
+	static double doubleellect = 8;
+	static double luck = 5;
+	static double personality = 5;
+	static double strength = 10;
+	static double vitality = 9;
 	
 	//Create instance
 	public static PlayerManager getInstance() {
@@ -94,7 +94,7 @@ public class PlayerManager {
 	 */
 	public static void disable() {
 		for (Player players : Bukkit.getOnlinePlayers()) {
-			int logoutHP = PlayerManager.getHealthPoints(players.getName());
+			double logoutHP = PlayerManager.getHealthPoints(players.getName());
 			setPlayerConfigInt(players, "player.logoutHP", logoutHP);
 		}
 	}
@@ -105,7 +105,7 @@ public class PlayerManager {
 	 * @param player The player that will be teleported.
 	 */
 	public static void teleportPlayerToSpawn(Player player) {
-    	//Player must be new, lets teleport them to the new player starting point.
+    	//Player must be new, lets teleport them to the new player starting podouble.
     	player.teleport(new Location(Bukkit.getWorld("world"), 43.5, 79, -35.5));
     	
     	//Play a sound effect for the player.
@@ -121,7 +121,7 @@ public class PlayerManager {
 	/*
 	public static void updateCustomName(Player player) {
 		String name = player.getName();
-		int level = player.getLevel();
+		double level = player.getLevel();
 		player.setCustomName(ChatColor.LIGHT_PURPLE + "[" + level + "]" +
 				ChatColor.WHITE + name);
 		player.setCustomNameVisible(true);
@@ -134,15 +134,15 @@ public class PlayerManager {
 	 * @param player The player who has leveled up.
 	 * @param level The players new level.
 	 */
-	public static void levelUp(Player player, int playerLevel) {
+	public static void levelUp(Player player, double playerLevel) {
 		
 		String playerName = player.getName();
-		String level = Integer.toString(playerLevel);
+		String level = Double.toString(playerLevel);
 		World world = player.getWorld();
-		int x = player.getLocation().getBlockX();
-		int y = player.getLocation().getBlockY();
-		int z = player.getLocation().getBlockZ();
-		int hp = maxHealthPoints.get(playerName);
+		double x = player.getLocation().getBlockX();
+		double y = player.getLocation().getBlockY();
+		double z = player.getLocation().getBlockZ();
+		double hp = maxHealthPoints.get(playerName);
 		
 		//Set the players level in their configuration.
 		setPlayerConfigInt(player, "player.playerLVL", playerLevel);
@@ -153,7 +153,7 @@ public class PlayerManager {
 		//Show level up effects.
 		Location loc = new Location(world, x, y - 1, z); //Firework spawn location
 
-		for (int i = 0; i < 2; i++) {
+		for (double i = 0; i < 2; i++) {
 			Firework fw = (Firework) world.spawn(loc, Firework.class);
 			FireworkMeta fm = fw.getFireworkMeta();
 			fm.addEffect(FireworkEffect.builder()
@@ -183,13 +183,13 @@ public class PlayerManager {
 	 */
 	public static void updatePlayerBossbar(Player player) {
 		
-		int playerlvlexp = player.getLevel();
-		int playerMana = manaPoints.get(player.getName());
-		int playerMaxMana = maxManaPoints.get(player.getName());
+		double playerlvlexp = player.getLevel();
+		double playerMana = manaPoints.get(player.getName());
+		double playerMaxMana = maxManaPoints.get(player.getName());
 		
-		String playerLevel = Integer.toString(playerlvlexp);
-		String playerMaxManaString = Integer.toString(playerMaxMana);
-		String playerStaminaString = Integer.toString((staminaPoints.get(player.getName()) * 100 ) / maxStaminaPoints.get(player.getName()));
+		String playerLevel = Double.toString(playerlvlexp);
+		String playerMaxManaString = Double.toString(playerMaxMana);
+		String playerStaminaString = Double.toString((staminaPoints.get(player.getName()) * 100 ) / maxStaminaPoints.get(player.getName()));
 		
 		
 		BossbarAPI.setMessage(player, ChatColor.AQUA + "" + ChatColor.BOLD + "    " +
@@ -201,7 +201,7 @@ public class PlayerManager {
 	
 	/**
 	 * This performs the necessary steps to load in a player.
-	 * Creates a configuration file for new players and loads players statistics into the hashMaps.
+	 * Creates a configuration file for new players and loads players statistics doubleo the hashMaps.
 	 * 
 	 * @param player The player that will be setup.
 	 */
@@ -240,7 +240,7 @@ public class PlayerManager {
         
         //Setup players attributes
     	dexterityMap.put(playerName, getPlayerConfigInt(player, "attribute.dexterity"));
-    	intellectMap.put(playerName, getPlayerConfigInt(player, "attribute.intellect"));
+    	doubleellectMap.put(playerName, getPlayerConfigInt(player, "attribute.doubleellect"));
     	luckMap.put(playerName, getPlayerConfigInt(player, "attribute.luck"));
     	personalityMap.put(playerName, getPlayerConfigInt(player, "attribute.personality"));
     	strengthMap.put(playerName, getPlayerConfigInt(player, "attribute.strength"));
@@ -281,7 +281,7 @@ public class PlayerManager {
 	 * @param attribute The attribute to update.
 	 * @param value The new attribute value.
 	 */
-	public static void updatePlayerHashMap(Player player, String attribute, int value) {
+	public static void updatePlayerHashMap(Player player, String attribute, double value) {
         String playerName = player.getName();
 		
 		healthPoints.put(playerName, baseHealthPoints);
@@ -296,7 +296,7 @@ public class PlayerManager {
         
         //Setup players attributes
     	dexterityMap.put(playerName, getPlayerConfigInt(player, "attribute.dexterity"));
-    	intellectMap.put(playerName, getPlayerConfigInt(player, "attribute.intellect"));
+    	doubleellectMap.put(playerName, getPlayerConfigInt(player, "attribute.doubleellect"));
     	luckMap.put(playerName, getPlayerConfigInt(player, "attribute.luck"));
     	personalityMap.put(playerName, getPlayerConfigInt(player, "attribute.personality"));
     	strengthMap.put(playerName, getPlayerConfigInt(player, "attribute.strength"));
@@ -322,7 +322,7 @@ public class PlayerManager {
 		
 		//remove player attributes from HashMaps.
 		dexterityMap.remove(playerName);
-    	intellectMap.remove(playerName);
+    	doubleellectMap.remove(playerName);
     	luckMap.remove(playerName);
     	personalityMap.remove(playerName);
     	strengthMap.remove(playerName);
@@ -355,7 +355,7 @@ public class PlayerManager {
         playerConfig.set("permissions.mod", 0);
         
         playerConfig.set("attribute.dexterity", dexterity);
-        playerConfig.set("attribute.intellect", intellect);
+        playerConfig.set("attribute.doubleellect", doubleellect);
         playerConfig.set("attribute.luck", luck);
         playerConfig.set("attribute.personality", personality);
         playerConfig.set("attribute.strength", strength);
@@ -393,7 +393,7 @@ public class PlayerManager {
         } 
     }
     
-	public static void setPlayerConfigInt(Player player, String config, int value) {
+	public static void setPlayerConfigInt(Player player, String config, double value) {
     	
 		String uuid = player.getUniqueId().toString();
     	
@@ -432,13 +432,13 @@ public class PlayerManager {
         } 
 	}
     
-	public static int getPlayerConfigInt(Player player, String value) {
+	public static double getPlayerConfigInt(Player player, String value) {
     	
 		String uuid = player.getUniqueId().toString();
     	
         File configFile = new File(playerFilePathStart + uuid + playerFilePathEnd);
         FileConfiguration playerConfig =  YamlConfiguration.loadConfiguration(configFile);
-        return (int) playerConfig.get(value);
+        return playerConfig.getDouble(value);
 	}
 	
 	public static void setPlayerConfigString(Player player, String config, String value) {
@@ -465,147 +465,147 @@ public class PlayerManager {
         return  (String) playerConfig.get(value);
 	}
 
-	public static int getHealthPoints(String playerName) {
+	public static double getHealthPoints(String playerName) {
 		return healthPoints.get(playerName);
 	}
 
-	public static void setHealthPoints(String playerName, Integer healthPoints) {
-		PlayerManager.healthPoints.put(playerName, healthPoints);;
+	public static void setHealthPoints(String playerName, double newHealthTotal) {
+		PlayerManager.healthPoints.put(playerName, newHealthTotal);;
 	}
 
-	public static int getMaxHealthPoints(String playerName) {
+	public static double getMaxHealthPoints(String playerName) {
 		return PlayerManager.maxHealthPoints.get(playerName);
 	}
 
-	public static void setMaxHealthPoints(String playerName, Integer maxHealthPoints) {
+	public static void setMaxHealthPoints(String playerName, double maxHealthPoints) {
 		PlayerManager.maxHealthPoints.put(playerName, maxHealthPoints);
 	}
 
-	public static int getStaminaPoints(String playerName) {
+	public static double getStaminaPoints(String playerName) {
 		return staminaPoints.get(playerName);
 	}
 
-	public static void setStaminaPoints(HashMap<String, Integer> staminaPoints) {
+	public static void setStaminaPoints(HashMap<String, Double> staminaPoints) {
 		PlayerManager.staminaPoints = staminaPoints;
 	}
 
-	public static int getMaxStaminaPoints(String playerName) {
+	public static double getMaxStaminaPoints(String playerName) {
 		return maxStaminaPoints.get(playerName);
 	}
 
-	public static void setMaxStaminaPoints(HashMap<String, Integer> maxStaminaPoints) {
+	public static void setMaxStaminaPoints(HashMap<String, Double> maxStaminaPoints) {
 		PlayerManager.maxStaminaPoints = maxStaminaPoints;
 	}
 
-	public static int getManaPoints(String playerName) {
+	public static double getManaPoints(String playerName) {
 		return manaPoints.get(playerName);
 	}
 
-	public static void setManaPoints(HashMap<String, Integer> manaPoints) {
+	public static void setManaPoints(HashMap<String, Double> manaPoints) {
 		PlayerManager.manaPoints = manaPoints;
 	}
 
-	public static int getMaxManaPoints(String playerName) {
+	public static double getMaxManaPoints(String playerName) {
 		return maxManaPoints.get(playerName);
 	}
 
-	public static void setMaxManaPoints(HashMap<String, Integer> maxManaPoints) {
+	public static void setMaxManaPoints(HashMap<String, Double> maxManaPoints) {
 		PlayerManager.maxManaPoints = maxManaPoints;
 	}
 
-	public static int getBaseHealthPoints() {
+	public static double getBaseHealthPoints() {
 		return baseHealthPoints;
 	}
 
-	public static void setBaseHealthPoints(int baseHealthPoints) {
+	public static void setBaseHealthPoints(double baseHealthPoints) {
 		PlayerManager.baseHealthPoints = baseHealthPoints;
 	}
 
-	public static int getBaseStaminaPoints() {
+	public static double getBaseStaminaPoints() {
 		return baseStaminaPoints;
 	}
 
-	public static void setBaseStaminaPoints(int baseStaminaPoints) {
+	public static void setBaseStaminaPoints(double baseStaminaPoints) {
 		PlayerManager.baseStaminaPoints = baseStaminaPoints;
 	}
 
-	public static int getBaseManaPoints() {
+	public static double getBaseManaPoints() {
 		return baseManaPoints;
 	}
 
-	public static void setBaseManaPoints(int baseManaPoints) {
+	public static void setBaseManaPoints(double baseManaPoints) {
 		PlayerManager.baseManaPoints = baseManaPoints;
 	}
 
-	public static int getBaseHealthRegenRate() {
+	public static double getBaseHealthRegenRate() {
 		return baseHealthRegenRate;
 	}
 
-	public static void setBaseHealthRegenRate(int baseHealthRegenRate) {
+	public static void setBaseHealthRegenRate(double baseHealthRegenRate) {
 		PlayerManager.baseHealthRegenRate = baseHealthRegenRate;
 	}
 
-	public static int getBaseStaminaRegenRate() {
+	public static double getBaseStaminaRegenRate() {
 		return baseStaminaRegenRate;
 	}
 
-	public static void setBaseStaminaRegenRate(int baseStaminaRegenRate) {
+	public static void setBaseStaminaRegenRate(double baseStaminaRegenRate) {
 		PlayerManager.baseStaminaRegenRate = baseStaminaRegenRate;
 	}
 
-	public static int getBaseManaRegenRate() {
+	public static double getBaseManaRegenRate() {
 		return baseManaRegenRate;
 	}
 
-	public static void setBaseManaRegenRate(int baseManaRegenRate) {
+	public static void setBaseManaRegenRate(double baseManaRegenRate) {
 		PlayerManager.baseManaRegenRate = baseManaRegenRate;
 	}
 
-	public static int getDexterity() {
+	public static double getDexterity() {
 		return dexterity;
 	}
 
-	public static void setDexterity(int dexterity) {
+	public static void setDexterity(double dexterity) {
 		PlayerManager.dexterity = dexterity;
 	}
 
-	public static int getIntellect() {
-		return intellect;
+	public static double getIntellect() {
+		return doubleellect;
 	}
 
-	public static void setIntellect(int intellect) {
-		PlayerManager.intellect = intellect;
+	public static void setIntellect(double doubleellect) {
+		PlayerManager.doubleellect = doubleellect;
 	}
 
-	public static int getLuck() {
+	public static double getLuck() {
 		return luck;
 	}
 
-	public static void setLuck(int luck) {
+	public static void setLuck(double luck) {
 		PlayerManager.luck = luck;
 	}
 
-	public static int getPersonality() {
+	public static double getPersonality() {
 		return personality;
 	}
 
-	public static void setPersonality(int personality) {
+	public static void setPersonality(double personality) {
 		PlayerManager.personality = personality;
 	}
 
-	public static int getStrength() {
+	public static double getStrength() {
 		return strength;
 	}
 
-	public static void setStrength(int strength) {
+	public static void setStrength(double strength) {
 		PlayerManager.strength = strength;
 	}
 
-	public static int getVitality() {
+	public static double getVitality() {
 		return vitality;
 	}
 
-	public static void setVitality(int vitality) {
+	public static void setVitality(double vitality) {
 		PlayerManager.vitality = vitality;
 	}
 }
