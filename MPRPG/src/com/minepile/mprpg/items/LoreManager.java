@@ -404,14 +404,6 @@ public class LoreManager {
 				//If the players HP percent is over 20,
 				//then just set the players hearts to 20.
 				if (healthPercent >= 20) {
-
-					//Debug messages
-					//entity.sendMessage("newMaxHP: " + newMaxHP);
-					//entity.sendMessage("oldMaxHP: " + oldMaxHP);
-					//entity.sendMessage("currentHP (old): " + currentHP);
-					//entity.sendMessage("updatedHP: " + updatedHP);
-					//entity.sendMessage("healthPercent: " + healthPercent);
-					
 					entity.setHealth(20);
 					
 				} else if (healthPercent < 0.01) { //Player died.

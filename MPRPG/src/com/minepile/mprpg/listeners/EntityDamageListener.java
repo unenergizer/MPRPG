@@ -17,6 +17,7 @@ import org.bukkit.inventory.ItemStack;
 import com.minepile.mprpg.MPRPG;
 import com.minepile.mprpg.chat.MessageManager;
 import com.minepile.mprpg.entities.MonsterManager;
+import com.minepile.mprpg.items.LoreManager;
 import com.minepile.mprpg.player.PlayerHealthTagManager;
 import com.minepile.mprpg.player.PlayerManager;
 
@@ -83,6 +84,9 @@ public class EntityDamageListener implements Listener{
 				} else  {
 					//Update the players health tag if player isnt dead.
 					PlayerHealthTagManager.updateHealthTag(player);
+					
+					//Update the players armor.
+					LoreManager.applyHpBonus(player, false);
 				}
 			} else {
 				if (!victim.getType().equals(EntityType.ARMOR_STAND)) {

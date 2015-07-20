@@ -124,6 +124,9 @@ public class EntityDamageByEntityListener implements Listener{
 						} else  {
 							//Update the players health tag
 							PlayerHealthTagManager.updateHealthTag(player);
+							
+							//Update the players armor.
+							LoreManager.applyHpBonus(player, false);
 						}
 					}
 				}

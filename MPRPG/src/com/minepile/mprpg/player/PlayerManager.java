@@ -24,19 +24,20 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.meta.FireworkMeta;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitScheduler;
 
 import com.minepile.mprpg.MPRPG;
 import com.minepile.mprpg.items.LoreManager;
 
 public class PlayerManager {
-	
+
 	//setup instance variables
 	public static MPRPG plugin;
 	static PlayerManager playerManagerInstance = new PlayerManager();
 	static String playerFilePathStart = "plugins/MPRPG/players/";
 	static String playerFilePathEnd = ".yml";
-	
+
 	//MAIN STATS
 	static ConcurrentHashMap<String, Double> healthPoints = new ConcurrentHashMap<String, Double>();
 	static ConcurrentHashMap<String, Double> maxHealthPoints = new ConcurrentHashMap<String, Double>();
@@ -44,14 +45,14 @@ public class PlayerManager {
 	static ConcurrentHashMap<String, Double> maxStaminaPoints = new ConcurrentHashMap<String, Double>();
 	static ConcurrentHashMap<String, Double> manaPoints = new ConcurrentHashMap<String, Double>();
 	static ConcurrentHashMap<String, Double> maxManaPoints = new ConcurrentHashMap<String, Double>();
-	
+
 	static ConcurrentHashMap<String, Double> dexterityMap = new ConcurrentHashMap<String, Double>();
 	static ConcurrentHashMap<String, Double> doubleellectMap = new ConcurrentHashMap<String, Double>();
 	static ConcurrentHashMap<String, Double> luckMap = new ConcurrentHashMap<String, Double>();
 	static ConcurrentHashMap<String, Double> personalityMap = new ConcurrentHashMap<String, Double>();
 	static ConcurrentHashMap<String, Double> strengthMap = new ConcurrentHashMap<String, Double>();
 	static ConcurrentHashMap<String, Double> vitalityMap = new ConcurrentHashMap<String, Double>();
-	
+
 	//Base statistic rates
 	static double baseHealthPoints = 100;
 	static double baseStaminaPoints = 100;
@@ -59,7 +60,7 @@ public class PlayerManager {
 	static double baseHealthRegenRate = 1;
 	static double baseStaminaRegenRate = 1;
 	static double baseManaRegenRate = 1;
-	
+
 	//Base attributes
 	static double dexterity = 8;
 	static double doubleellect = 8;
@@ -67,29 +68,29 @@ public class PlayerManager {
 	static double personality = 5;
 	static double strength = 10;
 	static double vitality = 9;
-	
+
 	//Create instance
 	public static PlayerManager getInstance() {
 		return playerManagerInstance;
 	}
-	
+
 	//Setup PlayerManager
 	@SuppressWarnings("static-access")
 	public void setup(MPRPG plugin) {
 		this.plugin = plugin;
-		
+
 		//If the server reloads, lets remove all players from the hashMaps.
 		//We will add them back after this step.
 		for (Player players : Bukkit.getOnlinePlayers()) {
 			removePlayer(players);
 		}
-		
+
 		//If the server reloads, then setup all the players again.
 		for (Player players : Bukkit.getOnlinePlayers()) {
 			setupPlayer(players);
 		}
 	}
-	
+
 	/**
 	 * This will disable this class.
 	 */
@@ -99,65 +100,84 @@ public class PlayerManager {
 			setPlayerConfigInt(players, "player.logoutHP", logoutHP);
 		}
 	}
-	
+
 	/**
 	 * This will teleport the specified player to the main player Spawn location.
 	 * 
 	 * @param player The player that will be teleported.
 	 */
 	public static void teleportPlayerToSpawn(Player player) {
-    	//Player must be new, lets teleport them to the new player starting podouble.
-    	player.teleport(new Location(Bukkit.getWorld("world"), 43.5, 79, -35.5));
-    	
-    	//Play a sound effect for the player.
-    	player.playSound(player.getLocation(), Sound.AMBIENCE_CAVE, .8f, .8f);
-    	
-    	//Add temporary potion effects.
-    	PotionEffect blind = new PotionEffect(PotionEffectType.BLINDNESS, 6*20, 10);
+		//Player must be new, lets teleport them to the new player starting podouble.
+		player.teleport(new Location(Bukkit.getWorld("world"), 43.5, 79, -35.5));
+
+		//Play a sound effect for the player.
+		player.playSound(player.getLocation(), Sound.AMBIENCE_CAVE, .8f, .8f);
+
+		//Add temporary potion effects.
+		PotionEffect blind = new PotionEffect(PotionEffectType.BLINDNESS, 6*20, 10);
 		PotionEffect confuse = new PotionEffect(PotionEffectType.CONFUSION, 6*20, 20);
 		blind.apply(player);
 		confuse.apply(player);
 	}
-	
-	/*
-	public static void updateCustomName(Player player) {
-		String name = player.getName();
-		double level = player.getLevel();
-		player.setCustomName(ChatColor.LIGHT_PURPLE + "[" + level + "]" +
-				ChatColor.WHITE + name);
-		player.setCustomNameVisible(true);
-	}
-	*/
-	
+
 	/**
 	 * This is what happens when a player has lost all its HP.
 	 * 
 	 * @param player The player entity that needs to be killed.
 	 */
 	public static void killPlayer(Player player) {
-		//Teleport the player to spawn
-		teleportPlayerToSpawn(player);
+		String playerName = player.getName();
+		
+		//This will respawn the player after a certain amount of time.
+		startPlayerRespawn(player);
+		
+		//Turn the player invisible.
+		PotionEffect invisible = new PotionEffect(PotionEffectType.INVISIBILITY, 6*20, 10);
+		invisible.apply(player);
+		
+		//Temporarly allow the player to fly.
+		player.setAllowFlight(true);
 		
 		//Play death sound.
 		player.playSound(player.getLocation(), Sound.VILLAGER_DEATH, .5F, 1F);
-		
+
 		//Show death message.
 		new TitleObject(ChatColor.RED + "You have died!", ChatColor.YELLOW + "You are now being respawned.").send(player);
-		
-		//Reset the players health
-		setupPlayer(player);
+
+		//Update the players armor.
+		LoreManager.applyHpBonus(player, false);
+
+		//Reheal the player.
+		double maxHp = maxHealthPoints.get(playerName);
+		healthPoints.put(playerName, maxHp);
+		player.setHealth(20);
+
+		//Send the player a message
+		player.sendMessage(ChatColor.RED + "You have died!");
+		player.sendMessage(ChatColor.YELLOW + "Your armor has been damaged!");
+		player.sendMessage(ChatColor.GREEN + "You have been healed!");
 	}
-	
-	private static void startPlayerRespawn() {
-        BukkitScheduler scheduler = Bukkit.getServer().getScheduler();
-        scheduler.scheduleSyncDelayedTask(plugin, new Runnable() {
-            @Override
-            public void run() {
-                // Do something
-            }
-        }, 20L);
+
+	private static void startPlayerRespawn(final Player player) {
+		// Create the task anonymously and schedule to run it once, after 20 ticks
+		new BukkitRunnable() {
+
+			@Override
+			public void run() {
+				//Change gamemode back to one.
+				player.setAllowFlight(false);
+				
+				//Clear potion effect.
+				player.removePotionEffect(PotionEffectType.INVISIBILITY);
+				
+				//Teleport the player to spawn
+				teleportPlayerToSpawn(player);
+				
+			}
+
+		}.runTaskLater(plugin, 20 * 7); //7 seconds
 	}
-	
+
 	/**
 	 * Things that should happen when a player levels up.
 	 * 
@@ -165,7 +185,7 @@ public class PlayerManager {
 	 * @param level The players new level.
 	 */
 	public static void levelUp(Player player, double playerLevel) {
-		
+
 		String playerName = player.getName();
 		String level = Double.toString(playerLevel);
 		World world = player.getWorld();
@@ -173,13 +193,13 @@ public class PlayerManager {
 		double y = player.getLocation().getBlockY();
 		double z = player.getLocation().getBlockZ();
 		double hp = maxHealthPoints.get(playerName);
-		
+
 		//Set the players level in their configuration.
 		setPlayerConfigInt(player, "player.playerLVL", playerLevel);
-		
+
 		//Show level up message.
 		new TitleObject(ChatColor.GREEN + "Leveled UP!", ChatColor.GOLD + "You are now level " + level).send(player);
-		
+
 		//Show level up effects.
 		Location loc = new Location(world, x, y - 1, z); //Firework spawn location
 
@@ -195,40 +215,40 @@ public class PlayerManager {
 					.build());
 			fw.setFireworkMeta(fm);
 		}
-		
+
 		//Heal the player
 		healthPoints.put(playerName, hp);	//Sets payer HP hashmap
 		player.setHealth(20); 				//Sets player HP bar
-		
+
 		//Send the player a message
 		player.sendMessage(ChatColor.GREEN + "You have leveled up!"); 
 		player.sendMessage(ChatColor.GREEN + "You are now level " +  ChatColor.GOLD + level + ChatColor.GREEN + ".");
 		player.sendMessage(ChatColor.GREEN + "You have been healed!");
 	}
-	
+
 	/**
 	 * This will update the players UI bar at the top of the screen.
 	 * 
 	 * @param player The player who's UI will be updated.
 	 */
 	public static void updatePlayerBossbar(Player player) {
-		
+
 		double playerlvlexp = player.getLevel();
 		double playerMana = manaPoints.get(player.getName());
 		double playerMaxMana = maxManaPoints.get(player.getName());
-		
+
 		String playerLevel = Double.toString(playerlvlexp);
 		String playerMaxManaString = Double.toString(playerMaxMana);
 		String playerStaminaString = Double.toString((staminaPoints.get(player.getName()) * 100 ) / maxStaminaPoints.get(player.getName()));
-		
-		
+
+
 		BossbarAPI.setMessage(player, ChatColor.AQUA + "" + ChatColor.BOLD + "    " +
 				"LVL " + ChatColor.AQUA + playerLevel + ChatColor.DARK_GRAY + ChatColor.BOLD + 
 				"  -  " + ChatColor.LIGHT_PURPLE + ChatColor.BOLD + "Mana " + 
 				ChatColor.LIGHT_PURPLE + playerMana +  " / " + playerMaxManaString + ChatColor.DARK_GRAY + ChatColor.BOLD + 
 				"  -  " + ChatColor.GREEN + ChatColor.BOLD + "Stamina " + ChatColor.GREEN + playerStaminaString + "%");
 	}
-	
+
 	/**
 	 * This performs the necessary steps to load in a player.
 	 * Creates a configuration file for new players and loads players statistics doubleo the hashMaps.
@@ -236,103 +256,74 @@ public class PlayerManager {
 	 * @param player The player that will be setup.
 	 */
 	public static void setupPlayer(Player player) {
-		
+
 		String playerName = player.getName();
 		String uuid = player.getUniqueId().toString();
-		
+
 		//Check to make sure the player configuration exists.
 		//Player configurations are saved with the UUID (Mojang's Unique User Identifier).
-        if(!new File(playerFilePathStart + uuid + playerFilePathEnd).exists()){
-        	//The players file does not exist. Lets create the player file now.
-        	createPlayerConfig(player);
-        	
-        	//Teleport new players to the spawn location.
-        	teleportPlayerToSpawn(player);
-        }
-        
-        //Set the players level, if less than 1.
-        if (player.getLevel() < 1) {
-        	player.setLevel(1);
-        }
-        
-        //Read armor and set statistics.
-        //update HashMap info
-        if (getPlayerConfigInt(player, "player.logoutHP") < LoreManager.getHpBonus(player)) {
-        	healthPoints.put(playerName, baseHealthPoints);
-        } else {
-        	healthPoints.put(playerName, getPlayerConfigInt(player, "player.logoutHP"));
-        }
-        maxHealthPoints.put(playerName, baseHealthPoints);
-        staminaPoints.put(playerName, baseStaminaPoints);
-        maxStaminaPoints.put(playerName, baseStaminaPoints);
-        manaPoints.put(playerName, baseManaPoints);
-        maxManaPoints.put(playerName, baseManaPoints);
-        
-        //Setup players attributes
-    	dexterityMap.put(playerName, getPlayerConfigInt(player, "attribute.dexterity"));
-    	doubleellectMap.put(playerName, getPlayerConfigInt(player, "attribute.doubleellect"));
-    	luckMap.put(playerName, getPlayerConfigInt(player, "attribute.luck"));
-    	personalityMap.put(playerName, getPlayerConfigInt(player, "attribute.personality"));
-    	strengthMap.put(playerName, getPlayerConfigInt(player, "attribute.strength"));
-    	vitalityMap.put(playerName, getPlayerConfigInt(player, "attribute.vitality"));
-        
-        //Set players health to max on the health bar.
-        //player.setMaxHealth(200);
-        
-        //Give new players the MinePile game menu.
-        PlayerMenuManager.givePlayerMenu(player);
-        
-        //Monster bar at the top of the screen.
-      	updatePlayerBossbar(player);
-      	
-      	//Feed player.
-      	player.setFoodLevel(20);
-      	
-      	//update the players health tag
-      	if (PlayerHealthTagManager.getSb() != null && PlayerHealthTagManager.getObj() != null) {
-      		PlayerHealthTagManager.addPlayer(player);
-      		PlayerHealthTagManager.updateHealthTag(player);
-      	}
-      	
-      	//Give the player a Menu!
-      	PlayerMenuManager.createMenu(player);
-      	
-      	//Set player tab menu text
-      	String header = ChatColor.GREEN + "You are playing on " + ChatColor.GOLD + "MinePile Network" + ChatColor.GREEN + "!";
-      	String footer = ChatColor.RED + "www.MinePile.com" + ChatColor.BLUE + " > Forum, Store, & More!!";
-      	new TabTitleObject(header, footer).send(player);
-      	
+		if(!new File(playerFilePathStart + uuid + playerFilePathEnd).exists()){
+			//The players file does not exist. Lets create the player file now.
+			createPlayerConfig(player);
+
+			//Teleport new players to the spawn location.
+			teleportPlayerToSpawn(player);
+		}
+
+		//Set the players level, if less than 1.
+		if (player.getLevel() < 1) {
+			player.setLevel(1);
+		}
+
+		//Read armor and set statistics.
+		//update HashMap info
+		if (getPlayerConfigInt(player, "player.logoutHP") < LoreManager.getHpBonus(player)) {
+			healthPoints.put(playerName, baseHealthPoints);
+		} else {
+			healthPoints.put(playerName, getPlayerConfigInt(player, "player.logoutHP"));
+		}
+		maxHealthPoints.put(playerName, baseHealthPoints);
+		staminaPoints.put(playerName, baseStaminaPoints);
+		maxStaminaPoints.put(playerName, baseStaminaPoints);
+		manaPoints.put(playerName, baseManaPoints);
+		maxManaPoints.put(playerName, baseManaPoints);
+
+		//Setup players attributes
+		dexterityMap.put(playerName, getPlayerConfigInt(player, "attribute.dexterity"));
+		doubleellectMap.put(playerName, getPlayerConfigInt(player, "attribute.doubleellect"));
+		luckMap.put(playerName, getPlayerConfigInt(player, "attribute.luck"));
+		personalityMap.put(playerName, getPlayerConfigInt(player, "attribute.personality"));
+		strengthMap.put(playerName, getPlayerConfigInt(player, "attribute.strength"));
+		vitalityMap.put(playerName, getPlayerConfigInt(player, "attribute.vitality"));
+
+		//Set players health to max on the health bar.
+		//player.setMaxHealth(200);
+
+		//Give new players the MinePile game menu.
+		PlayerMenuManager.givePlayerMenu(player);
+
+		//Monster bar at the top of the screen.
+		updatePlayerBossbar(player);
+
+		//Feed player.
+		player.setFoodLevel(20);
+
+		//update the players health tag
+		if (PlayerHealthTagManager.getSb() != null && PlayerHealthTagManager.getObj() != null) {
+			PlayerHealthTagManager.addPlayer(player);
+			PlayerHealthTagManager.updateHealthTag(player);
+		}
+
+		//Give the player a Menu!
+		PlayerMenuManager.createMenu(player);
+
+		//Set player tab menu text
+		String header = ChatColor.GREEN + "You are playing on " + ChatColor.GOLD + "MinePile Network" + ChatColor.GREEN + "!";
+		String footer = ChatColor.RED + "www.MinePile.com" + ChatColor.BLUE + " > Forum, Store, & More!!";
+		new TabTitleObject(header, footer).send(player);
+
 	}
-	
-	/**
-	 * This will update the players HashMap's to contain new important attribute information.
-	 * 
-	 * @param player The player to update.
-	 * @param attribute The attribute to update.
-	 * @param value The new attribute value.
-	 */
-	public static void updatePlayerHashMap(Player player, String attribute, double value) {
-        String playerName = player.getName();
-		
-		healthPoints.put(playerName, baseHealthPoints);
-		
-        maxHealthPoints.put(playerName, maxHealthPoints.get(playerName) + value);
-		player.sendMessage("new hp: " + maxHealthPoints.get(playerName).toString());
-		
-        staminaPoints.put(playerName, baseStaminaPoints);
-        maxStaminaPoints.put(playerName, baseStaminaPoints);
-        manaPoints.put(playerName, baseManaPoints);
-        maxManaPoints.put(playerName, baseManaPoints);
-        
-        //Setup players attributes
-    	dexterityMap.put(playerName, getPlayerConfigInt(player, "attribute.dexterity"));
-    	doubleellectMap.put(playerName, getPlayerConfigInt(player, "attribute.doubleellect"));
-    	luckMap.put(playerName, getPlayerConfigInt(player, "attribute.luck"));
-    	personalityMap.put(playerName, getPlayerConfigInt(player, "attribute.personality"));
-    	strengthMap.put(playerName, getPlayerConfigInt(player, "attribute.strength"));
-    	vitalityMap.put(playerName, getPlayerConfigInt(player, "attribute.vitality"));
-	}
-	
+
 	/**
 	 * Remove players from the game. Will remove players from hashMaps and saves any data if necessary.
 	 * 
@@ -341,7 +332,7 @@ public class PlayerManager {
 	public static void removePlayer(Player player) {
 		//Get Player's name.
 		String playerName = player.getName();
-		
+
 		//remove player from HashMaps.
 		healthPoints.remove(playerName);
 		maxHealthPoints.remove(playerName);
@@ -349,150 +340,150 @@ public class PlayerManager {
 		maxStaminaPoints.remove(playerName);
 		manaPoints.remove(playerName);
 		maxManaPoints.remove(playerName);
-		
+
 		//remove player attributes from HashMaps.
 		dexterityMap.remove(playerName);
-    	doubleellectMap.remove(playerName);
-    	luckMap.remove(playerName);
-    	personalityMap.remove(playerName);
-    	strengthMap.remove(playerName);
-    	vitalityMap.remove(playerName);
-    	
-    	//Remove players game menu
-    	PlayerMenuManager.deleteMenu(player);
+		doubleellectMap.remove(playerName);
+		luckMap.remove(playerName);
+		personalityMap.remove(playerName);
+		strengthMap.remove(playerName);
+		vitalityMap.remove(playerName);
+
+		//Remove players game menu
+		PlayerMenuManager.deleteMenu(player);
 	}
-	
+
 	/**
 	 * Creates a new configuration file on a players first visit to the server.
 	 */
 	private static void createPlayerConfig(Player player) {
- 	
-    	String uuid = player.getUniqueId().toString();
-    	String playerName = player.getName();
-    	
-        File configFile = new File(playerFilePathStart + uuid + playerFilePathEnd);
-        FileConfiguration playerConfig =  YamlConfiguration.loadConfiguration(configFile);
-        playerConfig.set("playerName", playerName);
-        playerConfig.set("player.playerLVL", 1);
-        playerConfig.set("player.playerEXP", 0);
-        playerConfig.set("player.logoutHP", baseHealthPoints);
-        
-        playerConfig.set("gang.owner", false);
-        playerConfig.set("gang.name", null);
-        
-        playerConfig.set("permissions.admin", 0);
-        playerConfig.set("permissions.dev", 0);
-        playerConfig.set("permissions.mod", 0);
-        
-        playerConfig.set("attribute.dexterity", dexterity);
-        playerConfig.set("attribute.doubleellect", doubleellect);
-        playerConfig.set("attribute.luck", luck);
-        playerConfig.set("attribute.personality", personality);
-        playerConfig.set("attribute.strength", strength);
-        playerConfig.set("attribute.vitality", vitality);
 
-        playerConfig.set("setting.chat.languagefilter", 1);
-        playerConfig.set("setting.chat.focus", "local");
-        playerConfig.set("setting.chat.lastpm", null);
+		String uuid = player.getUniqueId().toString();
+		String playerName = player.getName();
 
-        playerConfig.set("setting.chat.healthDebug", true);
-        playerConfig.set("setting.chat.monsterDebug", true);
-        playerConfig.set("setting.chat.professionDebug", true);
-        
-        playerConfig.set("setting.chatchannel.admin", 1);
-        playerConfig.set("setting.chatchannel.global", 1);
-        playerConfig.set("setting.chatchannel.guild", 1);
-        playerConfig.set("setting.chatchannel.help", 1);
-        playerConfig.set("setting.chatchannel.local", 1);
-        playerConfig.set("setting.chatchannel.mod", 1);
-        playerConfig.set("setting.chatchannel.party", 1);
-        playerConfig.set("setting.chatchannel.pm", 1);
-        playerConfig.set("setting.chatchannel.trade", 1);
-        
-        playerConfig.set("economy.gold", 0);
-        playerConfig.set("economy.silver", 0);
-        playerConfig.set("economy.copper", 15);
-        playerConfig.set("economy.portalCash", 0);
-        playerConfig.set("economy.bankRows", 1);
-        playerConfig.set("economy.shopRows", 1);
+		File configFile = new File(playerFilePathStart + uuid + playerFilePathEnd);
+		FileConfiguration playerConfig =  YamlConfiguration.loadConfiguration(configFile);
+		playerConfig.set("playerName", playerName);
+		playerConfig.set("player.playerLVL", 1);
+		playerConfig.set("player.playerEXP", 0);
+		playerConfig.set("player.logoutHP", baseHealthPoints);
 
-        try {
-            playerConfig.save(configFile);
-        } catch (IOException e) {
-            e.printStackTrace();
-        } 
-    }
-    
+		playerConfig.set("gang.owner", false);
+		playerConfig.set("gang.name", null);
+
+		playerConfig.set("permissions.admin", 0);
+		playerConfig.set("permissions.dev", 0);
+		playerConfig.set("permissions.mod", 0);
+
+		playerConfig.set("attribute.dexterity", dexterity);
+		playerConfig.set("attribute.doubleellect", doubleellect);
+		playerConfig.set("attribute.luck", luck);
+		playerConfig.set("attribute.personality", personality);
+		playerConfig.set("attribute.strength", strength);
+		playerConfig.set("attribute.vitality", vitality);
+
+		playerConfig.set("setting.chat.languagefilter", 1);
+		playerConfig.set("setting.chat.focus", "local");
+		playerConfig.set("setting.chat.lastpm", null);
+
+		playerConfig.set("setting.chat.healthDebug", true);
+		playerConfig.set("setting.chat.monsterDebug", true);
+		playerConfig.set("setting.chat.professionDebug", true);
+
+		playerConfig.set("setting.chatchannel.admin", 1);
+		playerConfig.set("setting.chatchannel.global", 1);
+		playerConfig.set("setting.chatchannel.guild", 1);
+		playerConfig.set("setting.chatchannel.help", 1);
+		playerConfig.set("setting.chatchannel.local", 1);
+		playerConfig.set("setting.chatchannel.mod", 1);
+		playerConfig.set("setting.chatchannel.party", 1);
+		playerConfig.set("setting.chatchannel.pm", 1);
+		playerConfig.set("setting.chatchannel.trade", 1);
+
+		playerConfig.set("economy.gold", 0);
+		playerConfig.set("economy.silver", 0);
+		playerConfig.set("economy.copper", 15);
+		playerConfig.set("economy.portalCash", 0);
+		playerConfig.set("economy.bankRows", 1);
+		playerConfig.set("economy.shopRows", 1);
+
+		try {
+			playerConfig.save(configFile);
+		} catch (IOException e) {
+			e.printStackTrace();
+		} 
+	}
+
 	public static void setPlayerConfigInt(Player player, String config, double value) {
-    	
-		String uuid = player.getUniqueId().toString();
-    	
-        File configFile = new File(playerFilePathStart + uuid + playerFilePathEnd);
-        FileConfiguration playerConfig =  YamlConfiguration.loadConfiguration(configFile);
-        playerConfig.set(config, value);
 
-        try {
-            playerConfig.save(configFile);
-        } catch (IOException e) {
-            e.printStackTrace();
-        } 
+		String uuid = player.getUniqueId().toString();
+
+		File configFile = new File(playerFilePathStart + uuid + playerFilePathEnd);
+		FileConfiguration playerConfig =  YamlConfiguration.loadConfiguration(configFile);
+		playerConfig.set(config, value);
+
+		try {
+			playerConfig.save(configFile);
+		} catch (IOException e) {
+			e.printStackTrace();
+		} 
 	}
-    
+
 	public static boolean getPlayerConfigBoolean(Player player, String value) {
-    	
+
 		String uuid = player.getUniqueId().toString();
-    	
-        File configFile = new File(playerFilePathStart + uuid + playerFilePathEnd);
-        FileConfiguration playerConfig =  YamlConfiguration.loadConfiguration(configFile);
-        return playerConfig.getBoolean(value);
+
+		File configFile = new File(playerFilePathStart + uuid + playerFilePathEnd);
+		FileConfiguration playerConfig =  YamlConfiguration.loadConfiguration(configFile);
+		return playerConfig.getBoolean(value);
 	}
-	
+
 	public static void setPlayerConfigBoolean(Player player, String config, boolean value) {
-    	
-		String uuid = player.getUniqueId().toString();
-    	
-        File configFile = new File(playerFilePathStart + uuid + playerFilePathEnd);
-        FileConfiguration playerConfig =  YamlConfiguration.loadConfiguration(configFile);
-        playerConfig.set(config, value);
 
-        try {
-            playerConfig.save(configFile);
-        } catch (IOException e) {
-            e.printStackTrace();
-        } 
+		String uuid = player.getUniqueId().toString();
+
+		File configFile = new File(playerFilePathStart + uuid + playerFilePathEnd);
+		FileConfiguration playerConfig =  YamlConfiguration.loadConfiguration(configFile);
+		playerConfig.set(config, value);
+
+		try {
+			playerConfig.save(configFile);
+		} catch (IOException e) {
+			e.printStackTrace();
+		} 
 	}
-    
+
 	public static double getPlayerConfigInt(Player player, String value) {
-    	
-		String uuid = player.getUniqueId().toString();
-    	
-        File configFile = new File(playerFilePathStart + uuid + playerFilePathEnd);
-        FileConfiguration playerConfig =  YamlConfiguration.loadConfiguration(configFile);
-        return playerConfig.getDouble(value);
-	}
-	
-	public static void setPlayerConfigString(Player player, String config, String value) {
-    	
-		String uuid = player.getUniqueId().toString();
-    	
-        File configFile = new File(playerFilePathStart + uuid + playerFilePathEnd);
-        FileConfiguration playerConfig =  YamlConfiguration.loadConfiguration(configFile);
-        playerConfig.set(config, value);
 
-        try {
-            playerConfig.save(configFile);
-        } catch (IOException e) {
-            e.printStackTrace();
-        } 
-	}
-	
-	public static String getPlayerConfigString(Player player, String value) {
-    	
 		String uuid = player.getUniqueId().toString();
-    	
-        File configFile = new File(playerFilePathStart + uuid + playerFilePathEnd);
-        FileConfiguration playerConfig =  YamlConfiguration.loadConfiguration(configFile);
-        return  (String) playerConfig.get(value);
+
+		File configFile = new File(playerFilePathStart + uuid + playerFilePathEnd);
+		FileConfiguration playerConfig =  YamlConfiguration.loadConfiguration(configFile);
+		return playerConfig.getDouble(value);
+	}
+
+	public static void setPlayerConfigString(Player player, String config, String value) {
+
+		String uuid = player.getUniqueId().toString();
+
+		File configFile = new File(playerFilePathStart + uuid + playerFilePathEnd);
+		FileConfiguration playerConfig =  YamlConfiguration.loadConfiguration(configFile);
+		playerConfig.set(config, value);
+
+		try {
+			playerConfig.save(configFile);
+		} catch (IOException e) {
+			e.printStackTrace();
+		} 
+	}
+
+	public static String getPlayerConfigString(Player player, String value) {
+
+		String uuid = player.getUniqueId().toString();
+
+		File configFile = new File(playerFilePathStart + uuid + playerFilePathEnd);
+		FileConfiguration playerConfig =  YamlConfiguration.loadConfiguration(configFile);
+		return  (String) playerConfig.get(value);
 	}
 
 	public static double getHealthPoints(String playerName) {
