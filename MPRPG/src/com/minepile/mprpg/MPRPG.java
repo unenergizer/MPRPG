@@ -10,6 +10,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import com.minepile.mprpg.chat.ChatManager;
 import com.minepile.mprpg.chat.DiceRollManager;
+import com.minepile.mprpg.chat.GameTipManager;
 import com.minepile.mprpg.chat.LagManager;
 import com.minepile.mprpg.chat.MessageManager;
 import com.minepile.mprpg.commands.CommandManager;
@@ -106,6 +107,7 @@ public class MPRPG extends JavaPlugin {
         //setup chat manager instances
         ChatManager.getInstance().setup(this);
         DiceRollManager.getInstance().setup(this);
+        GameTipManager.getInstance().setup(this);
         GuildManager.getInstance().setup(this);
         LagManager.getInstance().setup(this);
         MessageManager.getInstance().setup(this);
