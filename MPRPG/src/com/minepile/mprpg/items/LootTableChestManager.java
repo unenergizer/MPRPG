@@ -25,7 +25,7 @@ public class LootTableChestManager {
 	static FileConfiguration lootTableConfig;
 
 	//Drop percentage
-	static int dropPercentage = 50;
+	static int dropPercentage = 10;
 
 	//Create instance
 	public static LootTableChestManager getInstance() {

@@ -35,40 +35,27 @@ public class EntityRegainHealthListener implements Listener{
 			double healAmount = event.getAmount() + LoreManager.getRegenBonus((LivingEntity)event.getEntity());
 			double newHP = currentHP + healAmount;
 			double hpPercent = ((100 * newHP) / maxHP);
-			double hpBarPercent = (20 * currentHP) / maxHP;
-			
+			double hpBarPercent = (20 * currentHP) / maxHP;		
 			
 			if (currentHP == maxHP) {
 				PlayerManager.setHealthPoints(playerName, maxHP);
 				player.setHealth(20);
-				
-				/* Redundant message.
-				player.sendMessage(ChatColor.GREEN + "            " + 
-						ChatColor.GRAY + ChatColor.BOLD + " HP: " +
-						ChatColor.GRAY + ChatColor.BOLD + "100%" +
-						ChatColor.GRAY + " [" + ChatColor.GREEN + maxHP +
-						ChatColor.GRAY + " / " + ChatColor.GREEN + maxHP +
-						ChatColor.GRAY + "]");
-				*/
 			} else if (currentHP < maxHP){
 				PlayerManager.setHealthPoints(playerName, newHP);
-				
-				if (hpBarPercent > 1) {
-					player.setHealth(hpBarPercent - 1);
-				} else {
-					player.setHealth(hpBarPercent);
-				}
+				player.setHealth(hpBarPercent);
 
-				//Update the players health tag.
-				
+				//Send the player a hp change message.
 				new ActionbarTitleObject(ChatColor.GREEN + "+" + 
-						ChatColor.GRAY + healAmount + ChatColor.BOLD + " HP: " +
+						ChatColor.GRAY + Integer.toString((int) healAmount) + ChatColor.BOLD + " HP: " +
 						MessageManager.percentBar(hpPercent) + 
-						ChatColor.GRAY + " [" + ChatColor.GREEN + newHP +
-						ChatColor.GRAY + " / " + ChatColor.GREEN + maxHP +
+						ChatColor.GRAY + " [" + ChatColor.GREEN + Integer.toString((int) newHP) +
+						ChatColor.GRAY + " / " + ChatColor.GREEN + Integer.toString((int) maxHP) +
 						ChatColor.GRAY + "]").send(player);
 				
+				//Update the players health tag.
 				PlayerHealthTagManager.updateHealthTag(player);
+			} else if (hpBarPercent <= 0) {
+				event.setCancelled(true);
 			}
 		}
 	}

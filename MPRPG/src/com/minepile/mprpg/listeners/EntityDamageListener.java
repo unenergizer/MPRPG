@@ -1,7 +1,6 @@
 package com.minepile.mprpg.listeners;
 
 import io.puharesource.mc.titlemanager.api.ActionbarTitleObject;
-import io.puharesource.mc.titlemanager.api.TitleObject;
 
 import java.util.UUID;
 
@@ -65,44 +64,26 @@ public class EntityDamageListener implements Listener{
 				//Cancel regular event damage
 				event.setDamage(0);
 
-				//Print out the type of damage done.
-				//player.sendMessage(ChatColor.AQUA + "DmgCause: " + event.getCause().toString());
-
 				//Show player damage message.
-				hpChangeMessage(player, playerHealth, damage, playerMaxHealth);
-				
-				//Check to make sure the healthBarPercent isn't less than 1.
-				//If it is, we should set it back to 1.
-				if (healthBarPercent < 1) {
-					healthBarPercent = 1;
-				}
+				hpChangeMessage(player, (int) playerHealth, (int) damage, (int) playerMaxHealth);
 				
 				//If players healthBar is greater than 1 heart and the players healthMap is not 0.
-				if (player.getHealth() > 1 && playerHealth > 0) {
-					
-					//If the percent of HP is less than or equal to 1 continue.
-					if (healthBarPercent <= 1) {
-						//Set the players health based on the percentage.
-						player.setHealth(healthBarPercent);
-					} else {
-						//Set the players health 
-						player.setHealth(healthBarPercent - 1);
-					}
+				if (healthBarPercent <= 1 ) {
+					player.setHealth(healthBarPercent + 1);
 					PlayerManager.setHealthPoints(playerName, newHealthTotal);
-				} else if (player.getHealth() == 1) {
-					player.setHealth(player.getHealth() + 1);
+				} else {
+					player.setHealth(healthBarPercent);
 					PlayerManager.setHealthPoints(playerName, newHealthTotal);
-				} else if (playerHealth <= 0) {
-					//Cancel any further damage.
-					event.setCancelled(true);
-					//Kill the player
-					player.setHealth(0);
-					
-					new TitleObject(ChatColor.RED + "You have died!", "").send(player);
 				}
-
-				//Update the players health tag
-				PlayerHealthTagManager.updateHealthTag(player);
+				
+				//Check if the player HP is too low. If it is, kill the player.
+				if (playerHealth < 1) {
+					//kill player
+					PlayerManager.killPlayer(player);
+				} else  {
+					//Update the players health tag if player isnt dead.
+					PlayerHealthTagManager.updateHealthTag(player);
+				}
 			} else {
 				if (!victim.getType().equals(EntityType.ARMOR_STAND)) {
 					//Living entity is not a player, so it must be some type of mob.
@@ -138,14 +119,14 @@ public class EntityDamageListener implements Listener{
 		}
 	}
 
-	private static void hpChangeMessage(Player player, double playerHealth, double damage, double playerMaxHealth) {
+	private static void hpChangeMessage(Player player, int playerHealth, int damage, int playerMaxHealth) {
 
-		double newHP = playerHealth - damage;
-		double hpPercent = ((100 * newHP) / playerMaxHealth);
+		int newHP = playerHealth - damage;
+		int hpPercent =((100 * newHP) / playerMaxHealth);
 
-		String dmg = Double.toString(damage);
-		String hp = Double.toString(newHP);
-		String maxHP = Double.toString(playerMaxHealth);
+		String dmg = Integer.toString(damage);
+		String hp = Integer.toString(newHP);
+		String maxHP = Integer.toString(playerMaxHealth);
 
 		new ActionbarTitleObject(ChatColor.RED + "-" + 
 				ChatColor.GRAY + dmg + ChatColor.BOLD + " HP: " +

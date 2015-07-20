@@ -5,7 +5,7 @@ import io.puharesource.mc.titlemanager.api.TitleObject;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.HashMap;
+import java.util.concurrent.ConcurrentHashMap;
 
 import me.mgone.bossbarapi.BossbarAPI;
 import net.md_5.bungee.api.ChatColor;
@@ -24,6 +24,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.meta.FireworkMeta;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+import org.bukkit.scheduler.BukkitScheduler;
 
 import com.minepile.mprpg.MPRPG;
 import com.minepile.mprpg.items.LoreManager;
@@ -37,19 +38,19 @@ public class PlayerManager {
 	static String playerFilePathEnd = ".yml";
 	
 	//MAIN STATS
-	static HashMap<String, Double> healthPoints = new HashMap<String, Double>();
-	static HashMap<String, Double> maxHealthPoints = new HashMap<String, Double>();
-	static HashMap<String, Double> staminaPoints = new HashMap<String, Double>();
-	static HashMap<String, Double> maxStaminaPoints = new HashMap<String, Double>();
-	static HashMap<String, Double> manaPoints = new HashMap<String, Double>();
-	static HashMap<String, Double> maxManaPoints = new HashMap<String, Double>();
+	static ConcurrentHashMap<String, Double> healthPoints = new ConcurrentHashMap<String, Double>();
+	static ConcurrentHashMap<String, Double> maxHealthPoints = new ConcurrentHashMap<String, Double>();
+	static ConcurrentHashMap<String, Double> staminaPoints = new ConcurrentHashMap<String, Double>();
+	static ConcurrentHashMap<String, Double> maxStaminaPoints = new ConcurrentHashMap<String, Double>();
+	static ConcurrentHashMap<String, Double> manaPoints = new ConcurrentHashMap<String, Double>();
+	static ConcurrentHashMap<String, Double> maxManaPoints = new ConcurrentHashMap<String, Double>();
 	
-	static HashMap<String, Double> dexterityMap = new HashMap<String, Double>();
-	static HashMap<String, Double> doubleellectMap = new HashMap<String, Double>();
-	static HashMap<String, Double> luckMap = new HashMap<String, Double>();
-	static HashMap<String, Double> personalityMap = new HashMap<String, Double>();
-	static HashMap<String, Double> strengthMap = new HashMap<String, Double>();
-	static HashMap<String, Double> vitalityMap = new HashMap<String, Double>();
+	static ConcurrentHashMap<String, Double> dexterityMap = new ConcurrentHashMap<String, Double>();
+	static ConcurrentHashMap<String, Double> doubleellectMap = new ConcurrentHashMap<String, Double>();
+	static ConcurrentHashMap<String, Double> luckMap = new ConcurrentHashMap<String, Double>();
+	static ConcurrentHashMap<String, Double> personalityMap = new ConcurrentHashMap<String, Double>();
+	static ConcurrentHashMap<String, Double> strengthMap = new ConcurrentHashMap<String, Double>();
+	static ConcurrentHashMap<String, Double> vitalityMap = new ConcurrentHashMap<String, Double>();
 	
 	//Base statistic rates
 	static double baseHealthPoints = 100;
@@ -127,6 +128,35 @@ public class PlayerManager {
 		player.setCustomNameVisible(true);
 	}
 	*/
+	
+	/**
+	 * This is what happens when a player has lost all its HP.
+	 * 
+	 * @param player The player entity that needs to be killed.
+	 */
+	public static void killPlayer(Player player) {
+		//Teleport the player to spawn
+		teleportPlayerToSpawn(player);
+		
+		//Play death sound.
+		player.playSound(player.getLocation(), Sound.VILLAGER_DEATH, .5F, 1F);
+		
+		//Show death message.
+		new TitleObject(ChatColor.RED + "You have died!", ChatColor.YELLOW + "You are now being respawned.").send(player);
+		
+		//Reset the players health
+		setupPlayer(player);
+	}
+	
+	private static void startPlayerRespawn() {
+        BukkitScheduler scheduler = Bukkit.getServer().getScheduler();
+        scheduler.scheduleSyncDelayedTask(plugin, new Runnable() {
+            @Override
+            public void run() {
+                // Do something
+            }
+        }, 20L);
+	}
 	
 	/**
 	 * Things that should happen when a player levels up.
@@ -485,7 +515,7 @@ public class PlayerManager {
 		return staminaPoints.get(playerName);
 	}
 
-	public static void setStaminaPoints(HashMap<String, Double> staminaPoints) {
+	public static void setStaminaPoints(ConcurrentHashMap<String, Double> staminaPoints) {
 		PlayerManager.staminaPoints = staminaPoints;
 	}
 
@@ -493,7 +523,7 @@ public class PlayerManager {
 		return maxStaminaPoints.get(playerName);
 	}
 
-	public static void setMaxStaminaPoints(HashMap<String, Double> maxStaminaPoints) {
+	public static void setMaxStaminaPoints(ConcurrentHashMap<String, Double> maxStaminaPoints) {
 		PlayerManager.maxStaminaPoints = maxStaminaPoints;
 	}
 
@@ -501,7 +531,7 @@ public class PlayerManager {
 		return manaPoints.get(playerName);
 	}
 
-	public static void setManaPoints(HashMap<String, Double> manaPoints) {
+	public static void setManaPoints(ConcurrentHashMap<String, Double> manaPoints) {
 		PlayerManager.manaPoints = manaPoints;
 	}
 
@@ -509,7 +539,7 @@ public class PlayerManager {
 		return maxManaPoints.get(playerName);
 	}
 
-	public static void setMaxManaPoints(HashMap<String, Double> maxManaPoints) {
+	public static void setMaxManaPoints(ConcurrentHashMap<String, Double> maxManaPoints) {
 		PlayerManager.maxManaPoints = maxManaPoints;
 	}
 

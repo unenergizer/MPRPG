@@ -1,7 +1,5 @@
 package com.minepile.mprpg.items;
 
-import io.puharesource.mc.titlemanager.api.TitleObject;
-
 import java.sql.Timestamp;
 import java.util.Date;
 import java.util.HashMap;
@@ -401,7 +399,7 @@ public class LoreManager {
 			if (newMaxHP != oldMaxHP) {
 
 				PlayerManager.setMaxHealthPoints(entity.getName(), newMaxHP);
-				entity.sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "New MaxHP: " + ChatColor.RESET + newMaxHP);
+				entity.sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "New MaxHP: " + ChatColor.RESET + Integer.toString((int) newMaxHP));
 				
 				//If the players HP percent is over 20,
 				//then just set the players hearts to 20.
@@ -418,18 +416,7 @@ public class LoreManager {
 					
 				} else if (healthPercent < 0.01) { //Player died.
 					
-					//Teleport the player to spawn
-					PlayerManager.teleportPlayerToSpawn(player);
-					
-					//Play death sound.
-					((Player) entity).playSound(entity.getLocation(), Sound.VILLAGER_DEATH, .5F, 1F);
-					
-					//Show death message.
-					new TitleObject(ChatColor.RED + "You have died!", ChatColor.YELLOW + "You are now being respawned.").send(player);
-					
-					//Reset the players health
-					PlayerManager.setHealthPoints(playerName, newMaxHP);
-					entity.setHealth(20);
+					PlayerManager.killPlayer(player);
 				} else {
 					entity.setHealth(healthPercent);
 				}

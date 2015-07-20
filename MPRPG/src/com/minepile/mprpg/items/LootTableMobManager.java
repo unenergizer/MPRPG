@@ -21,7 +21,7 @@ public class LootTableMobManager {
 	static String LootTableFilePath = "plugins/MPRPG/items/LootTableMobs.yml";
 
 	//Drop percentage
-	static int dropPercentage = 50;
+	private static double dropPercentage = 2.5;
 
 	//Configuration file that holds currency information.
 	static File configFile;
@@ -93,9 +93,8 @@ public class LootTableMobManager {
 	private static boolean dropItem() {
 		Random rand = new Random();
 
-		int randomNum = rand.nextInt() * 100 + 1;
-
-		if (randomNum > dropPercentage) { 
+		double randomNum = rand.nextDouble() * 100;
+		if (randomNum <= dropPercentage) { 
 			return true;
 		} else {
 			return false;
