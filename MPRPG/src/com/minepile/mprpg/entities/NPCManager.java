@@ -53,6 +53,24 @@ public class NPCManager {
 		//teleportNPC();
 	}
 	
+	
+	
+	
+	/**
+	 * 
+	 * Load NPC from file
+	 * Spawn NPC at location
+	 * Give NPC a HP
+	 * Assign actions to them (quests, menus, etc)
+	 * Put hologram over a class trainers head and quest person head
+	 *
+	 * 
+	 */
+	
+	
+	
+	/*///////////////////////////////////////////////////////////////////////////////////////////////////*/
+	
 	/**
 	 * This will setup an NPC entitie.
 	 * 

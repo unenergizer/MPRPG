@@ -6,6 +6,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
 
 import com.minepile.mprpg.MPRPG;
 import com.minepile.mprpg.items.LootTableChestManager;
@@ -26,6 +27,7 @@ public class InventoryOpenListener implements Listener{
 		if (event.getPlayer() instanceof Player) {
 			Inventory inv = event.getInventory();
 			InventoryType invType = inv.getType();
+			String invName = inv.getName();
 			
 			switch(invType) {
 			case ANVIL:
@@ -38,7 +40,9 @@ public class InventoryOpenListener implements Listener{
 				event.setCancelled(true);
 				break;
 			case CHEST:
-				LootTableChestManager.toggleChestLoot(player, inv);
+				if (invName.equalsIgnoreCase("container.chest")) {
+					LootTableChestManager.toggleChestLoot(player, inv);
+				}
 				break;
 			case CRAFTING:
 				event.setCancelled(true);

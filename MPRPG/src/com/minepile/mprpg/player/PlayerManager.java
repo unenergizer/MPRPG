@@ -25,7 +25,6 @@ import org.bukkit.inventory.meta.FireworkMeta;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
-import org.bukkit.scheduler.BukkitScheduler;
 
 import com.minepile.mprpg.MPRPG;
 import com.minepile.mprpg.items.LoreManager;
@@ -135,8 +134,16 @@ public class PlayerManager {
 		PotionEffect invisible = new PotionEffect(PotionEffectType.INVISIBILITY, 6*20, 10);
 		invisible.apply(player);
 		
-		//Temporarly allow the player to fly.
+		//Teleport player into the air.
+		double x = player.getLocation().getX();
+		double y = player.getLocation().getY();
+		double z = player.getLocation().getZ();
+		
+		player.teleport(new Location(Bukkit.getWorld("world"), x, y + 5, z));
+		
+		//Temporarily allow the player to fly.
 		player.setAllowFlight(true);
+		player.setFlying(true);
 		
 		//Play death sound.
 		player.playSound(player.getLocation(), Sound.VILLAGER_DEATH, .5F, 1F);
@@ -147,7 +154,7 @@ public class PlayerManager {
 		//Update the players armor.
 		LoreManager.applyHpBonus(player, false);
 
-		//Reheal the player.
+		//Heal the player.
 		double maxHp = maxHealthPoints.get(playerName);
 		healthPoints.put(playerName, maxHp);
 		player.setHealth(20);
@@ -164,8 +171,9 @@ public class PlayerManager {
 
 			@Override
 			public void run() {
-				//Change gamemode back to one.
+				//Turn flying off back to one.
 				player.setAllowFlight(false);
+				player.setFlying(false);
 				
 				//Clear potion effect.
 				player.removePotionEffect(PotionEffectType.INVISIBILITY);
@@ -175,7 +183,7 @@ public class PlayerManager {
 				
 			}
 
-		}.runTaskLater(plugin, 20 * 7); //7 seconds
+		}.runTaskLater(plugin, 20 * 10); //7 seconds
 	}
 
 	/**
@@ -318,8 +326,10 @@ public class PlayerManager {
 		PlayerMenuManager.createMenu(player);
 
 		//Set player tab menu text
-		String header = ChatColor.GREEN + "You are playing on " + ChatColor.GOLD + "MinePile Network" + ChatColor.GREEN + "!";
-		String footer = ChatColor.RED + "www.MinePile.com" + ChatColor.BLUE + " > Forum, Store, & More!!";
+		String header = ChatColor.YELLOW + "" + ChatColor.BOLD + "MinePile" 
+				+ ChatColor.WHITE + ChatColor.BOLD + ": RPGMMO " 
+				+ plugin.getPluginVersion();
+		String footer = ChatColor.YELLOW + "" + ChatColor.UNDERLINE + "www.MinePile.com";
 		new TabTitleObject(header, footer).send(player);
 
 	}

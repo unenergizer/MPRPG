@@ -3,6 +3,7 @@ package com.minepile.mprpg.professions;
 import net.citizensnpcs.api.CitizensAPI;
 import net.citizensnpcs.api.npc.NPC;
 import net.citizensnpcs.api.npc.NPCRegistry;
+import net.citizensnpcs.api.trait.Trait;
 import net.md_5.bungee.api.ChatColor;
 
 import org.bukkit.Bukkit;
@@ -37,7 +38,7 @@ public class Blacksmithing {
 		this.plugin = plugin;
 		
 		setupAnvilHolograms();
-		spawnNPC();
+		//spawnNPC();
 	}
 	
 	/**
@@ -45,13 +46,13 @@ public class Blacksmithing {
 	 */
 	public static void disable() {
 		removeHolograms();
-		removeNPC();
+		//removeNPC();
 	}	
 	
 	/**
 	 * This will spawn an NPC.
-	 */
-	private static void spawnNPC() {
+	 *
+	private void spawnNPC() {
 		World world = Bukkit.getWorld("world");
 		Location bs = new Location(world, 30, 79, 20);
 		
@@ -59,7 +60,10 @@ public class Blacksmithing {
 		NPCRegistry registry = CitizensAPI.getNPCRegistry();
 		npc = registry.createNPC(EntityType.PLAYER, "Blacksmith");
 		npc.spawn(bs);
-	}
+		npc.addTrait(Class<LookClose extends Trait> trait);
+		npc.setProtected(true);
+		//npc.data().setPersistent("lookclose", true);
+	}*/
 	
 	//This will remove an NPC.
 	private static void removeNPC() {

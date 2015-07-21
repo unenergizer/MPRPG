@@ -49,7 +49,7 @@ public class LootTableChestManager {
 
 	public static void toggleChestLoot(Player player, Inventory inv) {
 
-		if (inv.getContents() != null) {
+		if (inv.getContents().length <= 0) {
 			String lootTable = "junk01";
 
 			ArrayList armorItems = (ArrayList) lootTableConfig.getList(lootTable + ".armorItem");

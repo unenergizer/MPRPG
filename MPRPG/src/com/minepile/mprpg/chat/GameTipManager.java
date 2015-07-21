@@ -15,24 +15,24 @@ import com.minepile.mprpg.MPRPG;
 
 public class GameTipManager {
 
-	//setup instance variables
+	//Setup instance variables.
 	public static MPRPG plugin;
 	static GameTipManager gameTipManagerInstance = new GameTipManager();
     static String FILE_PATH = "plugins/MPRPG/language/tips.yml";
     
-    //Config file.
-    static File configFile;
-    static FileConfiguration gameTipConfig;
+    //Configuration file.
+    private static File configFile;
+    private static FileConfiguration gameTipConfig;
 	
-	//Setup regeneration variables
+	//Setup regeneration variables.
 	private static int gameTipTime = 60 * 10;			//Time it takes for a message to show up. 60 seconds * 15 (15 minutes)
 	
-	//Create instance
+	//Create instance.
 	public static GameTipManager getInstance() {
 		return gameTipManagerInstance;
 	}
 
-	//Setup GameTipManager
+	//Setup GameTipManager.
 	@SuppressWarnings("static-access")
 	public void setup(MPRPG plugin) {
 		this.plugin = plugin;
@@ -53,7 +53,10 @@ public class GameTipManager {
 	}
 	
 	/**
-	 * Resets a block back to its original state.
+	 * TODO: Load messages in from a list.
+	 * <p>
+	 * This starts the thread that will loop over and over displaying tips and
+	 * other useful information to the player.
 	 */
 	private void startTipMessages() {
 		
@@ -61,16 +64,23 @@ public class GameTipManager {
         scheduler.scheduleSyncRepeatingTask(plugin, new Runnable() {
             @Override
             public void run() {
-            	Bukkit.broadcastMessage(ChatColor.YELLOW + "" + ChatColor.BOLD + "TIP: " + ChatColor.YELLOW + "Please report all bugs to staff members.");
-			
+            	Bukkit.broadcastMessage(ChatColor.YELLOW + "" + ChatColor.BOLD + "TIP" 
+            			+ ChatColor.DARK_GRAY + ChatColor.BOLD + ": " 
+            			+ ChatColor.YELLOW + "Please report all bugs to staff members"  
+            			+ ChatColor.DARK_GRAY + ".");
             }
         }, 0L, 20 * gameTipTime);
 	}
 	
-	public static List<?> loadMessages() {
+	/**
+	 * TODO:  Load all messages from configuration file.
+	 * 
+	 * @return A list of all tips (messages) in the configuration file.
+	 */
+	private static void loadMessages() {
 		configFile = new File(FILE_PATH);
 		gameTipConfig =  YamlConfiguration.loadConfiguration(configFile);
-		return gameTipConfig.getList("GameTips");
+		List<String> list = (List<String>) gameTipConfig.getList("GameTips");
 	}
 	
 	/**

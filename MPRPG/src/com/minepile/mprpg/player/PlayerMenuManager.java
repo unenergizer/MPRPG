@@ -17,6 +17,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.material.Dye;
 
 import com.minepile.mprpg.MPRPG;
+import com.minepile.mprpg.util.ItemBuilder;
 
 public class PlayerMenuManager {
 	
@@ -52,6 +53,7 @@ public class PlayerMenuManager {
 		dyeOff.setColor(DyeColor.LIME);
 		on = dyeOn.toItemStack(1);
 		off = dyeOff.toItemStack(1);
+		
 	}
 	
 	/**
@@ -68,22 +70,22 @@ public class PlayerMenuManager {
 		
 		Inventory mainMenu = Bukkit.createInventory(player, 27, playerName + "'s " + ChatColor.RED + gameMenu);
 		//Define the items in the Main Menu.
-		mainMenu.setItem(0, new ItemStack(Material.BOOK, 1));
-        mainMenu.setItem(1, new ItemStack(Material.ENCHANTED_BOOK, 1));
-        mainMenu.setItem(2, new ItemStack(Material.MAP));
-        mainMenu.setItem(3, new ItemStack(Material.WOOD_SWORD));
-        mainMenu.setItem(6, new ItemStack(Material.ENDER_CHEST));
-        mainMenu.setItem(7, new ItemStack(Material.MONSTER_EGG));
-        mainMenu.setItem(8, new ItemStack(Material.REDSTONE_COMPARATOR));
+		mainMenu.setItem(0, new ItemBuilder(Material.BOOK, 1).setTitle(ChatColor.GREEN + "Rule Book").build());
+        mainMenu.setItem(1, new ItemBuilder(Material.ENCHANTED_BOOK, 1).setTitle(ChatColor.GREEN + "Achievement").build());
+        mainMenu.setItem(2, new ItemBuilder(Material.MAP).setTitle(ChatColor.GREEN + "Stats").build());
+        mainMenu.setItem(3, new ItemBuilder(Material.WOOD_SWORD).setTitle(ChatColor.GREEN + "Guild Info").build());
+        mainMenu.setItem(6, new ItemBuilder(Material.ENDER_CHEST).setTitle(ChatColor.GREEN + "Cosmetic Menu").build());
+        mainMenu.setItem(7, new ItemBuilder(Material.MONSTER_EGG).setTitle(ChatColor.GREEN + "Pet Menu").build());
+        mainMenu.setItem(8, new ItemBuilder(Material.REDSTONE_COMPARATOR).setTitle(ChatColor.GREEN + "Settings").build());
         
-        mainMenu.setItem(18, new ItemStack(Material.COMPASS));
-        mainMenu.setItem(19, new ItemStack(Material.WATCH));
-        mainMenu.setItem(21, new ItemStack(Material.GOLD_INGOT));
-        mainMenu.setItem(22, new ItemStack(Material.IRON_INGOT));
-        mainMenu.setItem(23, new ItemStack(Material.CLAY_BRICK));
+        mainMenu.setItem(18, new ItemBuilder(Material.COMPASS).setTitle(ChatColor.GREEN + "Tracking Device").build());
+        mainMenu.setItem(19, new ItemBuilder(Material.WATCH).setTitle(ChatColor.GREEN + "Game/Lobby Menu").build());
+        mainMenu.setItem(21, new ItemBuilder(Material.GOLD_INGOT).setTitle(ChatColor.GREEN + "Gold value here").build());
+        mainMenu.setItem(22, new ItemBuilder(Material.IRON_INGOT).setTitle(ChatColor.GREEN + "Silver value here").build());
+        mainMenu.setItem(23, new ItemBuilder(Material.CLAY_BRICK).setTitle(ChatColor.GREEN + "Copper value here").build());
 
-        mainMenu.setItem(25, new ItemStack(Material.DIAMOND));
-        mainMenu.setItem(26, new ItemStack(Material.ENCHANTMENT_TABLE));
+        mainMenu.setItem(25, new ItemBuilder(Material.DIAMOND).setTitle(ChatColor.GREEN + "eChash value here").build());
+        mainMenu.setItem(26, new ItemBuilder(Material.ENCHANTMENT_TABLE).setTitle(ChatColor.GREEN + "Server Store").build());
         
         playerMainMenu.put(player.getUniqueId(), mainMenu);
         
@@ -93,22 +95,22 @@ public class PlayerMenuManager {
         
 		Inventory settingsMenu = Bukkit.createInventory(player, 36, playerName + "'s " + ChatColor.RED + gameSettingsMenu);
 		//Row Header
-		settingsMenu.setItem(0, new ItemStack(Material.HOPPER));				//Back to previous menu
-		settingsMenu.setItem(1, new ItemStack(Material.STAINED_GLASS_PANE, 1, (short) 15));
-		settingsMenu.setItem(2, new ItemStack(Material.STAINED_GLASS_PANE, 1, (short) 15));
-		settingsMenu.setItem(3, new ItemStack(Material.STAINED_GLASS_PANE, 1, (short) 15));
-		settingsMenu.setItem(4, new ItemStack(Material.BOOK));					//About menu
-		settingsMenu.setItem(5, new ItemStack(Material.STAINED_GLASS_PANE, 1, (short) 15));
-		settingsMenu.setItem(6, new ItemStack(Material.STAINED_GLASS_PANE, 1, (short) 15));
-		settingsMenu.setItem(7, new ItemStack(Material.STAINED_GLASS_PANE, 1, (short) 15));
-		settingsMenu.setItem(8, new ItemStack(Material.REDSTONE_BLOCK));		//Exit Menu
+		settingsMenu.setItem(0, new ItemBuilder(Material.HOPPER).setTitle(ChatColor.GREEN + "Previous Menu / Back").build());//Back to previous menu
+		settingsMenu.setItem(1, new ItemBuilder(Material.STAINED_GLASS_PANE,  1, (short) 15).setTitle(" ").build());
+		settingsMenu.setItem(2, new ItemBuilder(Material.STAINED_GLASS_PANE,  1, (short) 15).setTitle(" ").build());
+		settingsMenu.setItem(3, new ItemBuilder(Material.STAINED_GLASS_PANE,  1, (short) 15).setTitle(" ").build());
+		settingsMenu.setItem(4, new ItemBuilder(Material.SIGN).setTitle(ChatColor.AQUA + "Game Settings").build());			//About menu
+		settingsMenu.setItem(5, new ItemBuilder(Material.STAINED_GLASS_PANE,  1, (short) 15).setTitle(" ").build());
+		settingsMenu.setItem(6, new ItemBuilder(Material.STAINED_GLASS_PANE,  1, (short) 15).setTitle(" ").build());
+		settingsMenu.setItem(7, new ItemBuilder(Material.STAINED_GLASS_PANE,  1, (short) 15).setTitle(" ").build());
+		settingsMenu.setItem(8, new ItemBuilder(Material.REDSTONE_BLOCK).setTitle(ChatColor.RED + "Close Menu").build());	//Exit Menu
         
 		//Options row 1.
-		settingsMenu.setItem(18, new ItemStack(Material.SKULL_ITEM, 1, (short) 2));	//Monster Debug Messages
-		settingsMenu.setItem(20, new ItemStack(Material.REDSTONE));					//Player HP Debug Messages
-		settingsMenu.setItem(22, new ItemStack(Material.STONE_PICKAXE));			//Profession Debug Messages
-		settingsMenu.setItem(24, new ItemStack(Material.SKULL_ITEM, 1, (short) 3));	//Friend Requests
-		settingsMenu.setItem(26, new ItemStack(Material.BED));						//Guild Requests
+		settingsMenu.setItem(18, new ItemBuilder(Material.SKULL_ITEM, 1, (short) 2).setTitle(ChatColor.GREEN + "Monster Debug Messages").build());//Monster Debug Messages
+		settingsMenu.setItem(20, new ItemBuilder(Material.REDSTONE).setTitle(ChatColor.GREEN + "Player Debug Messages").build());				//Player HP Debug Messages
+		settingsMenu.setItem(22, new ItemBuilder(Material.STONE_PICKAXE).setTitle(ChatColor.GREEN + "Profession Debug Messages").build());		//Profession Debug Messages
+		settingsMenu.setItem(24, new ItemBuilder(Material.SKULL_ITEM, 1, (short) 3).setTitle(ChatColor.GREEN + "Friends Requests").build());	//Friend Requests
+		settingsMenu.setItem(26, new ItemBuilder(Material.BED).setTitle(ChatColor.GREEN + "Guild Requests").build());							//Guild Requests						//Guild Requests
         
 		
 		//Option settings for row 1
@@ -176,6 +178,15 @@ public class PlayerMenuManager {
 	 */
 	public static void openPlayerMenu(Player player) {
 		player.openInventory(playerMainMenu.get(player.getUniqueId()));
+		
+		/*
+		PageInventory inv = new PageInventory(player);
+		ItemStack items = new ItemBuilder(Material.SKULL_ITEM).setTitle("Test").build();
+		
+		inv.setPages(items);
+		inv.setTitle("Players online");
+		inv.openInventory();
+		*/
 	}
 	
 	/**
