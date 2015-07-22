@@ -24,10 +24,10 @@ public class BlockRegenerationManager {
 	static BlockRegenerationManager blockRegenManagerInstance = new BlockRegenerationManager();
 	
 	//Setup regeneration variables
-	private static int chestRegenTime = 60 * 15;			//Time it takes for a chest to regenerate. 60 seconds * 15 (15 minutes)
-	private static int blockRegenTime = 120; 				//Time it takes for an block to regenerate. 120 = 2 Minutes (60*2)
-	private static int blockRegenRate = 5; 					//Default between 90 and 200 seconds intervals.
-	private static int blockRegenTick = blockRegenRate * 20;//Time it takes for an block to regenerate.
+	private static int chestRegenTime = 60 * 2;			//Time it takes for a chest to regenerate. 60 seconds * 15 (15 minutes)
+	private static int blockRegenTime = 60 * 2; 			//Time it takes for an block to regenerate. 120 = 2 Minutes (60*2)
+	private static int blockRegenRate = 5; 					//The number of seconds the thread should update.
+	private static int blockRegenTick = blockRegenRate * 20;//How fast the thread is refreshed.
 	private static int blockID = 0;							//The current ID of the hashMaps.  Resets on reload.
 	private static int blockIDsRemoved = 0;					//Keep track of how many blocks we have removed from the HashMaps.
 	

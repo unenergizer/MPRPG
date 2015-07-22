@@ -73,12 +73,23 @@ public class MonsterManager {
 		if(!(new File(mobTypeIdPath)).exists()){
 			createMonsterConfig();
 		} else {
-			//lets load the configuration file.
+			//Load the configuration file.
 			configFile = new File(mobTypeIdPath);
 			monsterIdConfig =  YamlConfiguration.loadConfiguration(configFile);
 
-			//setup and spawn monsters
-			spawnAllMobs();
+			//Setup and spawn monsters
+			Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
+	            public void run() {
+	                removeAllMobs();
+	            }
+	        }, 2 * 20L);
+			
+			//Spawn all the mobs.
+			Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
+	            public void run() {
+	            	spawnAllMobs();
+	            }
+	        }, 6 * 20L);
 			
 			//Start mob respawn thread.
 			respawnMob();
@@ -135,24 +146,6 @@ public class MonsterManager {
 	 * Respawns all the mobs in the world after a Server Reload.
 	 */
 	private static void spawnAllMobs() {
-		///////////////////
-		/// REMOVE MOBS ///
-		///////////////////
-
-		//Loop through entity list and remove them.
-		//This is mainly for clearing mobs on server reload.
-		for (Entity mob : Bukkit.getWorld("world").getEntities()) {
-			if (!(mob.getType().equals(EntityType.ENDER_DRAGON)) && 
-					!(mob.getType().equals(EntityType.PLAYER)) && 
-					!(mob.getType().equals(EntityType.ITEM_FRAME))) {
-				mob.remove();
-			}
-		}
-
-		//////////////////
-		/// SPAWN MOBS ///
-		//////////////////
-
 		monsterIdConfig.get("settings");
 		int totalMonsters = monsterIdConfig.getInt("settings.countTotal");
 

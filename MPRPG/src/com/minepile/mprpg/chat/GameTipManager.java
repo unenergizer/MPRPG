@@ -30,7 +30,7 @@ public class GameTipManager {
     private static int numberOfTips;
     
 	//Setup regeneration variables.
-	private static int gameTipTime = 10 * 1;			//Time it takes for a message to show up. 60 seconds * 15 (15 minutes)
+	private static int gameTipTime = 60 * 5;			//Time it takes for a message to show up. 60 seconds * 15 (15 minutes)
 	
 	//Create instance.
 	public static GameTipManager getInstance() {
@@ -76,7 +76,8 @@ public class GameTipManager {
             	String gameTip = tips.get(tipDisplayed);
             	
             	//Show the tip.
-            	Bukkit.broadcastMessage(ChatColor.YELLOW + "" + ChatColor.BOLD + "TIP #"
+            	Bukkit.broadcastMessage(ChatColor.YELLOW + "" + ChatColor.BOLD + "TIP" 
+            			+ ChatColor.YELLOW + " #"
             			+ Integer.toString(tipDisplayed + 1)
             			+ ChatColor.DARK_GRAY + ChatColor.BOLD + ": " 
             			+ ChatColor.YELLOW + gameTip  

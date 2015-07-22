@@ -6,9 +6,9 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryCloseEvent;
+import org.bukkit.inventory.Inventory;
 
 import com.minepile.mprpg.MPRPG;
-import com.minepile.mprpg.items.LoreManager;
 
 public class InventoryCloseListener implements Listener{
 	
@@ -23,12 +23,19 @@ public class InventoryCloseListener implements Listener{
 	public void onInventoryClose(InventoryCloseEvent event) {
 		if (event.getPlayer() instanceof Player) {
 			Player player = (Player) event.getPlayer();
+			Inventory inv = event.getInventory();
+			inv.getHolder();
 			
-			LoreManager.applyHpBonus(player, true);
 			
-			if (event.getInventory().getType().equals(Material.ENDER_CHEST)) {
+			if (inv.getType().equals(Material.ENDER_CHEST)) {
 				//Play a closing sound.
 				player.playSound(player.getLocation(), Sound.CHEST_CLOSE, .5F, 1F);
+			}
+			
+			//If the player is damaging a CHEST, it must be a loot chest!
+			if (inv.getType().equals(Material.CHEST)) {
+				//Setup the broken chest to be regenerated.
+				//BlockRegenerationManager.setBlock(Material.CHEST, Material.AIR, block.getLocation());
 			}
 		}
 	}

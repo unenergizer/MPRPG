@@ -5,6 +5,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Random;
 
+import org.bukkit.Material;
+import org.bukkit.block.Block;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
@@ -12,6 +14,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 import com.minepile.mprpg.MPRPG;
+import com.minepile.mprpg.world.BlockRegenerationManager;
 
 public class LootTableChestManager {
 
@@ -46,10 +49,41 @@ public class LootTableChestManager {
 			lootTableConfig =  YamlConfiguration.loadConfiguration(configFile);
 		}
 	}	
+	
+	public static void toggleChestEmpty(Inventory inv, Block block) {
+		int size = inv.getSize();
+		int air = 0;
+		
+		for (ItemStack item : inv.getContents()) {
+			if (item == null) {
+				air++;
+			} else if (item.getType().equals(Material.AIR)) {
+				air++;
+			}
+		}
+		
+		if (size == air) {
+			//Delete chest
+			block.breakNaturally();
 
+			//Setup the broken chest to be regenerated.
+			BlockRegenerationManager.setBlock(Material.CHEST, Material.AIR, block.getLocation());
+		}
+	}
+	
 	public static void toggleChestLoot(Player player, Inventory inv) {
-
-		if (inv.getContents().length <= 0) {
+		int size = inv.getSize();
+		int air = 0;
+		
+		for (ItemStack item : inv.getContents()) {
+			if (item == null) {
+				air++;
+			} else if (item.getType().equals(Material.AIR)) {
+				air++;
+			}
+		}
+		
+		if (size == air) {
 			String lootTable = "junk01";
 
 			ArrayList armorItems = (ArrayList) lootTableConfig.getList(lootTable + ".armorItem");
@@ -77,12 +111,9 @@ public class LootTableChestManager {
 
 						//Place weapons on third row in chest.
 						inv.setItem(i + 19, weapon);
-
 					}
 				}
 			}
-		} else {
-			player.sendMessage("This chest has items in it!");
 		}
 	}
 

@@ -156,11 +156,12 @@ public class PlayerMenuManager {
 			meta.setDisplayName(ChatColor.GOLD + "" + ChatColor.BOLD + "Game Menu");
 			
 			ArrayList<String> lore = new ArrayList<String>();
-			lore.add(ChatColor.GRAY + "This is the main menu for the game.");
-			lore.add(ChatColor.GRAY + "With this menu you can view your");
-			lore.add(ChatColor.GRAY + "statistics and change your settings.");
-			lore.add(ChatColor.GRAY + "This item can not be removed from your");
-			lore.add(ChatColor.GRAY + "inventory.");
+			lore.add(ChatColor.GRAY + "A menu that allows you to change game settings");
+			lore.add(ChatColor.GRAY + "and view your user profile.");
+			lore.add("");
+			lore.add(ChatColor.GREEN + "Right-Click" + ChatColor.GRAY + ": Opens your game menu.");
+			lore.add(ChatColor.BLUE + "Sneak + Right-Click" + ChatColor.GRAY + ": Places your chest shop.");
+			lore.add(ChatColor.LIGHT_PURPLE + "Sneak + Left-Click" + ChatColor.GRAY + ": Opens your private realm.");
 			
 			//Set the item lore
 			meta.setLore(lore);

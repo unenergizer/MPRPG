@@ -7,6 +7,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockDamageEvent;
 
 import com.minepile.mprpg.MPRPG;
+import com.minepile.mprpg.world.BlockRegenerationManager;
 
 public class BlockDamageListener implements Listener{
 	
@@ -25,6 +26,9 @@ public class BlockDamageListener implements Listener{
 		//If the player is damaging a CHEST, it must be a loot chest!
 		if (block.getType().equals(Material.CHEST)) {
 			event.setInstaBreak(true);
+			
+			//Setup the broken chest to be regenerated.
+			BlockRegenerationManager.setBlock(Material.CHEST, Material.AIR, block.getLocation());
 		}
 	}
 }
