@@ -24,8 +24,13 @@ public class GameTipManager {
     private static File configFile;
     private static FileConfiguration gameTipConfig;
 	
+    //An array of strings.
+    private static List<String> tips;
+    private static int tipDisplayed = 0;
+    private static int numberOfTips;
+    
 	//Setup regeneration variables.
-	private static int gameTipTime = 60 * 10;			//Time it takes for a message to show up. 60 seconds * 15 (15 minutes)
+	private static int gameTipTime = 10 * 1;			//Time it takes for a message to show up. 60 seconds * 15 (15 minutes)
 	
 	//Create instance.
 	public static GameTipManager getInstance() {
@@ -60,14 +65,31 @@ public class GameTipManager {
 	 */
 	private void startTipMessages() {
 		
+		numberOfTips = tips.size();
+		
+		//Start a repeating task.
         BukkitScheduler scheduler = Bukkit.getServer().getScheduler();
         scheduler.scheduleSyncRepeatingTask(plugin, new Runnable() {
             @Override
             public void run() {
-            	Bukkit.broadcastMessage(ChatColor.YELLOW + "" + ChatColor.BOLD + "TIP" 
+            	
+            	String gameTip = tips.get(tipDisplayed);
+            	
+            	//Show the tip.
+            	Bukkit.broadcastMessage(ChatColor.YELLOW + "" + ChatColor.BOLD + "TIP #"
+            			+ Integer.toString(tipDisplayed + 1)
             			+ ChatColor.DARK_GRAY + ChatColor.BOLD + ": " 
-            			+ ChatColor.YELLOW + "Please report all bugs to staff members"  
+            			+ ChatColor.YELLOW + gameTip  
             			+ ChatColor.DARK_GRAY + ".");
+            	
+            	//Setup to display the next tip.
+            	if ((tipDisplayed + 1) == numberOfTips) {
+            		//Reset the tip count.  All tips have been displayed.
+            		tipDisplayed = 0;
+            	} else {
+            		//Increment the tip count to display the next tip.
+            		tipDisplayed++;
+            	}
             }
         }, 0L, 20 * gameTipTime);
 	}
@@ -80,7 +102,7 @@ public class GameTipManager {
 	private static void loadMessages() {
 		configFile = new File(FILE_PATH);
 		gameTipConfig =  YamlConfiguration.loadConfiguration(configFile);
-		List<String> list = (List<String>) gameTipConfig.getList("GameTips");
+		tips = (List<String>) gameTipConfig.getList("GameTips");
 	}
 	
 	/**
