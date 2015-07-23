@@ -11,22 +11,25 @@ import net.md_5.bungee.api.ChatColor;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
+import org.bukkit.entity.LivingEntity;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.SkullMeta;
 
 import com.minepile.mprpg.MPRPG;
 import com.minepile.mprpg.chat.MessageManager;
 import com.minepile.mprpg.items.LootTableMobManager;
-import com.minepile.mprpg.util.LivingEntitySpawnerUtil;
+import com.minepile.mprpg.util.LivingEntityEquipItems;
 
 public class MonsterManager {
 
 	//setup instance variables
 	public static MPRPG plugin;
-	private static LivingEntitySpawnerUtil spawnerUtil = new LivingEntitySpawnerUtil();
 	static MonsterManager monsterManagerInstance = new MonsterManager();
 
 	//@SuppressWarnings("unused")
@@ -101,45 +104,6 @@ public class MonsterManager {
 	 */
 	public static void disable() {
 		removeAllMobs();
-	}	
-
-	/**
-	 * This will spawn an entitie in the World.
-	 * 
-	 * @param world The world to spawn the entitie.
-	 * @param loc The XYZ coordinate to spawn the entitie in the world.
-	 * @param entity The type of entitie to spawn.
-	 * @param color The color of the entities name.
-	 * @param name The name of the entitie.
-	 * @param lvl The level of the entitie.
-	 * @param hp The hitpoints the entitie will have.
-	 * @param runRadius How far the entitie can walk from it's spawn point.
-	 * @param id The entitie identifier to grab from the Configuration file.
-	 * @param loot The loot table of items that the entite should drop on death.
-	 */
-	public static void spawnEntitie(World world, Location loc, EntityType entity, String color, String name, int lvl, int hp, int runRadius, int id, String loot) {	
-
-		String colorName = (stringToColor(color) + name);
-		String finalName = colorName.replaceAll("_", " ");
-		String mobNameBase = ChatColor.GRAY + "[" + ChatColor.RED + lvl + ChatColor.GRAY +"] " + finalName;
-
-		//Set evenStatus for mobs spawning to false to allow them.
-		setEventStatus(false);
-
-		//Spawn the mob
-		spawnerUtil.spawnEntity(world.getName(), loc, entity, mobNameBase);
-
-		//Set evenStatus for mobs spawning to true to cancel them.
-		setEventStatus(true);
-
-		//Setup various mob attributes.
-		UUID entityId = spawnerUtil.getEntityID();
-		mobId.put(entityId, id);
-		mobName.put(entityId, finalName);
-		mobLevel.put(entityId, lvl);
-		mobHealthPoints.put(entityId, hp);
-		mobMaxHealthPoints.put(entityId, hp);
-		lootTable.put(entityId, loot);
 	}
 
 	/**
@@ -175,24 +139,94 @@ public class MonsterManager {
 	public static void setupEntitie(int id) {
 
 		//Get id config values.
-		String mobType = monsterIdConfig.getString(Integer.toString(id) + ".mobType");
+		String name = monsterIdConfig.getString(Integer.toString(id) + ".mobType");
 		int x = monsterIdConfig.getInt(Integer.toString(id) + ".X");
 		int y = monsterIdConfig.getInt(Integer.toString(id) + ".Y");
 		int z = monsterIdConfig.getInt(Integer.toString(id) + ".Z");
 
 		//Get mobType config values.
-		String stringColor = MonsterCreatorManager.getMonsterConfig().getString(mobType + ".mobNameColor");
-		EntityType entity = EntityType.fromName(MonsterCreatorManager.getMonsterConfig().getString(mobType + ".entity"));
-		int lvl = MonsterCreatorManager.getMonsterConfig().getInt(mobType + ".mobLVL");
-		int hp = MonsterCreatorManager.getMonsterConfig().getInt(mobType + ".mobHP");
-		int runRadius = MonsterCreatorManager.getMonsterConfig().getInt(mobType + ".mobRadius");
-		String loot = MonsterCreatorManager.getMonsterConfig().getString(mobType + ".lootTable");
-
+		String stringColor = MonsterCreatorManager.getMonsterConfig().getString(name + ".mobNameColor");
+		EntityType entityType = EntityType.fromName(MonsterCreatorManager.getMonsterConfig().getString(name + ".entity"));
+		int lvl = MonsterCreatorManager.getMonsterConfig().getInt(name + ".mobLVL");
+		int hp = MonsterCreatorManager.getMonsterConfig().getInt(name + ".mobHP");
+		int runRadius = MonsterCreatorManager.getMonsterConfig().getInt(name + ".mobRadius");
+		String loot = MonsterCreatorManager.getMonsterConfig().getString(name + ".lootTable");
+		
+		//Get equipment
+		boolean useSkull = MonsterCreatorManager.getMonsterConfig().getBoolean(name + ".useSkull");
+		String skull = MonsterCreatorManager.getMonsterConfig().getString(name + ".lootTable");
+		boolean useHelm = MonsterCreatorManager.getMonsterConfig().getBoolean(name + ".helm");
+		boolean useChest = MonsterCreatorManager.getMonsterConfig().getBoolean(name + ".chest");
+		boolean useLegs = MonsterCreatorManager.getMonsterConfig().getBoolean(name + ".legs");
+		boolean useBoots = MonsterCreatorManager.getMonsterConfig().getBoolean(name + ".boots");
+		boolean useWeapon = MonsterCreatorManager.getMonsterConfig().getBoolean(name + ".weapon");
+		
 		//misc vars
 		Location loc = new Location(world, x + .5, y + .5, z + .5);
+		
+		//Spawn the mob
+		//spawnEntitie(world, loc, entity, stringColor, mobType, lvl, hp, runRadius, id, loot);
+		String colorName = (stringToColor(stringColor) + name);
+		String fixedName = colorName.replaceAll("_", " ");
+		String mobNameBase = ChatColor.GRAY + "[" + ChatColor.RED + lvl + ChatColor.GRAY +"] " + fixedName;
+
+		//Set evenStatus for mobs spawning to false to allow them.
+		setEventStatus(false);
 
 		//Spawn the mob
-		spawnEntitie(world, loc, entity, stringColor, mobType, lvl, hp, runRadius, id, loot);
+		LivingEntity entity = (LivingEntity) Bukkit.getWorld("world").spawnEntity(loc, entityType);
+		entity.setCustomName(mobNameBase);
+		entity.setCustomNameVisible(true);
+		entity.setRemoveWhenFarAway(false);
+		entity.setCanPickupItems(false);	
+		
+		//Set entity equipment (if possible).
+		if (useSkull) {
+			ItemStack playerSkull = new ItemStack(Material.SKULL_ITEM, 1);
+			playerSkull.setDurability((short)3);
+		    SkullMeta skullMeta = (SkullMeta)playerSkull.getItemMeta();
+		    skullMeta.setOwner(skull);
+		    playerSkull.setItemMeta(skullMeta);
+		    
+		    
+			LivingEntityEquipItems.setHelmet(entity, playerSkull);
+		} else if (useHelm) {
+			ItemStack helm = new ItemStack(Material.CARPET);
+			LivingEntityEquipItems.setHelmet(entity, helm);
+		}
+		
+		if (useChest) {
+			ItemStack chest = new ItemStack(Material.LEATHER_CHESTPLATE);
+			LivingEntityEquipItems.setChestplate(entity, chest);
+		}
+		
+		if (useLegs) {
+			ItemStack legs = new ItemStack(Material.LEATHER_LEGGINGS);
+			LivingEntityEquipItems.setLeggings(entity, legs);
+		}
+		
+		if (useBoots) {
+			ItemStack boots = new ItemStack(Material.LEATHER_BOOTS);
+			LivingEntityEquipItems.setBoots(entity, boots);
+		}
+		
+		if (useWeapon) {
+			ItemStack boots = new ItemStack(Material.IRON_SPADE);
+			LivingEntityEquipItems.setWeapon(entity, boots);
+		}
+
+		//Set evenStatus for mobs spawning to true to cancel them.
+		setEventStatus(true);
+
+		//Setup various mob attributes.
+		UUID entityId = entity.getUniqueId();
+		
+		mobId.put(entityId, id);
+		mobName.put(entityId, fixedName);
+		mobLevel.put(entityId, lvl);
+		mobHealthPoints.put(entityId, hp);
+		mobMaxHealthPoints.put(entityId, hp);
+		lootTable.put(entityId, loot);
 	}
 
 	/**
@@ -383,7 +417,7 @@ public class MonsterManager {
 			e.printStackTrace();
 		} 
 	}
-
+	
 	public static FileConfiguration getMonsterIdConfig() {
 		return monsterIdConfig;
 	}

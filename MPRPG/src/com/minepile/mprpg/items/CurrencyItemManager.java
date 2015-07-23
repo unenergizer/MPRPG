@@ -9,8 +9,10 @@ import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.inventory.ItemStack;
 
 import com.minepile.mprpg.MPRPG;
+import com.minepile.mprpg.util.ItemBuilder;
 
 public class CurrencyItemManager {
 	
@@ -42,6 +44,16 @@ public class CurrencyItemManager {
             currencyItemConfig =  YamlConfiguration.loadConfiguration(configFile);
         }
 	}	
+	
+	public static ItemStack makeItem(String currencyType) {
+		// TODO Auto-generated method stub
+		
+		Material mat = getCurrencyType(currencyType);
+		
+		ItemStack money = new ItemBuilder(mat).setTitle(ChatColor.GREEN + currencyType.toUpperCase()).build();
+		
+		return money;
+	}
 	
 	/**
 	 * Converts a currency String to a Material.
@@ -87,7 +99,7 @@ public class CurrencyItemManager {
         
         //set copper currency
         currencyItemConfig.set("copper", "copper");
-        currencyItemConfig.set("copper.itemId", 366); //366 = Clay_Brick
+        currencyItemConfig.set("copper.itemId", 336); //336 = Clay_Brick
         
         //set silver currency
         currencyItemConfig.set("silver", "silver");
@@ -107,5 +119,4 @@ public class CurrencyItemManager {
             e.printStackTrace();
         } 
     }
-	
 }

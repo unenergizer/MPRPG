@@ -1,5 +1,7 @@
 package com.minepile.mprpg.listeners;
 
+import org.bukkit.Location;
+import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -22,7 +24,7 @@ public class PlayerPickupItemListener implements Listener{
 		
 		Player player = event.getPlayer();
 		ItemStack item = event.getItem().getItemStack();
-		
+		Location loc = player.getLocation();
 		//Get the items name, to know what type of statistics to generate.
 		//TODO: Saved this for when item have names.
 		//String item = event.getItem().getName();
@@ -32,16 +34,16 @@ public class PlayerPickupItemListener implements Listener{
 		//Currency //
 		/////////////
 		case CLAY_BRICK:
-			player.sendMessage("picked up a clay brick");
+			player.playSound(loc, Sound.ORB_PICKUP,  .8f, .8f);
 			break;
 		case IRON_INGOT:
-			player.sendMessage("picked up a iron ingot");
+			player.playSound(loc, Sound.ORB_PICKUP,  .8f, .8f);
 			break;
 		case GOLD_INGOT:
-			player.sendMessage("picked up a gold ingot");
+			player.playSound(loc, Sound.ORB_PICKUP,  .8f, .8f);
 			break;
 		case PORTAL:
-			player.sendMessage("picked up a portal");
+			player.playSound(loc, Sound.ORB_PICKUP,  .8f, .8f);
 			break;
 		
 		//////////

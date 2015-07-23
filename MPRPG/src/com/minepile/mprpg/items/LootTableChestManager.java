@@ -49,11 +49,11 @@ public class LootTableChestManager {
 			lootTableConfig =  YamlConfiguration.loadConfiguration(configFile);
 		}
 	}	
-	
+
 	public static void toggleChestEmpty(Inventory inv, Block block) {
 		int size = inv.getSize();
 		int air = 0;
-		
+
 		for (ItemStack item : inv.getContents()) {
 			if (item == null) {
 				air++;
@@ -61,7 +61,7 @@ public class LootTableChestManager {
 				air++;
 			}
 		}
-		
+
 		if (size == air) {
 			//Delete chest
 			block.breakNaturally();
@@ -70,11 +70,11 @@ public class LootTableChestManager {
 			BlockRegenerationManager.setBlock(Material.CHEST, Material.AIR, block.getLocation());
 		}
 	}
-	
+
 	public static void toggleChestLoot(Player player, Inventory inv) {
 		int size = inv.getSize();
 		int air = 0;
-		
+
 		for (ItemStack item : inv.getContents()) {
 			if (item == null) {
 				air++;
@@ -82,12 +82,15 @@ public class LootTableChestManager {
 				air++;
 			}
 		}
-		
+
 		if (size == air) {
 			String lootTable = "junk01";
 
 			ArrayList armorItems = (ArrayList) lootTableConfig.getList(lootTable + ".armorItem");
 			ArrayList weaponItems = (ArrayList) lootTableConfig.getList(lootTable + ".weaponItem");
+			String currencyType = lootTableConfig.getString(lootTable + ".currency");
+			int currencyMin = lootTableConfig.getInt(lootTable + ".currencyDropMin");
+			int currencyMax = lootTableConfig.getInt(lootTable + ".currencyDropMax");
 
 			//Drop armor
 			if (armorItems != null) {
@@ -113,6 +116,21 @@ public class LootTableChestManager {
 						inv.setItem(i + 19, weapon);
 					}
 				}
+			}
+			//Drop money
+			if (currencyType != null) {
+
+				Random rand = new Random();
+				int range = currencyMax - currencyMin + 1;
+				int randomNum =  rand.nextInt(range) + currencyMin;
+				
+				if (randomNum != 0) {
+					ItemStack money = CurrencyItemManager.makeItem(currencyType);
+					money.setAmount(randomNum);
+					//Place weapons on third row in chest.
+					inv.setItem(23, money);
+				}
+
 			}
 		}
 	}

@@ -57,6 +57,9 @@ public class LootTableMobManager {
 
 		List<String> armorItems = (List<String>) lootTableConfig.getList(lootTable + ".armorItem");
 		List<String> weaponItems = (List<String>) lootTableConfig.getList(lootTable + ".weaponItem");
+		String currencyType = lootTableConfig.getString(lootTable + ".currency");
+		int currencyMin = lootTableConfig.getInt(lootTable + ".currencyDropMin");
+		int currencyMax = lootTableConfig.getInt(lootTable + ".currencyDropMax");
 
 		//Drop armor
 		if (armorItems != null) {
@@ -74,7 +77,7 @@ public class LootTableMobManager {
 		if (weaponItems != null) {
 			for (int i = 0; i < weaponItems.size(); i++) {
 				if (dropItem() == true) {
-					
+
 					ItemStack weapon = WeaponItemManager.makeItem((String) weaponItems.get(i));
 
 					//Generate drops
@@ -82,6 +85,23 @@ public class LootTableMobManager {
 
 				}
 			}
+		}
+		//Drop money
+		if (currencyType != null) {
+
+			Random rand = new Random();
+			int range = currencyMax - currencyMin + 1;
+			int randomNum =  rand.nextInt(range) + currencyMin;
+
+			if (randomNum != 0) {
+				ItemStack money = CurrencyItemManager.makeItem(currencyType);
+				money.setAmount(randomNum);
+
+				//Generate drops
+				Bukkit.getWorld("world").dropItemNaturally(loc, money);
+			}
+
+
 		}
 	}
 

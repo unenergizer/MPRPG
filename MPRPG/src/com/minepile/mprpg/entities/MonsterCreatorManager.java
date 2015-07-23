@@ -57,13 +57,11 @@ public class MonsterCreatorManager {
 	 */
 	public static void setEntitie(Player player, String mobName, Location location) {
 		
-		World world = player.getWorld();
 		int currentCount = getMobIdTotals();
 		int newCount = currentCount + 1;
 		double x = location.getBlockX();
 		double y = location.getBlockY() + 2;
 		double z = location.getBlockZ();
-		Location newLoc = new Location(player.getWorld(), x, y, z);
 		
 		//Set monster and add to config.
         File monsterIdConfigFile = new File(MonsterManager.mobTypeIdPath);
@@ -84,18 +82,8 @@ public class MonsterCreatorManager {
             e.printStackTrace();
         }
         
-        //Get mobType config values
-        File monsterTypeConfigFile = new File(mobTypeFilePath);
-        FileConfiguration monsterTypeConfig =  YamlConfiguration.loadConfiguration(monsterTypeConfigFile);
-        String color = monsterTypeConfig.getString(mobName + ".mobNameColor");
-        EntityType entity = EntityType.fromName(monsterTypeConfig.getString(mobName + ".entity"));
-        int lvl = monsterTypeConfig.getInt(mobName + ".mobLVL");
-        int hp = monsterTypeConfig.getInt(mobName + ".mobHP");
-        int runRadius = monsterTypeConfig.getInt(mobName + ".mobRadius");
-        String loot = monsterTypeConfig.getString(mobName + ".lootTable");
-        
         //Spawn the monster in the game.
-        MonsterManager.spawnEntitie(world, newLoc, entity, color, mobName, lvl, hp, runRadius, newCount, loot);
+        MonsterManager.setupEntitie(newCount);
 
 	}
 	
