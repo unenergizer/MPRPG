@@ -82,23 +82,23 @@ public class MonsterManager {
 
 			//Setup and spawn monsters
 			Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
-	            public void run() {
-	                removeAllMobs();
-	            }
-	        }, 2 * 20L);
-			
+				public void run() {
+					removeAllMobs();
+				}
+			}, 2 * 20L);
+
 			//Spawn all the mobs.
 			Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
-	            public void run() {
-	            	spawnAllMobs();
-	            }
-	        }, 6 * 20L);
-			
+				public void run() {
+					spawnAllMobs();
+				}
+			}, 6 * 20L);
+
 			//Start mob respawn thread.
 			respawnMob();
 		}
 	}
-	
+
 	/**
 	 * This will disable this class.
 	 */
@@ -117,7 +117,7 @@ public class MonsterManager {
 			setupEntitie(i);
 		}
 	}
-	
+
 	/**
 	 * Removes all the mobs in the world.
 	 */
@@ -146,24 +146,24 @@ public class MonsterManager {
 
 		//Get mobType config values.
 		String stringColor = MonsterCreatorManager.getMonsterConfig().getString(name + ".mobNameColor");
-		EntityType entityType = EntityType.fromName(MonsterCreatorManager.getMonsterConfig().getString(name + ".entity"));
+		EntityType entityType = stringToEntityType(MonsterCreatorManager.getMonsterConfig().getString(name + ".entity"));
 		int lvl = MonsterCreatorManager.getMonsterConfig().getInt(name + ".mobLVL");
 		int hp = MonsterCreatorManager.getMonsterConfig().getInt(name + ".mobHP");
 		int runRadius = MonsterCreatorManager.getMonsterConfig().getInt(name + ".mobRadius");
 		String loot = MonsterCreatorManager.getMonsterConfig().getString(name + ".lootTable");
-		
+
 		//Get equipment
 		boolean useSkull = MonsterCreatorManager.getMonsterConfig().getBoolean(name + ".useSkull");
-		String skull = MonsterCreatorManager.getMonsterConfig().getString(name + ".lootTable");
+		String skull = MonsterCreatorManager.getMonsterConfig().getString(name + ".skull");
 		boolean useHelm = MonsterCreatorManager.getMonsterConfig().getBoolean(name + ".helm");
 		boolean useChest = MonsterCreatorManager.getMonsterConfig().getBoolean(name + ".chest");
 		boolean useLegs = MonsterCreatorManager.getMonsterConfig().getBoolean(name + ".legs");
 		boolean useBoots = MonsterCreatorManager.getMonsterConfig().getBoolean(name + ".boots");
 		boolean useWeapon = MonsterCreatorManager.getMonsterConfig().getBoolean(name + ".weapon");
-		
+
 		//misc vars
 		Location loc = new Location(world, x + .5, y + .5, z + .5);
-		
+
 		//Spawn the mob
 		//spawnEntitie(world, loc, entity, stringColor, mobType, lvl, hp, runRadius, id, loot);
 		String colorName = (stringToColor(stringColor) + name);
@@ -179,37 +179,35 @@ public class MonsterManager {
 		entity.setCustomNameVisible(true);
 		entity.setRemoveWhenFarAway(false);
 		entity.setCanPickupItems(false);	
-		
+
 		//Set entity equipment (if possible).
 		if (useSkull) {
-			ItemStack playerSkull = new ItemStack(Material.SKULL_ITEM, 1);
-			playerSkull.setDurability((short)3);
-		    SkullMeta skullMeta = (SkullMeta)playerSkull.getItemMeta();
-		    skullMeta.setOwner(skull);
-		    playerSkull.setItemMeta(skullMeta);
-		    
-		    
+			ItemStack playerSkull = new ItemStack(Material.SKULL_ITEM, 1, (byte) 3);
+			SkullMeta skullMeta = (SkullMeta)playerSkull.getItemMeta();
+			if (skullMeta.setOwner(skull)) {
+				playerSkull.setItemMeta(skullMeta);
+			}
 			LivingEntityEquipItems.setHelmet(entity, playerSkull);
 		} else if (useHelm) {
 			ItemStack helm = new ItemStack(Material.CARPET);
 			LivingEntityEquipItems.setHelmet(entity, helm);
 		}
-		
+
 		if (useChest) {
 			ItemStack chest = new ItemStack(Material.LEATHER_CHESTPLATE);
 			LivingEntityEquipItems.setChestplate(entity, chest);
 		}
-		
+
 		if (useLegs) {
 			ItemStack legs = new ItemStack(Material.LEATHER_LEGGINGS);
 			LivingEntityEquipItems.setLeggings(entity, legs);
 		}
-		
+
 		if (useBoots) {
 			ItemStack boots = new ItemStack(Material.LEATHER_BOOTS);
 			LivingEntityEquipItems.setBoots(entity, boots);
 		}
-		
+
 		if (useWeapon) {
 			ItemStack boots = new ItemStack(Material.IRON_SPADE);
 			LivingEntityEquipItems.setWeapon(entity, boots);
@@ -220,7 +218,7 @@ public class MonsterManager {
 
 		//Setup various mob attributes.
 		UUID entityId = entity.getUniqueId();
-		
+
 		mobId.put(entityId, id);
 		mobName.put(entityId, fixedName);
 		mobLevel.put(entityId, lvl);
@@ -245,8 +243,8 @@ public class MonsterManager {
 
 				if (respawnTimeLeft.isEmpty() == false) {
 					Iterator<Entry<Integer, Integer>> it = respawnTimeLeft.entrySet().iterator();
-				    while (it.hasNext()) {
-				    	Entry<Integer, Integer> pair = it.next();
+					while (it.hasNext()) {
+						Entry<Integer, Integer> pair = it.next();
 						int spawnID = pair.getKey();
 						int timeLeft = pair.getValue();
 
@@ -345,11 +343,154 @@ public class MonsterManager {
 			mobLevel.remove(id);
 			mobHealthPoints.remove(id);
 			mobMaxHealthPoints.remove(id);
-			
+
 			//Setup mob for respawning.
 			//Add spawnID to the Hashmap.
 			respawnTimeLeft.put(configId, entityRespawnTime);
 		}
+	}
+
+	private static EntityType stringToEntityType(String entity) {
+		String entityType = entity.toUpperCase().replace(" ", "_");
+		EntityType type = null;
+		switch(entityType) {
+		case "ARMOR_STAND": type = EntityType.ARMOR_STAND;
+			break;
+		case "ARROW": type = EntityType.ARROW;
+			break;
+		case "BAT": type = EntityType.BAT;
+			break;
+		case "BLAZE": type = EntityType.BLAZE;
+			break;
+		case "BOAT": type = EntityType.BOAT;
+			break;
+		case "CAVE_SPIDER": type = EntityType.CAVE_SPIDER;
+			break;
+		case "CHICKEN": type = EntityType.CHICKEN;
+			break;
+		case "COMPLEX_PART": type = EntityType.COMPLEX_PART;
+			break;
+		case "COW": type = EntityType.COW;
+			break;
+		case "CREEPER": type = EntityType.CREEPER;
+			break;
+		case "DROPPED_ITEM": type = EntityType.DROPPED_ITEM;
+			break;
+		case "EGG": type = EntityType.EGG;
+			break;
+		case "ENDERMAN": type = EntityType.ENDERMAN;
+			break;
+		case "ENDERMITE": type = EntityType.ENDERMITE;
+			break;
+		case "ENDER_CRYSTAL": type = EntityType.ENDER_CRYSTAL;
+			break;
+		case "ENDER_DRAGON": type = EntityType.ENDER_DRAGON;
+			break;
+		case "ENDER_PEARL": type = EntityType.ENDER_PEARL;
+			break;
+		case "ENDER_SIGNAL": type = EntityType.ENDER_SIGNAL;
+			break;
+		case "EXPERIENCE_ORB": type = EntityType.EXPERIENCE_ORB;
+			break;
+		case "FALLING_BLOCK": type = EntityType.FALLING_BLOCK;
+			break;
+		case "FIREBALL": type = EntityType.FIREBALL;
+			break;
+		case "FIREWORK": type = EntityType.FIREWORK;
+			break;
+		case "FISHING_HOOK": type = EntityType.FISHING_HOOK;
+			break;
+		case "GHAST": type = EntityType.GHAST;
+			break;
+		case "GIANT": type = EntityType.GIANT;
+			break;
+		case "GUARDIAN": type = EntityType.GUARDIAN;
+			break;
+		case "HORSE": type = EntityType.HORSE;
+			break;
+		case "IRON_GOLEM": type = EntityType.IRON_GOLEM;
+			break;
+		case "ITEM_FRAME": type = EntityType.ITEM_FRAME;
+			break;
+		case "LEASH_HITCH": type = EntityType.LEASH_HITCH;
+			break;
+		case "LIGHTNING": type = EntityType.LIGHTNING;
+			break;
+		case "MAGMA_CUBE": type = EntityType.MAGMA_CUBE;
+			break;
+		case "MINECART": type = EntityType.MINECART;
+			break;
+		case "MINECART_CHEST": type = EntityType.MINECART_CHEST;
+			break;
+		case "MINECART_COMMAND": type = EntityType.MINECART_COMMAND;
+			break;
+		case "MINECART_FURNACE": type = EntityType.MINECART_FURNACE;
+			break;
+		case "MINECART_HOPPER": type = EntityType.MINECART_HOPPER;
+			break;
+		case "MINECART_MOB_SPAWNER": type = EntityType.MINECART_MOB_SPAWNER;
+			break;
+		case "MINECART_TNT": type = EntityType.MINECART_TNT;
+			break;
+		case "MUSHROOM_COW": type = EntityType.MUSHROOM_COW;
+			break;
+		case "OCELOT": type = EntityType.OCELOT;
+			break;
+		case "PAINTING": type = EntityType.PAINTING;
+			break;
+		case "PIG": type = EntityType.PIG;
+			break;
+		case "PIG_ZOMBIE": type = EntityType.PIG_ZOMBIE;
+			break;
+		case "PLAYER": type = EntityType.PLAYER;
+			break;
+		case "PRIMED_TNT": type = EntityType.PRIMED_TNT;
+			break;
+		case "RABBIT": type = EntityType.RABBIT;
+			break;
+		case "SHEEP": type = EntityType.SHEEP;
+			break;
+		case "SILVERFISH": type = EntityType.SILVERFISH;
+			break;
+		case "SKELETON": type = EntityType.SKELETON;
+			break;
+		case "SLIME": type = EntityType.SLIME;
+			break;
+		case "SMALL_FIREBALL": type = EntityType.SMALL_FIREBALL;
+			break;
+		case "SNOWBALL": type = EntityType.SNOWBALL;
+			break;
+		case "SNOWMAN": type = EntityType.SNOWMAN;
+			break;
+		case "SPIDER": type = EntityType.SPIDER;
+			break;
+		case "SPLASH_POTION": type = EntityType.SPLASH_POTION;
+			break;
+		case "SQUID": type = EntityType.SQUID;
+			break;
+		case "THROWN_EXP_BOTTLE": type = EntityType.THROWN_EXP_BOTTLE;
+			break;
+		case "UNKNOWN": type = EntityType.UNKNOWN;
+			break;
+		case "VILLAGER": type = EntityType.VILLAGER;
+			break;
+		case "WEATHER": type = EntityType.WEATHER;
+			break;
+		case "WITCH": type = EntityType.WITCH;
+			break;
+		case "WITHER": type = EntityType.WITHER;
+			break;
+		case "WITHER_SKULL": type = EntityType.WITHER_SKULL;
+			break;
+		case "WOLF": type = EntityType.WOLF;
+			break;
+		case "ZOMBIE": type = EntityType.ZOMBIE;
+			break;
+		default:
+			type = EntityType.CHICKEN;
+			break;
+		}
+		return type;
 	}
 
 	/**
@@ -417,7 +558,7 @@ public class MonsterManager {
 			e.printStackTrace();
 		} 
 	}
-	
+
 	public static FileConfiguration getMonsterIdConfig() {
 		return monsterIdConfig;
 	}
