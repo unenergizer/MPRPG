@@ -2,11 +2,19 @@ package com.minepile.mprpg.items;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
+import org.bukkit.ChatColor;
+import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 
 import com.minepile.mprpg.MPRPG;
+import com.minepile.mprpg.util.StringAlignUtil;
+import com.minepile.mprpg.util.StringAlignUtil.Alignment;
 
 public class MiscItemManager {
 	
@@ -17,7 +25,7 @@ public class MiscItemManager {
 	
 	//Configuration file that holds "miscellaneous item" information.
 	static File configFile;
-	static FileConfiguration miscItemManagerConfig;
+	static FileConfiguration miscItemConfig;
 	
 	//Create instance
 	public static MiscItemManager getInstance() {
@@ -35,8 +43,59 @@ public class MiscItemManager {
         } else {
         	//lets load the configuration file.
         	configFile = new File(miscItemsFilePath);
-        	miscItemManagerConfig =  YamlConfiguration.loadConfiguration(configFile);
+        	miscItemConfig =  YamlConfiguration.loadConfiguration(configFile);
         }
+	}	
+	
+	/**
+	 * Generates the item that needs to be dropped based on the settings from the configuration file.
+	 * 
+	 * @param itemName the item name specified inside the configuration file for this item type
+	 */
+	public static ItemStack makeItem(String itemName) {
+		
+		//Util to make sure line length isn't really long for descriptions. 
+		StringAlignUtil util = new StringAlignUtil(25, Alignment.CENTER);
+		
+		/////////////////////////////
+		/// GRAB ITEM FROM CONFIG ///
+		/////////////////////////////
+		configFile = new File(miscItemsFilePath);
+		miscItemConfig =  YamlConfiguration.loadConfiguration(configFile);
+
+		String name = itemName.replaceAll("_", " ");
+		int itemNumber = miscItemConfig.getInt(itemName + ".itemId");
+		String type = miscItemConfig.getString(itemName + ".itemType");
+		List<String> itemDescription = (List<String>) miscItemConfig.getList(itemName + ".itemDescription");
+
+		/////////////////////
+		/// SET ITEM LORE ///
+		/////////////////////
+		Material itemMaterial = ItemGeneratorManager.convertItemIdToMaterial(itemNumber);
+		ItemStack item = new ItemStack(itemMaterial, 1);
+		ItemMeta im = item.getItemMeta();
+		
+		//Set the items Name
+		im.setDisplayName(ChatColor.AQUA + name);
+
+		//Set the item lore
+		ArrayList<String> lore = new ArrayList<String>();
+		lore.add(ChatColor.WHITE + type);	//Define the quality of item.
+		lore.add("");																		//create blank space		
+
+		//Set the items description
+		if (!itemDescription.isEmpty()) {
+			for (int i = 0; i < itemDescription.size(); i++) {
+				lore.add(ChatColor.GRAY + "" + ChatColor.ITALIC + itemDescription.get(i));
+			}
+		}
+
+		//Set the item lore
+		im.setLore(lore);
+		//Set the item meta
+		item.setItemMeta(im);
+
+		return item;
 	}	
 	
 	/**
@@ -45,26 +104,18 @@ public class MiscItemManager {
     private static void createConfig() {
     	
         configFile = new File(miscItemsFilePath);
-        miscItemManagerConfig =  YamlConfiguration.loadConfiguration(configFile);
+        miscItemConfig =  YamlConfiguration.loadConfiguration(configFile);
         
+        configFile = new File(miscItemsFilePath);
+        miscItemConfig =  YamlConfiguration.loadConfiguration(configFile);
         //set copper currency
-        miscItemManagerConfig.set("copper", "copper");
-        miscItemManagerConfig.set("copper.itemId", 366); //366 = Clay_Brick
-        
-        //set silver currency
-        miscItemManagerConfig.set("silver", "silver");
-        miscItemManagerConfig.set("silver.itemId", 265); //265 = Iron_ingot
-        
-        //set gold currency
-        miscItemManagerConfig.set("gold", "gold");
-        miscItemManagerConfig.set("gold.itemId", 266); //266 = Gold_ingot
-
-        //set premium currency
-        miscItemManagerConfig.set("premium", "premium");
-        miscItemManagerConfig.set("premium.itemId", 388); //388 = Emerald
+        miscItemConfig.set("TNT", "");
+        miscItemConfig.set("TNT.itemId", 46);
+        miscItemConfig.set("TNT.itemType", "Equipment");
+        miscItemConfig.set("TNT.itemDescription", "This is a test item.");
         
         try {
-        	miscItemManagerConfig.save(configFile);	//Save the file.
+        	miscItemConfig.save(configFile);	//Save the file.
         } catch (IOException e) {
             e.printStackTrace();
         } 

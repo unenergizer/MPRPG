@@ -37,14 +37,18 @@ public class EntityRegainHealthListener implements Listener{
 			double hpPercent = ((100 * newHP) / maxHP);
 			double hpBarPercent = (20 * currentHP) / maxHP;		
 			
-			if (currentHP == maxHP) {
+			if (currentHP == newHP) {
 				PlayerManager.setHealthPoints(playerName, maxHP);
 				player.setHealth(20);
-			} else if (currentHP < maxHP){
+			} else if (newHP < maxHP){
 				PlayerManager.setHealthPoints(playerName, newHP);
 				
 				if (hpBarPercent >= 1 ) {
-					player.setHealth(hpBarPercent);
+					if ((hpBarPercent + 1) >= 19.5 && newHP < maxHP) {
+						player.setHealth(19);
+					} else {
+						player.setHealth(hpBarPercent);
+					}
 				}
 
 				//Send the player a hp change message.

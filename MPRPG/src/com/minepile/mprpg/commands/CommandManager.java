@@ -466,7 +466,7 @@ public class CommandManager implements CommandExecutor{
 							player.sendMessage(ChatColor.BLUE + "  " + ChatColor.BOLD + 
 									"Commands" + ChatColor.DARK_GRAY + ChatColor.BOLD + ": ");
 							//Add command
-							player.sendMessage("     " + ChatColor.GREEN + "/mm manager add <name> <color> <entity> <LVL> <HP> <radius>");
+							player.sendMessage("     " + ChatColor.GREEN + "/mm manager add <name> <color> <entity> <LVL> <HP> <radius> <lootTable>");
 							player.sendMessage("          " + ChatColor.GRAY + "This will add a new mobType to the database.");
 
 							player.sendMessage("");

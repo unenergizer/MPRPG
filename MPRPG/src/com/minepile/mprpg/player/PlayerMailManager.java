@@ -45,7 +45,7 @@ public class PlayerMailManager {
     	Location bank01 = new Location(Bukkit.getWorld("world"), 21.5, 81.6, -8.5);
     	
     	bankHologram01 = HologramsAPI.createHologram(plugin, bank01);
-    	bankHologram01.appendTextLine(ChatColor.YELLOW + "" + ChatColor.BOLD + "Mailbox");
+    	bankHologram01.appendTextLine(ChatColor.LIGHT_PURPLE + "" + ChatColor.BOLD + "Mailbox");
     }
     
     /**

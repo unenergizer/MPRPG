@@ -21,7 +21,7 @@ public class LootTableMobManager {
 	static String LootTableFilePath = "plugins/MPRPG/items/LootTableMobs.yml";
 
 	//Drop percentage
-	private static double dropPercentage = 2.5;
+	private static double dropPercentage = 100;
 
 	//Configuration file that holds currency information.
 	static File configFile;
@@ -57,6 +57,9 @@ public class LootTableMobManager {
 
 		List<String> armorItems = (List<String>) lootTableConfig.getList(lootTable + ".armorItem");
 		List<String> weaponItems = (List<String>) lootTableConfig.getList(lootTable + ".weaponItem");
+		List<String> consumableItems = (List<String>) lootTableConfig.getList(lootTable + ".consumableItem");
+		List<String> miscItems = (List<String>) lootTableConfig.getList(lootTable + ".miscItem");
+		
 		String currencyType = lootTableConfig.getString(lootTable + ".currency");
 		int currencyMin = lootTableConfig.getInt(lootTable + ".currencyDropMin");
 		int currencyMax = lootTableConfig.getInt(lootTable + ".currencyDropMax");
@@ -82,6 +85,32 @@ public class LootTableMobManager {
 
 					//Generate drops
 					Bukkit.getWorld("world").dropItemNaturally(loc, weapon);
+
+				}
+			}
+		}
+		//Drop Consumable items.
+		if (consumableItems != null) {
+			for (int i = 0; i < consumableItems.size(); i++) {
+				if (dropItem() == true) {
+
+					ItemStack consumable = ConsumableItemManager.makeItem((String) consumableItems.get(i));
+
+					//Generate drops
+					Bukkit.getWorld("world").dropItemNaturally(loc, consumable);
+
+				}
+			}
+		}
+		//Drop misc items.
+		if (miscItems != null) {
+			for (int i = 0; i < miscItems.size(); i++) {
+				if (dropItem() == true) {
+
+					ItemStack misc = MiscItemManager.makeItem((String) miscItems.get(i));
+					Bukkit.broadcastMessage("dropping: " + miscItems.get(i).toString());
+					//Generate drops
+					Bukkit.getWorld("world").dropItemNaturally(loc, misc);
 
 				}
 			}
@@ -131,9 +160,10 @@ public class LootTableMobManager {
 		lootTableConfig.set("junk01", "junk01");
 		lootTableConfig.set("junk01.armorItem", "testArmorDrop");
 		lootTableConfig.set("junk01.weaponItem", "testWeaponDrop");
+		lootTableConfig.set("junk01.consumableItem", "testConsumableDrop");
 		lootTableConfig.set("junk01.currency", "copper");
 		lootTableConfig.set("junk01.currencyDropMin", 0);
-		lootTableConfig.set("junk01.currencyDropMax", 10);
+		lootTableConfig.set("junk01.currencyDropMax", 2);
 
 		try {
 			lootTableConfig.save(configFile);	//Save the file.

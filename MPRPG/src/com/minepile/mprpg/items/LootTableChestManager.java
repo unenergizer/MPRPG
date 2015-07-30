@@ -3,8 +3,10 @@ package com.minepile.mprpg.items;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -28,7 +30,7 @@ public class LootTableChestManager {
 	static FileConfiguration lootTableConfig;
 
 	//Drop percentage
-	static int dropPercentage = 10;
+	private static double dropPercentage = 2.5;
 
 	//Create instance
 	public static LootTableChestManager getInstance() {
@@ -88,6 +90,9 @@ public class LootTableChestManager {
 
 			ArrayList armorItems = (ArrayList) lootTableConfig.getList(lootTable + ".armorItem");
 			ArrayList weaponItems = (ArrayList) lootTableConfig.getList(lootTable + ".weaponItem");
+			List<String> consumableItems = (List<String>) lootTableConfig.getList(lootTable + ".consumableItem");
+			List<String> miscItems = (List<String>) lootTableConfig.getList(lootTable + ".miscItem");
+			
 			String currencyType = lootTableConfig.getString(lootTable + ".currency");
 			int currencyMin = lootTableConfig.getInt(lootTable + ".currencyDropMin");
 			int currencyMax = lootTableConfig.getInt(lootTable + ".currencyDropMax");
@@ -114,6 +119,32 @@ public class LootTableChestManager {
 
 						//Place weapons on third row in chest.
 						inv.setItem(i + 19, weapon);
+					}
+				}
+			}
+			//Drop consumable items.
+			if (consumableItems != null) {
+				for (int i = 0; i < weaponItems.size(); i++) {
+					if (dropItem() == true) {
+
+						ItemStack consumable = ConsumableItemManager.makeItem((String) consumableItems.get(i));
+
+						//Place weapons on third row in chest.
+						inv.setItem(i + 15, consumable);
+
+					}
+				}
+			}
+			//Drop misc items.
+			if (miscItems != null) {
+				for (int i = 0; i < miscItems.size(); i++) {
+					if (dropItem() == true) {
+
+						ItemStack misc = MiscItemManager.makeItem((String) miscItems.get(i));
+
+						//Place weapons on third row in chest.
+						inv.setItem(i + 17, misc);
+
 					}
 				}
 			}

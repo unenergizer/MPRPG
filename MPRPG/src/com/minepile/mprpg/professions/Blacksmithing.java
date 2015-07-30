@@ -1,15 +1,10 @@
 package com.minepile.mprpg.professions;
 
-import net.citizensnpcs.api.CitizensAPI;
 import net.citizensnpcs.api.npc.NPC;
-import net.citizensnpcs.api.npc.NPCRegistry;
-import net.citizensnpcs.api.trait.Trait;
 import net.md_5.bungee.api.ChatColor;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.World;
-import org.bukkit.entity.EntityType;
 
 import com.gmail.filoghost.holographicdisplays.api.Hologram;
 import com.gmail.filoghost.holographicdisplays.api.HologramsAPI;
@@ -25,7 +20,7 @@ public class Blacksmithing {
 	private static NPC npc;
 	
 	//Holograms
-	private static Hologram bankHologram01;
+	private static Hologram blacksmithAnvil, blacksmithTrainer;
 	
 	//Create instance
 	public static Blacksmithing getInstance() {
@@ -37,7 +32,7 @@ public class Blacksmithing {
 	public void setup(MPRPG plugin) {
 		this.plugin = plugin;
 		
-		setupAnvilHolograms();
+		setupAllHolograms();
 		//spawnNPC();
 	}
 	
@@ -45,7 +40,7 @@ public class Blacksmithing {
 	 * This will disable this class.
 	 */
 	public static void disable() {
-		removeHolograms();
+		removeAllHolograms();
 		//removeNPC();
 	}	
 	
@@ -73,17 +68,22 @@ public class Blacksmithing {
 	/**
 	 * This will create a hologram that will display over the Blacksmith Anvil.
 	 */
-    private static void setupAnvilHolograms() {
-    	Location bank01 = new Location(Bukkit.getWorld("world"), 28.5, 80.5, 16.5);
+    private static void setupAllHolograms() {
+    	Location anvilLoc = new Location(Bukkit.getWorld("world"), 28.5, 80.5, 16.5);
+    	Location trainerLoc = new Location(Bukkit.getWorld("world"), 30.5, 82, 20.5);
     	
-    	bankHologram01 = HologramsAPI.createHologram(plugin, bank01);
-    	bankHologram01.appendTextLine(ChatColor.DARK_AQUA + "" + ChatColor.BOLD + "Blacksmith Anvil");
+    	blacksmithAnvil = HologramsAPI.createHologram(plugin, anvilLoc);
+    	blacksmithAnvil.appendTextLine(ChatColor.DARK_AQUA + "" + ChatColor.BOLD + "Blacksmith Anvil");
+    	
+    	blacksmithTrainer = HologramsAPI.createHologram(plugin, trainerLoc);
+    	blacksmithTrainer.appendTextLine(ChatColor.YELLOW+ "" + ChatColor.BOLD + "Blacksmith Trainer");
     }
     
     /**
      * This will delete the hologram on server reload or shut down.
      */
-    private static void removeHolograms() {
-    	bankHologram01.delete();
+    private static void removeAllHolograms() {
+    	blacksmithAnvil.delete();
+    	blacksmithTrainer.delete();
     }
 }

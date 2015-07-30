@@ -43,7 +43,7 @@ public class MonsterManager {
 	static String mobTypeIdPath = "plugins/MPRPG/mobs/monsterId.yml";
 
 	//Entity respawn
-	public static int entityRespawnTime = 60 * 5; 						//Time it takes for an entity to respawn. 120 = 2 Minutes (60*2)
+	public static int entityRespawnTime = 60 * 5; 					//Time it takes for an entity to respawn. 120 = 2 Minutes (60*2)
 	public static int entityRespawnRate = 5; 						//Default between 90 and 200 seconds intervals.
 	public static int entityRespawnTicks = entityRespawnRate * 20; 	//Time it takes for an block to regenerate.
 	public static HashMap<Integer, Integer> respawnTimeLeft = new HashMap<Integer, Integer>(); //ID > TimeLeft
@@ -76,10 +76,6 @@ public class MonsterManager {
 		if(!(new File(mobTypeIdPath)).exists()){
 			createMonsterConfig();
 		} else {
-			//Load the configuration file.
-			configFile = new File(mobTypeIdPath);
-			monsterIdConfig =  YamlConfiguration.loadConfiguration(configFile);
-
 			//Setup and spawn monsters
 			Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
 				public void run() {
@@ -95,6 +91,9 @@ public class MonsterManager {
 			}, 6 * 20L);
 
 			//Start mob respawn thread.
+			//This thread will attempt to respawn a mob if one has died.
+			//If no mobs have died, then nothing will happen.
+			//Remove this if you want to disable mob respawns.
 			respawnMob();
 		}
 	}
@@ -110,8 +109,13 @@ public class MonsterManager {
 	 * Respawns all the mobs in the world after a Server Reload.
 	 */
 	private static void spawnAllMobs() {
-		monsterIdConfig.get("settings");
-		int totalMonsters = monsterIdConfig.getInt("settings.countTotal");
+
+		//Load the configuration file.
+		File file = new File(mobTypeIdPath);
+		FileConfiguration config =  YamlConfiguration.loadConfiguration(file);
+
+		config.get("settings");
+		int totalMonsters = config.getInt("settings.countTotal");
 
 		for (int i = 1; i <= totalMonsters; i++) {
 			setupEntitie(i);
@@ -137,12 +141,16 @@ public class MonsterManager {
 	 * @param id 
 	 */
 	public static void setupEntitie(int id) {
-
+		
+		//Load the configuration file.
+		File file = new File(mobTypeIdPath);
+		FileConfiguration config =  YamlConfiguration.loadConfiguration(file);
+		
 		//Get id config values.
-		String name = monsterIdConfig.getString(Integer.toString(id) + ".mobType");
-		int x = monsterIdConfig.getInt(Integer.toString(id) + ".X");
-		int y = monsterIdConfig.getInt(Integer.toString(id) + ".Y");
-		int z = monsterIdConfig.getInt(Integer.toString(id) + ".Z");
+		String name = config.getString(Integer.toString(id) + ".mobType");
+		int x = config.getInt(Integer.toString(id) + ".X");
+		int y = config.getInt(Integer.toString(id) + ".Y");
+		int z = config.getInt(Integer.toString(id) + ".Z");
 
 		//Get mobType config values.
 		String stringColor = MonsterCreatorManager.getMonsterConfig().getString(name + ".mobNameColor");
@@ -349,8 +357,15 @@ public class MonsterManager {
 			respawnTimeLeft.put(configId, entityRespawnTime);
 		}
 	}
-
+	
+	/**
+	 * Converts a String value to an EntityType if a match can be made.
+	 * 
+	 * @param entity The String to be converted to an EntityType.
+	 * @return A EntityType enumerator.
+	 */
 	private static EntityType stringToEntityType(String entity) {
+		
 		String entityType = entity.toUpperCase().replace(" ", "_");
 		EntityType type = null;
 		switch(entityType) {
@@ -546,21 +561,27 @@ public class MonsterManager {
 	 */
 	private static void createMonsterConfig() {
 
-		configFile = new File(mobTypeIdPath);
-		monsterIdConfig =  YamlConfiguration.loadConfiguration(configFile);
+		//Load the configuration file.
+		File file = new File(mobTypeIdPath);
+		FileConfiguration config =  YamlConfiguration.loadConfiguration(file);
 
-		monsterIdConfig.set("settings", "settings");
-		monsterIdConfig.set("settings.countTotal", 0);
+		config.set("settings", "settings");
+		config.set("settings.countTotal", 0);
 
 		try {
-			monsterIdConfig.save(configFile);	//Save the file.
+			config.save(configFile);	//Save the file.
 		} catch (IOException e) {
 			e.printStackTrace();
 		} 
 	}
 
 	public static FileConfiguration getMonsterIdConfig() {
-		return monsterIdConfig;
+
+		//Load the configuration file.
+		File file = new File(mobTypeIdPath);
+		FileConfiguration config =  YamlConfiguration.loadConfiguration(file);
+
+		return config;
 	}
 
 	public static String getMobName(UUID id) {

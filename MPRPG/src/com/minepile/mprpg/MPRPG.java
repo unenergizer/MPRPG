@@ -29,6 +29,7 @@ import com.minepile.mprpg.items.ItemTierManager;
 import com.minepile.mprpg.items.LootTableChestManager;
 import com.minepile.mprpg.items.LootTableMobManager;
 import com.minepile.mprpg.items.LoreManager;
+import com.minepile.mprpg.items.MerchantManager;
 import com.minepile.mprpg.items.MiscItemManager;
 import com.minepile.mprpg.items.WeaponItemManager;
 import com.minepile.mprpg.listeners.AsyncPlayerChatListener;
@@ -59,6 +60,7 @@ import com.minepile.mprpg.listeners.PlayerJoinListener;
 import com.minepile.mprpg.listeners.PlayerPickupItemListener;
 import com.minepile.mprpg.listeners.PlayerQuitListener;
 import com.minepile.mprpg.listeners.PlayerRespawnListener;
+import com.minepile.mprpg.listeners.ProjectileHitListener;
 import com.minepile.mprpg.listeners.WeatherChangeListener;
 import com.minepile.mprpg.player.PlayerHealthTagManager;
 import com.minepile.mprpg.player.PlayerMailManager;
@@ -73,197 +75,206 @@ import com.minepile.mprpg.professions.Mining;
 import com.minepile.mprpg.world.BlockRegenerationManager;
 
 public class MPRPG extends JavaPlugin {
-	
+
 	public static MPRPG plugin;
 	private PluginManager pluginManager;
-	
+
 	//A few setup variables.
 	String pluginVersion = "v0.7.4";
-	
+
 	@Override
 	public void onEnable() {
 		this.pluginManager = getServer().getPluginManager();
-		
+
 		//Notify that plugin is starting to load all components
 		Bukkit.getConsoleSender().sendMessage(ChatColor.AQUA + "[MPRPG] Starting up MinePile:RPG now!");
+
+		//Save config.yml if it doesn't exist. Reload it, if it does.
+		if(!(new File("plugins/MPRPG/config.yml")).exists()){
+			saveResource("config.yml", false);
+		} else {
+			reloadConfig();
+		}
+
+		/////////////////////////////
+		/// Setup Class Instances ///
+		/////////////////////////////
+
+		//setup player manager instances
+		PlayerMailManager.getInstance().setup(this);
+		PlayerManager.getInstance().setup(this);
+		PlayerHealthTagManager.getInstance().setup(this);
+		PlayerMenuManager.getInstance().setup(this);
+
+		//setup chat manager instances
+		ChatManager.getInstance().setup(this);
+		DiceRollManager.getInstance().setup(this);
+		GameTipManager.getInstance().setup(this);
+		GuildManager.getInstance().setup(this);
+		LagManager.getInstance().setup(this);
+		MessageManager.getInstance().setup(this);
+
+		//setup entities manager instances
+		MonsterCreatorManager.getInstance().setup(this);
+		MonsterManager.getInstance().setup(this);
+		NPCManager.getInstance().setup(this);
+
+		//setup gang manager instances
+		GuildManager.getInstance().setup(this);
+
+		//setup inventory manager instances
+		BankChestManager.getInstance().setup(this);
+		ShopChestManager.getInstance().setup(this);
+
+		//setup item manager instances
+		ArmorItemManager.getInstance().setup(this);
+		ConsumableItemManager.getInstance().setup(this);
+		CurrencyItemManager.getInstance().setup(this);
+		ItemGeneratorManager.getInstance().setup(this);
+		ItemQualityManager.getInstance().setup(this);
+		ItemTierManager.getInstance().setup(this);
+		LootTableChestManager.getInstance().setup(this);
+		LootTableMobManager.getInstance().setup(this);
+		LoreManager.getInstance().setup(this);
+		MerchantManager.getInstance().setup(this);
+		MiscItemManager.getInstance().setup(this);
+		WeaponItemManager.getInstance().setup(this);
+
+		//setup profession manager instances
+		Alchemy.getInstance().setup(this);
+		Blacksmithing.getInstance().setup(this);
+		Cooking.getInstance().setup(this);
+		Fishing.getInstance().setup(this);
+		Herbalism.getInstance().setup(this);
+		Mining.getInstance().setup(this);
+
+		//setup world manager instances
+		BlockRegenerationManager.getInstance().setup(this);
+
+		/////////////////////////////
+		/// Setup Event Listeners ///
+		/////////////////////////////
+
+		pluginManager.registerEvents(new AsyncPlayerChatListener(this), this);
+
+		pluginManager.registerEvents(new BlockBreakListener(this), this);
+		pluginManager.registerEvents(new BlockDamageListener(this), this);
+		pluginManager.registerEvents(new BlockPlaceListener(this), this);
+
+		pluginManager.registerEvents(new CreatureSpawnListener(this), this);
+
+		pluginManager.registerEvents(new EntityChangeBlockListener(this), this);
+		pluginManager.registerEvents(new EntityCombustListener(this), this);
+		pluginManager.registerEvents(new EntityDamageByEntityListener(this), this);
+		pluginManager.registerEvents(new EntityDamageListener(this), this);
+		pluginManager.registerEvents(new EntityDeathListener(this), this);
+		pluginManager.registerEvents(new EntityExplodeListener(this), this);
+		pluginManager.registerEvents(new EntityRegainHealthListener(this), this);
+		pluginManager.registerEvents(new EntityShootBowListener(this), this);
+		pluginManager.registerEvents(new EntityTargetListener(this), this);
+
+		pluginManager.registerEvents(new InventoryClickListener(this), this);
+		pluginManager.registerEvents(new InventoryCloseListener(this), this);
+		pluginManager.registerEvents(new InventoryOpenListener(this), this);
+
+		pluginManager.registerEvents(new PlayerDeathListener(this), this);
+		pluginManager.registerEvents(new PlayerDropItemListener(this), this);
+		pluginManager.registerEvents(new PlayerExpChangeListener(this), this);
+		pluginManager.registerEvents(new PlayerFishListener(this), this);
+		pluginManager.registerEvents(new PlayerInteractEntityListener(this), this);
+		pluginManager.registerEvents(new PlayerInteractListener(this), this);
+		pluginManager.registerEvents(new PlayerItemBreakListener(this), this);
+		pluginManager.registerEvents(new PlayerJoinListener(this), this);
+		pluginManager.registerEvents(new PlayerPickupItemListener(this), this);
+		pluginManager.registerEvents(new PlayerQuitListener(this), this);
+		pluginManager.registerEvents(new PlayerRespawnListener(this), this);
 		
-        //Save config.yml if it doesn't exist. Reload it, if it does.
-        if(!(new File("plugins/MPRPG/config.yml")).exists()){
-            saveResource("config.yml", false);
-        } else {
-        	reloadConfig();
-        }
-        
-        /////////////////////////////
-        /// Setup Class Instances ///
-        /////////////////////////////
-        
-        //setup player manager instances
-        PlayerMailManager.getInstance().setup(this);
-        PlayerManager.getInstance().setup(this);
-        PlayerHealthTagManager.getInstance().setup(this);
-        PlayerMenuManager.getInstance().setup(this);
-        
-        //setup chat manager instances
-        ChatManager.getInstance().setup(this);
-        DiceRollManager.getInstance().setup(this);
-        GameTipManager.getInstance().setup(this);
-        GuildManager.getInstance().setup(this);
-        LagManager.getInstance().setup(this);
-        MessageManager.getInstance().setup(this);
-        
-        //setup entities manager instances
-        MonsterCreatorManager.getInstance().setup(this);
-        MonsterManager.getInstance().setup(this);
-        NPCManager.getInstance().setup(this);
-        
-        //setup gang manager instances
-        GuildManager.getInstance().setup(this);
-        
-        //setup inventory manager instances
-        BankChestManager.getInstance().setup(this);
-        ShopChestManager.getInstance().setup(this);
-        
-        //setup item manager instances
-        ArmorItemManager.getInstance().setup(this);
-        ConsumableItemManager.getInstance().setup(this);
-        CurrencyItemManager.getInstance().setup(this);
-        ItemGeneratorManager.getInstance().setup(this);
-        ItemQualityManager.getInstance().setup(this);
-        ItemTierManager.getInstance().setup(this);
-        LootTableChestManager.getInstance().setup(this);
-        LootTableMobManager.getInstance().setup(this);
-        LoreManager.getInstance().setup(this);
-        MiscItemManager.getInstance().setup(this);
-        WeaponItemManager.getInstance().setup(this);
-        
-        //setup profession manager instances
-        Alchemy.getInstance().setup(this);
-        Blacksmithing.getInstance().setup(this);
-        Cooking.getInstance().setup(this);
-        Fishing.getInstance().setup(this);
-        Herbalism.getInstance().setup(this);
-        Mining.getInstance().setup(this);
-        
-        //setup world manager instances
-        BlockRegenerationManager.getInstance().setup(this);
-        
-        /////////////////////////////
-        /// Setup Event Listeners ///
-        /////////////////////////////
-        
-        pluginManager.registerEvents(new AsyncPlayerChatListener(this), this);
-        
-        pluginManager.registerEvents(new BlockBreakListener(this), this);
-        pluginManager.registerEvents(new BlockDamageListener(this), this);
-        pluginManager.registerEvents(new BlockPlaceListener(this), this);
+		pluginManager.registerEvents(new ProjectileHitListener(this), this);
 
-        pluginManager.registerEvents(new CreatureSpawnListener(this), this);
+		pluginManager.registerEvents(new WeatherChangeListener(this), this);
 
-        pluginManager.registerEvents(new EntityChangeBlockListener(this), this);
-        pluginManager.registerEvents(new EntityCombustListener(this), this);
-        pluginManager.registerEvents(new EntityDamageByEntityListener(this), this);
-        pluginManager.registerEvents(new EntityDamageListener(this), this);
-        pluginManager.registerEvents(new EntityDeathListener(this), this);
-        pluginManager.registerEvents(new EntityExplodeListener(this), this);
-        pluginManager.registerEvents(new EntityRegainHealthListener(this), this);
-        pluginManager.registerEvents(new EntityShootBowListener(this), this);
-        pluginManager.registerEvents(new EntityTargetListener(this), this);
-        
-        pluginManager.registerEvents(new InventoryClickListener(this), this);
-        pluginManager.registerEvents(new InventoryCloseListener(this), this);
-        pluginManager.registerEvents(new InventoryOpenListener(this), this);
-        
-        pluginManager.registerEvents(new PlayerDeathListener(this), this);
-        pluginManager.registerEvents(new PlayerDropItemListener(this), this);
-        pluginManager.registerEvents(new PlayerExpChangeListener(this), this);
-        pluginManager.registerEvents(new PlayerFishListener(this), this);
-        pluginManager.registerEvents(new PlayerInteractEntityListener(this), this);
-        pluginManager.registerEvents(new PlayerInteractListener(this), this);
-        pluginManager.registerEvents(new PlayerItemBreakListener(this), this);
-        pluginManager.registerEvents(new PlayerJoinListener(this), this);
-        pluginManager.registerEvents(new PlayerPickupItemListener(this), this);
-        pluginManager.registerEvents(new PlayerQuitListener(this), this);
-        pluginManager.registerEvents(new PlayerRespawnListener(this), this);
-        
-        pluginManager.registerEvents(new WeatherChangeListener(this), this);
-        
-        //////////////////////
-        /// Setup Commands ///
-        //////////////////////
-        
-        //setting player chat channel
-        getCommand("c").setExecutor(new CommandManager(this));
-        
-        //get the server lag
-        getCommand("lag").setExecutor(new CommandManager(this));
-        
-        //get player stats
-        getCommand("armorstats").setExecutor(new CommandManager(this));
-        getCommand("gethp").setExecutor(new CommandManager(this));
-        
-        //commands to define monsters in the world
-        getCommand("mm").setExecutor(new CommandManager(this));
-        
-        //private message other players
-        getCommand("msg").setExecutor(new CommandManager(this));
-        getCommand("pm").setExecutor(new CommandManager(this));
-        getCommand("tell").setExecutor(new CommandManager(this));
-        
-        //send quick reply to the last private message a player had
-        getCommand("r").setExecutor(new CommandManager(this));
-        
-        //roll a dice
-        getCommand("roll").setExecutor(new CommandManager(this));
-     
-        //sends operator to the spawn location.
-        getCommand("spawn").setExecutor(new CommandManager(this));
-     
-        //various commands to manage a gang.
-        getCommand("guild").setExecutor(new CommandManager(this));
-        
-        ///////////////////
-        /// Startup End ///
-        ///////////////////
-        
-        //Notify that plugin is fully finished loading.
-        Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + "[MPRPG] Start up has finished for MinePile:RPG!");
+		//////////////////////
+		/// Setup Commands ///
+		//////////////////////
+
+		//setting player chat channel
+		getCommand("c").setExecutor(new CommandManager(this));
+
+		//get the server lag
+		getCommand("lag").setExecutor(new CommandManager(this));
+
+		//get player stats
+		getCommand("armorstats").setExecutor(new CommandManager(this));
+		getCommand("gethp").setExecutor(new CommandManager(this));
+
+		//commands to define monsters in the world
+		getCommand("mm").setExecutor(new CommandManager(this));
+
+		//private message other players
+		getCommand("msg").setExecutor(new CommandManager(this));
+		getCommand("pm").setExecutor(new CommandManager(this));
+		getCommand("tell").setExecutor(new CommandManager(this));
+
+		//send quick reply to the last private message a player had
+		getCommand("r").setExecutor(new CommandManager(this));
+
+		//roll a dice
+		getCommand("roll").setExecutor(new CommandManager(this));
+
+		//sends operator to the spawn location.
+		getCommand("spawn").setExecutor(new CommandManager(this));
+
+		//various commands to manage a gang.
+		getCommand("guild").setExecutor(new CommandManager(this));
+
+		///////////////////
+		/// Startup End ///
+		///////////////////
+
+		//Notify that plugin is fully finished loading.
+		Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + "[MPRPG] Start up has finished for MinePile:RPG!");
 	}
-	
+
 	@Override
 	public void onDisable() {
 		//Show the administrator the plugin closing message.
 		Bukkit.getConsoleSender().sendMessage(ChatColor.AQUA + "[MPRPG] Shutting down MinePile:RPG!");
-		
+
 		//Reset all plants and blocks that have been picked or mined.
 		BlockRegenerationManager.disable();
-		
+
 		//Clear LoreManager Log
 		LoreManager.disable();
-		
+
 		//Remove any existing Holograms
 		BankChestManager.disable();
-		
+
 		//Remove mail holograms
 		PlayerMailManager.disable();
-		
+
 		//Remove Alchemy holograms
 		Alchemy.disable();
-		
+
 		//Remove Blacksmiting holograms
 		Blacksmithing.disable();
-		
+
+		//Remove Fishing holograms
+		Fishing.disable();
+
 		//Save players last health
 		PlayerManager.disable();
-        
+
+		//Remove Merchant Manager hologram.
+		MerchantManager.disable();
+
 		//Loop through entity list and remove them.
 		//This is mainly for clearing mobs on server reload.
 		MonsterManager.disable();
-		
+
 		////////////////////
-        /// Shutdown End ///
-        ////////////////////
-		
+		/// Shutdown End ///
+		////////////////////
+
 		//Show the administrator that the plugin is finished closing.
 		Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + "[MPRPG] Shut down of MinePile:RPG is complete!");
 	}
@@ -271,5 +282,5 @@ public class MPRPG extends JavaPlugin {
 	public String getPluginVersion() {
 		return pluginVersion;
 	}
-	
+
 }

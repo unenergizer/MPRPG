@@ -5,8 +5,8 @@ import java.io.IOException;
 
 import net.md_5.bungee.api.ChatColor;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.World;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.EntityType;
@@ -18,8 +18,8 @@ public class MonsterCreatorManager {
 	
 	//setup instance variables
 	public static MPRPG plugin;
-	static MonsterCreatorManager monsterCreatorManagerInstance = new MonsterCreatorManager();
-	static String mobTypeFilePath = "plugins/MPRPG/mobs/monsterType.yml";
+	private static MonsterCreatorManager monsterCreatorManagerInstance = new MonsterCreatorManager();
+	private static String mobTypeFilePath = "plugins/MPRPG/mobs/monsterType.yml";
 	
 	//Create instance
 	public static MonsterCreatorManager getInstance() {
@@ -27,8 +27,8 @@ public class MonsterCreatorManager {
 	}
 	
 	//Configuration file that holds monster information.
-	static File configFile;
-	static FileConfiguration monsterConfig;
+	//static File configFile;
+	//static FileConfiguration monsterConfig;
 	
 	//Setup MobManager
 	@SuppressWarnings("static-access")
@@ -38,13 +38,6 @@ public class MonsterCreatorManager {
 		//If monster configuration does not exist, create it. Otherwise lets load the config.
 		if(!(new File(mobTypeFilePath)).exists()){
 			createMonsterConfig();
-        } else {
-        	//lets load the configuration file.
-        	configFile = new File(mobTypeFilePath);
-            monsterConfig =  YamlConfiguration.loadConfiguration(configFile);
-
-            //setup and spawn monsters
-            
         }
 	}
 	
@@ -58,7 +51,7 @@ public class MonsterCreatorManager {
 	public static void setEntitie(Player player, String mobName, Location location) {
 		
 		int currentCount = getMobIdTotals();
-		int newCount = currentCount + 1;
+		final int newCount = currentCount + 1;
 		double x = location.getBlockX();
 		double y = location.getBlockY() + 2;
 		double z = location.getBlockZ();
@@ -83,8 +76,11 @@ public class MonsterCreatorManager {
         }
         
         //Spawn the monster in the game.
-        MonsterManager.setupEntitie(newCount);
-
+		Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
+			public void run() {
+				MonsterManager.setupEntitie(newCount);
+			}
+		}, 2 * 20L);
 	}
 	
 	/**
@@ -111,7 +107,9 @@ public class MonsterCreatorManager {
 	 * @param lootTable A list of items that might drop when the entitie dies.
 	 */
 	public static void createNewMonster(Player player, String mobName, String nameColor, EntityType entityType, int mobLevel, int mobHP, int runRadius, String lootTable) {
-    	
+
+    	File configFile = new File(mobTypeFilePath);
+        FileConfiguration monsterConfig =  YamlConfiguration.loadConfiguration(configFile);
         monsterConfig.set(mobName, mobName);
         monsterConfig.set(mobName + ".player", player.getName());
         monsterConfig.set(mobName + ".mobNameColor", nameColor);
@@ -165,7 +163,9 @@ public class MonsterCreatorManager {
 	 * This creates the configuration file that will hold data to save mob attributes.
 	 */
     private static void createMonsterConfig() {
-    	
+
+    	File configFile = new File(mobTypeFilePath);
+        FileConfiguration monsterConfig =  YamlConfiguration.loadConfiguration(configFile);
         configFile = new File(mobTypeFilePath);
         monsterConfig =  YamlConfiguration.loadConfiguration(configFile);
 
@@ -177,11 +177,16 @@ public class MonsterCreatorManager {
     }
     
 	public static FileConfiguration getMonsterConfig() {
+
+    	File configFile = new File(mobTypeFilePath);
+        FileConfiguration monsterConfig =  YamlConfiguration.loadConfiguration(configFile);
 		return monsterConfig;
 	}
 
 	public static void setMobConfigInt(String mobName, String config, int value) {
 
+    	File configFile = new File(mobTypeFilePath);
+        FileConfiguration monsterConfig =  YamlConfiguration.loadConfiguration(configFile);
         monsterConfig.set(config, value);
 
         try {
@@ -193,11 +198,15 @@ public class MonsterCreatorManager {
     
 	public static int getMobConfigInt(String mobName, String value) {
 
+    	File configFile = new File(mobTypeFilePath);
+        FileConfiguration monsterConfig =  YamlConfiguration.loadConfiguration(configFile);
         return (int) monsterConfig.get(value);
 	}
 	
 	public static void setMobConfigString(String mobName, String config, String value) {
 
+    	File configFile = new File(mobTypeFilePath);
+        FileConfiguration monsterConfig =  YamlConfiguration.loadConfiguration(configFile);
         monsterConfig.set(config, value);
 
         try {
@@ -209,6 +218,8 @@ public class MonsterCreatorManager {
 	
 	public static String getMobConfigString(String mobName, String value) {
 
+    	File configFile = new File(mobTypeFilePath);
+        FileConfiguration monsterConfig =  YamlConfiguration.loadConfiguration(configFile);
         return  (String) monsterConfig.get(value);
 	}
 
