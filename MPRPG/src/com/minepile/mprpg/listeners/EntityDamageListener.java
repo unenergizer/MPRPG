@@ -112,7 +112,7 @@ public class EntityDamageListener implements Listener{
 						
 						//Cleanup for MinePile plugin
 						//Also gets location for loot drop
-						MonsterManager.toggleEntitieDeath(victimID, x, y, z);
+						MonsterManager.toggleEntityDeath(victimID, x, y, z);
 					} else {
 						victim.setHealth(15);
 						MonsterManager.toggleDamage(victimID, damage);

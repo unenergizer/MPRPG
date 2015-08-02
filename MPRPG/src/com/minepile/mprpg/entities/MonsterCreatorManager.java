@@ -78,7 +78,7 @@ public class MonsterCreatorManager {
         //Spawn the monster in the game.
 		Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
 			public void run() {
-				MonsterManager.setupEntitie(newCount);
+				MonsterManager.setupEntity(newCount);
 			}
 		}, 2 * 20L);
 	}

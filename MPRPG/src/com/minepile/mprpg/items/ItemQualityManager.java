@@ -15,7 +15,7 @@ public class ItemQualityManager {
 		return itemQualityManagerInstance;
 	}
 	
-	//Setup PlayerManager
+	//Setup item quality ENUM.
 	@SuppressWarnings("static-access")
 	public void setup(MPRPG plugin) {
 		this.plugin = plugin;

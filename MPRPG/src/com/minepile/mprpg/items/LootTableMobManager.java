@@ -108,7 +108,7 @@ public class LootTableMobManager {
 				if (dropItem() == true) {
 
 					ItemStack misc = MiscItemManager.makeItem((String) miscItems.get(i));
-					Bukkit.broadcastMessage("dropping: " + miscItems.get(i).toString());
+					
 					//Generate drops
 					Bukkit.getWorld("world").dropItemNaturally(loc, misc);
 

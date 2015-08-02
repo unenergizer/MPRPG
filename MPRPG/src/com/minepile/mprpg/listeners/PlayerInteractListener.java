@@ -14,7 +14,7 @@ import org.bukkit.event.player.PlayerInteractEvent;
 
 import com.minepile.mprpg.MPRPG;
 import com.minepile.mprpg.inventory.BankChestManager;
-import com.minepile.mprpg.items.LoreManager;
+import com.minepile.mprpg.items.LoreManagerVersion2;
 import com.minepile.mprpg.player.PlayerMenuManager;
 
 public class PlayerInteractListener implements Listener{
@@ -242,8 +242,8 @@ public class PlayerInteractListener implements Listener{
 		taskID = Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
 			@Override
 			public void run() {
-				LoreManager.applyHpBonus(player, true);
-
+				//LoreManager.applyHpBonus(player, true);
+				LoreManagerVersion2.getInstance().applyHPBonus(player);
 			} //END Run method.
 		}, 10); //(20 ticks = 1 second)
 	}

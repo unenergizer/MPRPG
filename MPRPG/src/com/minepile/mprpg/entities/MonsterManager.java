@@ -20,6 +20,8 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.SkullMeta;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 
 import com.minepile.mprpg.MPRPG;
 import com.minepile.mprpg.chat.MessageManager;
@@ -55,6 +57,7 @@ public class MonsterManager {
 	static HashMap<UUID, Integer> mobLevel = new HashMap<UUID, Integer>();
 	static HashMap<UUID, Integer> mobHealthPoints = new HashMap<UUID, Integer>();
 	static HashMap<UUID, Integer> mobMaxHealthPoints = new HashMap<UUID, Integer>();
+	static HashMap<UUID, Integer> mobMoveRadius = new HashMap<UUID, Integer>();
 	static HashMap<UUID, Integer> respawnTime = new HashMap<UUID, Integer>();
 	static HashMap<UUID, String> lootTable = new HashMap<UUID, String>();
 
@@ -90,6 +93,13 @@ public class MonsterManager {
 				}
 			}, 6 * 20L);
 
+			//Teleport mobs if they move to far away from thier spawn point.
+			Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(plugin,  new Runnable() {
+				public void run() {
+					teleportEntity();
+				}
+			}, 0L, 5 * 20);
+
 			//Start mob respawn thread.
 			//This thread will attempt to respawn a mob if one has died.
 			//If no mobs have died, then nothing will happen.
@@ -118,7 +128,7 @@ public class MonsterManager {
 		int totalMonsters = config.getInt("settings.countTotal");
 
 		for (int i = 1; i <= totalMonsters; i++) {
-			setupEntitie(i);
+			setupEntity(i);
 		}
 	}
 
@@ -135,17 +145,79 @@ public class MonsterManager {
 		}
 	}
 
+	private static void teleportEntity() {
+		if (mobSpawnLocation.isEmpty() == false && mobMoveRadius.isEmpty() == false) {
+			Iterator<Entry<UUID, Integer>> it = mobMoveRadius.entrySet().iterator();
+			while (it.hasNext()) {
+
+				Entry<UUID, Integer> pair = it.next();
+				UUID uuid = pair.getKey();
+				Integer radius = pair.getValue();
+				
+				//Find the specific mob in the world with the same UUID.
+				for (Entity entity : world.getEntities()) {
+					if (entity.getUniqueId().equals(uuid)) {
+						
+						//Original spawn location
+						Location locSpawn = mobSpawnLocation.get(uuid);
+						double x = locSpawn.getX();
+						double y = locSpawn.getY();
+						double z = locSpawn.getZ();
+
+						//Current entity location
+						Location locCurrent = entity.getLocation();
+						double currentX = locCurrent.getX();
+						double currentY = locCurrent.getY();
+						double currentZ = locCurrent.getZ();
+
+						//Test if mob is past the max radius for X.
+						if ( x > 0) {
+							if (currentX > x + radius) {
+								entity.teleport(locSpawn);
+							}
+						} else {
+							if (currentX < x - radius) {
+								entity.teleport(locSpawn);
+							}
+						}
+						//Test if mob is past the max radius for Y.
+						if ( y > 0) {
+							if (currentY > y + radius) {
+								entity.teleport(locSpawn);
+							}
+						} else {
+							if (currentY < y - radius) {
+								entity.teleport(locSpawn);
+							}
+						}
+						//Test if mob is past the max radius for Z.
+						if ( z > 0) {
+							if (currentZ > z + radius) {
+								entity.teleport(locSpawn);
+							}
+						} else {
+							if (currentZ < z - radius) {
+								entity.teleport(locSpawn);
+							}
+						}
+						
+					}
+				}
+			}
+		}
+	}
+
 	/**
 	 * Spawns a an entite in the world.
 	 * 
 	 * @param id 
 	 */
-	public static void setupEntitie(int id) {
-		
+	public static void setupEntity(int id) {
+
 		//Load the configuration file.
 		File file = new File(mobTypeIdPath);
 		FileConfiguration config =  YamlConfiguration.loadConfiguration(file);
-		
+
 		//Get id config values.
 		String name = config.getString(Integer.toString(id) + ".mobType");
 		int x = config.getInt(Integer.toString(id) + ".X");
@@ -157,7 +229,7 @@ public class MonsterManager {
 		EntityType entityType = stringToEntityType(MonsterCreatorManager.getMonsterConfig().getString(name + ".entity"));
 		int lvl = MonsterCreatorManager.getMonsterConfig().getInt(name + ".mobLVL");
 		int hp = MonsterCreatorManager.getMonsterConfig().getInt(name + ".mobHP");
-		int runRadius = MonsterCreatorManager.getMonsterConfig().getInt(name + ".mobRadius");
+		int moveRadius = MonsterCreatorManager.getMonsterConfig().getInt(name + ".mobRadius");
 		String loot = MonsterCreatorManager.getMonsterConfig().getString(name + ".lootTable");
 
 		//Get equipment
@@ -173,7 +245,7 @@ public class MonsterManager {
 		Location loc = new Location(world, x + .5, y + .5, z + .5);
 
 		//Spawn the mob
-		//spawnEntitie(world, loc, entity, stringColor, mobType, lvl, hp, runRadius, id, loot);
+		//spawnEntity(world, loc, entity, stringColor, mobType, lvl, hp, runRadius, id, loot);
 		String colorName = (stringToColor(stringColor) + name);
 		String fixedName = colorName.replaceAll("_", " ");
 		String mobNameBase = ChatColor.GRAY + "[" + ChatColor.RED + lvl + ChatColor.GRAY +"] " + fixedName;
@@ -226,23 +298,29 @@ public class MonsterManager {
 
 		//Setup various mob attributes.
 		UUID entityId = entity.getUniqueId();
+		
+		//Boost mob running speed.
+		PotionEffect speed = new PotionEffect(PotionEffectType.SPEED, 60*60*20, 1);
+		speed.apply(entity);
 
 		mobId.put(entityId, id);
 		mobName.put(entityId, fixedName);
 		mobLevel.put(entityId, lvl);
 		mobHealthPoints.put(entityId, hp);
 		mobMaxHealthPoints.put(entityId, hp);
+		mobSpawnLocation.put(entityId, loc);
+		mobMoveRadius.put(entityId, moveRadius);
 		lootTable.put(entityId, loot);
 	}
 
 	/**
-	 * This will respawn the Entitie after a given amount of time.
+	 * This will respawn the Entity after a given amount of time.
 	 * <p>
 	 * This thread is started when this class is loaded at onEnable!
 	 * 
 	 * @param id The ID number of the mob to respawn contained in the monsterId.yml file.
 	 */
-	public static void respawnMob () {
+	private static void respawnMob () {
 		//Respawn mob
 		taskID02 = Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, new Runnable() {
 			@Override
@@ -259,7 +337,7 @@ public class MonsterManager {
 						if(timeLeft <= 0) {
 
 							//Spawn entity
-							setupEntitie(spawnID);
+							setupEntity(spawnID);
 
 							//Remove hashmap and update vars.
 							it.remove();
@@ -276,23 +354,23 @@ public class MonsterManager {
 	/**
 	 * This will remove HP from the entities Health HashMap.
 	 * 
-	 * @param id The UUID of the entitie to receive HP reduction.
+	 * @param id The UUID of the entity to receive HP reduction.
 	 * @param damage The amount of HP to remove from the HashMap.
 	 */
 	public static void toggleDamage(UUID id, double damage) {
 		int currentHP = mobHealthPoints.get(id);
 		int newHP = (int) (currentHP - damage);
 		mobHealthPoints.put(id, newHP);
-		//The entitie took damage, show HP bar instead of Entitie name.
-		renameEntitie(id);
+		//The entity took damage, show HP bar instead of Entity name.
+		renameEntity(id);
 	}
 
 	/**
-	 * This will give the entitie a custom name.
+	 * This will give the entity a custom name.
 	 * 
-	 * @param entity The entitie that is going to be given a custom name.
+	 * @param entity The entity that is going to be given a custom name.
 	 */
-	public static void setEntitieName(Entity entity) {
+	public static void setEntityName(Entity entity) {
 		UUID entityId = entity.getUniqueId();
 		String monsterName = mobName.get(entityId);
 		int monsterLevel = mobLevel.get(entityId);
@@ -305,9 +383,9 @@ public class MonsterManager {
 	/**
 	 * This will put the entities health as their name.
 	 * 
-	 * @param id The UUID of the entitie to grab from the HashMap's.
+	 * @param id The UUID of the entity to grab from the HashMap's.
 	 */
-	public static void renameEntitie(UUID id) {
+	public static void renameEntity(UUID id) {
 		int maxHP = mobMaxHealthPoints.get(id);
 		int hp = mobHealthPoints.get(id);
 		int level = mobLevel.get(id);
@@ -325,14 +403,14 @@ public class MonsterManager {
 	}
 
 	/**
-	 * This removes the dead Entitie from all the HashMap's that are tracking it.
+	 * This removes the dead Entity from all the HashMap's that are tracking it.
 	 * 
 	 * @param id The entities UUID to be removed from the HashMap's
 	 * @param x The Entities X coordinate in the world.
 	 * @param y The Entities Y coordinate in the world.
 	 * @param z The Entities Z coordinate in the world.
 	 */
-	public static void toggleEntitieDeath(final UUID id, int x, int y, int z) {
+	public static void toggleEntityDeath(final UUID id, int x, int y, int z) {
 		//Make sure the mob exists in the hashmap.
 		//If the mob does not exist, do nothing.
 		if (mobId.get(id) != null) {
@@ -345,19 +423,22 @@ public class MonsterManager {
 			LootTableMobManager.toggleLootTableDrop(lootTableName, loc);
 
 			//Remove mob
-			mobSpawnLocation.remove(id);
 			mobId.remove(id);
+			mobSpawnLocation.remove(id);
 			mobName.remove(id);
 			mobLevel.remove(id);
 			mobHealthPoints.remove(id);
 			mobMaxHealthPoints.remove(id);
+			mobMoveRadius.remove(id);
+			respawnTime.remove(id);
+			lootTable.remove(id);
 
 			//Setup mob for respawning.
-			//Add spawnID to the Hashmap.
+			//Add spawnID to the HashMap.
 			respawnTimeLeft.put(configId, entityRespawnTime);
 		}
 	}
-	
+
 	/**
 	 * Converts a String value to an EntityType if a match can be made.
 	 * 
@@ -365,142 +446,142 @@ public class MonsterManager {
 	 * @return A EntityType enumerator.
 	 */
 	private static EntityType stringToEntityType(String entity) {
-		
+
 		String entityType = entity.toUpperCase().replace(" ", "_");
 		EntityType type = null;
 		switch(entityType) {
 		case "ARMOR_STAND": type = EntityType.ARMOR_STAND;
-			break;
+		break;
 		case "ARROW": type = EntityType.ARROW;
-			break;
+		break;
 		case "BAT": type = EntityType.BAT;
-			break;
+		break;
 		case "BLAZE": type = EntityType.BLAZE;
-			break;
+		break;
 		case "BOAT": type = EntityType.BOAT;
-			break;
+		break;
 		case "CAVE_SPIDER": type = EntityType.CAVE_SPIDER;
-			break;
+		break;
 		case "CHICKEN": type = EntityType.CHICKEN;
-			break;
+		break;
 		case "COMPLEX_PART": type = EntityType.COMPLEX_PART;
-			break;
+		break;
 		case "COW": type = EntityType.COW;
-			break;
+		break;
 		case "CREEPER": type = EntityType.CREEPER;
-			break;
+		break;
 		case "DROPPED_ITEM": type = EntityType.DROPPED_ITEM;
-			break;
+		break;
 		case "EGG": type = EntityType.EGG;
-			break;
+		break;
 		case "ENDERMAN": type = EntityType.ENDERMAN;
-			break;
+		break;
 		case "ENDERMITE": type = EntityType.ENDERMITE;
-			break;
+		break;
 		case "ENDER_CRYSTAL": type = EntityType.ENDER_CRYSTAL;
-			break;
+		break;
 		case "ENDER_DRAGON": type = EntityType.ENDER_DRAGON;
-			break;
+		break;
 		case "ENDER_PEARL": type = EntityType.ENDER_PEARL;
-			break;
+		break;
 		case "ENDER_SIGNAL": type = EntityType.ENDER_SIGNAL;
-			break;
+		break;
 		case "EXPERIENCE_ORB": type = EntityType.EXPERIENCE_ORB;
-			break;
+		break;
 		case "FALLING_BLOCK": type = EntityType.FALLING_BLOCK;
-			break;
+		break;
 		case "FIREBALL": type = EntityType.FIREBALL;
-			break;
+		break;
 		case "FIREWORK": type = EntityType.FIREWORK;
-			break;
+		break;
 		case "FISHING_HOOK": type = EntityType.FISHING_HOOK;
-			break;
+		break;
 		case "GHAST": type = EntityType.GHAST;
-			break;
+		break;
 		case "GIANT": type = EntityType.GIANT;
-			break;
+		break;
 		case "GUARDIAN": type = EntityType.GUARDIAN;
-			break;
+		break;
 		case "HORSE": type = EntityType.HORSE;
-			break;
+		break;
 		case "IRON_GOLEM": type = EntityType.IRON_GOLEM;
-			break;
+		break;
 		case "ITEM_FRAME": type = EntityType.ITEM_FRAME;
-			break;
+		break;
 		case "LEASH_HITCH": type = EntityType.LEASH_HITCH;
-			break;
+		break;
 		case "LIGHTNING": type = EntityType.LIGHTNING;
-			break;
+		break;
 		case "MAGMA_CUBE": type = EntityType.MAGMA_CUBE;
-			break;
+		break;
 		case "MINECART": type = EntityType.MINECART;
-			break;
+		break;
 		case "MINECART_CHEST": type = EntityType.MINECART_CHEST;
-			break;
+		break;
 		case "MINECART_COMMAND": type = EntityType.MINECART_COMMAND;
-			break;
+		break;
 		case "MINECART_FURNACE": type = EntityType.MINECART_FURNACE;
-			break;
+		break;
 		case "MINECART_HOPPER": type = EntityType.MINECART_HOPPER;
-			break;
+		break;
 		case "MINECART_MOB_SPAWNER": type = EntityType.MINECART_MOB_SPAWNER;
-			break;
+		break;
 		case "MINECART_TNT": type = EntityType.MINECART_TNT;
-			break;
+		break;
 		case "MUSHROOM_COW": type = EntityType.MUSHROOM_COW;
-			break;
+		break;
 		case "OCELOT": type = EntityType.OCELOT;
-			break;
+		break;
 		case "PAINTING": type = EntityType.PAINTING;
-			break;
+		break;
 		case "PIG": type = EntityType.PIG;
-			break;
+		break;
 		case "PIG_ZOMBIE": type = EntityType.PIG_ZOMBIE;
-			break;
+		break;
 		case "PLAYER": type = EntityType.PLAYER;
-			break;
+		break;
 		case "PRIMED_TNT": type = EntityType.PRIMED_TNT;
-			break;
+		break;
 		case "RABBIT": type = EntityType.RABBIT;
-			break;
+		break;
 		case "SHEEP": type = EntityType.SHEEP;
-			break;
+		break;
 		case "SILVERFISH": type = EntityType.SILVERFISH;
-			break;
+		break;
 		case "SKELETON": type = EntityType.SKELETON;
-			break;
+		break;
 		case "SLIME": type = EntityType.SLIME;
-			break;
+		break;
 		case "SMALL_FIREBALL": type = EntityType.SMALL_FIREBALL;
-			break;
+		break;
 		case "SNOWBALL": type = EntityType.SNOWBALL;
-			break;
+		break;
 		case "SNOWMAN": type = EntityType.SNOWMAN;
-			break;
+		break;
 		case "SPIDER": type = EntityType.SPIDER;
-			break;
+		break;
 		case "SPLASH_POTION": type = EntityType.SPLASH_POTION;
-			break;
+		break;
 		case "SQUID": type = EntityType.SQUID;
-			break;
+		break;
 		case "THROWN_EXP_BOTTLE": type = EntityType.THROWN_EXP_BOTTLE;
-			break;
+		break;
 		case "UNKNOWN": type = EntityType.UNKNOWN;
-			break;
+		break;
 		case "VILLAGER": type = EntityType.VILLAGER;
-			break;
+		break;
 		case "WEATHER": type = EntityType.WEATHER;
-			break;
+		break;
 		case "WITCH": type = EntityType.WITCH;
-			break;
+		break;
 		case "WITHER": type = EntityType.WITHER;
-			break;
+		break;
 		case "WITHER_SKULL": type = EntityType.WITHER_SKULL;
-			break;
+		break;
 		case "WOLF": type = EntityType.WOLF;
-			break;
+		break;
 		case "ZOMBIE": type = EntityType.ZOMBIE;
-			break;
+		break;
 		default:
 			type = EntityType.CHICKEN;
 			break;
