@@ -10,7 +10,7 @@ import org.bukkit.event.player.PlayerJoinEvent;
 
 import com.minepile.mprpg.MPRPG;
 import com.minepile.mprpg.chat.MessageManager;
-import com.minepile.mprpg.items.LoreManager;
+import com.minepile.mprpg.items.ItemLoreFactory;
 import com.minepile.mprpg.player.PlayerManager;
 
 public class PlayerJoinListener implements Listener {
@@ -58,7 +58,7 @@ public class PlayerJoinListener implements Listener {
 				PlayerManager.setupPlayer(player);
 				
 				//Update the players armor.
-				LoreManager.applyHpBonus(player, false);
+				ItemLoreFactory.getInstance().applyHPBonus(player, false);
 				
 			} //END Run method.
 		}, 5); //(20 ticks = 1 second)

@@ -30,7 +30,7 @@ public class GameTipManager {
     private static int numberOfTips;
     
 	//Setup regeneration variables.
-	private static int gameTipTime = 60 * 5;			//Time it takes for a message to show up. 60 seconds * 15 (15 minutes)
+	private static int gameTipTime = 60 * 10;			//Time it takes for a message to show up. 60 seconds * 15 (15 minutes)
 	
 	//Create instance.
 	public static GameTipManager getInstance() {

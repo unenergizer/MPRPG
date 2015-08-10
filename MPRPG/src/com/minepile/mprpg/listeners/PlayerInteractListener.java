@@ -14,7 +14,7 @@ import org.bukkit.event.player.PlayerInteractEvent;
 
 import com.minepile.mprpg.MPRPG;
 import com.minepile.mprpg.inventory.BankChestManager;
-import com.minepile.mprpg.items.LoreManagerVersion2;
+import com.minepile.mprpg.items.ItemLoreFactory;
 import com.minepile.mprpg.player.PlayerMenuManager;
 
 public class PlayerInteractListener implements Listener{
@@ -243,7 +243,7 @@ public class PlayerInteractListener implements Listener{
 			@Override
 			public void run() {
 				//LoreManager.applyHpBonus(player, true);
-				LoreManagerVersion2.getInstance().applyHPBonus(player);
+				ItemLoreFactory.getInstance().applyHPBonus(player, true);
 			} //END Run method.
 		}, 10); //(20 ticks = 1 second)
 	}

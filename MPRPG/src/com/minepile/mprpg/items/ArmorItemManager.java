@@ -104,6 +104,8 @@ public class ArmorItemManager {
 		int manaMin = armorItemConfig.getInt(itemName + ".manaMin");	
 		int manaRegenMax = armorItemConfig.getInt(itemName + ".manaRegenMax");	
 		int manaRegenMin = armorItemConfig.getInt(itemName + ".manaRegenMin");	
+		int manastealMax = armorItemConfig.getInt(itemName + ".manastealMax");	
+		int manastealMin = armorItemConfig.getInt(itemName + ".manastealMin");	
 		int poisonDamageMax = armorItemConfig.getInt(itemName + ".poisonDamageMax");	
 		int poisonDamageMin = armorItemConfig.getInt(itemName + ".poisonDamageMin");	
 		int poisonResistMax = armorItemConfig.getInt(itemName + ".poisonResistMax");	
@@ -142,6 +144,7 @@ public class ArmorItemManager {
 		int lifesteal = randomInt(lifestealMin, lifestealMax);	
 		int mana = randomInt(manaMin, manaMax);
 		int manaRegen = randomInt(manaRegenMin, manaRegenMax);
+		int manasteal = randomInt(manastealMin, manastealMax);
 		int poisonDamage = randomInt(poisonDamageMin, poisonDamageMax);
 		int poisonResist = randomInt(poisonResistMin, poisonResistMax);
 		int reflection = randomInt(reflectionMin, reflectionMax);	
@@ -188,6 +191,7 @@ public class ArmorItemManager {
 		if (lifesteal > 0)	{ lore.add(ChatColor.DARK_PURPLE + "+" + lifesteal + " Lifesteal"); }			
 		if (mana > 0)		{ lore.add(ChatColor.GREEN + "+" + mana + " Mana"); }			
 		if (manaRegen > 0)	{ lore.add(ChatColor.GREEN + "+" + manaRegen + " Mana Regeneration"); }			
+		if (manasteal > 0)	{ lore.add(ChatColor.GREEN + "+" + manasteal + " Manasteal"); }			
 		if (poisonDamage >0){ lore.add(ChatColor.RED + "+" + poisonDamage + " Poison Damage"); }			
 		if (poisonResist >0){ lore.add(ChatColor.BLUE + "+" + poisonResist + " Poison Resistance"); }			
 		if (reflection > 0) { lore.add(ChatColor.DARK_PURPLE + "+" + reflection + " Damage Reflection"); }
@@ -284,22 +288,24 @@ public class ArmorItemManager {
 		armorItemConfig.set("testArmorDrop" + ".manaMin", 17);	
 		armorItemConfig.set("testArmorDrop" + ".manaRegenMax", 18);	
 		armorItemConfig.set("testArmorDrop" + ".manaRegenMin", 18);	
-		armorItemConfig.set("testArmorDrop" + ".poisonDamageMax", 19);	
-		armorItemConfig.set("testArmorDrop" + ".poisonDamageMin", 19);	
-		armorItemConfig.set("testArmorDrop" + ".poisonResistMax", 20);	
-		armorItemConfig.set("testArmorDrop" + ".poisonResistMin", 20);	
-		armorItemConfig.set("testArmorDrop" + ".reflectionMax", 21);	
-		armorItemConfig.set("testArmorDrop" + ".reflectionMin", 21);	
-		armorItemConfig.set("testArmorDrop" + ".slownessMax", 22);	
-		armorItemConfig.set("testArmorDrop" + ".slownessMin", 22);	
-		armorItemConfig.set("testArmorDrop" + ".staminaMax", 23);	
-		armorItemConfig.set("testArmorDrop" + ".staminaMin", 23);	
-		armorItemConfig.set("testArmorDrop" + ".staminaRegenMax", 24);	
-		armorItemConfig.set("testArmorDrop" + ".staminaRegenMin", 24);	
-		armorItemConfig.set("testArmorDrop" + ".thornsDamageMax", 25);	
-		armorItemConfig.set("testArmorDrop" + ".thornsDamageMin", 25);
-		armorItemConfig.set("testArmorDrop" + ".thornsResistMax", 26);	
-		armorItemConfig.set("testArmorDrop" + ".thornsResistMin", 26);
+		armorItemConfig.set("testArmorDrop" + ".manastealMax", 19);	
+		armorItemConfig.set("testArmorDrop" + ".manastealMin", 19);	
+		armorItemConfig.set("testArmorDrop" + ".poisonDamageMax", 20);	
+		armorItemConfig.set("testArmorDrop" + ".poisonDamageMin", 20);	
+		armorItemConfig.set("testArmorDrop" + ".poisonResistMax", 21);	
+		armorItemConfig.set("testArmorDrop" + ".poisonResistMin", 21);	
+		armorItemConfig.set("testArmorDrop" + ".reflectionMax", 22);	
+		armorItemConfig.set("testArmorDrop" + ".reflectionMin", 22);	
+		armorItemConfig.set("testArmorDrop" + ".slownessMax", 23);	
+		armorItemConfig.set("testArmorDrop" + ".slownessMin", 23);	
+		armorItemConfig.set("testArmorDrop" + ".staminaMax", 24);	
+		armorItemConfig.set("testArmorDrop" + ".staminaMin", 24);	
+		armorItemConfig.set("testArmorDrop" + ".staminaRegenMax", 25);	
+		armorItemConfig.set("testArmorDrop" + ".staminaRegenMin", 25);	
+		armorItemConfig.set("testArmorDrop" + ".thornsDamageMax", 26);	
+		armorItemConfig.set("testArmorDrop" + ".thornsDamageMin", 26);
+		armorItemConfig.set("testArmorDrop" + ".thornsResistMax", 27);	
+		armorItemConfig.set("testArmorDrop" + ".thornsResistMin", 27);
 
 		try {
 			armorItemConfig.save(configFile);	//Save the file.

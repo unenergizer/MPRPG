@@ -27,7 +27,7 @@ import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import com.minepile.mprpg.MPRPG;
-import com.minepile.mprpg.items.LoreManager;
+import com.minepile.mprpg.items.ItemLoreFactory;
 
 public class PlayerManager {
 
@@ -54,9 +54,9 @@ public class PlayerManager {
 
 	//Base statistic rates
 	static double baseHealthPoints = 100;
+	static double baseHealthRegenRate = 2;
 	static double baseStaminaPoints = 100;
 	static double baseManaPoints = 100;
-	static double baseHealthRegenRate = 1;
 	static double baseStaminaRegenRate = 1;
 	static double baseManaRegenRate = 1;
 
@@ -152,7 +152,7 @@ public class PlayerManager {
 		new TitleObject(ChatColor.RED + "You have died!", ChatColor.YELLOW + "You are now being respawned.").send(player);
 
 		//Update the players armor.
-		LoreManager.applyHpBonus(player, false);
+		ItemLoreFactory.getInstance().applyHPBonus(player, true);
 
 		//Heal the player.
 		double maxHp = maxHealthPoints.get(playerName);
@@ -285,7 +285,7 @@ public class PlayerManager {
 
 		//Read armor and set statistics.
 		//update HashMap info
-		if (getPlayerConfigInt(player, "player.logoutHP") < LoreManager.getHpBonus(player)) {
+		if (getPlayerConfigInt(player, "player.logoutHP") < ItemLoreFactory.getInstance().getHealthPointsBonus(player)) {
 			healthPoints.put(playerName, baseHealthPoints);
 		} else {
 			healthPoints.put(playerName, getPlayerConfigInt(player, "player.logoutHP"));

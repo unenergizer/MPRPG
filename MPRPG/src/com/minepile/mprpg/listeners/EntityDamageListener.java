@@ -17,9 +17,6 @@ import org.bukkit.inventory.ItemStack;
 import com.minepile.mprpg.MPRPG;
 import com.minepile.mprpg.chat.MessageManager;
 import com.minepile.mprpg.entities.MonsterManager;
-import com.minepile.mprpg.items.LoreManager;
-import com.minepile.mprpg.player.PlayerHealthTagManager;
-import com.minepile.mprpg.player.PlayerManager;
 
 public class EntityDamageListener implements Listener{
 
@@ -42,7 +39,6 @@ public class EntityDamageListener implements Listener{
 
 			//Lets cancel fishing rod damage.
 			if (weapon.getType().equals(Material.FISHING_ROD)) {
-				player.sendMessage("EntityDamageEvent");
 				event.setCancelled(true);
 			}
 		}
@@ -52,6 +48,8 @@ public class EntityDamageListener implements Listener{
 			LivingEntity victim = (LivingEntity) event.getEntity();
 
 			if (victim instanceof Player) {
+				
+				/*
 				Player player = (Player) event.getEntity();
 				String playerName = player.getName();
 
@@ -86,8 +84,9 @@ public class EntityDamageListener implements Listener{
 					PlayerHealthTagManager.updateHealthTag(player);
 					
 					//Update the players armor.
-					LoreManager.applyHpBonus(player, false);
+					LoreManagerOLD.applyHpBonus(player, false);
 				}
+				*/
 			} else {
 				if (!victim.getType().equals(EntityType.ARMOR_STAND)) {
 					//Living entity is not a player, so it must be some type of mob.

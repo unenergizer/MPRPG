@@ -6,7 +6,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerItemBreakEvent;
 
 import com.minepile.mprpg.MPRPG;
-import com.minepile.mprpg.items.LoreManager;
+import com.minepile.mprpg.items.ItemLoreFactory;
 import com.minepile.mprpg.player.PlayerHealthTagManager;
 
 
@@ -23,7 +23,7 @@ public class PlayerItemBreakListener  implements Listener {
 	public void onPlayerItemBreak(PlayerItemBreakEvent event) {
 		Player player = event.getPlayer();
 		
-		LoreManager.applyHpBonus(player, true);
+		ItemLoreFactory.getInstance().applyHPBonus(player, true);
 		PlayerHealthTagManager.updateHealthTag(player);
 	}
 }

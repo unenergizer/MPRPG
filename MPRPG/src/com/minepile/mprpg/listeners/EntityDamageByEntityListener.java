@@ -17,8 +17,6 @@ import org.bukkit.inventory.ItemStack;
 
 import com.minepile.mprpg.MPRPG;
 import com.minepile.mprpg.entities.MonsterManager;
-import com.minepile.mprpg.items.LoreManager;
-import com.minepile.mprpg.player.PlayerHealthTagManager;
 import com.minepile.mprpg.player.PlayerManager;
 
 public class EntityDamageByEntityListener implements Listener{
@@ -59,15 +57,16 @@ public class EntityDamageByEntityListener implements Listener{
 
 				//Damager is another player
 				if (event.getDamager() instanceof Player) {
-
+					
+					/*
 					Player damager = (Player) event.getDamager();
 					String damagerName = damager.getName();
 
-					double damage = Math.max(0, LoreManager.getDamageBonus(damager) - LoreManager.getArmorBonus((LivingEntity)event.getEntity()));
+					double damage = Math.max(0, ItemLoreFactory.getInstance().getDamageBonus(damager) - ItemLoreFactory.getInstance().getArmorBonus((LivingEntity)event.getEntity()));
 					double healthBarPercent = (20 * (playerHealth - damage) / playerMaxHealth);
 					double newHealthTotal = (playerHealth - damage);
 
-					LoreManager.addAttackCooldown(damagerName);
+					ItemLoreFactory.getInstance().addAttackCooldown(damagerName);
 
 					//Show player damage message.
 					playerHealthChangeMessage(player, (int) playerHealth, (int) damage, (int) playerMaxHealth);
@@ -89,10 +88,11 @@ public class EntityDamageByEntityListener implements Listener{
 						//Update the players health tag
 						PlayerHealthTagManager.updateHealthTag(player);
 					}
-
+					*/
 					//PLayer shot arrow.
 				} else if (event.getDamager() instanceof Arrow){
-
+					
+					/*
 					Arrow arrow = (Arrow)event.getDamager();
 
 					if ((arrow.getShooter() != null) && ((arrow.getShooter() instanceof Player))) {
@@ -103,7 +103,7 @@ public class EntityDamageByEntityListener implements Listener{
 						double healthBarPercent =(20 * (playerHealth - damage) / playerMaxHealth);
 						double newHealthTotal = playerHealth - damage;
 
-						LoreManager.addAttackCooldown(damagerName);
+						//ItemLoreFactory.getInstance().addAttackCooldown(damagerName);
 
 						//Show player damage message.
 						damager.sendMessage(playerHealthChangeMessage(player, (int) playerHealth, (int) damage, (int) playerMaxHealth));
@@ -126,9 +126,10 @@ public class EntityDamageByEntityListener implements Listener{
 							PlayerHealthTagManager.updateHealthTag(player);
 							
 							//Update the players armor.
-							LoreManager.applyHpBonus(player, false);
+							ItemLoreFactory.getInstance().applyHPBonus(player, false);
 						}
-					}
+					} 
+					*/
 				}
 			} else if (event.getEntity() instanceof LivingEntity && !event.getEntity().getType().equals(EntityType.ARMOR_STAND)) {
 				//Living entity is not a player, so it must be some type of mob.				

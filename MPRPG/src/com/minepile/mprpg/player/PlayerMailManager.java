@@ -23,7 +23,7 @@ public class PlayerMailManager {
 		return playerMailManagerInstance;
 	}
 	
-	//Setup PlayerManager
+	//Setup PlayerMailManager
 	@SuppressWarnings("static-access")
 	public void setup(MPRPG plugin) {
 		this.plugin = plugin;

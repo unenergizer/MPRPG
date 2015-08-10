@@ -18,13 +18,15 @@ import org.bukkit.potion.PotionEffectType;
 
 import com.minepile.mprpg.MPRPG;
 import com.minepile.mprpg.items.ItemAttributes.ItemAttribute;
+import com.minepile.mprpg.player.PlayerHealthTagManager;
+import com.minepile.mprpg.player.PlayerManager;
 
-public class LoreManagerVersion2 {
+public class ItemLoreFactory {
 
 	//setup instance variables
 	public static MPRPG plugin;
-	static LoreManagerVersion2 loreManagerV2Instance = new LoreManagerVersion2();
-	
+	static ItemLoreFactory loreManagerV2Instance = new ItemLoreFactory();
+
 	//String regex.
 	private static Pattern armorRegex = 		Pattern.compile("[+](\\d+)[ ](armor)");
 	private static Pattern blindnessRegex = 	Pattern.compile("[+](\\d+)[ ](blindness)");
@@ -33,6 +35,7 @@ public class LoreManagerVersion2 {
 	private static Pattern coldResistRegex = 	Pattern.compile("[+](\\d+)[ ](cold resistance)");
 	private static Pattern critChanceRegex = 	Pattern.compile("[+](\\d+)[ ](critical hit chance)");
 	private static Pattern damageRegex = 		Pattern.compile("[+](\\d+)[ ](damage)");
+	private static Pattern damageRangeRegex = 	Pattern.compile("[+](\\d+)(-)(\\d+)[ ](damage)"); //TODO: Implement me. "2-5 Damage"
 	private static Pattern dodgeChanceRegex =	Pattern.compile("[+](\\d+)[ ](dodge chance)");
 	private static Pattern fireDamageRegex = 	Pattern.compile("[+](\\d+)[ ](fire damage)");
 	private static Pattern fireResistRegex = 	Pattern.compile("[+](\\d+)[ ](fire resistance)");
@@ -44,6 +47,7 @@ public class LoreManagerVersion2 {
 	private static Pattern lifestealRegex = 	Pattern.compile("[+](\\d+)[ ](lifesteal)");
 	private static Pattern manaRegex = 			Pattern.compile("[+](\\d+)[ ](mana)");
 	private static Pattern manaRegenRegex = 	Pattern.compile("[+](\\d+)[ ](mana regeneration)");
+	private static Pattern manastealRegex = 	Pattern.compile("[+](\\d+)[ ](mana steal)");
 	private static Pattern poisonDamageRegex = 	Pattern.compile("[+](\\d+)[ ](poison damage)");
 	private static Pattern poisonResistRegex = 	Pattern.compile("[+](\\d+)[ ](poison resistance)");
 	private static Pattern reflectionRegex = 	Pattern.compile("[+](\\d+)[ ](damage reflection)");
@@ -54,7 +58,7 @@ public class LoreManagerVersion2 {
 	private static Pattern thornResistRegex = 	Pattern.compile("[+](\\d+)[ ](thorn resistance)");
 
 	//Create instance
-	public static LoreManagerVersion2 getInstance() {
+	public static ItemLoreFactory getInstance() {
 		return loreManagerV2Instance;
 	}
 
@@ -68,16 +72,29 @@ public class LoreManagerVersion2 {
 
 		if (damager instanceof LivingEntity) {
 			LivingEntity livingDamager = (LivingEntity) damager;
+			
+			double coldDamage = getColdDamage((LivingEntity) damager);
+			double fireDamage = getFireDamage((LivingEntity) damager);
+			double poisonDamage = getPoisonDamage((LivingEntity) damager);
+			double thornDamage = getThornDamage((LivingEntity) damager);
+			
+			double coldResistance = coldDamage * (getColdResist((LivingEntity) victim) / 100);
+			double fireResistance = fireDamage * (getFireResist((LivingEntity) victim) / 100);
+			double poisonResistance = poisonDamage * (getPoisonResist((LivingEntity) victim) / 100);
+			double thornResistance = thornDamage * (getColdResist((LivingEntity) victim) / 100);
+			
 			double damage = getDamageBonus(livingDamager);
-			double coldDamage = getColdDamage((LivingEntity) damager) - getColdResist((LivingEntity) victim);
-			double fireDamage = getFireDamage(livingDamager) - getFireResist((LivingEntity) victim);
-			double poisonDamage = getPoisonDamage(livingDamager) - getPoisonResist((LivingEntity) victim);
-			double thronDamage = getThornDamage(livingDamager) - getThornResist((LivingEntity) victim);
+			double coldDamageFinal = coldDamage - coldResistance;
+			double fireDamageFinal = fireDamage - fireResistance;
+			double poisonDamageFinal = poisonDamage - poisonResistance;
+			double thornDamageFinal = thornDamage - thornResistance;
 
-			double totalDamage = damage + coldDamage + fireDamage + poisonDamage + thronDamage;
+			double totalDamage = damage + coldDamageFinal + fireDamageFinal + poisonDamageFinal + thornDamageFinal;
 
 			//TODO: Something here
 			
+			
+
 		} else if (damager instanceof Arrow) {
 			double damage = getArrorDamage(damager);
 		}
@@ -87,24 +104,96 @@ public class LoreManagerVersion2 {
 	 * This will apply the players current attribute totals placed on armor.
 	 * @param player
 	 */
-	public void applyHPBonus(Player player) {
-		//TODO: Apply player HP to Minecraft HP Bar and Player HP Hashmap.
+	public void applyHPBonus(Player player, Boolean playSoundEffect) {
+		//Get armor HP bonuses
+		Double hpToAdd = Double.valueOf(getHealthPointsBonus(player));
 
-		//Loop through the armor slots and find armor.
-		getHealthPointsBonus(player);
-		
+		String playerName = player.getName();
+		double currentHP = PlayerManager.getHealthPoints(playerName);
+		double newMaxHP = PlayerManager.getBaseHealthPoints() + hpToAdd.doubleValue();
+		double oldMaxHP = PlayerManager.getMaxHealthPoints(playerName);
+
+		//If the players HP is greater than the base HP + HP bonus,
+		//set the players HP.  BaseHP + Armor HP.
+		if (currentHP > newMaxHP) {
+
+			//entity.setHealth(newHP);
+			PlayerManager.setHealthPoints(player.getName(), newMaxHP);
+			player.sendMessage(ChatColor.BLUE + "" + ChatColor.BOLD + "New HP: " + ChatColor.RESET + newMaxHP);
+
+			//Set players heart's level to 20 (full health).
+			player.setHealth(20);
+
+		}
+
+		//Lets grab the players HP again, just incase it was updated above.
+		double updatedHP = PlayerManager.getHealthPoints(playerName);
+		//This is the percent determines how many play hearts are shown.
+		double healthPercent = ((20 * updatedHP) / newMaxHP);
+
+		//If the players maximum HP has changed, then lets update
+		//the user on that change.  If the oldMaxHP equals the newMaxHP
+		//then no change has been made and the user does not need updates.
+		if (newMaxHP != oldMaxHP) {
+
+			PlayerManager.setMaxHealthPoints(player.getName(), newMaxHP);
+			player.sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "New MaxHP: " + ChatColor.RESET + Integer.toString((int) newMaxHP));
+
+			//If the players HP percent is over 20,
+			//then just set the players hearts to 20.
+			if (healthPercent >= 20) {
+				player.setHealth(20);
+
+			} else if (healthPercent < 0.01) { //Player died.
+
+				PlayerManager.killPlayer(player);
+			} else {
+				player.setHealth(healthPercent);
+			}
+
+			if (playSoundEffect == true) {
+				//Play sound effect.
+				player.playSound(player.getLocation(), Sound.ANVIL_LAND, .5F, 1F);
+			}
+		}
+		//Update the players health tag.
+		PlayerHealthTagManager.updateHealthTag(player);
 
 		//Show the total attributes the player currently has.
 		displayAttributes(player);
 	}
 
+	private int getPlayerHearts(Player player, int maxPlayerHP) {
+		if (maxPlayerHP >= 101 && maxPlayerHP <= 399) {
+			return 8;
+		} else if (maxPlayerHP >= 400) {
+			return 12;
+		} else if (maxPlayerHP >= 100) {
+			return 16;
+		} else if (maxPlayerHP >= 100) {
+			return 20;
+		} else if (maxPlayerHP >= 100) {
+			return 24;
+		} else if (maxPlayerHP >= 100) {
+			return 28;
+		} else if (maxPlayerHP >= 100) {
+			return 32;
+		} else if (maxPlayerHP >= 100) {
+			return 36;
+		} else if (maxPlayerHP >= 100) {
+			return 40;
+		} else {
+			return 4;
+		}
+	}
+	
 	public void displayAttributes(Player player) {
 		//TODO: Show player all of their attribute totals.
-		
+
 		String stringPrefix = ChatColor.GREEN + "";
 		String seperator = ChatColor.DARK_GRAY + ": ";
 		String stringSuffix = ChatColor.YELLOW + "";
-		
+
 		//Show player their total attributes.
 		player.sendMessage(ChatColor.GREEN + "" + ChatColor.BOLD + "Your Attributes" 
 				+ ChatColor.DARK_GRAY + ChatColor.BOLD + ":");
@@ -127,6 +216,7 @@ public class LoreManagerVersion2 {
 		player.sendMessage(stringPrefix +"Lifesteal" + seperator + stringSuffix + Integer.toString((int) getLifeStealBonus(player)));
 		player.sendMessage(stringPrefix +"Mana" + seperator + stringSuffix + Integer.toString((int) getManaPointsBonus(player)));
 		player.sendMessage(stringPrefix +"Mana Regen" + seperator + stringSuffix + Integer.toString((int) getManaPointsRegenerate(player)));
+		player.sendMessage(stringPrefix +"Manasteal" + seperator + stringSuffix + Integer.toString((int) getManasteal(player)));
 		player.sendMessage(stringPrefix +"Poison Damage" + seperator + stringSuffix + Integer.toString((int) getPoisonDamage(player)));
 		player.sendMessage(stringPrefix +"Poison Resist" + seperator + stringSuffix + Integer.toString((int) getPoisonResist(player)));
 		player.sendMessage(stringPrefix +"Reflection" + seperator + stringSuffix + Integer.toString((int) getReflectionBonus(player)));
@@ -137,7 +227,7 @@ public class LoreManagerVersion2 {
 		player.sendMessage(stringPrefix +"Thorn Resist" + seperator + stringSuffix + Integer.toString((int) getThornResist(player)));
 	}
 
-	private void applyEffect(LivingEntity entity, ItemAttributes itemAttribute, int duration, int amplifier) {
+	public void applyEffect(LivingEntity entity, ItemAttributes itemAttribute, int duration, int amplifier) {
 		if (itemAttribute.equals(ItemAttribute.BLINDNESS_EFFECT)) {
 			entity.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, duration, amplifier));
 
@@ -157,13 +247,16 @@ public class LoreManagerVersion2 {
 			Bukkit.getWorlds().get(0).playSound(entity.getLocation(), Sound.BAT_TAKEOFF, .8f, .8f);
 
 		} else if (itemAttribute.equals(ItemAttribute.FIRE_EFFECT)) {
-			entity.setFireTicks(duration);
+			entity.setFireTicks(duration * 20); //Duration times 20 (ticks per second)
 
 		} else if (itemAttribute.equals(ItemAttribute.KNOCKBACK_EFFECT)) {
 			Bukkit.getWorlds().get(0).playSound(entity.getLocation(), Sound.SHEEP_SHEAR, .8f, .8f);
 
 		} else if (itemAttribute.equals(ItemAttribute.LIFESTEAL_EFFECT)) {
 			Bukkit.getWorlds().get(0).playSound(entity.getLocation(), Sound.PORTAL_TRAVEL, .8f, .8f);
+
+		} else if (itemAttribute.equals(ItemAttribute.MANASTEAL_EFFECT)) {
+			Bukkit.getWorlds().get(0).playSound(entity.getLocation(), Sound.PORTAL_TRIGGER, .8f, .8f);
 
 		} else if (itemAttribute.equals(ItemAttribute.POISION_EFFECT)) {
 			entity.addPotionEffect(new PotionEffect(PotionEffectType.POISON, duration, amplifier));
@@ -176,7 +269,7 @@ public class LoreManagerVersion2 {
 
 		}
 	}
-	
+
 	private double getArmorBonus(LivingEntity entity) {
 		Integer value = Integer.valueOf(0);
 
@@ -493,7 +586,7 @@ public class LoreManagerVersion2 {
 		return value.intValue();
 	}
 
-	private double getHealthPointsBonus(LivingEntity entity) {
+	public double getHealthPointsBonus(LivingEntity entity) {
 		Integer value = Integer.valueOf(0);
 
 		//Loop through the armor slots and find armor.
@@ -521,7 +614,7 @@ public class LoreManagerVersion2 {
 		return value.intValue();
 	}
 
-	private double getHealthPointsRegenerate(LivingEntity entity) {
+	public double getHealthPointsRegenerate(LivingEntity entity) {
 		Integer value = Integer.valueOf(0);
 
 		//Loop through the armor slots and find armor.
@@ -679,6 +772,34 @@ public class LoreManagerVersion2 {
 
 				//Prepare for text matching using regular expressions.
 				Matcher matcher = manaRegenRegex.matcher(allLore);
+
+				//Find the new value.
+				if (matcher.find()) {
+					value = Integer.valueOf(value.intValue() + Integer.valueOf(matcher.group(1)).intValue());
+				}
+			}
+		}
+		//Return the value.
+		return value.intValue();
+	}
+
+	private double getManasteal(LivingEntity entity) {
+		Integer value = Integer.valueOf(0);
+
+		//Loop through the armor slots and find armor.
+		for (ItemStack item : entity.getEquipment().getArmorContents()) {
+
+			//If the item is not null and has meta and has lore, continue.
+			if ((item != null) && (item.hasItemMeta()) && (item.getItemMeta().hasLore())) {
+
+				//Create an array list of "Lore" strings and add them to it.
+				List<String> lore = item.getItemMeta().getLore();
+
+				//Convert the array to a string, and make it all lowercase.
+				String allLore = ChatColor.stripColor(lore.toString().toLowerCase());
+
+				//Prepare for text matching using regular expressions.
+				Matcher matcher = manastealRegex.matcher(allLore);
 
 				//Find the new value.
 				if (matcher.find()) {

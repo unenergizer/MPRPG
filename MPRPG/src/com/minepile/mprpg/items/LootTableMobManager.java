@@ -7,11 +7,14 @@ import java.util.Random;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.inventory.ItemStack;
 
 import com.minepile.mprpg.MPRPG;
+import com.minepile.mprpg.items.ItemQualityManager.ItemQuality;
+import com.minepile.mprpg.items.ItemTierManager.ItemTier;
 
 public class LootTableMobManager {
 
@@ -60,11 +63,20 @@ public class LootTableMobManager {
 		List<String> consumableItems = (List<String>) lootTableConfig.getList(lootTable + ".consumableItem");
 		List<String> miscItems = (List<String>) lootTableConfig.getList(lootTable + ".miscItem");
 		
+		//Random armor and weapon drops
+		boolean dropRandomArmor = lootTableConfig.getBoolean(lootTable + ".random.armor.enabled");
+		ItemTier randArmorTier = ItemTierManager.getItemTierEnum((String) lootTableConfig.get(lootTable + ".random.armor.tier"));
+		ItemQuality randArmorQuality = ItemQualityManager.getItemQualityEnum((String) lootTableConfig.get(lootTable + ".random.armor.quality"));
+		boolean dropRandomWeapon = lootTableConfig.getBoolean(lootTable + ".random.weapon.enabled");
+		ItemTier randWeaponTier = ItemTierManager.getItemTierEnum((String) lootTableConfig.get(lootTable + ".random.weapon.tier"));
+		ItemQuality randWeaponQuality = ItemQualityManager.getItemQualityEnum((String) lootTableConfig.get(lootTable + ".random.weapon.quality"));
+		
+		//Currency drops
 		String currencyType = lootTableConfig.getString(lootTable + ".currency");
 		int currencyMin = lootTableConfig.getInt(lootTable + ".currencyDropMin");
 		int currencyMax = lootTableConfig.getInt(lootTable + ".currencyDropMax");
 
-		//Drop armor
+		//Drops custom armor.
 		if (armorItems != null) {
 			for (int i = 0; i < armorItems.size(); i++) {
 				if (dropItem() == true) {
@@ -75,8 +87,15 @@ public class LootTableMobManager {
 
 				}
 			}
+		}		
+		//Drops random armor.
+		if (dropRandomArmor == true) {
+			ItemStack randArmor = RandomItemFactory.createArmor(new ItemStack(Material.GOLD_CHESTPLATE, 1), randArmorTier, randArmorQuality);
+			
+			//Generate drops
+			Bukkit.getWorld("world").dropItemNaturally(loc, randArmor);
 		}
-		//Drop weapons
+		//Drop custom weapons.
 		if (weaponItems != null) {
 			for (int i = 0; i < weaponItems.size(); i++) {
 				if (dropItem() == true) {
@@ -88,6 +107,13 @@ public class LootTableMobManager {
 
 				}
 			}
+		}		
+		//Drops random weapon.
+		if (dropRandomWeapon == true) {
+			ItemStack randWeapon = RandomItemFactory.createWeapon(new ItemStack(Material.GOLD_SWORD, 1), randWeaponTier, randWeaponQuality);
+			
+			//Generate drops
+			Bukkit.getWorld("world").dropItemNaturally(loc, randWeapon);
 		}
 		//Drop Consumable items.
 		if (consumableItems != null) {
@@ -161,6 +187,12 @@ public class LootTableMobManager {
 		lootTableConfig.set("junk01.armorItem", "testArmorDrop");
 		lootTableConfig.set("junk01.weaponItem", "testWeaponDrop");
 		lootTableConfig.set("junk01.consumableItem", "testConsumableDrop");
+		lootTableConfig.set("junk01.random.armor.enabled", true);
+		lootTableConfig.set("junk01.random.armor.tier", "T1");
+		lootTableConfig.set("junk01.random.armor.quality", "JUNK");
+		lootTableConfig.set("junk01.random.weapon.enabled", false);
+		lootTableConfig.set("junk01.random.weapon.tier", "T1");
+		lootTableConfig.set("junk01.random.weapon.quality", "JUNK");
 		lootTableConfig.set("junk01.currency", "copper");
 		lootTableConfig.set("junk01.currencyDropMin", 0);
 		lootTableConfig.set("junk01.currencyDropMax", 2);

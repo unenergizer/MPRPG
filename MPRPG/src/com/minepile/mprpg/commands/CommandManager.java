@@ -17,8 +17,7 @@ import com.minepile.mprpg.chat.LagManager;
 import com.minepile.mprpg.chat.MessageManager;
 import com.minepile.mprpg.entities.MonsterCreatorManager;
 import com.minepile.mprpg.guild.GuildManager;
-import com.minepile.mprpg.items.LoreManager;
-import com.minepile.mprpg.items.LoreManagerVersion2;
+import com.minepile.mprpg.items.ItemLoreFactory;
 import com.minepile.mprpg.player.PlayerManager;
 
 public class CommandManager implements CommandExecutor{
@@ -292,7 +291,7 @@ public class CommandManager implements CommandExecutor{
 			//Display the players lore stats.
 			if (cmd.getLabel().equalsIgnoreCase("lorestats") || cmd.getLabel().equalsIgnoreCase("armorstats")) {
 				//LoreManager.displayLoreStats((Player)sender);
-				LoreManagerVersion2.getInstance().displayAttributes(player);
+				ItemLoreFactory.getInstance().displayAttributes(player);
 			}
 
 			//Roll command. Used to get a random number.

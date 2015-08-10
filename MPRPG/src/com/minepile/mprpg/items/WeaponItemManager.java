@@ -103,7 +103,9 @@ public class WeaponItemManager {
 		int manaMax = weaponItemConfig.getInt(itemName + ".manaMax");	
 		int manaMin = weaponItemConfig.getInt(itemName + ".manaMin");	
 		int manaRegenMax = weaponItemConfig.getInt(itemName + ".manaRegenMax");	
-		int manaRegenMin = weaponItemConfig.getInt(itemName + ".manaRegenMin");	
+		int manaRegenMin = weaponItemConfig.getInt(itemName + ".manaRegenMin");		
+		int manastealMax = weaponItemConfig.getInt(itemName + ".manastealMax");	
+		int manastealMin = weaponItemConfig.getInt(itemName + ".manastealMin");
 		int poisonDamageMax = weaponItemConfig.getInt(itemName + ".poisonDamageMax");	
 		int poisonDamageMin = weaponItemConfig.getInt(itemName + ".poisonDamageMin");	
 		int poisonResistMax = weaponItemConfig.getInt(itemName + ".poisonResistMax");	
@@ -142,6 +144,7 @@ public class WeaponItemManager {
 		int lifesteal = randomInt(lifestealMin, lifestealMax);	
 		int mana = randomInt(manaMin, manaMax);
 		int manaRegen = randomInt(manaRegenMin, manaRegenMax);
+		int manasteal = randomInt(manastealMin, manastealMax);
 		int poisonDamage = randomInt(poisonDamageMin, poisonDamageMax);
 		int poisonResist = randomInt(poisonResistMin, poisonResistMax);
 		int reflection = randomInt(reflectionMin, reflectionMax);	
@@ -170,7 +173,7 @@ public class WeaponItemManager {
 		lore.add(ChatColor.DARK_GRAY + "" + ChatColor.ITALIC + tier + ": " + itemQuality);	//Define the quality of item.
 		lore.add("");																		//create blank space
 
-		if (weapon > 0) 		{ lore.add(ChatColor.GREEN + "+" + weapon + " weapon"); }
+		if (weapon > 0) 		{ lore.add(ChatColor.GREEN + "+" + weapon + " Armor"); }
 		if (blindness > 0) 	{ lore.add(ChatColor.DARK_PURPLE + "+" + blindness + " Blindness"); }
 		if (block > 0) 		{ lore.add(ChatColor.DARK_PURPLE + "+" + block + " Block Chance"); }
 		if (coldDamage > 0) { lore.add(ChatColor.RED + "+" + coldDamage + " Cold Damage"); }
@@ -187,7 +190,8 @@ public class WeaponItemManager {
 		if (knockback > 0)	{ lore.add(ChatColor.DARK_PURPLE + "+" + knockback + " Knockback"); }			
 		if (lifesteal > 0)	{ lore.add(ChatColor.DARK_PURPLE + "+" + lifesteal + " Lifesteal"); }			
 		if (mana > 0)		{ lore.add(ChatColor.GREEN + "+" + mana + " Mana"); }			
-		if (manaRegen > 0)	{ lore.add(ChatColor.GREEN + "+" + manaRegen + " Mana Regeneration"); }			
+		if (manaRegen > 0)	{ lore.add(ChatColor.GREEN + "+" + manaRegen + " Mana Regeneration"); }				
+		if (manasteal > 0)	{ lore.add(ChatColor.GREEN + "+" + manasteal + " Manasteal"); }			
 		if (poisonDamage >0){ lore.add(ChatColor.RED + "+" + poisonDamage + " Poison Damage"); }			
 		if (poisonResist >0){ lore.add(ChatColor.BLUE + "+" + poisonResist + " Poison Resistance"); }			
 		if (reflection > 0) { lore.add(ChatColor.DARK_PURPLE + "+" + reflection + " Damage Reflection"); }
@@ -283,23 +287,25 @@ public class WeaponItemManager {
 		weaponItemConfig.set("testWeaponDrop" + ".manaMax", 17);	
 		weaponItemConfig.set("testWeaponDrop" + ".manaMin", 17);	
 		weaponItemConfig.set("testWeaponDrop" + ".manaRegenMax", 18);	
-		weaponItemConfig.set("testWeaponDrop" + ".manaRegenMin", 18);	
-		weaponItemConfig.set("testWeaponDrop" + ".poisonDamageMax", 19);	
-		weaponItemConfig.set("testWeaponDrop" + ".poisonDamageMin", 19);	
-		weaponItemConfig.set("testWeaponDrop" + ".poisonResistMax", 20);	
-		weaponItemConfig.set("testWeaponDrop" + ".poisonResistMin", 20);	
-		weaponItemConfig.set("testWeaponDrop" + ".reflectionMax", 21);	
-		weaponItemConfig.set("testWeaponDrop" + ".reflectionMin", 21);	
-		weaponItemConfig.set("testWeaponDrop" + ".slownessMax", 22);	
-		weaponItemConfig.set("testWeaponDrop" + ".slownessMin", 22);	
-		weaponItemConfig.set("testWeaponDrop" + ".staminaMax", 23);	
-		weaponItemConfig.set("testWeaponDrop" + ".staminaMin", 23);	
-		weaponItemConfig.set("testWeaponDrop" + ".staminaRegenMax", 24);	
-		weaponItemConfig.set("testWeaponDrop" + ".staminaRegenMin", 24);	
-		weaponItemConfig.set("testWeaponDrop" + ".thornsDamageMax", 25);	
-		weaponItemConfig.set("testWeaponDrop" + ".thornsDamageMin", 25);
-		weaponItemConfig.set("testWeaponDrop" + ".thornsResistMax", 26);	
-		weaponItemConfig.set("testWeaponDrop" + ".thornsResistMin", 26);
+		weaponItemConfig.set("testWeaponDrop" + ".manaRegenMin", 18);
+		weaponItemConfig.set("testWeaponDrop" + ".manastealMax", 19);	
+		weaponItemConfig.set("testWeaponDrop" + ".manastealMin", 19);	
+		weaponItemConfig.set("testWeaponDrop" + ".poisonDamageMax", 20);	
+		weaponItemConfig.set("testWeaponDrop" + ".poisonDamageMin", 20);	
+		weaponItemConfig.set("testWeaponDrop" + ".poisonResistMax", 21);	
+		weaponItemConfig.set("testWeaponDrop" + ".poisonResistMin", 21);	
+		weaponItemConfig.set("testWeaponDrop" + ".reflectionMax", 22);	
+		weaponItemConfig.set("testWeaponDrop" + ".reflectionMin", 22);	
+		weaponItemConfig.set("testWeaponDrop" + ".slownessMax", 23);	
+		weaponItemConfig.set("testWeaponDrop" + ".slownessMin", 23);	
+		weaponItemConfig.set("testWeaponDrop" + ".staminaMax", 24);	
+		weaponItemConfig.set("testWeaponDrop" + ".staminaMin", 24);	
+		weaponItemConfig.set("testWeaponDrop" + ".staminaRegenMax", 25);	
+		weaponItemConfig.set("testWeaponDrop" + ".staminaRegenMin", 25);	
+		weaponItemConfig.set("testWeaponDrop" + ".thornsDamageMax", 26);	
+		weaponItemConfig.set("testWeaponDrop" + ".thornsDamageMin", 26);
+		weaponItemConfig.set("testWeaponDrop" + ".thornsResistMax", 27);	
+		weaponItemConfig.set("testWeaponDrop" + ".thornsResistMin", 27);
 
 		try {
 			weaponItemConfig.save(configFile);	//Save the file.

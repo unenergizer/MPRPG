@@ -11,7 +11,7 @@ import org.bukkit.event.entity.EntityRegainHealthEvent;
 
 import com.minepile.mprpg.MPRPG;
 import com.minepile.mprpg.chat.MessageManager;
-import com.minepile.mprpg.items.LoreManager;
+import com.minepile.mprpg.items.ItemLoreFactory;
 import com.minepile.mprpg.player.PlayerHealthTagManager;
 import com.minepile.mprpg.player.PlayerManager;
 
@@ -32,7 +32,7 @@ public class EntityRegainHealthListener implements Listener{
 			
 			double currentHP = PlayerManager.getHealthPoints(playerName);
 			double maxHP = PlayerManager.getMaxHealthPoints(playerName);
-			double healAmount = event.getAmount() + LoreManager.getRegenBonus((LivingEntity)event.getEntity());
+			double healAmount = PlayerManager.getBaseHealthRegenRate() + ItemLoreFactory.getInstance().getHealthPointsRegenerate((LivingEntity)event.getEntity());
 			double newHP = currentHP + healAmount;
 			double hpPercent = ((100 * newHP) / maxHP);
 			double hpBarPercent = (20 * currentHP) / maxHP;		

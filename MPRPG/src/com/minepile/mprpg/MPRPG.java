@@ -25,14 +25,14 @@ import com.minepile.mprpg.items.ConsumableItemManager;
 import com.minepile.mprpg.items.CurrencyItemManager;
 import com.minepile.mprpg.items.ItemAttributes;
 import com.minepile.mprpg.items.ItemGeneratorManager;
+import com.minepile.mprpg.items.ItemLoreFactory;
 import com.minepile.mprpg.items.ItemQualityManager;
 import com.minepile.mprpg.items.ItemTierManager;
 import com.minepile.mprpg.items.LootTableChestManager;
 import com.minepile.mprpg.items.LootTableMobManager;
-import com.minepile.mprpg.items.LoreManager;
-import com.minepile.mprpg.items.LoreManagerVersion2;
 import com.minepile.mprpg.items.MerchantManager;
 import com.minepile.mprpg.items.MiscItemManager;
+import com.minepile.mprpg.items.RandomItemFactory;
 import com.minepile.mprpg.items.WeaponItemManager;
 import com.minepile.mprpg.listeners.AsyncPlayerChatListener;
 import com.minepile.mprpg.listeners.BlockBreakListener;
@@ -138,10 +138,10 @@ public class MPRPG extends JavaPlugin {
 		ItemTierManager.getInstance().setup(this);
 		LootTableChestManager.getInstance().setup(this);
 		LootTableMobManager.getInstance().setup(this);
-		LoreManager.getInstance().setup(this);
-		LoreManagerVersion2.getInstance().setup(this);
+		ItemLoreFactory.getInstance().setup(this);
 		MerchantManager.getInstance().setup(this);
 		MiscItemManager.getInstance().setup(this);
+		RandomItemFactory.getInstance().setup(this);
 		WeaponItemManager.getInstance().setup(this);
 
 		//setup profession manager instances
@@ -246,10 +246,7 @@ public class MPRPG extends JavaPlugin {
 
 		//Reset all plants and blocks that have been picked or mined.
 		BlockRegenerationManager.disable();
-
-		//Clear LoreManager Log
-		LoreManager.disable();
-
+		
 		//Remove any existing Holograms
 		BankChestManager.disable();
 

@@ -7,7 +7,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerRespawnEvent;
 
 import com.minepile.mprpg.MPRPG;
-import com.minepile.mprpg.items.LoreManager;
+import com.minepile.mprpg.items.ItemLoreFactory;
 import com.minepile.mprpg.player.PlayerManager;
 
 public class PlayerRespawnListener implements Listener {
@@ -35,7 +35,7 @@ public class PlayerRespawnListener implements Listener {
 			@Override
 			public void run() {
 				
-				LoreManager.applyHpBonus(player, false);
+				ItemLoreFactory.getInstance().applyHPBonus(player, false);
 				PlayerManager.teleportPlayerToSpawn(player);
 
 			} //END Run method.

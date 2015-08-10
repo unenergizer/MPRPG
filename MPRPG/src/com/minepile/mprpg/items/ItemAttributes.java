@@ -70,6 +70,7 @@ public class ItemAttributes {
 		
 		MANA_BONUS (ChatColor.GOLD + ""),
 		MANA_REGENERATE (ChatColor.GOLD + ""),
+		MANASTEAL_EFFECT (ChatColor.GOLD + ""),
 		
 		POISION_DMG (ChatColor.GOLD + ""),
 		POISION_EFFECT (ChatColor.GOLD + ""),
