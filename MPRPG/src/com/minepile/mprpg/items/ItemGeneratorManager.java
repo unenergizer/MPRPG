@@ -540,8 +540,8 @@ public class ItemGeneratorManager {
 			break;
 		case LEVER:
 			break;
-		case LOCKED_CHEST:
-			break;
+		//case LOCKED_CHEST:
+		//	break;
 		case LOG:
 			break;
 		case LOG_2:

@@ -4,9 +4,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.UUID;
 
-import net.md_5.bungee.api.ChatColor;
-
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.DyeColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -84,7 +83,7 @@ public class PlayerMenuManager {
         mainMenu.setItem(22, new ItemBuilder(Material.IRON_INGOT).setTitle(ChatColor.GREEN + "Silver value here").build());
         mainMenu.setItem(23, new ItemBuilder(Material.CLAY_BRICK).setTitle(ChatColor.GREEN + "Copper value here").build());
 
-        mainMenu.setItem(25, new ItemBuilder(Material.DIAMOND).setTitle(ChatColor.GREEN + "eChash value here").build());
+        mainMenu.setItem(25, new ItemBuilder(Material.DIAMOND).setTitle(ChatColor.GREEN + "eCash value here").build());
         mainMenu.setItem(26, new ItemBuilder(Material.ENCHANTMENT_TABLE).setTitle(ChatColor.GREEN + "Server Store").build());
         
         playerMainMenu.put(player.getUniqueId(), mainMenu);

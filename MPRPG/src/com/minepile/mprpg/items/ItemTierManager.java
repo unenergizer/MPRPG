@@ -1,6 +1,6 @@
 package com.minepile.mprpg.items;
 
-import net.md_5.bungee.api.ChatColor;
+import org.bukkit.ChatColor;
 
 import com.minepile.mprpg.MPRPG;
 

@@ -1,9 +1,9 @@
 package com.minepile.mprpg.professions;
 
 import net.citizensnpcs.api.npc.NPC;
-import net.md_5.bungee.api.ChatColor;
 
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 
 import com.gmail.filoghost.holographicdisplays.api.Hologram;

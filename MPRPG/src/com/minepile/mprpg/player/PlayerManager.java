@@ -1,5 +1,6 @@
 package com.minepile.mprpg.player;
 
+import io.puharesource.mc.titlemanager.api.ActionbarTitleObject;
 import io.puharesource.mc.titlemanager.api.TabTitleObject;
 import io.puharesource.mc.titlemanager.api.TitleObject;
 
@@ -7,10 +8,8 @@ import java.io.File;
 import java.io.IOException;
 import java.util.concurrent.ConcurrentHashMap;
 
-import me.mgone.bossbarapi.BossbarAPI;
-import net.md_5.bungee.api.ChatColor;
-
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Color;
 import org.bukkit.FireworkEffect;
 import org.bukkit.FireworkEffect.Type;
@@ -45,13 +44,6 @@ public class PlayerManager {
 	static ConcurrentHashMap<String, Double> manaPoints = new ConcurrentHashMap<String, Double>();
 	static ConcurrentHashMap<String, Double> maxManaPoints = new ConcurrentHashMap<String, Double>();
 
-	static ConcurrentHashMap<String, Double> dexterityMap = new ConcurrentHashMap<String, Double>();
-	static ConcurrentHashMap<String, Double> doubleellectMap = new ConcurrentHashMap<String, Double>();
-	static ConcurrentHashMap<String, Double> luckMap = new ConcurrentHashMap<String, Double>();
-	static ConcurrentHashMap<String, Double> personalityMap = new ConcurrentHashMap<String, Double>();
-	static ConcurrentHashMap<String, Double> strengthMap = new ConcurrentHashMap<String, Double>();
-	static ConcurrentHashMap<String, Double> vitalityMap = new ConcurrentHashMap<String, Double>();
-
 	//Base statistic rates
 	static double baseHealthPoints = 100;
 	static double baseHealthRegenRate = 2;
@@ -59,14 +51,6 @@ public class PlayerManager {
 	static double baseManaPoints = 100;
 	static double baseStaminaRegenRate = 1;
 	static double baseManaRegenRate = 1;
-
-	//Base attributes
-	static double dexterity = 8;
-	static double doubleellect = 8;
-	static double luck = 5;
-	static double personality = 5;
-	static double strength = 10;
-	static double vitality = 9;
 
 	//Create instance
 	public static PlayerManager getInstance() {
@@ -77,8 +61,8 @@ public class PlayerManager {
 	@SuppressWarnings("static-access")
 	public void setup(MPRPG plugin) {
 		this.plugin = plugin;
-
-		//If the server reloads, lets remove all players from the hashMaps.
+		
+		//If the server reloads, lets remove all players from the ConcurrentHashMaps.
 		//We will add them back after this step.
 		for (Player players : Bukkit.getOnlinePlayers()) {
 			removePlayer(players);
@@ -88,6 +72,25 @@ public class PlayerManager {
 		for (Player players : Bukkit.getOnlinePlayers()) {
 			setupPlayer(players);
 		}
+		
+		//Starts the thread that will refresh the action bar for the user, so they can see
+		//various stats above their health and hunger bar.
+		Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(plugin,  new Runnable() {
+			public void run() {
+				for (Player players : Bukkit.getOnlinePlayers()) {
+					displayActionBar(players);
+				}
+			}
+		}, 0L, 2 * 20);
+		
+		//Starts a thread that will regen a players health every few seconds.
+		Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(plugin,  new Runnable() {
+			public void run() {
+				for (Player players : Bukkit.getOnlinePlayers()) {
+					regenerateHealthPoints(players);
+				}
+			}
+		}, 0L, 2 * 20);
 	}
 
 	/**
@@ -118,7 +121,39 @@ public class PlayerManager {
 		blind.apply(player);
 		confuse.apply(player);
 	}
-
+	
+	/**
+	 * Sets the players health.  This will update all things health related.
+	 * 
+	 * @param player
+	 * @param playerHitPointsFinal
+	 */
+	public static void setPlayerHitPoints(Player player, double hp) {
+		//Set the players health map
+		setHealthPoints(player.getName(), hp);
+		
+		//Set players health tag under their name
+		PlayerHealthTagManager.updateHealthTag(player);
+	}
+	
+	public static void regenerateHealthPoints(Player player) {
+		// TODO Auto-generated method stub
+		String playerName = player.getName();
+		double playerRegen = ItemLoreFactory.getInstance().getHealthPointsRegenerate(player);
+		double totalRegen = baseHealthRegenRate + playerRegen;
+		double playerHP = healthPoints.get(player);
+		double playerMaxHP = maxHealthPoints.get(player);
+		double newHP = playerHP + totalRegen;
+		
+		if (playerHP >= playerMaxHP) {
+			healthPoints.put(playerName, playerMaxHP);
+		} else {
+			healthPoints.put(playerName, newHP);
+		}
+		
+		player.sendMessage("your regen:" + totalRegen);
+	}
+	
 	/**
 	 * This is what happens when a player has lost all its HP.
 	 * 
@@ -164,7 +199,39 @@ public class PlayerManager {
 		player.sendMessage(ChatColor.YELLOW + "Your armor has been damaged!");
 		player.sendMessage(ChatColor.GREEN + "You have been healed!");
 	}
-
+	
+	/**
+	 * This will add an action bar above the players HP area to display various stats
+	 * to the player.  Currently it displays hp, stamina, and mana.
+	 * 
+	 * @param player The player to add a stats action/display bar too.
+	 */
+	public static void displayActionBar(Player player) {
+		String playerName = player.getName();
+		String hp = Integer.toString(healthPoints.get(playerName).intValue());
+		String maxHP = Integer.toString(maxHealthPoints.get(playerName).intValue());
+		String stamina = Integer.toString(staminaPoints.get(playerName).intValue());
+		String maxStamina = Integer.toString(maxStaminaPoints.get(playerName).intValue());
+		String mana = Integer.toString(manaPoints.get(playerName).intValue());
+		String maxMana = Integer.toString(maxManaPoints.get(playerName).intValue());
+		
+		new ActionbarTitleObject(ChatColor.GREEN + "" + ChatColor.BOLD + "HP" 
+				+ ChatColor.GRAY + ChatColor.BOLD + ": " 
+				+ ChatColor.WHITE + ChatColor.BOLD + hp 
+				+ ChatColor.GREEN + ChatColor.BOLD + "/" 
+				+ ChatColor.WHITE + ChatColor.BOLD + maxHP 
+				+ ChatColor.AQUA + ChatColor.BOLD + "   Stamina" 
+				+ ChatColor.GRAY + ChatColor.BOLD + ": "
+				+ ChatColor.WHITE + ChatColor.BOLD + stamina 
+				+ ChatColor.AQUA + ChatColor.BOLD + "/" 
+				+ ChatColor.WHITE + ChatColor.BOLD + maxStamina
+				+ ChatColor.LIGHT_PURPLE + ChatColor.BOLD + "   Mana" 
+				+ ChatColor.GRAY + ChatColor.BOLD + ": " 
+				+ ChatColor.WHITE + ChatColor.BOLD + mana 
+				+ ChatColor.LIGHT_PURPLE + ChatColor.BOLD +  "/" 
+				+ ChatColor.WHITE + ChatColor.BOLD + maxMana).send(player);
+	}
+	
 	private static void startPlayerRespawn(final Player player) {
 		// Create the task anonymously and schedule to run it once, after 20 ticks
 		new BukkitRunnable() {
@@ -195,7 +262,7 @@ public class PlayerManager {
 	public static void levelUp(Player player, double playerLevel) {
 
 		String playerName = player.getName();
-		String level = Double.toString(playerLevel);
+		String level = Integer.toString((int) playerLevel);
 		World world = player.getWorld();
 		double x = player.getLocation().getBlockX();
 		double y = player.getLocation().getBlockY();
@@ -210,7 +277,7 @@ public class PlayerManager {
 
 		//Show level up effects.
 		Location loc = new Location(world, x, y - 1, z); //Firework spawn location
-
+		
 		for (double i = 0; i < 2; i++) {
 			Firework fw = (Firework) world.spawn(loc, Firework.class);
 			FireworkMeta fm = fw.getFireworkMeta();
@@ -223,9 +290,9 @@ public class PlayerManager {
 					.build());
 			fw.setFireworkMeta(fm);
 		}
-
+		
 		//Heal the player
-		healthPoints.put(playerName, hp);	//Sets payer HP hashmap
+		healthPoints.put(playerName, hp);	//Sets payer HP ConcurrentHashMap
 		player.setHealth(20); 				//Sets player HP bar
 
 		//Send the player a message
@@ -239,6 +306,7 @@ public class PlayerManager {
 	 * 
 	 * @param player The player who's UI will be updated.
 	 */
+	/*
 	public static void updatePlayerBossbar(Player player) {
 
 		double playerlvlexp = player.getLevel();
@@ -255,11 +323,11 @@ public class PlayerManager {
 				"  -  " + ChatColor.LIGHT_PURPLE + ChatColor.BOLD + "Mana " + 
 				ChatColor.LIGHT_PURPLE + playerMana +  " / " + playerMaxManaString + ChatColor.DARK_GRAY + ChatColor.BOLD + 
 				"  -  " + ChatColor.GREEN + ChatColor.BOLD + "Stamina " + ChatColor.GREEN + playerStaminaString + "%");
-	}
+	}*/
 
 	/**
 	 * This performs the necessary steps to load in a player.
-	 * Creates a configuration file for new players and loads players statistics doubleo the hashMaps.
+	 * Creates a configuration file for new players and loads players statistics doubleo the ConcurrentHashMaps.
 	 * 
 	 * @param player The player that will be setup.
 	 */
@@ -284,7 +352,7 @@ public class PlayerManager {
 		}
 
 		//Read armor and set statistics.
-		//update HashMap info
+		//update ConcurrentHashMap info
 		if (getPlayerConfigInt(player, "player.logoutHP") < ItemLoreFactory.getInstance().getHealthPointsBonus(player)) {
 			healthPoints.put(playerName, baseHealthPoints);
 		} else {
@@ -296,14 +364,6 @@ public class PlayerManager {
 		manaPoints.put(playerName, baseManaPoints);
 		maxManaPoints.put(playerName, baseManaPoints);
 
-		//Setup players attributes
-		dexterityMap.put(playerName, getPlayerConfigInt(player, "attribute.dexterity"));
-		doubleellectMap.put(playerName, getPlayerConfigInt(player, "attribute.doubleellect"));
-		luckMap.put(playerName, getPlayerConfigInt(player, "attribute.luck"));
-		personalityMap.put(playerName, getPlayerConfigInt(player, "attribute.personality"));
-		strengthMap.put(playerName, getPlayerConfigInt(player, "attribute.strength"));
-		vitalityMap.put(playerName, getPlayerConfigInt(player, "attribute.vitality"));
-
 		//Set players health to max on the health bar.
 		//player.setMaxHealth(200);
 
@@ -311,7 +371,7 @@ public class PlayerManager {
 		PlayerMenuManager.givePlayerMenu(player);
 
 		//Monster bar at the top of the screen.
-		updatePlayerBossbar(player);
+		//updatePlayerBossbar(player);
 
 		//Feed player.
 		player.setFoodLevel(20);
@@ -335,7 +395,7 @@ public class PlayerManager {
 	}
 
 	/**
-	 * Remove players from the game. Will remove players from hashMaps and saves any data if necessary.
+	 * Remove players from the game. Will remove players from ConcurrentHashMaps and saves any data if necessary.
 	 * 
 	 * @param player The player to remove from the server.
 	 */
@@ -343,21 +403,13 @@ public class PlayerManager {
 		//Get Player's name.
 		String playerName = player.getName();
 
-		//remove player from HashMaps.
+		//remove player from ConcurrentHashMaps.
 		healthPoints.remove(playerName);
 		maxHealthPoints.remove(playerName);
 		staminaPoints.remove(playerName);
 		maxStaminaPoints.remove(playerName);
 		manaPoints.remove(playerName);
 		maxManaPoints.remove(playerName);
-
-		//remove player attributes from HashMaps.
-		dexterityMap.remove(playerName);
-		doubleellectMap.remove(playerName);
-		luckMap.remove(playerName);
-		personalityMap.remove(playerName);
-		strengthMap.remove(playerName);
-		vitalityMap.remove(playerName);
 
 		//Remove players game menu
 		PlayerMenuManager.deleteMenu(player);
@@ -384,13 +436,6 @@ public class PlayerManager {
 		playerConfig.set("permissions.admin", 0);
 		playerConfig.set("permissions.dev", 0);
 		playerConfig.set("permissions.mod", 0);
-
-		playerConfig.set("attribute.dexterity", dexterity);
-		playerConfig.set("attribute.doubleellect", doubleellect);
-		playerConfig.set("attribute.luck", luck);
-		playerConfig.set("attribute.personality", personality);
-		playerConfig.set("attribute.strength", strength);
-		playerConfig.set("attribute.vitality", vitality);
 
 		playerConfig.set("setting.chat.languagefilter", 1);
 		playerConfig.set("setting.chat.focus", "local");
@@ -500,143 +545,95 @@ public class PlayerManager {
 		return healthPoints.get(playerName);
 	}
 
-	public static void setHealthPoints(String playerName, double newHealthTotal) {
-		PlayerManager.healthPoints.put(playerName, newHealthTotal);;
+	private static void setHealthPoints(String playerName, double newHealthTotal) {
+		healthPoints.put(playerName, newHealthTotal);
 	}
 
 	public static double getMaxHealthPoints(String playerName) {
-		return PlayerManager.maxHealthPoints.get(playerName);
+		return maxHealthPoints.get(playerName);
 	}
 
-	public static void setMaxHealthPoints(String playerName, double maxHealthPoints) {
-		PlayerManager.maxHealthPoints.put(playerName, maxHealthPoints);
+	public static void setMaxHealthPoints(String playerName, double maxhp) {
+		maxHealthPoints.put(playerName, maxhp);
 	}
 
 	public static double getStaminaPoints(String playerName) {
 		return staminaPoints.get(playerName);
 	}
 
-	public static void setStaminaPoints(ConcurrentHashMap<String, Double> staminaPoints) {
-		PlayerManager.staminaPoints = staminaPoints;
+	public static void setStaminaPoints(ConcurrentHashMap<String, Double> stamina) {
+		staminaPoints = stamina;
 	}
 
 	public static double getMaxStaminaPoints(String playerName) {
 		return maxStaminaPoints.get(playerName);
 	}
 
-	public static void setMaxStaminaPoints(ConcurrentHashMap<String, Double> maxStaminaPoints) {
-		PlayerManager.maxStaminaPoints = maxStaminaPoints;
+	public static void setMaxStaminaPoints(ConcurrentHashMap<String, Double> maxStamina) {
+		maxStaminaPoints = maxStamina;
 	}
 
 	public static double getManaPoints(String playerName) {
 		return manaPoints.get(playerName);
 	}
 
-	public static void setManaPoints(ConcurrentHashMap<String, Double> manaPoints) {
-		PlayerManager.manaPoints = manaPoints;
+	public static void setManaPoints(ConcurrentHashMap<String, Double> mana) {
+		manaPoints = mana;
 	}
 
 	public static double getMaxManaPoints(String playerName) {
 		return maxManaPoints.get(playerName);
 	}
 
-	public static void setMaxManaPoints(ConcurrentHashMap<String, Double> maxManaPoints) {
-		PlayerManager.maxManaPoints = maxManaPoints;
+	public static void setMaxManaPoints(ConcurrentHashMap<String, Double> maxMana) {
+		maxManaPoints = maxMana;
 	}
 
 	public static double getBaseHealthPoints() {
 		return baseHealthPoints;
 	}
 
-	public static void setBaseHealthPoints(double baseHealthPoints) {
-		PlayerManager.baseHealthPoints = baseHealthPoints;
+	public static void setBaseHealthPoints(double baseHealth) {
+		baseHealthPoints = baseHealth;
 	}
 
 	public static double getBaseStaminaPoints() {
 		return baseStaminaPoints;
 	}
 
-	public static void setBaseStaminaPoints(double baseStaminaPoints) {
-		PlayerManager.baseStaminaPoints = baseStaminaPoints;
+	public static void setBaseStaminaPoints(double baseStamina) {
+		baseStaminaPoints = baseStamina;
 	}
 
 	public static double getBaseManaPoints() {
 		return baseManaPoints;
 	}
 
-	public static void setBaseManaPoints(double baseManaPoints) {
-		PlayerManager.baseManaPoints = baseManaPoints;
+	public static void setBaseManaPoints(double baseMana) {
+		baseManaPoints = baseMana;
 	}
 
 	public static double getBaseHealthRegenRate() {
 		return baseHealthRegenRate;
 	}
 
-	public static void setBaseHealthRegenRate(double baseHealthRegenRate) {
-		PlayerManager.baseHealthRegenRate = baseHealthRegenRate;
+	public static void setBaseHealthRegenRate(double baseHealthRegen) {
+		baseHealthRegenRate = baseHealthRegen;
 	}
 
 	public static double getBaseStaminaRegenRate() {
 		return baseStaminaRegenRate;
 	}
 
-	public static void setBaseStaminaRegenRate(double baseStaminaRegenRate) {
-		PlayerManager.baseStaminaRegenRate = baseStaminaRegenRate;
+	public static void setBaseStaminaRegenRate(double baseStaminaRegen) {
+		baseStaminaRegenRate = baseStaminaRegen;
 	}
 
 	public static double getBaseManaRegenRate() {
 		return baseManaRegenRate;
 	}
 
-	public static void setBaseManaRegenRate(double baseManaRegenRate) {
-		PlayerManager.baseManaRegenRate = baseManaRegenRate;
-	}
-
-	public static double getDexterity() {
-		return dexterity;
-	}
-
-	public static void setDexterity(double dexterity) {
-		PlayerManager.dexterity = dexterity;
-	}
-
-	public static double getIntellect() {
-		return doubleellect;
-	}
-
-	public static void setIntellect(double doubleellect) {
-		PlayerManager.doubleellect = doubleellect;
-	}
-
-	public static double getLuck() {
-		return luck;
-	}
-
-	public static void setLuck(double luck) {
-		PlayerManager.luck = luck;
-	}
-
-	public static double getPersonality() {
-		return personality;
-	}
-
-	public static void setPersonality(double personality) {
-		PlayerManager.personality = personality;
-	}
-
-	public static double getStrength() {
-		return strength;
-	}
-
-	public static void setStrength(double strength) {
-		PlayerManager.strength = strength;
-	}
-
-	public static double getVitality() {
-		return vitality;
-	}
-
-	public static void setVitality(double vitality) {
-		PlayerManager.vitality = vitality;
+	public static void setBaseManaRegenRate(double baseManaRegen) {
+		baseManaRegenRate = baseManaRegen;
 	}
 }

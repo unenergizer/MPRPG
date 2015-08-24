@@ -2,8 +2,7 @@ package com.minepile.mprpg.listeners;
 
 import java.util.UUID;
 
-import net.md_5.bungee.api.ChatColor;
-
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Entity;
@@ -17,6 +16,7 @@ import org.bukkit.inventory.ItemStack;
 
 import com.minepile.mprpg.MPRPG;
 import com.minepile.mprpg.entities.MonsterManager;
+import com.minepile.mprpg.items.ItemLoreFactory;
 import com.minepile.mprpg.player.PlayerManager;
 
 public class EntityDamageByEntityListener implements Listener{
@@ -57,41 +57,78 @@ public class EntityDamageByEntityListener implements Listener{
 
 				//Damager is another player
 				if (event.getDamager() instanceof Player) {
-					
-					/*
 					Player damager = (Player) event.getDamager();
-					String damagerName = damager.getName();
 
-					double damage = Math.max(0, ItemLoreFactory.getInstance().getDamageBonus(damager) - ItemLoreFactory.getInstance().getArmorBonus((LivingEntity)event.getEntity()));
-					double healthBarPercent = (20 * (playerHealth - damage) / playerMaxHealth);
-					double newHealthTotal = (playerHealth - damage);
+					//get the damagers damage values
+					double damage = ItemLoreFactory.getInstance().getDamageBonus(damager);
+					double coldDamage = ItemLoreFactory.getInstance().getColdDamage((LivingEntity) damager);
+					double fireDamage = ItemLoreFactory.getInstance().getFireDamage((LivingEntity) damager);
+					double poisonDamage = ItemLoreFactory.getInstance().getPoisonDamage((LivingEntity) damager);
+					double thornDamage = ItemLoreFactory.getInstance().getThornDamage((LivingEntity) damager);
 
-					ItemLoreFactory.getInstance().addAttackCooldown(damagerName);
+					//Get the victims magical resistances
+					double armor = damage * (ItemLoreFactory.getInstance().getArmorBonus((LivingEntity) victim) / 100);
+					double coldResistance = coldDamage * (ItemLoreFactory.getInstance().getColdResist((LivingEntity) victim) / 100);
+					double fireResistance = fireDamage * (ItemLoreFactory.getInstance().getFireResist((LivingEntity) victim) / 100);
+					double poisonResistance = poisonDamage * (ItemLoreFactory.getInstance().getPoisonResist((LivingEntity) victim) / 100);
+					double thornResistance = thornDamage * (ItemLoreFactory.getInstance().getColdResist((LivingEntity) victim) / 100);
 
-					//Show player damage message.
-					playerHealthChangeMessage(player, (int) playerHealth, (int) damage, (int) playerMaxHealth);
+					//Get final damages based on both the damages damage values and the victims resistances.
+					double damageFinal = damage - armor;
+					double coldDamageFinal = coldDamage - coldResistance;
+					double fireDamageFinal = fireDamage - fireResistance;
+					double poisonDamageFinal = poisonDamage - poisonResistance;
+					double thornDamageFinal = thornDamage - thornResistance;
 
-					//If players healthBar is greater than 1 heart and the players healthMap is not 0.
-					if (healthBarPercent <= 1 ) {
-						player.setHealth(healthBarPercent + 1);
-						PlayerManager.setHealthPoints(playerName, newHealthTotal);
-					} else {
-						player.setHealth(healthBarPercent);
-						PlayerManager.setHealthPoints(playerName, newHealthTotal);
-					}
-					
+					//Apply final math.
+					double totalDamage = damageFinal + coldDamageFinal + fireDamageFinal + poisonDamageFinal + thornDamageFinal;
+					double playerHitPointsFinal = playerHealth - totalDamage;
+					double healthBarPercent = (20 * playerHitPointsFinal) / playerMaxHealth;
+					double actionBarPercent = (100 * playerHitPointsFinal) / playerMaxHealth;
+
+
+					//Debug message
+					victim.sendMessage(victim.getName() 
+							+ ChatColor.GREEN + " D: " + ChatColor.RESET + damageFinal 
+							+ ChatColor.GREEN +  " +C: " + ChatColor.RESET + coldDamageFinal
+							+ ChatColor.GREEN +  " +F: " + ChatColor.RESET + fireDamageFinal 
+							+ ChatColor.GREEN +  " +P: " + ChatColor.RESET + poisonDamageFinal
+							+ ChatColor.GREEN +  " +T: " + ChatColor.RESET + thornDamageFinal 
+							+ ChatColor.RED +  " = " + ChatColor.RESET + totalDamage
+							+ ChatColor.YELLOW +  " > " + ChatColor.RESET + playerHealth 
+							+ ChatColor.GREEN +  " >> " + ChatColor.RESET + playerHitPointsFinal);
+					damager.sendMessage(damager.getName() 
+							+ ChatColor.GREEN + "D: " + ChatColor.RESET + damage 
+							+ ChatColor.GREEN + " +C: " + ChatColor.RESET + coldDamageFinal
+							+ ChatColor.GREEN +  " +F: " + ChatColor.RESET + fireDamageFinal 
+							+ ChatColor.GREEN + " +P: " + ChatColor.RESET + poisonDamageFinal
+							+ ChatColor.GREEN +  " +T: " + ChatColor.RESET + thornDamageFinal 
+							+ ChatColor.RED +  " = " + ChatColor.RESET + totalDamage
+							+ ChatColor.YELLOW +  " > " + ChatColor.RESET + playerHealth 
+							+ ChatColor.GREEN +  " >> " + ChatColor.RESET + playerHitPointsFinal);
+
+					//Send the player a hp change message.
+					PlayerManager.displayActionBar(player);
+
 					//Check if the player HP is too low. If it is, kill the player.
-					if (playerHealth < 1) {
+					//Otherwise apply damage to the player
+					if (playerHitPointsFinal < 1) {
 						//kill player
 						PlayerManager.killPlayer(player);
-					} else  {
-						//Update the players health tag
-						PlayerHealthTagManager.updateHealthTag(player);
+					} else {
+						//Set damage
+						if (healthBarPercent <= 3) {
+							player.sendMessage("Adding 2% back to healthBarPercent");
+							player.setHealth(healthBarPercent + 2);
+						} else {
+							player.setHealth(healthBarPercent);
+						}
+						PlayerManager.setPlayerHitPoints(player, playerHitPointsFinal);
 					}
-					*/
+
 					//PLayer shot arrow.
-				} else if (event.getDamager() instanceof Arrow){
-					
+				} else if (event.getDamager() instanceof Arrow) {
+
 					/*
 					Arrow arrow = (Arrow)event.getDamager();
 
@@ -116,7 +153,7 @@ public class EntityDamageByEntityListener implements Listener{
 							player.setHealth(healthBarPercent);
 							PlayerManager.setHealthPoints(playerName, newHealthTotal);
 						}
-						
+
 						//Check if the player HP is too low. If it is, kill the player.
 						if (playerHealth < 1) {
 							//kill player
@@ -124,12 +161,12 @@ public class EntityDamageByEntityListener implements Listener{
 						} else  {
 							//Update the players health tag
 							PlayerHealthTagManager.updateHealthTag(player);
-							
+
 							//Update the players armor.
 							ItemLoreFactory.getInstance().applyHPBonus(player, false);
 						}
 					} 
-					*/
+					 */
 				}
 			} else if (event.getEntity() instanceof LivingEntity && !event.getEntity().getType().equals(EntityType.ARMOR_STAND)) {
 				//Living entity is not a player, so it must be some type of mob.				
@@ -138,10 +175,7 @@ public class EntityDamageByEntityListener implements Listener{
 
 				double victimHealth = MonsterManager.getMobHealthPoints(victimID);
 				double victimMaxHealth = MonsterManager.getMobMaxHealthPoints(victimID);
-
-				double damage = event.getDamage();
-
-
+				
 				//Set the entities health to 20.
 				//We need this if the entity default 
 				//health is less than 20. Example is 
@@ -149,29 +183,67 @@ public class EntityDamageByEntityListener implements Listener{
 				if (victim.getHealth() < 20) {
 					victim.setMaxHealth(20);
 				}
-
-				//Show monster damage message.
+				
 				if (damager instanceof Player) {
-					if (PlayerManager.getPlayerConfigBoolean((Player) damager, "setting.chat.monsterDebug") == true) {
-						damager.sendMessage(mobHealthChangeMessage((Player)damager, victim, (int) victimHealth, (int) damage, (int) victimMaxHealth));
+					
+					//get the damagers damage values
+					double playerDamage = ItemLoreFactory.getInstance().getDamageBonus((LivingEntity) damager);
+					double coldDamage = ItemLoreFactory.getInstance().getColdDamage((LivingEntity) damager);
+					double fireDamage = ItemLoreFactory.getInstance().getFireDamage((LivingEntity) damager);
+					double poisonDamage = ItemLoreFactory.getInstance().getPoisonDamage((LivingEntity) damager);
+					double thornDamage = ItemLoreFactory.getInstance().getThornDamage((LivingEntity) damager);
+					double totalDamage = playerDamage + coldDamage + fireDamage + poisonDamage + thornDamage;
+					double finalHP = victimHealth - totalDamage;
+
+					damager.sendMessage(damager.getName() 
+							+ ChatColor.GREEN + "D: " + ChatColor.RESET + playerDamage 
+							+ ChatColor.GREEN + " +C: " + ChatColor.RESET + coldDamage
+							+ ChatColor.GREEN +  " +F: " + ChatColor.RESET + fireDamage 
+							+ ChatColor.GREEN + " +P: " + ChatColor.RESET + poisonDamage
+							+ ChatColor.GREEN +  " +T: " + ChatColor.RESET + thornDamage 
+							+ ChatColor.RED +  " = " + ChatColor.RESET + totalDamage
+							+ ChatColor.YELLOW +  " > " + ChatColor.RESET + victimHealth 
+							+ ChatColor.GREEN +  " >> " + ChatColor.RESET + finalHP);
+
+					damager.sendMessage("Player damage: " + totalDamage);
+
+					//Show monster damage message.
+					damager.sendMessage(mobHealthChangeMessage((Player)damager, victim, (int) victimHealth, (int) totalDamage, (int) victimMaxHealth));
+
+					//Set victim health
+					if (victimHealth <= 1) {
+						int x = victim.getLocation().getBlockX();
+						int y = victim.getLocation().getBlockY();
+						int z = victim.getLocation().getBlockZ();
+
+						victim.remove();
+						MonsterManager.toggleEntityDeath(victimID, x, y, z);
+					} else {
+						victim.setHealth(15);
+						MonsterManager.toggleDamage(victimID, totalDamage);
+
 					}
-				}
 
-				if (victimHealth <= 1) {
-					int x = victim.getLocation().getBlockX();
-					int y = victim.getLocation().getBlockY();
-					int z = victim.getLocation().getBlockZ();
+				} else { //This damage type was not by a player.
 
-					victim.remove();
-					MonsterManager.toggleEntityDeath(victimID, x, y, z);
-				} else {
-					victim.setHealth(15);
-					MonsterManager.toggleDamage(victimID, damage);
+					double damage = event.getDamage();
+					damager.sendMessage("eventDamage: " + damage);
+					
+					if (victimHealth <= 1) {
+						int x = victim.getLocation().getBlockX();
+						int y = victim.getLocation().getBlockY();
+						int z = victim.getLocation().getBlockZ();
 
+						victim.remove();
+						MonsterManager.toggleEntityDeath(victimID, x, y, z);
+					} else {
+						victim.setHealth(15);
+						MonsterManager.toggleDamage(victimID, damage);
+
+					}
 				}
 			}
 		}
-
 	}
 
 	public static String playerHealthChangeMessage(Player player, int playerHealth, int damage, int playerMaxHealth) {

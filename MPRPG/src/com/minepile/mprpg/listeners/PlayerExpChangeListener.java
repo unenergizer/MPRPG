@@ -37,7 +37,7 @@ public class PlayerExpChangeListener implements Listener{
 			@Override
 			public void run() {
 				//Update the player boss bar.
-				PlayerManager.updatePlayerBossbar(player);
+				//PlayerManager.updatePlayerBossbar(player);
 				
 				int level = player.getLevel();
 				int configLevel = (int) PlayerManager.getPlayerConfigInt(player, "player.playerLVL");

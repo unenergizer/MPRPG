@@ -21,7 +21,7 @@ public class EntityTargetListener implements Listener {
 	@EventHandler
 	public void onEntityTarget(EntityTargetEvent event) {
 		if ((event.getEntity() instanceof LivingEntity)) {
-			LivingEntity entity = (LivingEntity)event.getEntity();
+			LivingEntity entity = (LivingEntity)event.getTarget();
 
 			if (entity instanceof Player) {
 				ItemLoreFactory.getInstance().applyHPBonus((Player) entity, false);

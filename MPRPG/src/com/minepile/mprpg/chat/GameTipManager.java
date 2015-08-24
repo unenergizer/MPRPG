@@ -4,9 +4,8 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
-import net.md_5.bungee.api.ChatColor;
-
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.scheduler.BukkitScheduler;
@@ -80,7 +79,7 @@ public class GameTipManager {
             			+ ChatColor.YELLOW + " #"
             			+ Integer.toString(tipDisplayed + 1)
             			+ ChatColor.DARK_GRAY + ChatColor.BOLD + ": " 
-            			+ ChatColor.YELLOW + gameTip  
+            			+ ChatColor.WHITE + gameTip  
             			+ ChatColor.DARK_GRAY + ".");
             	
             	//Setup to display the next tip.
