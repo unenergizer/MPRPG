@@ -20,6 +20,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Firework;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.FireworkMeta;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
@@ -177,6 +178,16 @@ public class PlayerManager {
 		//This will respawn the player after a certain amount of time.
 		startPlayerRespawn(player);
 		
+		//Drop the players items.
+		Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(plugin,  new Runnable() {
+			public void run() {
+				for (ItemStack itemStack : player.getInventory()) {
+				    player.getWorld().dropItemNaturally(player.getLocation(), itemStack);
+				    player.getInventory().remove(itemStack);
+				}
+			}
+		}, 1L);
+		
 		//If the player dies on fire. Stop him from burning.	
 		Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(plugin,  new Runnable() {
 			public void run() {
@@ -187,7 +198,7 @@ public class PlayerManager {
 		//Turn the player invisible.
 		PotionEffect invisible = new PotionEffect(PotionEffectType.INVISIBILITY, 6*20, 10);
 		invisible.apply(player);
-
+		
 		//Teleport player into the air.
 		double x = player.getLocation().getX();
 		double y = player.getLocation().getY();

@@ -1,5 +1,7 @@
 package com.minepile.mprpg.listeners;
 
+import net.md_5.bungee.api.ChatColor;
+
 import org.bukkit.Location;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
@@ -35,15 +37,19 @@ public class PlayerPickupItemListener implements Listener{
 		/////////////
 		case CLAY_BRICK:
 			player.playSound(loc, Sound.ORB_PICKUP,  .8f, .8f);
+			player.sendMessage(ChatColor.GREEN + "" + ChatColor.BOLD + "+" + Integer.toString(item.getAmount()) + " Copper");
 			break;
 		case IRON_INGOT:
 			player.playSound(loc, Sound.ORB_PICKUP,  .8f, .8f);
+			player.sendMessage(ChatColor.GREEN + "" + ChatColor.BOLD + "+" + Integer.toString(item.getAmount()) + " Silver");
 			break;
 		case GOLD_INGOT:
 			player.playSound(loc, Sound.ORB_PICKUP,  .8f, .8f);
+			player.sendMessage(ChatColor.GREEN + "" + ChatColor.BOLD + "+" + Integer.toString(item.getAmount()) + " Gold");
 			break;
 		case PORTAL:
 			player.playSound(loc, Sound.ORB_PICKUP,  .8f, .8f);
+			player.sendMessage(ChatColor.GREEN + "" + ChatColor.BOLD + "+" + Integer.toString(item.getAmount()) + " eCash");
 			break;
 		
 		//////////
