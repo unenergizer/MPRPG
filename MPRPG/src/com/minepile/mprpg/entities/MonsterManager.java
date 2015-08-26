@@ -77,34 +77,34 @@ public class MonsterManager {
 		//If monster configuration does not exist, create it. Otherwise lets load the config.
 		if(!(new File(mobTypeIdPath)).exists()){
 			createMonsterConfig();
-		} else {
-			//Setup and spawn monsters
-			Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
-				public void run() {
-					removeAllMobs();
-				}
-			}, 2 * 20L);
-
-			//Spawn all the mobs.
-			Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
-				public void run() {
-					spawnAllMobs();
-				}
-			}, 6 * 20L);
-
-			//Teleport mobs if they move to far away from thier spawn point.
-			Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(plugin,  new Runnable() {
-				public void run() {
-					teleportEntity();
-				}
-			}, 0L, 5 * 20);
-
-			//Start mob respawn thread.
-			//This thread will attempt to respawn a mob if one has died.
-			//If no mobs have died, then nothing will happen.
-			//Remove this if you want to disable mob respawns.
-			respawnMob();
 		}
+		
+		//Setup and spawn monsters
+		Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
+			public void run() {
+				removeAllMobs();
+			}
+		}, 2 * 20L);
+
+		//Spawn all the mobs.
+		Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
+			public void run() {
+				spawnAllMobs();
+			}
+		}, 6 * 20L);
+
+		//Teleport mobs if they move to far away from thier spawn point.
+		Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(plugin,  new Runnable() {
+			public void run() {
+				teleportEntity();
+			}
+		}, 0L, 5 * 20);
+
+		//Start mob respawn thread.
+		//This thread will attempt to respawn a mob if one has died.
+		//If no mobs have died, then nothing will happen.
+		//Remove this if you want to disable mob respawns.
+		respawnMob();
 	}
 
 	/**

@@ -46,7 +46,7 @@ public class PlayerManager {
 
 	//Base statistic rates
 	static double baseHealthPoints = 100;
-	static double baseHealthRegenRate = 2;
+	static double baseHealthRegenRate = .5;
 	static double baseStaminaPoints = 100;
 	static double baseManaPoints = 100;
 	static double baseStaminaRegenRate = 1;
@@ -61,33 +61,41 @@ public class PlayerManager {
 	@SuppressWarnings("static-access")
 	public void setup(MPRPG plugin) {
 		this.plugin = plugin;
-		
+
 		//If the server reloads, lets remove all players from the ConcurrentHashMaps.
 		//We will add them back after this step.
 		for (Player players : Bukkit.getOnlinePlayers()) {
-			removePlayer(players);
+			if (!players.hasMetadata("NPC")) {
+				removePlayer(players);
+			}
 		}
 
 		//If the server reloads, then setup all the players again.
 		for (Player players : Bukkit.getOnlinePlayers()) {
-			setupPlayer(players);
+			if (!players.hasMetadata("NPC")) {
+				setupPlayer(players);
+			}
 		}
-		
+
 		//Starts the thread that will refresh the action bar for the user, so they can see
 		//various stats above their health and hunger bar.
 		Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(plugin,  new Runnable() {
 			public void run() {
 				for (Player players : Bukkit.getOnlinePlayers()) {
-					displayActionBar(players);
+					if (!players.hasMetadata("NPC")) {
+						displayActionBar(players);
+					}
 				}
 			}
 		}, 0L, 2 * 20);
-		
+
 		//Starts a thread that will regen a players health every few seconds.
 		Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(plugin,  new Runnable() {
 			public void run() {
 				for (Player players : Bukkit.getOnlinePlayers()) {
-					regenerateHealthPoints(players);
+					if (!players.hasMetadata("NPC")) {
+						regenerateHealthPoints(players);
+					}
 				}
 			}
 		}, 0L, 2 * 20);
@@ -121,7 +129,7 @@ public class PlayerManager {
 		blind.apply(player);
 		confuse.apply(player);
 	}
-	
+
 	/**
 	 * Sets the players health.  This will update all things health related.
 	 * 
@@ -131,29 +139,31 @@ public class PlayerManager {
 	public static void setPlayerHitPoints(Player player, double hp) {
 		//Set the players health map
 		setHealthPoints(player.getName(), hp);
-		
+
 		//Set players health tag under their name
 		PlayerHealthTagManager.updateHealthTag(player);
 	}
 	
+	/**
+	 * Regenerates a players HitPoints every few seconds.
+	 * 
+	 * @param player The player who will have their HP regenerated.
+	 */
 	public static void regenerateHealthPoints(Player player) {
-		// TODO Auto-generated method stub
 		String playerName = player.getName();
 		double playerRegen = ItemLoreFactory.getInstance().getHealthPointsRegenerate(player);
 		double totalRegen = baseHealthRegenRate + playerRegen;
-		double playerHP = healthPoints.get(player);
-		double playerMaxHP = maxHealthPoints.get(player);
+		double playerHP = healthPoints.get(playerName);
+		double playerMaxHP = maxHealthPoints.get(playerName);
 		double newHP = playerHP + totalRegen;
-		
+
 		if (playerHP >= playerMaxHP) {
 			healthPoints.put(playerName, playerMaxHP);
 		} else {
 			healthPoints.put(playerName, newHP);
 		}
-		
-		player.sendMessage("your regen:" + totalRegen);
 	}
-	
+
 	/**
 	 * This is what happens when a player has lost all its HP.
 	 * 
@@ -161,25 +171,25 @@ public class PlayerManager {
 	 */
 	public static void killPlayer(Player player) {
 		String playerName = player.getName();
-		
+
 		//This will respawn the player after a certain amount of time.
 		startPlayerRespawn(player);
-		
+
 		//Turn the player invisible.
 		PotionEffect invisible = new PotionEffect(PotionEffectType.INVISIBILITY, 6*20, 10);
 		invisible.apply(player);
-		
+
 		//Teleport player into the air.
 		double x = player.getLocation().getX();
 		double y = player.getLocation().getY();
 		double z = player.getLocation().getZ();
-		
+
 		player.teleport(new Location(Bukkit.getWorld("world"), x, y + 5, z));
-		
+
 		//Temporarily allow the player to fly.
 		player.setAllowFlight(true);
 		player.setFlying(true);
-		
+
 		//Play death sound.
 		player.playSound(player.getLocation(), Sound.VILLAGER_DEATH, .5F, 1F);
 
@@ -199,7 +209,7 @@ public class PlayerManager {
 		player.sendMessage(ChatColor.YELLOW + "Your armor has been damaged!");
 		player.sendMessage(ChatColor.GREEN + "You have been healed!");
 	}
-	
+
 	/**
 	 * This will add an action bar above the players HP area to display various stats
 	 * to the player.  Currently it displays hp, stamina, and mana.
@@ -214,7 +224,7 @@ public class PlayerManager {
 		String maxStamina = Integer.toString(maxStaminaPoints.get(playerName).intValue());
 		String mana = Integer.toString(manaPoints.get(playerName).intValue());
 		String maxMana = Integer.toString(maxManaPoints.get(playerName).intValue());
-		
+
 		new ActionbarTitleObject(ChatColor.GREEN + "" + ChatColor.BOLD + "HP" 
 				+ ChatColor.GRAY + ChatColor.BOLD + ": " 
 				+ ChatColor.WHITE + ChatColor.BOLD + hp 
@@ -231,7 +241,7 @@ public class PlayerManager {
 				+ ChatColor.LIGHT_PURPLE + ChatColor.BOLD +  "/" 
 				+ ChatColor.WHITE + ChatColor.BOLD + maxMana).send(player);
 	}
-	
+
 	private static void startPlayerRespawn(final Player player) {
 		// Create the task anonymously and schedule to run it once, after 20 ticks
 		new BukkitRunnable() {
@@ -241,13 +251,13 @@ public class PlayerManager {
 				//Turn flying off back to one.
 				player.setAllowFlight(false);
 				player.setFlying(false);
-				
+
 				//Clear potion effect.
 				player.removePotionEffect(PotionEffectType.INVISIBILITY);
-				
+
 				//Teleport the player to spawn
 				teleportPlayerToSpawn(player);
-				
+
 			}
 
 		}.runTaskLater(plugin, 20 * 10); //7 seconds
@@ -277,7 +287,7 @@ public class PlayerManager {
 
 		//Show level up effects.
 		Location loc = new Location(world, x, y - 1, z); //Firework spawn location
-		
+
 		for (double i = 0; i < 2; i++) {
 			Firework fw = (Firework) world.spawn(loc, Firework.class);
 			FireworkMeta fm = fw.getFireworkMeta();
@@ -290,7 +300,7 @@ public class PlayerManager {
 					.build());
 			fw.setFireworkMeta(fm);
 		}
-		
+
 		//Heal the player
 		healthPoints.put(playerName, hp);	//Sets payer HP ConcurrentHashMap
 		player.setHealth(20); 				//Sets player HP bar

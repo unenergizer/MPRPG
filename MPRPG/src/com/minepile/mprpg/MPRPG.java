@@ -13,6 +13,7 @@ import com.minepile.mprpg.chat.GameTipManager;
 import com.minepile.mprpg.chat.LagManager;
 import com.minepile.mprpg.chat.MessageManager;
 import com.minepile.mprpg.commands.CommandManager;
+import com.minepile.mprpg.entities.CitizensManager;
 import com.minepile.mprpg.entities.MonsterCreatorManager;
 import com.minepile.mprpg.entities.MonsterManager;
 import com.minepile.mprpg.entities.NPCManager;
@@ -116,6 +117,7 @@ public class MPRPG extends JavaPlugin {
 		MessageManager.getInstance().setup(this);
 
 		//setup entities manager instances
+		CitizensManager.getInstance().setup(this);
 		MonsterCreatorManager.getInstance().setup(this);
 		MonsterManager.getInstance().setup(this);
 		NPCManager.getInstance().setup(this);

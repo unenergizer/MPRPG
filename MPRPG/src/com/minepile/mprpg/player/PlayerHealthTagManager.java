@@ -9,6 +9,7 @@ import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.Team;
 
 import com.minepile.mprpg.MPRPG;
+import com.minepile.mprpg.entities.CitizensManager;
 
 public class PlayerHealthTagManager {
 	
@@ -91,6 +92,24 @@ public class PlayerHealthTagManager {
 			public void run() {
 				
 				obj.getScore(player).setScore((int) PlayerManager.getHealthPoints(player.getName()));
+				
+			} //END Run method.
+		}, 5); //(20 ticks = 1 second)
+	}
+	
+	/**
+	 * This will update the NPC score on the scoreboard.  This will then show the NPC new HP under its name.
+	 * 
+	 * @param player The player who will have their HP updated under their name.
+	 */
+	@SuppressWarnings("deprecation")
+	public static void updateNPCHealthTag(final Player npc, final double maxHP) {
+		//Lets start a  task
+		taskID = Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
+			@Override
+			public void run() {
+				
+				obj.getScore(npc).setScore((int) maxHP);
 				
 			} //END Run method.
 		}, 5); //(20 ticks = 1 second)
