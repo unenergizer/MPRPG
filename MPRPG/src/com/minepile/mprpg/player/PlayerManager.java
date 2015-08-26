@@ -171,12 +171,19 @@ public class PlayerManager {
 	 * 
 	 * @param player The player entity that needs to be killed.
 	 */
-	public static void killPlayer(Player player) {
+	public static void killPlayer(final Player player) {
 		String playerName = player.getName();
 
 		//This will respawn the player after a certain amount of time.
 		startPlayerRespawn(player);
-
+		
+		//If the player dies on fire. Stop him from burning.	
+		Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(plugin,  new Runnable() {
+			public void run() {
+				player.setFireTicks(0);
+			}
+		}, 1L);
+		
 		//Turn the player invisible.
 		PotionEffect invisible = new PotionEffect(PotionEffectType.INVISIBILITY, 6*20, 10);
 		invisible.apply(player);
@@ -205,6 +212,7 @@ public class PlayerManager {
 		double maxHp = maxHealthPoints.get(playerName);
 		healthPoints.put(playerName, maxHp);
 		player.setHealth(20);
+		player.setFoodLevel(20);
 
 		//Send the player a message
 		player.sendMessage(ChatColor.RED + "You have died!");

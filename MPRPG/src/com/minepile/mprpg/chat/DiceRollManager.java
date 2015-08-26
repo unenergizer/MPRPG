@@ -27,10 +27,10 @@ public class DiceRollManager {
 	 */
 	public static int onDiceRoll(int diceSize) {
 		if (diceSize < 10000) {
-			int roll = (int) (Math.random() * diceSize);
+			int roll = (int) (Math.random() * diceSize) + 1;
 			return roll;
 		} else {
-			int fixedRoll = (int) (Math.random() * 10000);
+			int fixedRoll = (int) (Math.random() * 10000) + 1;
 			return fixedRoll;
 		}
 	}

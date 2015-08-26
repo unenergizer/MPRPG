@@ -247,12 +247,14 @@ public class EntityDamageListener implements Listener{
 					double healthBarPercent = (20 * playerHitPointsFinal) / playerMaxHealth;
 
 					//Debug message
-					player.sendMessage(playerName + "> "
-							+ ChatColor.GREEN +  "HP: " + ChatColor.RESET + playerHealth 
-							+ ChatColor.RED + " - D: " + ChatColor.RESET + eventDamage  
-							+ ChatColor.GOLD +  " = " + ChatColor.RESET + playerHitPointsFinal);
+					if (player.isOp()) {
+						player.sendMessage(playerName + "> "
+								+ ChatColor.GREEN +  "HP: " + ChatColor.RESET + playerHealth 
+								+ ChatColor.RED + " - D: " + ChatColor.RESET + eventDamage  
+								+ ChatColor.GOLD +  " = " + ChatColor.RESET + playerHitPointsFinal);
 
-					player.sendMessage("HP Percent: " + healthBarPercent);
+						player.sendMessage("HP Percent: " + healthBarPercent);
+					}
 
 					//Display action bar message
 					if (!event.getCause().equals(DamageCause.ENTITY_ATTACK)) {
@@ -268,10 +270,14 @@ public class EntityDamageListener implements Listener{
 					} else {
 						//Set damage
 						if (healthBarPercent <= 3) {
-							player.sendMessage("Adding 2% back to healthBarPercent");
+							if (player.isOp()) {
+								player.sendMessage("Adding 2% back to healthBarPercent");
+							}
 							player.setHealth(healthBarPercent + 2);
 						} else if (healthBarPercent >= 19) {
-							player.sendMessage("Adding 2% back to healthBarPercent");
+							if (player.isOp()) {
+								player.sendMessage("Adding 2% back to healthBarPercent");
+							}
 							player.setHealth(20);
 						} else {
 							player.setHealth(healthBarPercent + 1);

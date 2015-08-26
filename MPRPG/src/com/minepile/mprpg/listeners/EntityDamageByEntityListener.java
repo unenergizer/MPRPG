@@ -49,15 +49,15 @@ public class EntityDamageByEntityListener implements Listener{
 			LivingEntity victim = (LivingEntity) event.getEntity();
 
 			if (victim instanceof Player) {
-				
+
 				//If the victim is a NPC. Lets cancel damage and send the player a message.
 				if (victim.hasMetadata("NPC")) {
 					event.setCancelled(true);
-					
+
 					//Check if the damager was a player.
 					if (event.getDamager() instanceof Player) {
 						//TODO: When punched we should toggle NPC interact.
-						
+
 						String npcName = victim.getCustomName();
 						Player damager = (Player) event.getDamager();
 						String damagerName = damager.getName();
@@ -65,7 +65,7 @@ public class EntityDamageByEntityListener implements Listener{
 								+ ChatColor.WHITE + damagerName + " why are you punching me? Use right click..");
 					}
 				} else {
-					
+
 					Player player = (Player) event.getEntity();
 					String playerName = player.getName();
 
@@ -101,28 +101,30 @@ public class EntityDamageByEntityListener implements Listener{
 						double totalDamage = damageFinal + coldDamageFinal + fireDamageFinal + poisonDamageFinal + thornDamageFinal;
 						double playerHitPointsFinal = playerHealth - totalDamage;
 						double healthBarPercent = (20 * playerHitPointsFinal) / playerMaxHealth;
-						double actionBarPercent = (100 * playerHitPointsFinal) / playerMaxHealth;
-
 
 						//Debug message
-						victim.sendMessage(victim.getName() 
-								+ ChatColor.GREEN + " D: " + ChatColor.RESET + damageFinal 
-								+ ChatColor.GREEN +  " +C: " + ChatColor.RESET + coldDamageFinal
-								+ ChatColor.GREEN +  " +F: " + ChatColor.RESET + fireDamageFinal 
-								+ ChatColor.GREEN +  " +P: " + ChatColor.RESET + poisonDamageFinal
-								+ ChatColor.GREEN +  " +T: " + ChatColor.RESET + thornDamageFinal 
-								+ ChatColor.RED +  " = " + ChatColor.RESET + totalDamage
-								+ ChatColor.YELLOW +  " > " + ChatColor.RESET + playerHealth 
-								+ ChatColor.GREEN +  " >> " + ChatColor.RESET + playerHitPointsFinal);
-						damager.sendMessage(damager.getName() 
-								+ ChatColor.GREEN + "D: " + ChatColor.RESET + damage 
-								+ ChatColor.GREEN + " +C: " + ChatColor.RESET + coldDamageFinal
-								+ ChatColor.GREEN +  " +F: " + ChatColor.RESET + fireDamageFinal 
-								+ ChatColor.GREEN + " +P: " + ChatColor.RESET + poisonDamageFinal
-								+ ChatColor.GREEN +  " +T: " + ChatColor.RESET + thornDamageFinal 
-								+ ChatColor.RED +  " = " + ChatColor.RESET + totalDamage
-								+ ChatColor.YELLOW +  " > " + ChatColor.RESET + playerHealth 
-								+ ChatColor.GREEN +  " >> " + ChatColor.RESET + playerHitPointsFinal);
+						if (victim.isOp()) {
+							victim.sendMessage(victim.getName() 
+									+ ChatColor.GREEN + " D: " + ChatColor.RESET + damageFinal 
+									+ ChatColor.GREEN +  " +C: " + ChatColor.RESET + coldDamageFinal
+									+ ChatColor.GREEN +  " +F: " + ChatColor.RESET + fireDamageFinal 
+									+ ChatColor.GREEN +  " +P: " + ChatColor.RESET + poisonDamageFinal
+									+ ChatColor.GREEN +  " +T: " + ChatColor.RESET + thornDamageFinal 
+									+ ChatColor.RED +  " = " + ChatColor.RESET + totalDamage
+									+ ChatColor.YELLOW +  " > " + ChatColor.RESET + playerHealth 
+									+ ChatColor.GREEN +  " >> " + ChatColor.RESET + playerHitPointsFinal);
+						}
+						if (damager.isOp()) {
+							damager.sendMessage(damager.getName() 
+									+ ChatColor.GREEN + "D: " + ChatColor.RESET + damage 
+									+ ChatColor.GREEN + " +C: " + ChatColor.RESET + coldDamageFinal
+									+ ChatColor.GREEN +  " +F: " + ChatColor.RESET + fireDamageFinal 
+									+ ChatColor.GREEN + " +P: " + ChatColor.RESET + poisonDamageFinal
+									+ ChatColor.GREEN +  " +T: " + ChatColor.RESET + thornDamageFinal 
+									+ ChatColor.RED +  " = " + ChatColor.RESET + totalDamage
+									+ ChatColor.YELLOW +  " > " + ChatColor.RESET + playerHealth 
+									+ ChatColor.GREEN +  " >> " + ChatColor.RESET + playerHitPointsFinal);
+						}
 
 						//Send the player a hp change message.
 						PlayerManager.displayActionBar(player);
@@ -135,7 +137,9 @@ public class EntityDamageByEntityListener implements Listener{
 						} else {
 							//Set damage
 							if (healthBarPercent <= 3) {
-								player.sendMessage("Adding 2% back to healthBarPercent");
+								if (player.isOp()) {
+									player.sendMessage("Adding 2% back to healthBarPercent");
+								}
 								player.setHealth(healthBarPercent + 2);
 							} else {
 								player.setHealth(healthBarPercent);
@@ -213,17 +217,19 @@ public class EntityDamageByEntityListener implements Listener{
 					double totalDamage = playerDamage + coldDamage + fireDamage + poisonDamage + thornDamage;
 					double finalHP = victimHealth - totalDamage;
 
-					damager.sendMessage(damager.getName() 
-							+ ChatColor.GREEN + "D: " + ChatColor.RESET + playerDamage 
-							+ ChatColor.GREEN + " +C: " + ChatColor.RESET + coldDamage
-							+ ChatColor.GREEN +  " +F: " + ChatColor.RESET + fireDamage 
-							+ ChatColor.GREEN + " +P: " + ChatColor.RESET + poisonDamage
-							+ ChatColor.GREEN +  " +T: " + ChatColor.RESET + thornDamage 
-							+ ChatColor.RED +  " = " + ChatColor.RESET + totalDamage
-							+ ChatColor.YELLOW +  " > " + ChatColor.RESET + victimHealth 
-							+ ChatColor.GREEN +  " >> " + ChatColor.RESET + finalHP);
+					if (damager.isOp()) {
+						damager.sendMessage(damager.getName() 
+								+ ChatColor.GREEN + "D: " + ChatColor.RESET + playerDamage 
+								+ ChatColor.GREEN + " +C: " + ChatColor.RESET + coldDamage
+								+ ChatColor.GREEN +  " +F: " + ChatColor.RESET + fireDamage 
+								+ ChatColor.GREEN + " +P: " + ChatColor.RESET + poisonDamage
+								+ ChatColor.GREEN +  " +T: " + ChatColor.RESET + thornDamage 
+								+ ChatColor.RED +  " = " + ChatColor.RESET + totalDamage
+								+ ChatColor.YELLOW +  " > " + ChatColor.RESET + victimHealth 
+								+ ChatColor.GREEN +  " >> " + ChatColor.RESET + finalHP);
 
-					damager.sendMessage("Player damage: " + totalDamage);
+						damager.sendMessage("Player damage: " + totalDamage);
+					}
 
 					//Show monster damage message.
 					damager.sendMessage(mobHealthChangeMessage((Player)damager, victim, (int) victimHealth, (int) totalDamage, (int) victimMaxHealth));
@@ -245,7 +251,10 @@ public class EntityDamageByEntityListener implements Listener{
 				} else { //This damage type was not by a player.
 
 					double damage = event.getDamage();
-					damager.sendMessage("eventDamage: " + damage);
+
+					if (damager.isOp()) {
+						damager.sendMessage("eventDamage: " + damage);
+					}
 
 					if (victimHealth <= 1) {
 						int x = victim.getLocation().getBlockX();
