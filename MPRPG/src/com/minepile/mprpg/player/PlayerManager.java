@@ -162,6 +162,8 @@ public class PlayerManager {
 		} else {
 			healthPoints.put(playerName, newHP);
 		}
+		//Update the players health tag under their name.
+		PlayerHealthTagManager.updateHealthTag(player);
 	}
 
 	/**
