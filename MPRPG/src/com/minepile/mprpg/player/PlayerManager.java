@@ -186,7 +186,7 @@ public class PlayerManager {
 				    player.getInventory().remove(itemStack);
 				}
 			}
-		}, 1L);
+		}, 5L);
 		
 		//If the player dies on fire. Stop him from burning.	
 		Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(plugin,  new Runnable() {

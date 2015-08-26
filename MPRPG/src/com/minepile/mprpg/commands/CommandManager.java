@@ -3,6 +3,7 @@ package com.minepile.mprpg.commands;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
+import org.bukkit.Sound;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -184,16 +185,24 @@ public class CommandManager implements CommandExecutor{
 						String prefix = ChatManager.getStaffPrefix(player);
 
 						//Send target player the message.
-						Bukkit.getPlayer(targetName).sendMessage(ChatColor.DARK_AQUA + "" + 
+						Bukkit.getPlayer(targetName).sendMessage(ChatColor.LIGHT_PURPLE + "" + 
 								ChatColor.BOLD + "PM " + prefix + clanTag +
-								ChatColor.GRAY + senderName + ChatColor.DARK_GRAY + ": " + 
+								ChatColor.GRAY + senderName + ChatColor.LIGHT_PURPLE + " > " +
+								ChatColor.GRAY + Bukkit.getPlayer(targetName).getName() + ChatColor.DARK_GRAY + ": " + 
 								ChatColor.WHITE + msg);
+						
+						Bukkit.getPlayer(targetName).playSound(Bukkit.getPlayer(targetName).getLocation(), Sound.CAT_MEOW, .8f, .8f);
 
 						//Send the sender the same message.
-						player.sendMessage(ChatColor.DARK_AQUA + "" + 
+						player.sendMessage(ChatColor.LIGHT_PURPLE + "" + 
 								ChatColor.BOLD + "PM " + prefix + clanTag +
-								ChatColor.GRAY + senderName + ChatColor.DARK_GRAY + ": " + 
+								ChatColor.GRAY + senderName + ChatColor.LIGHT_PURPLE + " > " +
+								ChatColor.GRAY + Bukkit.getPlayer(targetName).getName() + ChatColor.DARK_GRAY + ": " + 
 								ChatColor.WHITE + msg);
+						
+
+						player.playSound(player.getLocation(), Sound.CAT_MEOW, .8f, .8f);
+						
 					} else {
 						player.sendMessage(MessageManager.selectMessagePrefix("debug") +
 								targetName + " is offline.");
@@ -234,15 +243,17 @@ public class CommandManager implements CommandExecutor{
 						String prefix = ChatManager.getStaffPrefix(player);
 
 						//Send target player the message.
-						Bukkit.getPlayer(targetName).sendMessage(ChatColor.DARK_AQUA + "" + 
+						Bukkit.getPlayer(targetName).sendMessage(ChatColor.LIGHT_PURPLE + "" + 
 								ChatColor.BOLD + "PM " + prefix + clanTag +
-								ChatColor.GRAY + senderName + ChatColor.DARK_GRAY + ": " + 
+								ChatColor.GRAY + senderName + ChatColor.LIGHT_PURPLE + " > " +
+								ChatColor.GRAY + Bukkit.getPlayer(targetName).getName() + ChatColor.DARK_GRAY + ": " + 
 								ChatColor.WHITE + msg);
 
 						//Send the sender the same message.
-						player.sendMessage(ChatColor.DARK_AQUA + "" + 
+						player.sendMessage(ChatColor.LIGHT_PURPLE + "" + 
 								ChatColor.BOLD + "PM " + prefix + clanTag +
-								ChatColor.GRAY + senderName + ChatColor.DARK_GRAY + ": " + 
+								ChatColor.GRAY + senderName + ChatColor.LIGHT_PURPLE + " > " +
+								ChatColor.GRAY + Bukkit.getPlayer(targetName).getName() + ChatColor.DARK_GRAY + ": " + 
 								ChatColor.WHITE + msg);
 					} else {
 						player.sendMessage(MessageManager.selectMessagePrefix("debug") +

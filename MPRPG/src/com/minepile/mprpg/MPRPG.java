@@ -14,6 +14,7 @@ import com.minepile.mprpg.chat.LagManager;
 import com.minepile.mprpg.chat.MessageManager;
 import com.minepile.mprpg.commands.CommandManager;
 import com.minepile.mprpg.entities.CitizensManager;
+import com.minepile.mprpg.entities.ItemIdentifierManager;
 import com.minepile.mprpg.entities.MonsterCreatorManager;
 import com.minepile.mprpg.entities.MonsterManager;
 import com.minepile.mprpg.entities.NPCManager;
@@ -118,6 +119,7 @@ public class MPRPG extends JavaPlugin {
 
 		//setup entities manager instances
 		CitizensManager.getInstance().setup(this);
+		ItemIdentifierManager.getInstance().setup(this);
 		MonsterCreatorManager.getInstance().setup(this);
 		MonsterManager.getInstance().setup(this);
 		NPCManager.getInstance().setup(this);
@@ -272,7 +274,10 @@ public class MPRPG extends JavaPlugin {
 		//Loop through entity list and remove them.
 		//This is mainly for clearing mobs on server reload.
 		MonsterManager.disable();
-
+		
+		//Remove Item Identifier hologram.
+		ItemIdentifierManager.disable();
+		
 		////////////////////
 		/// Shutdown End ///
 		////////////////////
