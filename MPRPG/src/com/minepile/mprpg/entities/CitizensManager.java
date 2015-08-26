@@ -86,7 +86,6 @@ public class CitizensManager {
 	}
 
 	public static double getCitizenMaxHP(String citizenName) {
-		Bukkit.broadcastMessage(citizenName);
 		return npcConfig.getDouble(citizenName + ".health");
 	}
 
