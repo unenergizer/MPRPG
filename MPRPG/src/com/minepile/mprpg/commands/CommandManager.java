@@ -84,14 +84,32 @@ public class CommandManager implements CommandExecutor{
 									ChatColor.BOLD + ChatColor.UNDERLINE + arg + 
 									ChatColor.RED + ChatColor.BOLD + " channel.");
 						} else {
-							//Set the players chat channel focus.
-							PlayerManager.setPlayerConfigString(player, "setting.chat.focus", arg);
+							
+							//Make sure the player is a staff member or admin before they join staff channels.
+							if(arg.equalsIgnoreCase("admin") && player.isOp() || arg.equalsIgnoreCase("mod") && player.isOp()) {
+								//Set the players chat channel focus.
+								PlayerManager.setPlayerConfigString(player, "setting.chat.focus", arg);
 
-							//Tell the player their chat channel has been changed.
-							player.sendMessage(ChatColor.YELLOW + "" + ChatColor.BOLD + 
-									"       Your are now chatting in the " + 
-									ChatColor.WHITE + ChatColor.BOLD + ChatColor.UNDERLINE + arg + 
-									ChatColor.YELLOW + ChatColor.BOLD + " channel.");
+								//Tell the player their chat channel has been changed.
+								player.sendMessage(ChatColor.YELLOW + "" + ChatColor.BOLD + 
+										"       Your are now chatting in the " + 
+										ChatColor.WHITE + ChatColor.BOLD + ChatColor.UNDERLINE + arg + 
+										ChatColor.YELLOW + ChatColor.BOLD + " channel.");
+								
+							} else if (arg.equalsIgnoreCase("admin") && !player.isOp() || arg.equalsIgnoreCase("mod") && !player.isOp()) {
+							
+							player.sendMessage(ChatColor.RED + "You are not allowed to join this channel.");
+							
+							} else { //The player is not staff and is joining a regular channel. So lets let them.
+								//Set the players chat channel focus.
+								PlayerManager.setPlayerConfigString(player, "setting.chat.focus", arg);
+
+								//Tell the player their chat channel has been changed.
+								player.sendMessage(ChatColor.YELLOW + "" + ChatColor.BOLD + 
+										"       Your are now chatting in the " + 
+										ChatColor.WHITE + ChatColor.BOLD + ChatColor.UNDERLINE + arg + 
+										ChatColor.YELLOW + ChatColor.BOLD + " channel.");
+							}
 						}
 
 					} else {
@@ -167,6 +185,9 @@ public class CommandManager implements CommandExecutor{
 					if (Bukkit.getServer().getPlayer(args[0]) != null) {
 						StringBuilder str = new StringBuilder();
 
+						//Target player.
+						Player target = Bukkit.getPlayer(targetName);
+
 						//Start loop at location 1, to skip the username.
 						for (int i = 1; i < args.length; i++) {
 							str.append(args[i] + " ");
@@ -176,7 +197,7 @@ public class CommandManager implements CommandExecutor{
 
 						//Lets set lastPM for both players.
 						PlayerManager.setPlayerConfigString(player, "setting.chat.lastpm", targetName);
-						PlayerManager.setPlayerConfigString(Bukkit.getPlayer(targetName), "setting.chat.lastpm", player.getName());
+						PlayerManager.setPlayerConfigString(target, "setting.chat.lastpm", player.getName());
 
 						//Get clan tag (if any).
 						String clanTag = ChatManager.getClanTag(player);
@@ -185,24 +206,22 @@ public class CommandManager implements CommandExecutor{
 						String prefix = ChatManager.getStaffPrefix(player);
 
 						//Send target player the message.
-						Bukkit.getPlayer(targetName).sendMessage(ChatColor.LIGHT_PURPLE + "" + 
+						target.sendMessage(ChatColor.LIGHT_PURPLE + "" + 
 								ChatColor.BOLD + "PM " + prefix + clanTag +
 								ChatColor.GRAY + senderName + ChatColor.LIGHT_PURPLE + " > " +
-								ChatColor.GRAY + Bukkit.getPlayer(targetName).getName() + ChatColor.DARK_GRAY + ": " + 
+								ChatColor.GRAY + target.getName() + ChatColor.DARK_GRAY + ": " + 
 								ChatColor.WHITE + msg);
-						
-						Bukkit.getPlayer(targetName).playSound(Bukkit.getPlayer(targetName).getLocation(), Sound.CAT_MEOW, .8f, .8f);
+
+						//Send message sound.
+						target.playSound(target.getLocation(), Sound.CAT_MEOW, .8f, .8f);
 
 						//Send the sender the same message.
 						player.sendMessage(ChatColor.LIGHT_PURPLE + "" + 
 								ChatColor.BOLD + "PM " + prefix + clanTag +
 								ChatColor.GRAY + senderName + ChatColor.LIGHT_PURPLE + " > " +
-								ChatColor.GRAY + Bukkit.getPlayer(targetName).getName() + ChatColor.DARK_GRAY + ": " + 
+								ChatColor.GRAY + target.getName() + ChatColor.DARK_GRAY + ": " + 
 								ChatColor.WHITE + msg);
-						
 
-						player.playSound(player.getLocation(), Sound.CAT_MEOW, .8f, .8f);
-						
 					} else {
 						player.sendMessage(MessageManager.selectMessagePrefix("debug") +
 								targetName + " is offline.");
@@ -226,6 +245,9 @@ public class CommandManager implements CommandExecutor{
 					if (Bukkit.getServer().getPlayer(targetName) != null) {
 						StringBuilder str = new StringBuilder();
 
+						//Target player.
+						Player target = Bukkit.getPlayer(targetName);
+
 						//Start loop at location 0.
 						for (int i = 0; i < args.length; i++) {
 							str.append(args[i] + " ");
@@ -234,7 +256,7 @@ public class CommandManager implements CommandExecutor{
 
 						//Lets set lastPM for both players.
 						PlayerManager.setPlayerConfigString(player, "setting.chat.lastpm", targetName);
-						PlayerManager.setPlayerConfigString(Bukkit.getPlayer(targetName), "setting.chat.lastpm", player.getName());
+						PlayerManager.setPlayerConfigString(target, "setting.chat.lastpm", player.getName());
 
 						//Get clan tag (if any).
 						String clanTag = ChatManager.getClanTag(player);
@@ -243,17 +265,20 @@ public class CommandManager implements CommandExecutor{
 						String prefix = ChatManager.getStaffPrefix(player);
 
 						//Send target player the message.
-						Bukkit.getPlayer(targetName).sendMessage(ChatColor.LIGHT_PURPLE + "" + 
+						target.sendMessage(ChatColor.LIGHT_PURPLE + "" + 
 								ChatColor.BOLD + "PM " + prefix + clanTag +
 								ChatColor.GRAY + senderName + ChatColor.LIGHT_PURPLE + " > " +
-								ChatColor.GRAY + Bukkit.getPlayer(targetName).getName() + ChatColor.DARK_GRAY + ": " + 
+								ChatColor.GRAY + target.getName() + ChatColor.DARK_GRAY + ": " + 
 								ChatColor.WHITE + msg);
+
+						//Send message sound.
+						target.playSound(target.getLocation(), Sound.CAT_MEOW, .8f, .8f);
 
 						//Send the sender the same message.
 						player.sendMessage(ChatColor.LIGHT_PURPLE + "" + 
 								ChatColor.BOLD + "PM " + prefix + clanTag +
 								ChatColor.GRAY + senderName + ChatColor.LIGHT_PURPLE + " > " +
-								ChatColor.GRAY + Bukkit.getPlayer(targetName).getName() + ChatColor.DARK_GRAY + ": " + 
+								ChatColor.GRAY + target.getName() + ChatColor.DARK_GRAY + ": " + 
 								ChatColor.WHITE + msg);
 					} else {
 						player.sendMessage(MessageManager.selectMessagePrefix("debug") +

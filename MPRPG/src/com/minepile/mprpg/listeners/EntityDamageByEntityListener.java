@@ -70,83 +70,84 @@ public class EntityDamageByEntityListener implements Listener{
 					String playerName = player.getName();
 
 					double playerHealth = PlayerManager.getHealthPoints(playerName);
-					double playerMaxHealth = PlayerManager.getMaxHealthPoints(playerName);
 
 					//Damager is another player
 					if (event.getDamager() instanceof Player) {
 						Player damager = (Player) event.getDamager();
+						String damagerName = damager.getName();
+						
+						//Make sure the player is not dead.
+						//This will prevent dead players from doing damage to players or monsters.
+						if (PlayerManager.isPlayerDead(damagerName) == true || PlayerManager.isPlayerDead(playerName) == true) {
+							
+							//Player is dead. Cancel the event.
+							event.setCancelled(true);
+							
+						} else { //Player is not dead.
+							
+							//get the damagers damage values
+							double damage = ItemLoreFactory.getInstance().getDamageBonus(damager);
+							double coldDamage = ItemLoreFactory.getInstance().getColdDamage((LivingEntity) damager);
+							double fireDamage = ItemLoreFactory.getInstance().getFireDamage((LivingEntity) damager);
+							double poisonDamage = ItemLoreFactory.getInstance().getPoisonDamage((LivingEntity) damager);
+							double thornDamage = ItemLoreFactory.getInstance().getThornDamage((LivingEntity) damager);
 
-						//get the damagers damage values
-						double damage = ItemLoreFactory.getInstance().getDamageBonus(damager);
-						double coldDamage = ItemLoreFactory.getInstance().getColdDamage((LivingEntity) damager);
-						double fireDamage = ItemLoreFactory.getInstance().getFireDamage((LivingEntity) damager);
-						double poisonDamage = ItemLoreFactory.getInstance().getPoisonDamage((LivingEntity) damager);
-						double thornDamage = ItemLoreFactory.getInstance().getThornDamage((LivingEntity) damager);
+							//Get the victims magical resistances
+							double armor = damage * (ItemLoreFactory.getInstance().getArmorBonus((LivingEntity) victim) / 100);
+							double coldResistance = coldDamage * (ItemLoreFactory.getInstance().getColdResist((LivingEntity) victim) / 100);
+							double fireResistance = fireDamage * (ItemLoreFactory.getInstance().getFireResist((LivingEntity) victim) / 100);
+							double poisonResistance = poisonDamage * (ItemLoreFactory.getInstance().getPoisonResist((LivingEntity) victim) / 100);
+							double thornResistance = thornDamage * (ItemLoreFactory.getInstance().getColdResist((LivingEntity) victim) / 100);
 
-						//Get the victims magical resistances
-						double armor = damage * (ItemLoreFactory.getInstance().getArmorBonus((LivingEntity) victim) / 100);
-						double coldResistance = coldDamage * (ItemLoreFactory.getInstance().getColdResist((LivingEntity) victim) / 100);
-						double fireResistance = fireDamage * (ItemLoreFactory.getInstance().getFireResist((LivingEntity) victim) / 100);
-						double poisonResistance = poisonDamage * (ItemLoreFactory.getInstance().getPoisonResist((LivingEntity) victim) / 100);
-						double thornResistance = thornDamage * (ItemLoreFactory.getInstance().getColdResist((LivingEntity) victim) / 100);
+							//Get final damages based on both the damages damage values and the victims resistances.
+							double damageFinal = damage - armor;
+							double coldDamageFinal = coldDamage - coldResistance;
+							double fireDamageFinal = fireDamage - fireResistance;
+							double poisonDamageFinal = poisonDamage - poisonResistance;
+							double thornDamageFinal = thornDamage - thornResistance;
 
-						//Get final damages based on both the damages damage values and the victims resistances.
-						double damageFinal = damage - armor;
-						double coldDamageFinal = coldDamage - coldResistance;
-						double fireDamageFinal = fireDamage - fireResistance;
-						double poisonDamageFinal = poisonDamage - poisonResistance;
-						double thornDamageFinal = thornDamage - thornResistance;
+							//Apply final math.
+							double totalDamage = damageFinal + coldDamageFinal + fireDamageFinal + poisonDamageFinal + thornDamageFinal;
+							double playerHitPointsFinal = playerHealth - totalDamage;
+							//double healthBarPercent = (20 * playerHitPointsFinal) / playerMaxHealth;
 
-						//Apply final math.
-						double totalDamage = damageFinal + coldDamageFinal + fireDamageFinal + poisonDamageFinal + thornDamageFinal;
-						double playerHitPointsFinal = playerHealth - totalDamage;
-						double healthBarPercent = (20 * playerHitPointsFinal) / playerMaxHealth;
-
-						//Debug message
-						if (victim.isOp()) {
-							victim.sendMessage(victim.getName() 
-									+ ChatColor.GREEN + " D: " + ChatColor.RESET + damageFinal 
-									+ ChatColor.GREEN +  " +C: " + ChatColor.RESET + coldDamageFinal
-									+ ChatColor.GREEN +  " +F: " + ChatColor.RESET + fireDamageFinal 
-									+ ChatColor.GREEN +  " +P: " + ChatColor.RESET + poisonDamageFinal
-									+ ChatColor.GREEN +  " +T: " + ChatColor.RESET + thornDamageFinal 
-									+ ChatColor.RED +  " = " + ChatColor.RESET + totalDamage
-									+ ChatColor.YELLOW +  " > " + ChatColor.RESET + playerHealth 
-									+ ChatColor.GREEN +  " >> " + ChatColor.RESET + playerHitPointsFinal);
-						}
-						if (damager.isOp()) {
-							damager.sendMessage(damager.getName() 
-									+ ChatColor.GREEN + "D: " + ChatColor.RESET + damage 
-									+ ChatColor.GREEN + " +C: " + ChatColor.RESET + coldDamageFinal
-									+ ChatColor.GREEN +  " +F: " + ChatColor.RESET + fireDamageFinal 
-									+ ChatColor.GREEN + " +P: " + ChatColor.RESET + poisonDamageFinal
-									+ ChatColor.GREEN +  " +T: " + ChatColor.RESET + thornDamageFinal 
-									+ ChatColor.RED +  " = " + ChatColor.RESET + totalDamage
-									+ ChatColor.YELLOW +  " > " + ChatColor.RESET + playerHealth 
-									+ ChatColor.GREEN +  " >> " + ChatColor.RESET + playerHitPointsFinal);
-						}
-
-						//Send the player a hp change message.
-						PlayerManager.displayActionBar(player);
-
-						//Check if the player HP is too low. If it is, kill the player.
-						//Otherwise apply damage to the player
-						if (playerHitPointsFinal < 1) {
-							//kill player
-							PlayerManager.killPlayer(player);
-						} else {
-							//Set damage
-							if (healthBarPercent <= 3) {
-								if (player.isOp()) {
-									player.sendMessage("Adding 2% back to healthBarPercent");
-								}
-								player.setHealth(healthBarPercent + 2);
-							} else {
-								player.setHealth(healthBarPercent);
+							//Debug message
+							if (victim.isOp()) {
+								victim.sendMessage(victim.getName() 
+										+ ChatColor.GREEN + " D: " + ChatColor.RESET + damageFinal 
+										+ ChatColor.GREEN +  " +C: " + ChatColor.RESET + coldDamageFinal
+										+ ChatColor.GREEN +  " +F: " + ChatColor.RESET + fireDamageFinal 
+										+ ChatColor.GREEN +  " +P: " + ChatColor.RESET + poisonDamageFinal
+										+ ChatColor.GREEN +  " +T: " + ChatColor.RESET + thornDamageFinal 
+										+ ChatColor.RED +  " = " + ChatColor.RESET + totalDamage
+										+ ChatColor.YELLOW +  " > " + ChatColor.RESET + playerHealth 
+										+ ChatColor.GREEN +  " >> " + ChatColor.RESET + playerHitPointsFinal);
 							}
-							PlayerManager.setPlayerHitPoints(player, playerHitPointsFinal);
-						}
+							if (damager.isOp()) {
+								damager.sendMessage(damager.getName() 
+										+ ChatColor.GREEN + "D: " + ChatColor.RESET + damage 
+										+ ChatColor.GREEN + " +C: " + ChatColor.RESET + coldDamageFinal
+										+ ChatColor.GREEN +  " +F: " + ChatColor.RESET + fireDamageFinal 
+										+ ChatColor.GREEN + " +P: " + ChatColor.RESET + poisonDamageFinal
+										+ ChatColor.GREEN +  " +T: " + ChatColor.RESET + thornDamageFinal 
+										+ ChatColor.RED +  " = " + ChatColor.RESET + totalDamage
+										+ ChatColor.YELLOW +  " > " + ChatColor.RESET + playerHealth 
+										+ ChatColor.GREEN +  " >> " + ChatColor.RESET + playerHitPointsFinal);
+							}
 
+							//Send the player a hp change message.
+							PlayerManager.displayActionBar(player);
+
+							//Check if the player HP is too low. If it is, kill the player.
+							//Otherwise apply damage to the player
+							if (playerHitPointsFinal < 1) {
+								//kill player
+								PlayerManager.killPlayer(player);
+							} else {
+								//Set player HP.
+								PlayerManager.setPlayerHitPoints(player, playerHitPointsFinal);
+							}
+						}
 						//PLayer shot arrow.
 					} else if (event.getDamager() instanceof Arrow) {
 

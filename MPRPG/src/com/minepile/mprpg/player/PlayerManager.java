@@ -33,25 +33,26 @@ public class PlayerManager {
 
 	//setup instance variables
 	public static MPRPG plugin;
-	static PlayerManager playerManagerInstance = new PlayerManager();
-	static String playerFilePathStart = "plugins/MPRPG/players/";
-	static String playerFilePathEnd = ".yml";
+	public static PlayerManager playerManagerInstance = new PlayerManager();
+	private static String playerFilePathStart = "plugins/MPRPG/players/";
+	private static String playerFilePathEnd = ".yml";
 
 	//MAIN STATS
-	static ConcurrentHashMap<String, Double> healthPoints = new ConcurrentHashMap<String, Double>();
-	static ConcurrentHashMap<String, Double> maxHealthPoints = new ConcurrentHashMap<String, Double>();
-	static ConcurrentHashMap<String, Double> staminaPoints = new ConcurrentHashMap<String, Double>();
-	static ConcurrentHashMap<String, Double> maxStaminaPoints = new ConcurrentHashMap<String, Double>();
-	static ConcurrentHashMap<String, Double> manaPoints = new ConcurrentHashMap<String, Double>();
-	static ConcurrentHashMap<String, Double> maxManaPoints = new ConcurrentHashMap<String, Double>();
+	private static ConcurrentHashMap<String, Double> healthPoints = new ConcurrentHashMap<String, Double>();
+	private static ConcurrentHashMap<String, Double> maxHealthPoints = new ConcurrentHashMap<String, Double>();
+	private static ConcurrentHashMap<String, Double> staminaPoints = new ConcurrentHashMap<String, Double>();
+	private static ConcurrentHashMap<String, Double> maxStaminaPoints = new ConcurrentHashMap<String, Double>();
+	private static ConcurrentHashMap<String, Double> manaPoints = new ConcurrentHashMap<String, Double>();
+	private static ConcurrentHashMap<String, Double> maxManaPoints = new ConcurrentHashMap<String, Double>();
+	private static ConcurrentHashMap<String, Boolean> playerDead = new ConcurrentHashMap<String, Boolean>();
 
 	//Base statistic rates
-	static double baseHealthPoints = 100;
-	static double baseHealthRegenRate = .5;
-	static double baseStaminaPoints = 100;
-	static double baseManaPoints = 100;
-	static double baseStaminaRegenRate = 1;
-	static double baseManaRegenRate = 1;
+	private static double baseHealthPoints = 100;
+	private static double baseHealthRegenRate = .5;
+	private static double baseStaminaPoints = 100;
+	private static double baseManaPoints = 100;
+	private static double baseStaminaRegenRate = 1;
+	private static double baseManaRegenRate = 1;
 
 	//Create instance
 	public static PlayerManager getInstance() {
@@ -138,33 +139,48 @@ public class PlayerManager {
 	 * @param playerHitPointsFinal
 	 */
 	public static void setPlayerHitPoints(Player player, double hp) {
+		String playerName = player.getName();
+		double playerMaxHealth = maxHealthPoints.get(playerName);
+		double healthBarPercent = (20 * hp) / playerMaxHealth;
+
 		//Set the players health map
 		setHealthPoints(player.getName(), hp);
 
 		//Set players health tag under their name
 		PlayerHealthTagManager.updateHealthTag(player);
+
+		//Set hearts
+		if (healthBarPercent <= 3) {
+			player.setHealth(healthBarPercent + 2);
+		} else {
+			player.setHealth(healthBarPercent);
+		}
 	}
-	
+
 	/**
 	 * Regenerates a players HitPoints every few seconds.
 	 * 
 	 * @param player The player who will have their HP regenerated.
 	 */
 	public static void regenerateHealthPoints(Player player) {
-		String playerName = player.getName();
-		double playerRegen = ItemLoreFactory.getInstance().getHealthPointsRegenerate(player);
-		double totalRegen = baseHealthRegenRate + playerRegen;
-		double playerHP = healthPoints.get(playerName);
-		double playerMaxHP = maxHealthPoints.get(playerName);
-		double newHP = playerHP + totalRegen;
+		if (healthPoints.get(player.getName()) != null) {
+			String playerName = player.getName();
+			double playerRegen = ItemLoreFactory.getInstance().getHealthPointsRegenerate(player);
+			double totalRegen = baseHealthRegenRate + playerRegen;
+			double playerHP = healthPoints.get(playerName);
+			double playerMaxHP = maxHealthPoints.get(playerName);
+			double newHP = playerHP + totalRegen;
 
-		if (playerHP >= playerMaxHP) {
-			healthPoints.put(playerName, playerMaxHP);
-		} else {
-			healthPoints.put(playerName, newHP);
+			//Set the players HP HashMap values.
+			if (newHP >= playerMaxHP) {
+				setPlayerHitPoints(player, playerMaxHP);
+			} else {
+				setPlayerHitPoints(player, newHP);
+			}
+
+			//Update the players health tag under their name.
+			PlayerHealthTagManager.updateHealthTag(player);
 		}
-		//Update the players health tag under their name.
-		PlayerHealthTagManager.updateHealthTag(player);
 	}
 
 	/**
@@ -175,30 +191,35 @@ public class PlayerManager {
 	public static void killPlayer(final Player player) {
 		String playerName = player.getName();
 
+		//Player is dead.
+		playerDead.put(playerName, true);
+		
 		//This will respawn the player after a certain amount of time.
 		startPlayerRespawn(player);
-		
+
 		//Drop the players items.
 		Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(plugin,  new Runnable() {
 			public void run() {
 				for (ItemStack itemStack : player.getInventory()) {
-				    player.getWorld().dropItemNaturally(player.getLocation(), itemStack);
-				    player.getInventory().remove(itemStack);
+					if (itemStack != null) {
+						player.getWorld().dropItemNaturally(player.getLocation(), itemStack);
+						player.getInventory().remove(itemStack);
+					}
 				}
 			}
 		}, 5L);
-		
+
 		//If the player dies on fire. Stop him from burning.	
 		Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(plugin,  new Runnable() {
 			public void run() {
 				player.setFireTicks(0);
 			}
 		}, 1L);
-		
+
 		//Turn the player invisible.
 		PotionEffect invisible = new PotionEffect(PotionEffectType.INVISIBILITY, 6*20, 10);
 		invisible.apply(player);
-		
+
 		//Teleport player into the air.
 		double x = player.getLocation().getX();
 		double y = player.getLocation().getY();
@@ -224,7 +245,7 @@ public class PlayerManager {
 		healthPoints.put(playerName, maxHp);
 		player.setHealth(20);
 		player.setFoodLevel(20);
-
+		
 		//Send the player a message
 		player.sendMessage(ChatColor.RED + "You have died!");
 		player.sendMessage(ChatColor.YELLOW + "Your armor has been damaged!");
@@ -238,29 +259,31 @@ public class PlayerManager {
 	 * @param player The player to add a stats action/display bar too.
 	 */
 	public static void displayActionBar(Player player) {
-		String playerName = player.getName();
-		String hp = Integer.toString(healthPoints.get(playerName).intValue());
-		String maxHP = Integer.toString(maxHealthPoints.get(playerName).intValue());
-		String stamina = Integer.toString(staminaPoints.get(playerName).intValue());
-		String maxStamina = Integer.toString(maxStaminaPoints.get(playerName).intValue());
-		String mana = Integer.toString(manaPoints.get(playerName).intValue());
-		String maxMana = Integer.toString(maxManaPoints.get(playerName).intValue());
+		if (healthPoints.get(player.getName()) != null) {
+			String playerName = player.getName();
+			String hp = Integer.toString(healthPoints.get(playerName).intValue());
+			String maxHP = Integer.toString(maxHealthPoints.get(playerName).intValue());
+			String stamina = Integer.toString(staminaPoints.get(playerName).intValue());
+			String maxStamina = Integer.toString(maxStaminaPoints.get(playerName).intValue());
+			String mana = Integer.toString(manaPoints.get(playerName).intValue());
+			String maxMana = Integer.toString(maxManaPoints.get(playerName).intValue());
 
-		new ActionbarTitleObject(ChatColor.GREEN + "" + ChatColor.BOLD + "HP" 
-				+ ChatColor.GRAY + ChatColor.BOLD + ": " 
-				+ ChatColor.WHITE + ChatColor.BOLD + hp 
-				+ ChatColor.GREEN + ChatColor.BOLD + "/" 
-				+ ChatColor.WHITE + ChatColor.BOLD + maxHP 
-				+ ChatColor.AQUA + ChatColor.BOLD + "   Stamina" 
-				+ ChatColor.GRAY + ChatColor.BOLD + ": "
-				+ ChatColor.WHITE + ChatColor.BOLD + stamina 
-				+ ChatColor.AQUA + ChatColor.BOLD + "/" 
-				+ ChatColor.WHITE + ChatColor.BOLD + maxStamina
-				+ ChatColor.LIGHT_PURPLE + ChatColor.BOLD + "   Mana" 
-				+ ChatColor.GRAY + ChatColor.BOLD + ": " 
-				+ ChatColor.WHITE + ChatColor.BOLD + mana 
-				+ ChatColor.LIGHT_PURPLE + ChatColor.BOLD +  "/" 
-				+ ChatColor.WHITE + ChatColor.BOLD + maxMana).send(player);
+			new ActionbarTitleObject(ChatColor.GREEN + "" + ChatColor.BOLD + "HP" 
+					+ ChatColor.GRAY + ChatColor.BOLD + ": " 
+					+ ChatColor.WHITE + ChatColor.BOLD + hp 
+					+ ChatColor.GREEN + ChatColor.BOLD + "/" 
+					+ ChatColor.WHITE + ChatColor.BOLD + maxHP 
+					+ ChatColor.AQUA + ChatColor.BOLD + "   Stamina" 
+					+ ChatColor.GRAY + ChatColor.BOLD + ": "
+					+ ChatColor.WHITE + ChatColor.BOLD + stamina 
+					+ ChatColor.AQUA + ChatColor.BOLD + "/" 
+					+ ChatColor.WHITE + ChatColor.BOLD + maxStamina
+					+ ChatColor.LIGHT_PURPLE + ChatColor.BOLD + "   Mana" 
+					+ ChatColor.GRAY + ChatColor.BOLD + ": " 
+					+ ChatColor.WHITE + ChatColor.BOLD + mana 
+					+ ChatColor.LIGHT_PURPLE + ChatColor.BOLD +  "/" 
+					+ ChatColor.WHITE + ChatColor.BOLD + maxMana).send(player);
+		}
 	}
 
 	private static void startPlayerRespawn(final Player player) {
@@ -273,11 +296,14 @@ public class PlayerManager {
 				player.setAllowFlight(false);
 				player.setFlying(false);
 
-				//Clear potion effect.
-				player.removePotionEffect(PotionEffectType.INVISIBILITY);
-
 				//Teleport the player to spawn
 				teleportPlayerToSpawn(player);
+				
+				//Clear potion effect.
+				player.removePotionEffect(PotionEffectType.INVISIBILITY);
+				
+				//Player is no longer dead.
+				playerDead.put(player.getName(), false);
 
 			}
 
@@ -394,6 +420,7 @@ public class PlayerManager {
 		maxStaminaPoints.put(playerName, baseStaminaPoints);
 		manaPoints.put(playerName, baseManaPoints);
 		maxManaPoints.put(playerName, baseManaPoints);
+		playerDead.put(playerName, false);
 
 		//Set players health to max on the health bar.
 		//player.setMaxHealth(200);
@@ -441,6 +468,7 @@ public class PlayerManager {
 		maxStaminaPoints.remove(playerName);
 		manaPoints.remove(playerName);
 		maxManaPoints.remove(playerName);
+		playerDead.remove(playerName);
 
 		//Remove players game menu
 		PlayerMenuManager.deleteMenu(player);
@@ -618,6 +646,14 @@ public class PlayerManager {
 
 	public static void setMaxManaPoints(ConcurrentHashMap<String, Double> maxMana) {
 		maxManaPoints = maxMana;
+	}
+
+	public static boolean isPlayerDead(String playerName) {
+		return playerDead.get(playerName);
+	}
+
+	public static void setPlayerDead(ConcurrentHashMap<String, Boolean> dead) {
+		playerDead = dead;
 	}
 
 	public static double getBaseHealthPoints() {

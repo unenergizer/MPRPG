@@ -166,127 +166,120 @@ public class EntityDamageListener implements Listener{
 					Player player = (Player) victim;
 					String playerName = player.getName();
 
-					double playerHealth = PlayerManager.getHealthPoints(playerName);
-					double playerMaxHealth = PlayerManager.getMaxHealthPoints(playerName);
+					//Make sure the player is not dead.
+					//This will prevent dead players from doing damage to players or monsters.
+					if (PlayerManager.isPlayerDead(player.getName()) == false) {
 
-					double eventDamage = event.getDamage();
+						double playerHealth = PlayerManager.getHealthPoints(playerName);
+						double playerMaxHealth = PlayerManager.getMaxHealthPoints(playerName);
 
-					//double coldResistance = coldDamage * (ItemLoreFactory.getInstance().getColdResist((LivingEntity) victim) / 100);
-					//double fireResistance = fireDamage * (ItemLoreFactory.getInstance().getFireResist((LivingEntity) victim) / 100);
-					//double poisonResistance = poisonDamage * (ItemLoreFactory.getInstance().getPoisonResist((LivingEntity) victim) / 100);
-					//double thornResistance = thornDamage * (ItemLoreFactory.getInstance().getColdResist((LivingEntity) victim) / 100);
+						double eventDamage = event.getDamage();
+
+						//double coldResistance = coldDamage * (ItemLoreFactory.getInstance().getColdResist((LivingEntity) victim) / 100);
+						//double fireResistance = fireDamage * (ItemLoreFactory.getInstance().getFireResist((LivingEntity) victim) / 100);
+						//double poisonResistance = poisonDamage * (ItemLoreFactory.getInstance().getPoisonResist((LivingEntity) victim) / 100);
+						//double thornResistance = thornDamage * (ItemLoreFactory.getInstance().getColdResist((LivingEntity) victim) / 100);
 
 
-					switch (event.getCause()) {
-					case BLOCK_EXPLOSION:
-						break;
-					case CONTACT:
-						break;
-					case CUSTOM:
-						break;
-					case DROWNING:
-						break;
-					case ENTITY_ATTACK:
-						//Do nothing.  This action should be handled in EntityDamageByEntityListener.java
-						eventDamage = 0; //Set dmg to 0 and handle this in the java file mentioned above.
-						break;
-					case ENTITY_EXPLOSION:
-						break;
-					case FALL:
-						break;
-					case FALLING_BLOCK:
-						break;
-					case FIRE:
-						double fireResistance = eventDamage * (ItemLoreFactory.getInstance().getFireResist((LivingEntity) victim) / 100);
-						eventDamage -= fireResistance;
-						break;
-					case FIRE_TICK:
-						//using fireResistance here.
-						double fireTickResistance = eventDamage * (ItemLoreFactory.getInstance().getFireResist((LivingEntity) victim) / 100);
-						eventDamage -= fireTickResistance;
-						break;
-					case LAVA:
-						//using fireResistance here.
-						double lavaResistance = eventDamage * (ItemLoreFactory.getInstance().getFireResist((LivingEntity) victim) / 100);
-						eventDamage -= lavaResistance;
-						break;
-					case LIGHTNING:
-						break;
-					case MAGIC:
-						break;
-					case MELTING:
-						break;
-					case POISON:
-						double poisonResistance = eventDamage * (ItemLoreFactory.getInstance().getPoisonResist((LivingEntity) victim) / 100);
-						eventDamage -= poisonResistance;
-						break;
-					case PROJECTILE:
-						break;
-					case STARVATION:
-						break;
-					case SUFFOCATION:
-						break;
-					case SUICIDE:
-						break;
-					case THORNS:
-						double thornResistance = eventDamage * (ItemLoreFactory.getInstance().getColdResist((LivingEntity) victim) / 100);
-						eventDamage -= thornResistance;
-						break;
-					case VOID:
+						switch (event.getCause()) {
+						case BLOCK_EXPLOSION:
+							break;
+						case CONTACT:
+							break;
+						case CUSTOM:
+							break;
+						case DROWNING:
+							break;
+						case ENTITY_ATTACK:
+							//Do nothing.  This action should be handled in EntityDamageByEntityListener.java
+							eventDamage = 0; //Set dmg to 0 and handle this in the java file mentioned above.
+							break;
+						case ENTITY_EXPLOSION:
+							break;
+						case FALL:
+							break;
+						case FALLING_BLOCK:
+							break;
+						case FIRE:
+							double fireResistance = eventDamage * (ItemLoreFactory.getInstance().getFireResist((LivingEntity) victim) / 100);
+							eventDamage -= fireResistance;
+							break;
+						case FIRE_TICK:
+							//using fireResistance here.
+							double fireTickResistance = eventDamage * (ItemLoreFactory.getInstance().getFireResist((LivingEntity) victim) / 100);
+							eventDamage -= fireTickResistance;
+							break;
+						case LAVA:
+							//using fireResistance here.
+							double lavaResistance = eventDamage * (ItemLoreFactory.getInstance().getFireResist((LivingEntity) victim) / 100);
+							eventDamage -= lavaResistance;
+							break;
+						case LIGHTNING:
+							break;
+						case MAGIC:
+							break;
+						case MELTING:
+							break;
+						case POISON:
+							double poisonResistance = eventDamage * (ItemLoreFactory.getInstance().getPoisonResist((LivingEntity) victim) / 100);
+							eventDamage -= poisonResistance;
+							break;
+						case PROJECTILE:
+							break;
+						case STARVATION:
+							break;
+						case SUFFOCATION:
+							break;
+						case SUICIDE:
+							break;
+						case THORNS:
+							double thornResistance = eventDamage * (ItemLoreFactory.getInstance().getColdResist((LivingEntity) victim) / 100);
+							eventDamage -= thornResistance;
+							break;
+						case VOID:
 
-						break;
-					case WITHER:
-						break;
-					default:
-						break;
+							break;
+						case WITHER:
+							break;
+						default:
+							break;
 
-					}
-
-					//Apply final math.
-					double playerHitPointsFinal = playerHealth - eventDamage;
-					double healthBarPercent = (20 * playerHitPointsFinal) / playerMaxHealth;
-
-					//Debug message
-					if (player.isOp()) {
-						player.sendMessage(playerName + "> "
-								+ ChatColor.GREEN +  "HP: " + ChatColor.RESET + playerHealth 
-								+ ChatColor.RED + " - D: " + ChatColor.RESET + eventDamage  
-								+ ChatColor.GOLD +  " = " + ChatColor.RESET + playerHitPointsFinal);
-
-						player.sendMessage("HP Percent: " + healthBarPercent);
-					}
-
-					//Display action bar message
-					if (!event.getCause().equals(DamageCause.ENTITY_ATTACK)) {
-						//Send the player a hp change message.
-						PlayerManager.displayActionBar(player);
-					}
-
-					//Check if the player HP is too low. If it is, kill the player.
-					//Otherwise apply damage to the player
-					if (playerHitPointsFinal < 1) {
-						//kill player
-						PlayerManager.killPlayer(player);
-					} else {
-						//Set damage
-						if (healthBarPercent <= 3) {
-							if (player.isOp()) {
-								player.sendMessage("Adding 2% back to healthBarPercent");
-							}
-							player.setHealth(healthBarPercent + 2);
-						} else if (healthBarPercent >= 19) {
-							if (player.isOp()) {
-								player.sendMessage("Adding 2% back to healthBarPercent");
-							}
-							player.setHealth(20);
-						} else {
-							player.setHealth(healthBarPercent + 1);
 						}
 
-						PlayerManager.setPlayerHitPoints(player, playerHitPointsFinal);
+						//Apply final math.
+						double playerHitPointsFinal = playerHealth - eventDamage;
+						double healthBarPercent = (20 * playerHitPointsFinal) / playerMaxHealth;
+
+						//Debug message
+						if (player.isOp()) {
+							player.sendMessage(playerName + "> "
+									+ ChatColor.GREEN +  "HP: " + ChatColor.RESET + playerHealth 
+									+ ChatColor.RED + " - D: " + ChatColor.RESET + eventDamage  
+									+ ChatColor.GOLD +  " = " + ChatColor.RESET + playerHitPointsFinal);
+
+							player.sendMessage("HP Percent: " + healthBarPercent);
+						}
+
+						//Display action bar message
+						if (!event.getCause().equals(DamageCause.ENTITY_ATTACK)) {
+							//Send the player a hp change message.
+							PlayerManager.displayActionBar(player);
+						}
+
+						//Check if the player HP is too low. If it is, kill the player.
+						//Otherwise apply damage to the player
+						if (playerHitPointsFinal < 1) {
+							//kill player
+							PlayerManager.killPlayer(player);
+						} else {
+							//Set player HP.
+							PlayerManager.setPlayerHitPoints(player, playerHitPointsFinal);
+						}
+					} else {
+						//Player is dead. Do not let them take damage.
+						event.setCancelled(true);
 					}
 				}
-
 			} else {
 				if (!victim.getType().equals(EntityType.ARMOR_STAND)) {
 					//Living entity is not a player, so it must be some type of mob.
