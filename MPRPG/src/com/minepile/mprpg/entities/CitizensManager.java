@@ -2,15 +2,19 @@ package com.minepile.mprpg.entities;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
+import org.bukkit.World;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 
+import com.gmail.filoghost.holographicdisplays.api.Hologram;
+import com.gmail.filoghost.holographicdisplays.api.HologramsAPI;
 import com.minepile.mprpg.MPRPG;
 import com.minepile.mprpg.items.ItemIdentifierManager;
 import com.minepile.mprpg.items.MerchantManager;
@@ -26,12 +30,14 @@ public class CitizensManager {
 
 	static CitizensManager citizenManagerInstance = new CitizensManager();
 
-	@SuppressWarnings("unused")
 	private static MPRPG plugin;
 
 	private static File configFile;
 	private static FileConfiguration npcConfig;
 	private static String FILE_PATH = "plugins/MPRPG/npc/citizens.yml";
+	
+	//Holograms
+	private static ArrayList<Hologram> npcHolograms = new ArrayList<Hologram>();
 
 	public static CitizensManager getInstance() {
 		return citizenManagerInstance;
@@ -41,7 +47,7 @@ public class CitizensManager {
 	public void setup(MPRPG plugin) {
 		this.plugin = plugin;
 
-		//If monster configuration does not exist, create it. Otherwise lets load the config.
+		//If citizens configuration does not exist, create the file. Otherwise lets load the file.
 		if(!(new File(FILE_PATH)).exists()){
 			createCitizenConfig();
 		} else {
@@ -58,6 +64,13 @@ public class CitizensManager {
 			}
 		}, 5 * 20L);
 	}
+	
+	/**
+	 * This will disable this class.
+	 */
+	public static void disable() {
+		removeHolograms();
+	}
 
 	/**
 	 * This ENUM defines what type of NPC's exist in game.
@@ -66,16 +79,16 @@ public class CitizensManager {
 	 */
 	public static enum CitizenType {
 
-		ALCHEMIST (ChatColor.GOLD + ""),		//Alchemist Trainer
-		BLACKSMITH (ChatColor.GOLD + ""),		//Blacksmith Trainer
-		COOK (ChatColor.GOLD + ""),				//Cooking Trainer
-		FISHER (ChatColor.GOLD + ""),			//Fishing Trainer
-		HERBALIST (ChatColor.GOLD + ""),		//Herbalism Trainer
-		MINING (ChatColor.GOLD + ""),			//Mining Trainer
-		ITEM_IDENTIFIER (ChatColor.GOLD + ""),	//Item Identifier (NPC identifies unidentified items)
-		MERCHANT (ChatColor.GOLD + ""),			//Merchant
-		NONE (ChatColor.GOLD + ""),				//NONE.  This NPC is just filler.
-		QUEST_GIVER (ChatColor.GOLD + "");		//NPC that gives quests.
+		ALCHEMIST (ChatColor.YELLOW + "" + ChatColor.BOLD + "Alchemy Trainer"),			//Alchemist Trainer
+		BLACKSMITH (ChatColor.YELLOW + "" + ChatColor.BOLD + "Blacksmith Trainer"),		//Blacksmith Trainer
+		COOK (ChatColor.YELLOW + "" + ChatColor.BOLD + "Cooking Trainer"),				//Cooking Trainer
+		FISHER (ChatColor.YELLOW + "" + ChatColor.BOLD + "Fishing Trainer"),			//Fishing Trainer
+		HERBALIST (ChatColor.YELLOW + "" + ChatColor.BOLD + "Herbalisim Trainer"),		//Herbalism Trainer
+		MINING (ChatColor.YELLOW + "" + ChatColor.BOLD + "Mining Trainer"),				//Mining Trainer
+		ITEM_IDENTIFIER (ChatColor.YELLOW + "" + ChatColor.BOLD + "Item Identifier"),	//Item Identifier (NPC identifies unidentified items)
+		MERCHANT (ChatColor.YELLOW + "" + ChatColor.BOLD + "Item Merchat"),				//Merchant
+		NONE (""),																		//NONE.  This NPC is just filler.
+		QUEST_GIVER (ChatColor.YELLOW + "" + ChatColor.BOLD + "Quest Giver");			//NPC that gives quests.
 
 		private String name;
 
@@ -98,49 +111,72 @@ public class CitizensManager {
 
 			//Get all Citizen NPC's.
 			if (npc instanceof Player && npc.hasMetadata("NPC")) {
+				
 				String npcName = ((Player) npc).getDisplayName();
 				double npcHP = getCitizenMaxHP(npcName);
+				String hologramText = getCitizenType(npcName).getName();
+				
+				Location loc = getCitizenLocation(npcName);
+				World world = loc.getWorld();
+				double x = loc.getX();
+				double y = loc.getY() + 3;
+				double z = loc.getZ();
+				Location hologramLoc = new Location(world, x, y, z);
+				
 				//Set citizen health tag under their name.
 				PlayerHealthTagManager.updateNPCHealthTag((Player) npc, npcHP);
+				
+				//Setup NPC Hologram
+				Hologram hologram = HologramsAPI.createHologram(plugin, hologramLoc);
+		    	hologram.appendTextLine(hologramText);
+		    	
+		    	//Add hologram to the array list.
+		    	npcHolograms.add(hologram);
 			}
 		}
 	}
+    
+    /**
+     * This will delete the holograms on server reload or shut down.
+     */
+    private static void removeHolograms() {
+    	for (int i = 0; i < npcHolograms.size(); i++) {
+    		npcHolograms.get(i).delete();
+    	}
+    }
 
 	/**
 	 * This will trigger when an NPC is left clicked or right clicked.
 	 * 
 	 * @param player The player that interacted with the NPC.
-	 * @param npc The Citizen (plugin) that was clicked.
+	 * @param npc The Citizen (created by the Citizen plugin) that was clicked.
 	 */
 	public static void onCitizenInteract(Player player, Player npc) {
 		String npcName = npc.getDisplayName();
 		CitizenType type = getCitizenType(npcName);
 
-		if (type != null) {
-			//Trigger code in appropriate Java Class file.
-			if (type == CitizenType.ALCHEMIST) {
-				Alchemy.toggleCitizenInteract(player);
-			} else if (type == CitizenType.BLACKSMITH) {
-				Blacksmithing.toggleCitizenInteract(player);
-			} else if (type == CitizenType.COOK) {
-				Cooking.toggleCitizenInteract(player);
-			} else if (type == CitizenType.FISHER) {
-				Fishing.toggleCitizenInteract(player);
-			} else if (type == CitizenType.HERBALIST) {
-				Herbalism.toggleCitizenInteract(player);
-			} else if (type == CitizenType.MINING) {
-				Mining.toggleCitizenInteract(player);
-			} else if (type == CitizenType.ITEM_IDENTIFIER) {
-				ItemIdentifierManager.toggleCitizenInteract(player);
-			} else if (type == CitizenType.MERCHANT) {
-				MerchantManager.toggleCitizenInteract(player);
-			} else if (type == CitizenType.NONE) {
-				//TODO
-			} else if (type == CitizenType.QUEST_GIVER) {
-				//TODO
-			}
-		} else {
-			Bukkit.getLogger().info("[MPRPG] NPC: " + npcName + " does not exist in config.");
+
+		//Trigger code in appropriate Java Class file.
+		if (type == CitizenType.ALCHEMIST) {
+			Alchemy.toggleCitizenInteract(player);
+		} else if (type == CitizenType.BLACKSMITH) {
+			Blacksmithing.toggleCitizenInteract(player);
+		} else if (type == CitizenType.COOK) {
+			Cooking.toggleCitizenInteract(player);
+		} else if (type == CitizenType.FISHER) {
+			Fishing.toggleCitizenInteract(player);
+		} else if (type == CitizenType.HERBALIST) {
+			Herbalism.toggleCitizenInteract(player);
+		} else if (type == CitizenType.MINING) {
+			Mining.toggleCitizenInteract(player);
+		} else if (type == CitizenType.ITEM_IDENTIFIER) {
+			ItemIdentifierManager.toggleCitizenInteract(player);
+		} else if (type == CitizenType.MERCHANT) {
+			MerchantManager.toggleCitizenInteract(player);
+		} else if (type == CitizenType.NONE) {
+			//Do nothing. This is a regular NPC.
+		} else if (type == CitizenType.QUEST_GIVER) {
+			//TODO
 		}
 	}
 
@@ -180,33 +216,39 @@ public class CitizensManager {
 		String npc = citizenName.replace(" ", "_");
 		String type = npcConfig.getString(npc + ".type");
 
-		if (type.equalsIgnoreCase("ALCHEMIST")) {
-			return CitizenType.ALCHEMIST;
-		} else if (type.equalsIgnoreCase("BLACKSMITH")) {
-			return CitizenType.BLACKSMITH;
-		} else if (type.equalsIgnoreCase("COOK")) {
-			return CitizenType.COOK;
-		} else if (type.equalsIgnoreCase("FISHER")) {
-			return CitizenType.FISHER;
-		} else if (type.equalsIgnoreCase("HERBALIST")) {
-			return CitizenType.HERBALIST;
-		} else if (type.equalsIgnoreCase("MINING")) {
-			return CitizenType.MINING;
-		} else if (type.equalsIgnoreCase("ITEM_IDENTIFIER")) {
-			return CitizenType.ITEM_IDENTIFIER;
-		} else if (type.equalsIgnoreCase("MERCHANT")) {
-			return CitizenType.MERCHANT;
-		} else if (type.equalsIgnoreCase("NONE")) {
+		if (type == null) {
+			//Will leave null to report any errors if necessary.
+			Bukkit.getLogger().info("[MPRPG] NPC: " + npc + " does not exist in config.");
 			return CitizenType.NONE;
-		} else if (type.equalsIgnoreCase("QUEST_GIVER")) {
-			return CitizenType.QUEST_GIVER;
 		} else {
-			//Will leave null to report any errors if necessary. 
-			return null;
+			if (type.equalsIgnoreCase("ALCHEMIST")) {
+				return CitizenType.ALCHEMIST;
+			} else if (type.equalsIgnoreCase("BLACKSMITH")) {
+				return CitizenType.BLACKSMITH;
+			} else if (type.equalsIgnoreCase("COOK")) {
+				return CitizenType.COOK;
+			} else if (type.equalsIgnoreCase("FISHER")) {
+				return CitizenType.FISHER;
+			} else if (type.equalsIgnoreCase("HERBALIST")) {
+				return CitizenType.HERBALIST;
+			} else if (type.equalsIgnoreCase("MINING")) {
+				return CitizenType.MINING;
+			} else if (type.equalsIgnoreCase("ITEM_IDENTIFIER")) {
+				return CitizenType.ITEM_IDENTIFIER;
+			} else if (type.equalsIgnoreCase("MERCHANT")) {
+				return CitizenType.MERCHANT;
+			} else if (type.equalsIgnoreCase("NONE")) {
+				return CitizenType.NONE;
+			} else if (type.equalsIgnoreCase("QUEST_GIVER")) {
+				return CitizenType.QUEST_GIVER;
+			} else {
+				//This should never happen.
+				return null;
+			}
 		}
 	}
 
-	public static Location getCitizenSpawn(String citizenName) {
+	public static Location getCitizenLocation(String citizenName) {
 		String npc = citizenName.replace(" ", "_");
 		double x = npcConfig.getDouble(npc + ".spawn.x");
 		double y = npcConfig.getDouble(npc + ".spawn.y");

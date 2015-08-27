@@ -16,7 +16,7 @@ public class Alchemy {
 	static Alchemy AlchemyManagerInstance = new Alchemy();
 	
 	//Holograms
-	private static Hologram alchemyStand, alchemyTrainer;
+	private static Hologram alchemyStand;
 	
 	//Create instance
 	public static Alchemy getInstance() {
@@ -43,13 +43,9 @@ public class Alchemy {
 	 */
     private static void setupAlchemyHolograms() {
     	Location alcStandHologram = new Location(Bukkit.getWorld("world"), 47.5, 81, -4.5);
-    	Location alcTrainerHologram = new Location(Bukkit.getWorld("world"), 43.5, 82, -3.5);
     	
     	alchemyStand = HologramsAPI.createHologram(plugin, alcStandHologram);
     	alchemyStand.appendTextLine(ChatColor.DARK_AQUA + "" + ChatColor.BOLD + "Alchemy Stand");
-
-    	alchemyTrainer = HologramsAPI.createHologram(plugin, alcTrainerHologram);
-    	alchemyTrainer.appendTextLine(ChatColor.YELLOW + "" + ChatColor.BOLD + "Alchemy Trainer");
     }
     
     /**
@@ -57,7 +53,6 @@ public class Alchemy {
      */
     private static void removeHolograms() {
     	alchemyStand.delete();
-    	alchemyTrainer.delete();
     }
     
 

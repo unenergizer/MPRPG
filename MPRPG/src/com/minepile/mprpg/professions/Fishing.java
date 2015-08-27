@@ -8,9 +8,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -19,8 +17,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import com.gmail.filoghost.holographicdisplays.api.Hologram;
-import com.gmail.filoghost.holographicdisplays.api.HologramsAPI;
 import com.minepile.mprpg.MPRPG;
 import com.minepile.mprpg.chat.MessageManager;
 import com.minepile.mprpg.player.PlayerManager;
@@ -35,9 +31,6 @@ public class Fishing {
     //Config file.
     static File configFile;
     static FileConfiguration fishingConfig;
-    
-    //Holograms
-  	private static Hologram fishingTrainer;
 	
   	//HashMap to hold levels in memory.
 	static HashMap<Integer, Integer> configFishingLevel = new HashMap<Integer, Integer>();
@@ -65,18 +58,7 @@ public class Fishing {
             	configFishingLevel.put(i, totalEXPforLVL);
             }
         }
-		
-		//Add holograms.
-		setupAllHolograms();
-		
-	}	
-	
-	/**
-	 * This will disable this class.
-	 */
-	public static void disable() {
-		removeAllHolograms();
-	}	
+	}
 	
 
     /**
@@ -400,23 +382,6 @@ public class Fishing {
 			return 0;
 		}
 	}
-    
-	/**
-	 * This will create a hologram that will display over the Blacksmith Anvil.
-	 */
-    private static void setupAllHolograms() {
-    	Location trainerLoc = new Location(Bukkit.getWorld("world"), 54.5, 79, -24);
-    	
-    	fishingTrainer = HologramsAPI.createHologram(plugin, trainerLoc);
-    	fishingTrainer.appendTextLine(ChatColor.YELLOW + "" + ChatColor.BOLD + "Fishing Trainer");
-    }
-	
-    /**
-     * This will delete the hologram on server reload or shut down.
-     */
-    private static void removeAllHolograms() {
-    	fishingTrainer.delete();
-    }
     
 	/**
 	 * This creates the configuration file that has the EXP leveling requirements.

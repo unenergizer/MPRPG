@@ -256,27 +256,22 @@ public class MPRPG extends JavaPlugin {
 		//Remove mail holograms
 		PlayerMailManager.disable();
 
+		//Disable the citizen manager.
+		//This also removes all holograms.
+		CitizensManager.disable();
+		
 		//Remove Alchemy holograms
 		Alchemy.disable();
 
 		//Remove Blacksmiting holograms
 		Blacksmithing.disable();
 
-		//Remove Fishing holograms
-		Fishing.disable();
-
 		//Save players last health
 		PlayerManager.disable();
-
-		//Remove Merchant Manager hologram.
-		MerchantManager.disable();
-
+		
 		//Loop through entity list and remove them.
 		//This is mainly for clearing mobs on server reload.
 		MonsterManager.disable();
-		
-		//Remove Item Identifier hologram.
-		ItemIdentifierManager.disable();
 		
 		////////////////////
 		/// Shutdown End ///

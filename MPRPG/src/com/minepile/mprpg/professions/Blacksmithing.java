@@ -16,7 +16,7 @@ public class Blacksmithing {
 	public static Blacksmithing blacksmithingManagerInstance = new Blacksmithing();
 	
 	//Holograms
-	private static Hologram blacksmithAnvil, blacksmithTrainer;
+	private static Hologram blacksmithAnvil;
 	
 	//Create instance
 	public static Blacksmithing getInstance() {
@@ -53,13 +53,8 @@ public class Blacksmithing {
 	 */
     private static void setupAllHolograms() {
     	Location anvilLoc = new Location(Bukkit.getWorld("world"), 28.5, 80.5, 16.5);
-    	Location trainerLoc = new Location(Bukkit.getWorld("world"), 30.5, 82, 20.5);
-    	
     	blacksmithAnvil = HologramsAPI.createHologram(plugin, anvilLoc);
     	blacksmithAnvil.appendTextLine(ChatColor.DARK_AQUA + "" + ChatColor.BOLD + "Blacksmith Anvil");
-    	
-    	blacksmithTrainer = HologramsAPI.createHologram(plugin, trainerLoc);
-    	blacksmithTrainer.appendTextLine(ChatColor.YELLOW+ "" + ChatColor.BOLD + "Blacksmith Trainer");
     }
     
     /**
@@ -67,6 +62,5 @@ public class Blacksmithing {
      */
     private static void removeAllHolograms() {
     	blacksmithAnvil.delete();
-    	blacksmithTrainer.delete();
     }
 }
