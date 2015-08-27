@@ -3,6 +3,7 @@ package com.minepile.mprpg.professions;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
+import org.bukkit.entity.Player;
 
 import com.gmail.filoghost.holographicdisplays.api.Hologram;
 import com.gmail.filoghost.holographicdisplays.api.HologramsAPI;
@@ -58,4 +59,16 @@ public class Alchemy {
     	alchemyStand.delete();
     	alchemyTrainer.delete();
     }
+    
+
+
+    /**
+     * This will be toggled when a player left-clicks or right clicks a player.
+     * 
+     * @param player The player who clicked the NPC.
+     */
+	public static void toggleCitizenInteract(Player player) {
+		// TODO Auto-generated method stub
+		player.sendMessage(player.getName() + " you have clicked a Alchemy NPC!");
+	}
 }

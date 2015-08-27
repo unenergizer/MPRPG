@@ -60,6 +60,16 @@ public class Herbalism {
         }
 		
 	}
+
+    /**
+     * This will be toggled when a player left-clicks or right clicks a player.
+     * 
+     * @param player The player who clicked the NPC.
+     */
+	public static void toggleCitizenInteract(Player player) {
+		// TODO Auto-generated method stub
+		player.sendMessage(player.getName() + " you have clicked a Herbalist Trainer NPC!");
+	}
 	
 	/**
 	 * Instructions for what to do when a player is cutting plants.
@@ -398,5 +408,4 @@ public class Herbalism {
             e.printStackTrace();
         } 
     }
-	
 }

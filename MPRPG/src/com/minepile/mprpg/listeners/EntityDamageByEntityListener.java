@@ -15,6 +15,7 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.inventory.ItemStack;
 
 import com.minepile.mprpg.MPRPG;
+import com.minepile.mprpg.entities.CitizensManager;
 import com.minepile.mprpg.entities.MonsterManager;
 import com.minepile.mprpg.items.ItemLoreFactory;
 import com.minepile.mprpg.player.PlayerManager;
@@ -56,13 +57,12 @@ public class EntityDamageByEntityListener implements Listener{
 
 					//Check if the damager was a player.
 					if (event.getDamager() instanceof Player) {
-						//TODO: When punched we should toggle NPC interact.
-
-						String npcName = victim.getCustomName();
-						Player damager = (Player) event.getDamager();
-						String damagerName = damager.getName();
-						damager.sendMessage(ChatColor.GRAY + npcName + ChatColor.DARK_GRAY + ": "
-								+ ChatColor.WHITE + damagerName + " why are you punching me? Use right click..");
+						
+						//A NPC was hit. Lets toggle some code for them.
+						Player player = (Player) event.getDamager();
+						Player npc = (Player) victim;
+						
+						CitizensManager.onCitizenInteract(player, npc);
 					}
 				} else {
 

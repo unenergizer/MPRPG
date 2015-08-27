@@ -48,139 +48,29 @@ public class EntityDamageListener implements Listener{
 			LivingEntity victim = (LivingEntity) event.getEntity();
 
 			if (victim instanceof Player) {
-
-				/*
-				Player player = (Player) event.getEntity();
-				String playerName = player.getName();
-
-				double playerHealth = PlayerManager.getHealthPoints(playerName);
-				double playerMaxHealth = PlayerManager.getMaxHealthPoints(playerName);
-
-				double damage = event.getDamage();
-				double healthBarPercent = (20 * (playerHealth - damage) / playerMaxHealth);
-				double newHealthTotal = (playerHealth - damage);
-
-				//Cancel regular event damage
-				event.setDamage(0);
-
-				//Show player damage message.
-				hpChangeMessage(player, (int) playerHealth, (int) damage, (int) playerMaxHealth);
-
-				//If players healthBar is greater than 1 heart and the players healthMap is not 0.
-				if (healthBarPercent <= 1 ) {
-					player.setHealth(healthBarPercent + 1);
-					PlayerManager.setHealthPoints(playerName, newHealthTotal);
-				} else {
-					player.setHealth(healthBarPercent);
-					PlayerManager.setHealthPoints(playerName, newHealthTotal);
-				}
-
-				//Check if the player HP is too low. If it is, kill the player.
-				if (playerHealth < 1) {
-					//kill player
-					PlayerManager.killPlayer(player);
-				} else  {
-					//Update the players health tag if player isnt dead.
-					PlayerHealthTagManager.updateHealthTag(player);
-
-					//Update the players armor.
-					LoreManagerOLD.applyHpBonus(player, false);
-				}
-				 */
-
-				/*
-				Player player = (Player) event.getEntity();
-				String playerName = player.getName();
-				double playerHealth = PlayerManager.getHealthPoints(playerName);
-				double playerMaxHealth = PlayerManager.getMaxHealthPoints(playerName);
-
-
-				double coldDamage = ItemLoreFactory.getInstance().getColdDamage((LivingEntity) player);
-				double fireDamage = ItemLoreFactory.getInstance().getFireDamage((LivingEntity) player);
-				double poisonDamage = ItemLoreFactory.getInstance().getPoisonDamage((LivingEntity) player);
-				double thornDamage = ItemLoreFactory.getInstance().getThornDamage((LivingEntity) player);
-
-				player.sendMessage("coldDamage: " + coldDamage + " fireDamage: " + fireDamage
-						+ " poisonDamage: " + poisonDamage + " thornDamage: " + thornDamage);
-
-				double coldResistance = coldDamage * (ItemLoreFactory.getInstance().getColdResist((LivingEntity) victim) / 100);
-				double fireResistance = fireDamage * (ItemLoreFactory.getInstance().getFireResist((LivingEntity) victim) / 100);
-				double poisonResistance = poisonDamage * (ItemLoreFactory.getInstance().getPoisonResist((LivingEntity) victim) / 100);
-				double thornResistance = thornDamage * (ItemLoreFactory.getInstance().getColdResist((LivingEntity) victim) / 100);
-
-				player.sendMessage("coldResist: " + coldResistance + " fireResist: " + fireResistance
-						+ " poisonResist: " + poisonResistance + " thornResist: " + thornResistance);
-
-				//double damage = ItemLoreFactory.getInstance().getDamageBonus(player);
-				double damage = event.getDamage();
-				double coldDamageFinal = coldDamage - coldResistance;
-				double fireDamageFinal = fireDamage - fireResistance;
-				double poisonDamageFinal = poisonDamage - poisonResistance;
-				double thornDamageFinal = thornDamage - thornResistance;
-
-				double totalDamage = damage + coldDamageFinal + fireDamageFinal + poisonDamageFinal + thornDamageFinal;
-				double playerHitPoints = PlayerManager.getBaseHealthPoints();
-				double playerHitPointsFinal = playerHitPoints - totalDamage;
-				double healthBarPercent = (20 * playerHitPointsFinal) / playerMaxHealth;
-
-				//PlayerManager.setHealthPoints(victim.getName(), playerHitPointsFinal);
-				victim.sendMessage(victim.getName() 
-						+ ChatColor.GREEN + "D: " + ChatColor.RESET + damage 
-						+ ChatColor.GREEN +  " +C: " + ChatColor.RESET + coldDamageFinal
-						+ ChatColor.GREEN +  " +F: " + ChatColor.RESET + fireDamageFinal 
-						+ ChatColor.GREEN +  " +P: " + ChatColor.RESET + poisonDamageFinal
-						+ ChatColor.GREEN +  " +T: " + ChatColor.RESET + thornDamageFinal 
-						+ ChatColor.RED +  " = " + ChatColor.RESET + totalDamage
-						+ ChatColor.YELLOW +  " > " + ChatColor.RESET + playerHitPoints 
-						+ ChatColor.GREEN +  " >> " + ChatColor.RESET + playerHitPointsFinal);
-
-				//Cancel regular event damage
-				event.setDamage(0);
-
-				//Show player damage message.
-				hpChangeMessage(player, (int) playerHealth, (int) damage, (int) playerMaxHealth);
-
-				//ItemLoreFactory.getInstance().addAttackCooldown(damagerName);
-
-				//If players healthBar is greater than 1 heart and the players healthMap is not 0.
-				if (healthBarPercent <= 1 ) {
-					player.setHealth(healthBarPercent + 1);
-					//PlayerManager.setPlayerHitPoints(player, playerHitPointsFinal);
-				} else {
-					player.setHealth(healthBarPercent);
-					//PlayerManager.setPlayerHitPoints(player, playerHitPointsFinal);
-				}
-
-				//Check if the player HP is too low. If it is, kill the player.
-				if (playerHealth < 1) {
-					//kill player
-					PlayerManager.killPlayer(player);
-				} else  {
-					//Update the players health tag
-					PlayerHealthTagManager.updateHealthTag(player);
-				}
-				 */
+				
+				//Make sure the player taking damage is not an NPC.
 				if (victim.hasMetadata("NPC")) {
 					event.setCancelled(true);
-				} else {
+				
+				} else { //Player is not an NPC.
+					
 					Player player = (Player) victim;
 					String playerName = player.getName();
 
 					//Make sure the player is not dead.
 					//This will prevent dead players from doing damage to players or monsters.
-					if (PlayerManager.isPlayerDead(player.getName()) == false) {
+					if (PlayerManager.isPlayerDead(player.getName()) == true) {
+						
+						event.setCancelled(true);
+					} else {
 
 						double playerHealth = PlayerManager.getHealthPoints(playerName);
 						double playerMaxHealth = PlayerManager.getMaxHealthPoints(playerName);
-
+						//double eventDamage = event.getDamage() + (.03 * playerMaxHealth);
 						double eventDamage = event.getDamage();
-
-						//double coldResistance = coldDamage * (ItemLoreFactory.getInstance().getColdResist((LivingEntity) victim) / 100);
-						//double fireResistance = fireDamage * (ItemLoreFactory.getInstance().getFireResist((LivingEntity) victim) / 100);
-						//double poisonResistance = poisonDamage * (ItemLoreFactory.getInstance().getPoisonResist((LivingEntity) victim) / 100);
-						//double thornResistance = thornDamage * (ItemLoreFactory.getInstance().getColdResist((LivingEntity) victim) / 100);
-
-
+						
+						/*
 						switch (event.getCause()) {
 						case BLOCK_EXPLOSION:
 							break;
@@ -203,6 +93,7 @@ public class EntityDamageListener implements Listener{
 						case FIRE:
 							double fireResistance = eventDamage * (ItemLoreFactory.getInstance().getFireResist((LivingEntity) victim) / 100);
 							eventDamage -= fireResistance;
+							event.setCancelled(true);
 							break;
 						case FIRE_TICK:
 							//using fireResistance here.
@@ -213,6 +104,7 @@ public class EntityDamageListener implements Listener{
 							//using fireResistance here.
 							double lavaResistance = eventDamage * (ItemLoreFactory.getInstance().getFireResist((LivingEntity) victim) / 100);
 							eventDamage -= lavaResistance;
+							event.setCancelled(true);
 							break;
 						case LIGHTNING:
 							break;
@@ -237,7 +129,7 @@ public class EntityDamageListener implements Listener{
 							eventDamage -= thornResistance;
 							break;
 						case VOID:
-
+							PlayerManager.killPlayer(player);
 							break;
 						case WITHER:
 							break;
@@ -245,7 +137,8 @@ public class EntityDamageListener implements Listener{
 							break;
 
 						}
-
+						*/
+						
 						//Apply final math.
 						double playerHitPointsFinal = playerHealth - eventDamage;
 						double healthBarPercent = (20 * playerHitPointsFinal) / playerMaxHealth;
@@ -275,9 +168,6 @@ public class EntityDamageListener implements Listener{
 							//Set player HP.
 							PlayerManager.setPlayerHitPoints(player, playerHitPointsFinal);
 						}
-					} else {
-						//Player is dead. Do not let them take damage.
-						event.setCancelled(true);
 					}
 				}
 			} else {
@@ -308,7 +198,6 @@ public class EntityDamageListener implements Listener{
 					} else {
 						victim.setHealth(15);
 						MonsterManager.toggleDamage(victimID, damage);
-
 					}
 				}
 			}

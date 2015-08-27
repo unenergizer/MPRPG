@@ -1,10 +1,9 @@
 package com.minepile.mprpg.professions;
 
-import net.citizensnpcs.api.npc.NPC;
-
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
+import org.bukkit.entity.Player;
 
 import com.gmail.filoghost.holographicdisplays.api.Hologram;
 import com.gmail.filoghost.holographicdisplays.api.HologramsAPI;
@@ -14,10 +13,7 @@ public class Blacksmithing {
 	
 	//setup instance variables
 	public static MPRPG plugin;
-	static Blacksmithing blacksmithingManagerInstance = new Blacksmithing();
-	
-	//NPC
-	private static NPC npc;
+	public static Blacksmithing blacksmithingManagerInstance = new Blacksmithing();
 	
 	//Holograms
 	private static Hologram blacksmithAnvil, blacksmithTrainer;
@@ -33,7 +29,6 @@ public class Blacksmithing {
 		this.plugin = plugin;
 		
 		setupAllHolograms();
-		//spawnNPC();
 	}
 	
 	/**
@@ -41,28 +36,16 @@ public class Blacksmithing {
 	 */
 	public static void disable() {
 		removeAllHolograms();
-		//removeNPC();
 	}	
-	
-	/**
-	 * This will spawn an NPC.
-	 *
-	private void spawnNPC() {
-		World world = Bukkit.getWorld("world");
-		Location bs = new Location(world, 30, 79, 20);
-		
-		//Spawn blacksmith NPC.
-		NPCRegistry registry = CitizensAPI.getNPCRegistry();
-		npc = registry.createNPC(EntityType.PLAYER, "Blacksmith");
-		npc.spawn(bs);
-		npc.addTrait(Class<LookClose extends Trait> trait);
-		npc.setProtected(true);
-		//npc.data().setPersistent("lookclose", true);
-	}*/
-	
-	//This will remove an NPC.
-	private static void removeNPC() {
-		npc.destroy();
+
+    /**
+     * This will be toggled when a player left-clicks or right clicks a player.
+     * 
+     * @param player The player who clicked the NPC.
+     */
+	public static void toggleCitizenInteract(Player player) {
+		// TODO Auto-generated method stub
+		player.sendMessage(player.getName() + " you have clicked a Blacksmith NPC!");
 	}
 	
 	/**

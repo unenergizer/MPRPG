@@ -1,8 +1,9 @@
-package com.minepile.mprpg.entities;
+package com.minepile.mprpg.items;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
+import org.bukkit.entity.Player;
 
 import com.gmail.filoghost.holographicdisplays.api.Hologram;
 import com.gmail.filoghost.holographicdisplays.api.HologramsAPI;
@@ -46,6 +47,16 @@ public class ItemIdentifierManager {
     	itemIdentifierNPC = HologramsAPI.createHologram(plugin, npcHologram);
     	itemIdentifierNPC.appendTextLine(ChatColor.YELLOW + "" + ChatColor.BOLD + "Item Identifier");
     }
+
+    /**
+     * This will be toggled when a player left-clicks or right clicks a player.
+     * 
+     * @param player The player who clicked the NPC.
+     */
+	public static void toggleCitizenInteract(Player player) {
+		// TODO Auto-generated method stub
+		player.sendMessage(player.getName() + " you have clicked a Item_Identifier NPC!");
+	}
     
     /**
      * This will delete the hologram on server reload or shut down.
