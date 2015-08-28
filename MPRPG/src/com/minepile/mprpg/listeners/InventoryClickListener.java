@@ -8,8 +8,8 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 
 import com.minepile.mprpg.MPRPG;
+import com.minepile.mprpg.gui.ChestMenuManager;
 import com.minepile.mprpg.items.ItemLoreFactory;
-import com.minepile.mprpg.player.PlayerMenuManager;
 
 public class InventoryClickListener implements Listener{
 
@@ -37,16 +37,27 @@ public class InventoryClickListener implements Listener{
 			case CONTAINER:
 				//Name of the inventory.
 				String invName = event.getClickedInventory().getName();
+				ItemStack clickedItem = event.getCurrentItem();
 				
 				//Don't allow the player to move items in inventories.
 				//The players default inventory is called "container.inventory"
 				//Loot chests are called "container.chest"
 				//We should not stop them from moving items in that inventory.
+				
+				/*
 				if ((!(invName.equalsIgnoreCase("container.inventory"))) && (!(invName.equalsIgnoreCase("container.chest")))) {
 					ItemStack clickedItem = event.getCurrentItem();
 					PlayerMenuManager.playerInteractMenu(player, invName, clickedItem);
 					event.setCancelled(true);
 				}
+				*/
+				
+				//Toggles an item click.
+				ChestMenuManager.toggleChestMenuClick(player, invName, clickedItem);
+				
+				//Cancel the item pickup/click (or item move).
+				event.setCancelled(true); 
+				
 				break;
 			case CRAFTING:
 				event.setCancelled(true);

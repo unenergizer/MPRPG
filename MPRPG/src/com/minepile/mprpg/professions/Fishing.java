@@ -8,17 +8,20 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import com.minepile.mprpg.MPRPG;
 import com.minepile.mprpg.chat.MessageManager;
+import com.minepile.mprpg.gui.ChestMenuManager.MenuType;
 import com.minepile.mprpg.player.PlayerManager;
 
 public class Fishing {
@@ -32,6 +35,9 @@ public class Fishing {
     static File configFile;
     static FileConfiguration fishingConfig;
 	
+    //Shop menu.
+    private static Inventory menu;
+    
   	//HashMap to hold levels in memory.
 	static HashMap<Integer, Integer> configFishingLevel = new HashMap<Integer, Integer>();
 	
@@ -58,17 +64,34 @@ public class Fishing {
             	configFishingLevel.put(i, totalEXPforLVL);
             }
         }
+		
+		//Create menu to buy profession item.
+		createMenu();
 	}
 	
+	/**
+	 * This shows a menu with the item that is for sale.
+	 */
+    private void createMenu() {
+		menu = Bukkit.createInventory(null, 27, MenuType.FISHING_TRAINER.getName());
+		//Define the items in the Main Menu.
+		menu.setItem(0, createFishingRod());
+	}
 
-    /**
+	/**
      * This will be toggled when a player left-clicks or right clicks a player.
      * 
      * @param player The player who clicked the NPC.
      */
 	public static void toggleCitizenInteract(Player player) {
-		// TODO Auto-generated method stub
-		player.sendMessage(player.getName() + " you have clicked a Fishing NPC!");
+		player.openInventory(menu);
+	}
+	
+	
+	public static void toggleGiveFishinRod(Player player, ItemStack item) {
+		if (item != null && !item.getType().equals(Material.AIR)) {
+			player.getInventory().addItem(createFishingRod());
+		}
 	}
 	
 	/**
@@ -361,6 +384,39 @@ public class Fishing {
 		meta.setLore(lore);
 		//Set the item meta
 		tool.setItemMeta(meta);
+	}
+	
+	/**
+	 * Creates a new fishing rod!
+	 * 
+	 * @param player The player with the new fishing rod.
+	 */
+	private static ItemStack createFishingRod() {
+		ItemStack tool = new ItemStack(Material.FISHING_ROD, 1);
+		ItemMeta meta = tool.getItemMeta();
+
+		int expGoal = configFishingLevel.get(1);
+		
+		//Set the item name
+		meta.setDisplayName(ChatColor.WHITE + "Novice Fishing Rod");
+		
+		//Set the item lore
+		ArrayList<String> lore = new ArrayList<String>();
+		lore.add(ChatColor.GRAY + "" + ChatColor.BOLD + "LVL: " + ChatColor.RESET +
+				ChatColor.LIGHT_PURPLE + "1");
+		lore.add(ChatColor.GRAY + "" + ChatColor.BOLD + "EXP: " + 
+				ChatColor.RESET + ChatColor.BLUE + "0" + " / " + expGoal);
+		lore.add(ChatColor.GRAY + "" + ChatColor.BOLD + "EXP: " + 
+				MessageManager.percentBar(0) + ChatColor.GRAY + " " + "0" + "%");
+		lore.add(" ");//create blank space
+		lore.add(ChatColor.GRAY + "" + ChatColor.ITALIC + "A fishing rod made of wood.");
+		
+		//Set the item lore
+		meta.setLore(lore);
+		//Set the item meta
+		tool.setItemMeta(meta);
+		
+		return tool;
 	}
 	
 	/**

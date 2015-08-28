@@ -3,7 +3,6 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.7"/>
 	<classpathentry kind="lib" path="C:/Users/Andrew/Dropbox/Development/Minecraft MinePile Project/SpigotLibraries_Latest/citizensapi-2.0.16-SNAPSHOT.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Andrew/Dropbox/Development/Minecraft MinePile Project/SpigotLibraries_Latest/ProtocolLib.jar"/>
 	<classpathentry kind="lib" path="C:/Users/Andrew/Dropbox/Development/Minecraft MinePile Project/SpigotLibraries_Latest/TitleManager-1.5.11.jar"/>
 	<classpathentry kind="lib" path="C:/Users/Andrew/Dropbox/Development/Minecraft MinePile Project/SpigotLibraries_Latest/HolographicDisplays.jar"/>
 	<classpathentry kind="lib" path="C:/Users/Andrew/Dropbox/Development/Minecraft MinePile Project/SpigotLibraries_Latest/spigot-api-1.8.8-R0.1-SNAPSHOT-shaded.jar">

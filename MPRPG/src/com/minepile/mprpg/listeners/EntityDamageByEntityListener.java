@@ -2,8 +2,12 @@ package com.minepile.mprpg.listeners;
 
 import java.util.UUID;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Effect;
+import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
@@ -62,6 +66,7 @@ public class EntityDamageByEntityListener implements Listener{
 						Player player = (Player) event.getDamager();
 						Player npc = (Player) victim;
 						
+						//Toggle NPC interaction.
 						CitizensManager.onCitizenInteract(player, npc);
 					}
 				} else {

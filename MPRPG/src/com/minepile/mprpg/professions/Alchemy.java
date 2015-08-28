@@ -54,8 +54,6 @@ public class Alchemy {
     private static void removeHolograms() {
     	alchemyStand.delete();
     }
-    
-
 
     /**
      * This will be toggled when a player left-clicks or right clicks a player.

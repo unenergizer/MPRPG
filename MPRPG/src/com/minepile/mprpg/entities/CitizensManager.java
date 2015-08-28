@@ -6,7 +6,9 @@ import java.util.ArrayList;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Effect;
 import org.bukkit.Location;
+import org.bukkit.Sound;
 import org.bukkit.World;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -37,6 +39,7 @@ public class CitizensManager {
 	private static String FILE_PATH = "plugins/MPRPG/npc/citizens.yml";
 	
 	//Holograms
+	private static String namePrefix = ChatColor.YELLOW + "" + ChatColor.BOLD;
 	private static ArrayList<Hologram> npcHolograms = new ArrayList<Hologram>();
 
 	public static CitizensManager getInstance() {
@@ -60,7 +63,7 @@ public class CitizensManager {
 		Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(plugin,  new Runnable() {
 			public void run() {
 				applyCitizensConfiguration();
-				Bukkit.getLogger().info("[MPRPG] Applied Citizens HP.");
+				Bukkit.getLogger().info("[MPRPG] Applied Citizens HP and Holograms.");
 			}
 		}, 5 * 20L);
 	}
@@ -79,16 +82,17 @@ public class CitizensManager {
 	 */
 	public static enum CitizenType {
 
-		ALCHEMIST (ChatColor.YELLOW + "" + ChatColor.BOLD + "Alchemy Trainer"),			//Alchemist Trainer
-		BLACKSMITH (ChatColor.YELLOW + "" + ChatColor.BOLD + "Blacksmith Trainer"),		//Blacksmith Trainer
-		COOK (ChatColor.YELLOW + "" + ChatColor.BOLD + "Cooking Trainer"),				//Cooking Trainer
-		FISHER (ChatColor.YELLOW + "" + ChatColor.BOLD + "Fishing Trainer"),			//Fishing Trainer
-		HERBALIST (ChatColor.YELLOW + "" + ChatColor.BOLD + "Herbalisim Trainer"),		//Herbalism Trainer
-		MINING (ChatColor.YELLOW + "" + ChatColor.BOLD + "Mining Trainer"),				//Mining Trainer
-		ITEM_IDENTIFIER (ChatColor.YELLOW + "" + ChatColor.BOLD + "Item Identifier"),	//Item Identifier (NPC identifies unidentified items)
-		MERCHANT (ChatColor.YELLOW + "" + ChatColor.BOLD + "Item Merchat"),				//Merchant
+		ALCHEMIST (namePrefix + "Alchemy Trainer"),			//Alchemist Trainer
+		BLACKSMITH (namePrefix + "Blacksmith Trainer"),		//Blacksmith Trainer
+		COOK (namePrefix + "Cooking Trainer"),				//Cooking Trainer
+		FISHER (namePrefix + "Fishing Trainer"),			//Fishing Trainer
+		HERBALIST (namePrefix + "Herbalisim Trainer"),		//Herbalism Trainer
+		MINING (namePrefix + "Mining Trainer"),				//Mining Trainer
+		INN_KEEPER (namePrefix + "Inn Keeper"),				//Inn Keeper
+		ITEM_IDENTIFIER (namePrefix + "Item Identifier"),	//Item Identifier (NPC identifies unidentified items)
+		MERCHANT (namePrefix + "Item Merchat"),				//Merchant
 		NONE (""),																		//NONE.  This NPC is just filler.
-		QUEST_GIVER (ChatColor.YELLOW + "" + ChatColor.BOLD + "Quest Giver");			//NPC that gives quests.
+		QUEST_GIVER (namePrefix + "Quest Giver");			//NPC that gives quests.
 
 		private String name;
 
@@ -154,8 +158,8 @@ public class CitizensManager {
 	public static void onCitizenInteract(Player player, Player npc) {
 		String npcName = npc.getDisplayName();
 		CitizenType type = getCitizenType(npcName);
-
-
+		Location loc = npc.getLocation().add(0, 2, 0);
+		
 		//Trigger code in appropriate Java Class file.
 		if (type == CitizenType.ALCHEMIST) {
 			Alchemy.toggleCitizenInteract(player);
@@ -171,6 +175,8 @@ public class CitizensManager {
 			Mining.toggleCitizenInteract(player);
 		} else if (type == CitizenType.ITEM_IDENTIFIER) {
 			ItemIdentifierManager.toggleCitizenInteract(player);
+		} else if (type == CitizenType.INN_KEEPER) {
+			//TODO
 		} else if (type == CitizenType.MERCHANT) {
 			MerchantManager.toggleCitizenInteract(player);
 		} else if (type == CitizenType.NONE) {
@@ -178,6 +184,14 @@ public class CitizensManager {
 		} else if (type == CitizenType.QUEST_GIVER) {
 			//TODO
 		}
+		
+		//Show particle effect.
+		for (int i = 0; i <= 5; i++) {
+			Bukkit.getWorld("world").spigot().playEffect(loc, Effect.HAPPY_VILLAGER);
+		}
+		
+		//Player sound.
+		player.playSound(loc, Sound.VILLAGER_HAGGLE, .8f, .8f);
 	}
 
 	/**
@@ -233,6 +247,8 @@ public class CitizensManager {
 				return CitizenType.HERBALIST;
 			} else if (type.equalsIgnoreCase("MINING")) {
 				return CitizenType.MINING;
+			} else if (type.equalsIgnoreCase("INN_KEEPER")) {
+				return CitizenType.INN_KEEPER;
 			} else if (type.equalsIgnoreCase("ITEM_IDENTIFIER")) {
 				return CitizenType.ITEM_IDENTIFIER;
 			} else if (type.equalsIgnoreCase("MERCHANT")) {

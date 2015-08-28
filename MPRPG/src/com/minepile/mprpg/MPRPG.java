@@ -17,6 +17,7 @@ import com.minepile.mprpg.entities.CitizensManager;
 import com.minepile.mprpg.entities.MonsterCreatorManager;
 import com.minepile.mprpg.entities.MonsterManager;
 import com.minepile.mprpg.entities.NPCManager;
+import com.minepile.mprpg.gui.ChestMenuManager;
 import com.minepile.mprpg.guild.GuildManager;
 import com.minepile.mprpg.inventory.BankChestManager;
 import com.minepile.mprpg.inventory.ShopChestManager;
@@ -123,7 +124,10 @@ public class MPRPG extends JavaPlugin {
 		MonsterCreatorManager.getInstance().setup(this);
 		MonsterManager.getInstance().setup(this);
 		NPCManager.getInstance().setup(this);
-
+		
+		//setup gui managers
+		ChestMenuManager.getInstance().setup(this);
+		
 		//setup gang manager instances
 		GuildManager.getInstance().setup(this);
 
@@ -263,7 +267,7 @@ public class MPRPG extends JavaPlugin {
 		//Remove Alchemy holograms
 		Alchemy.disable();
 
-		//Remove Blacksmiting holograms
+		//Remove Blacksmithing holograms
 		Blacksmithing.disable();
 
 		//Save players last health
