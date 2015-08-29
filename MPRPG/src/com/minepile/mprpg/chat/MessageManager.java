@@ -98,7 +98,7 @@ public class MessageManager {
 	 * @return Fancy String with colored percentage bar.
 	 */
 	public static String percentBar(double hpPercent) {
-		if (hpPercent <= 5) {
+		if (hpPercent > 0 && hpPercent <= 5) {
 			return ChatColor.RED + "" + ChatColor.BOLD + "|" + ChatColor.GRAY + ChatColor.BOLD + "|||||||||||||||||||";
 		} else if (hpPercent > 5 && hpPercent <= 10) {
 			return ChatColor.RED + "" + ChatColor.BOLD + "||" + ChatColor.GRAY + ChatColor.BOLD + "||||||||||||||||||";
@@ -139,7 +139,7 @@ public class MessageManager {
 		} else if (hpPercent > 95 && hpPercent <= 100) {
 			return ChatColor.GREEN + "" + ChatColor.BOLD + "|||||||||||||||||||" + ChatColor.GRAY + ChatColor.BOLD + "|";
 		} else {
-			return ChatColor.GREEN + "" + ChatColor.BOLD + "||||||||||||||||||||";
+			return ChatColor.GRAY + "" + ChatColor.BOLD + "||||||||||||||||||||";
 		}
 	}
 	

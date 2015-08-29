@@ -52,11 +52,15 @@ public class InventoryClickListener implements Listener{
 				}
 				*/
 				
-				//Toggles an item click.
-				ChestMenuManager.toggleChestMenuClick(player, invName, clickedItem);
-				
-				//Cancel the item pickup/click (or item move).
-				event.setCancelled(true); 
+				//Check if the string can be converted to a menu type.  If it can not, then 
+				//the event does not need to be canceled.
+				if (ChestMenuManager.getMenuFromString(invName) != null) {
+					//Toggles an item click.
+					ChestMenuManager.toggleChestMenuClick(player, invName, clickedItem);
+					
+					//Cancel the item pickup/click (or item move).
+					event.setCancelled(true);
+				}
 				
 				break;
 			case CRAFTING:
