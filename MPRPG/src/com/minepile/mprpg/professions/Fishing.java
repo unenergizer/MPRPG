@@ -21,6 +21,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import com.minepile.mprpg.MPRPG;
 import com.minepile.mprpg.chat.MessageManager;
+import com.minepile.mprpg.gui.ChestMenuManager;
 import com.minepile.mprpg.gui.ChestMenuManager.MenuType;
 import com.minepile.mprpg.player.PlayerManager;
 
@@ -73,9 +74,11 @@ public class Fishing {
 	 * This shows a menu with the item that is for sale.
 	 */
     private void createMenu() {
-		menu = Bukkit.createInventory(null, 27, MenuType.FISHING_TRAINER.getName());
-		//Define the items in the Main Menu.
-		menu.setItem(0, createFishingRod());
+		//menu = Bukkit.createInventory(null, 27, MenuType.FISHING_TRAINER.getName());
+		String pageName = ChatColor.stripColor(MenuType.FISHING_TRAINER.getName().replace(" ", "_"));
+    	menu = ChestMenuManager.buildMenuPage(null, pageName);
+    	
+		//createFishingRod();
 	}
 
 	/**

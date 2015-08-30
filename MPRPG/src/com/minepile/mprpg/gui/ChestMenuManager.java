@@ -2,7 +2,9 @@ package com.minepile.mprpg.gui;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -231,7 +233,7 @@ public class ChestMenuManager {
 		}
 	}
 	
-	private static Inventory buildMenuPage(Player player, String pageName) {
+	public static Inventory buildMenuPage(Player player, String pageName) {
 		//Get config page
 		String owner = menuPagesConfig.getString(pageName + ".owner");	
 		int rows = menuPagesConfig.getInt(pageName + ".rows");
@@ -261,12 +263,25 @@ public class ChestMenuManager {
 	
 	private static ItemStack buildItem(String itemName) {
 		
-		String name = menuItemsConfig.getString(itemName + ".name");
+		String name = menuItemsConfig.getString(itemName + ".name").replace("_", " ");
+		String colorName = ChatColor.translateAlternateColorCodes('&', name);
 		int itemId = menuItemsConfig.getInt(itemName + ".id");
-		List<String> itemDescription = (List<String>) menuItemsConfig.getList(itemName + ".lore");
+		List<String> itemDescription = menuItemsConfig.getStringList(itemName + ".lore");
 		
 		Material mat = Material.getMaterial(itemId);
-		ItemStack item = new ItemBuilder(mat).setTitle(name).addLores(itemDescription).build();
+		ItemStack item;
+		
+		if (itemDescription != null) {
+			List<String> colorDescription = new ArrayList<>();
+			
+			for (String string : itemDescription) {
+				colorDescription.add(ChatColor.translateAlternateColorCodes('&', string.replace("*", "•")));
+			}
+			
+			item = new ItemBuilder(mat).setTitle(colorName).addLores(colorDescription).build();
+		} else {
+			item = new ItemBuilder(mat).setTitle(colorName).build();
+		}
 		
 		return item;
 	}
