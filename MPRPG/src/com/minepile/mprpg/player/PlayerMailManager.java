@@ -3,10 +3,13 @@ package com.minepile.mprpg.player;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.Inventory;
 
 import com.gmail.filoghost.holographicdisplays.api.Hologram;
 import com.gmail.filoghost.holographicdisplays.api.HologramsAPI;
 import com.minepile.mprpg.MPRPG;
+import com.minepile.mprpg.gui.ChestMenuManager;
 
 public class PlayerMailManager {
 	
@@ -16,6 +19,8 @@ public class PlayerMailManager {
 	
 	 //Holograms
 	static Hologram bankHologram01;
+	
+	public static Inventory menu;
 	
 	//Create instance
 	public static PlayerMailManager getInstance() {
@@ -28,6 +33,7 @@ public class PlayerMailManager {
 		this.plugin = plugin;
 		
 		setupMailHolograms();
+		createMenu();
 	}
 	
 	/**
@@ -53,4 +59,22 @@ public class PlayerMailManager {
     public static void removeHolograms() {
     	bankHologram01.delete();
     }
+
+	/**
+	 * This will build the menus for use with NPC's.
+	 */
+    private void createMenu() {
+		String pageName = "Player_Mailbox";
+    	menu = ChestMenuManager.buildMenuPage(null, pageName);
+	}
+
+
+    /**
+     * This will be toggled when a player left-clicks or right clicks an anvil.
+     * 
+     * @param player The player who clicked the Anvil.
+     */
+	public static void toggleMailboxInteract(Player player) {
+		player.openInventory(menu);
+	}
 }

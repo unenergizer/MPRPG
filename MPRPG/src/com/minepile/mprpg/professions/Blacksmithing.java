@@ -4,10 +4,12 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.Inventory;
 
 import com.gmail.filoghost.holographicdisplays.api.Hologram;
 import com.gmail.filoghost.holographicdisplays.api.HologramsAPI;
 import com.minepile.mprpg.MPRPG;
+import com.minepile.mprpg.gui.ChestMenuManager;
 
 public class Blacksmithing {
 	
@@ -17,6 +19,8 @@ public class Blacksmithing {
 	
 	//Holograms
 	private static Hologram blacksmithAnvil;
+	
+	public static Inventory menu, anvilMenu;
 	
 	//Create instance
 	public static Blacksmithing getInstance() {
@@ -29,6 +33,8 @@ public class Blacksmithing {
 		this.plugin = plugin;
 		
 		setupAllHolograms();
+		
+		createMenu();
 	}
 	
 	/**
@@ -37,15 +43,33 @@ public class Blacksmithing {
 	public static void disable() {
 		removeAllHolograms();
 	}	
-
+	
+	/**
+	 * This will build the menus for use with NPC's.
+	 */
+    private void createMenu() {
+		String pageName = "Blacksmith_Trainer";
+		String anvilPageName = "Blacksmith_Anvil";
+    	menu = ChestMenuManager.buildMenuPage(null, pageName);
+    	anvilMenu = ChestMenuManager.buildMenuPage(null, anvilPageName);
+	}
+    
     /**
      * This will be toggled when a player left-clicks or right clicks a player.
      * 
      * @param player The player who clicked the NPC.
      */
 	public static void toggleCitizenInteract(Player player) {
-		// TODO Auto-generated method stub
-		player.sendMessage(player.getName() + " you have clicked a Blacksmith NPC!");
+		player.openInventory(menu);
+	}	
+
+    /**
+     * This will be toggled when a player left-clicks or right clicks an anvil.
+     * 
+     * @param player The player who clicked the Anvil.
+     */
+	public static void toggleAnvilInteract(Player player) {
+		player.openInventory(anvilMenu);
 	}
 	
 	/**

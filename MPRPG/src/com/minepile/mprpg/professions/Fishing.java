@@ -8,7 +8,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -22,7 +21,6 @@ import org.bukkit.inventory.meta.ItemMeta;
 import com.minepile.mprpg.MPRPG;
 import com.minepile.mprpg.chat.MessageManager;
 import com.minepile.mprpg.gui.ChestMenuManager;
-import com.minepile.mprpg.gui.ChestMenuManager.MenuType;
 import com.minepile.mprpg.player.PlayerManager;
 
 public class Fishing {
@@ -75,7 +73,7 @@ public class Fishing {
 	 */
     private void createMenu() {
 		//menu = Bukkit.createInventory(null, 27, MenuType.FISHING_TRAINER.getName());
-		String pageName = ChatColor.stripColor(MenuType.FISHING_TRAINER.getName().replace(" ", "_"));
+		String pageName = ChatColor.stripColor("Fishing_Trainer");
     	menu = ChestMenuManager.buildMenuPage(null, pageName);
     	
 		//createFishingRod();

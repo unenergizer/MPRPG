@@ -15,7 +15,6 @@ import org.bukkit.inventory.ItemStack;
 
 import com.minepile.mprpg.MPRPG;
 import com.minepile.mprpg.entities.MonsterManager;
-import com.minepile.mprpg.items.ItemLoreFactory;
 import com.minepile.mprpg.player.PlayerManager;
 
 public class EntityDamageListener implements Listener{

@@ -4,10 +4,12 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.Inventory;
 
 import com.gmail.filoghost.holographicdisplays.api.Hologram;
 import com.gmail.filoghost.holographicdisplays.api.HologramsAPI;
 import com.minepile.mprpg.MPRPG;
+import com.minepile.mprpg.gui.ChestMenuManager;
 
 public class Alchemy {
 	
@@ -17,6 +19,8 @@ public class Alchemy {
 	
 	//Holograms
 	private static Hologram alchemyStand;
+	
+	public static Inventory menu, potionCraftMenu;
 	
 	//Create instance
 	public static Alchemy getInstance() {
@@ -29,6 +33,7 @@ public class Alchemy {
 		this.plugin = plugin;
 		
 		setupAlchemyHolograms();
+		createMenu();
 	}
 	
 	/**
@@ -55,13 +60,31 @@ public class Alchemy {
     	alchemyStand.delete();
     }
 
+	/**
+	 * This will build the menus for use with NPC's.
+	 */
+    private void createMenu() {
+		String pageName = "Alchemist_Trainer";
+		String anvilPageName = "Alchemist_Stand";
+    	menu = ChestMenuManager.buildMenuPage(null, pageName);
+    	potionCraftMenu = ChestMenuManager.buildMenuPage(null, anvilPageName);
+	}
+    
     /**
      * This will be toggled when a player left-clicks or right clicks a player.
      * 
      * @param player The player who clicked the NPC.
      */
 	public static void toggleCitizenInteract(Player player) {
-		// TODO Auto-generated method stub
-		player.sendMessage(player.getName() + " you have clicked a Alchemy NPC!");
+		player.openInventory(menu);
+	}
+
+    /**
+     * This will be toggled when a player left-clicks or right clicks an anvil.
+     * 
+     * @param player The player who clicked the Anvil.
+     */
+	public static void toggleAnvilInteract(Player player) {
+		player.openInventory(potionCraftMenu);
 	}
 }

@@ -36,7 +36,7 @@ public class InventoryClickListener implements Listener{
 				break;
 			case CONTAINER:
 				//Name of the inventory.
-				String invName = event.getClickedInventory().getName();
+				String invName = event.getClickedInventory().getName().replace(" ", "_");
 				ItemStack clickedItem = event.getCurrentItem();
 				
 				//Don't allow the player to move items in inventories.
@@ -54,9 +54,9 @@ public class InventoryClickListener implements Listener{
 				
 				//Check if the string can be converted to a menu type.  If it can not, then 
 				//the event does not need to be canceled.
-				if (ChestMenuManager.getMenuFromString(invName) != null) {
+				if (ChestMenuManager.getMenuExistsInConfig(invName) == true) {
 					//Toggles an item click.
-					ChestMenuManager.toggleChestMenuClick(player, invName, clickedItem);
+					//ChestMenuManager.toggleChestMenuClick(player, invName, clickedItem);
 					
 					//Cancel the item pickup/click (or item move).
 					event.setCancelled(true);

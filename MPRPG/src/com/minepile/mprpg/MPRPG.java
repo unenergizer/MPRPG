@@ -103,6 +103,10 @@ public class MPRPG extends JavaPlugin {
 		/////////////////////////////
 		/// Setup Class Instances ///
 		/////////////////////////////
+		
+		//setup gui managers
+		//Setting this up first so it will be ready for other classes.
+		ChestMenuManager.getInstance().setup(this);
 
 		//setup player manager instances
 		PlayerMailManager.getInstance().setup(this);
@@ -124,9 +128,6 @@ public class MPRPG extends JavaPlugin {
 		MonsterCreatorManager.getInstance().setup(this);
 		MonsterManager.getInstance().setup(this);
 		NPCManager.getInstance().setup(this);
-		
-		//setup gui managers
-		ChestMenuManager.getInstance().setup(this);
 		
 		//setup gang manager instances
 		GuildManager.getInstance().setup(this);

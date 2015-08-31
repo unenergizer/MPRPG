@@ -14,7 +14,10 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import com.minepile.mprpg.MPRPG;
 import com.minepile.mprpg.inventory.BankChestManager;
 import com.minepile.mprpg.items.ItemLoreFactory;
+import com.minepile.mprpg.player.PlayerMailManager;
 import com.minepile.mprpg.player.PlayerMenuManager;
+import com.minepile.mprpg.professions.Alchemy;
+import com.minepile.mprpg.professions.Blacksmithing;
 
 public class PlayerInteractListener implements Listener{
 
@@ -209,8 +212,8 @@ public class PlayerInteractListener implements Listener{
 			//Cancel opening the ender chest and show a custom chest.
 			event.setCancelled(true);
 
-			//Mailbox.
-			player.sendMessage(ChatColor.GRAY + "     " +ChatColor.ITALIC +"You have no mail in your mailbox.");
+			//Toggle potion stand interaction
+			PlayerMailManager.toggleMailboxInteract(player);
 		}
 		
 		//If player clicks a Potion Stand (Alchemy profession).
@@ -219,8 +222,8 @@ public class PlayerInteractListener implements Listener{
 			//Cancel opening the regular inventory.
 			event.setCancelled(true);
 
-			//Mailbox.
-			player.sendMessage(ChatColor.GRAY + "     " +ChatColor.ITALIC +"You have clicked an Potion Stand.");
+			//Toggle potion stand interaction
+			Alchemy.toggleAnvilInteract(player);
 		}
 		
 		//If player clicks a Anvil (Blacksmithing profession).
@@ -229,8 +232,8 @@ public class PlayerInteractListener implements Listener{
 			//Cancel opening the regular inventory.
 			event.setCancelled(true);
 
-			//Mailbox.
-			player.sendMessage(ChatColor.GRAY + "     " +ChatColor.ITALIC +"You have clicked an Anvil.");
+			//Toggle anvil interaction
+			Blacksmithing.toggleAnvilInteract(player);
 		}
 	}
 

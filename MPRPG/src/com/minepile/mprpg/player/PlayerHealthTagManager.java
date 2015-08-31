@@ -9,7 +9,6 @@ import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.Team;
 
 import com.minepile.mprpg.MPRPG;
-import com.minepile.mprpg.entities.CitizensManager;
 
 public class PlayerHealthTagManager {
 	

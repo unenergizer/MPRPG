@@ -90,7 +90,7 @@ public class CitizensManager {
 		MINING (namePrefix + "Mining Trainer"),				//Mining Trainer
 		INN_KEEPER (namePrefix + "Inn Keeper"),				//Inn Keeper
 		ITEM_IDENTIFIER (namePrefix + "Item Identifier"),	//Item Identifier (NPC identifies unidentified items)
-		MERCHANT (namePrefix + "Item Merchat"),				//Merchant
+		MERCHANT (namePrefix + "Item Merchant"),				//Merchant
 		NONE (""),																		//NONE.  This NPC is just filler.
 		QUEST_GIVER (namePrefix + "Quest Giver");			//NPC that gives quests.
 
