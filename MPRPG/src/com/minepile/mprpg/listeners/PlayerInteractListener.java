@@ -207,7 +207,7 @@ public class PlayerInteractListener implements Listener{
 		}
 		
 		//If player clicks a mail box.
-		if (event.getAction().equals(Action.RIGHT_CLICK_BLOCK) && block.getType().equals(Material.DROPPER)) {
+		if (event.getAction().equals(Action.RIGHT_CLICK_BLOCK) && block.getType().equals(Material.DROPPER) || event.getAction().equals(Action.LEFT_CLICK_BLOCK) && block.getType().equals(Material.DROPPER)) {
 
 			//Cancel opening the ender chest and show a custom chest.
 			event.setCancelled(true);
@@ -217,7 +217,7 @@ public class PlayerInteractListener implements Listener{
 		}
 		
 		//If player clicks a Potion Stand (Alchemy profession).
-		if (event.getAction().equals(Action.RIGHT_CLICK_BLOCK) && block.getType().equals(Material.BREWING_STAND)) {
+		if (event.getAction().equals(Action.RIGHT_CLICK_BLOCK) && block.getType().equals(Material.BREWING_STAND) || event.getAction().equals(Action.LEFT_CLICK_BLOCK) && block.getType().equals(Material.BREWING_STAND)) {
 
 			//Cancel opening the regular inventory.
 			event.setCancelled(true);
@@ -227,7 +227,7 @@ public class PlayerInteractListener implements Listener{
 		}
 		
 		//If player clicks a Anvil (Blacksmithing profession).
-		if (event.getAction().equals(Action.RIGHT_CLICK_BLOCK) && block.getType().equals(Material.ANVIL)) {
+		if (event.getAction().equals(Action.RIGHT_CLICK_BLOCK) && block.getType().equals(Material.ANVIL) || event.getAction().equals(Action.LEFT_CLICK_BLOCK) && block.getType().equals(Material.ANVIL)) {
 
 			//Cancel opening the regular inventory.
 			event.setCancelled(true);
