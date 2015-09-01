@@ -3,7 +3,9 @@ package com.minepile.mprpg.gui;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -32,6 +34,9 @@ public class ChestMenuManager {
 	private static String ITEM_FILE = "items.yml";
 	private static String PAGE_FILE = "pages.yml";
 	
+	//Protect inventory hashmap.
+	private static HashMap<UUID, Boolean> inventoryProtected = new HashMap<UUID, Boolean>();
+	
 	//Create instance
 	public static ChestMenuManager getInstance() {
 		return instance;
@@ -57,7 +62,34 @@ public class ChestMenuManager {
 		//Build menu pages
 		//buildMenuPage();
 	}
-
+	
+	public static void protectInventoryFromPlayer(Player player, String invName) {
+		String invNameFormatted = invName.replace(" ", "_");
+		if (getMenuExistsInConfig(invNameFormatted) == true) {
+			addPlayerToProtectedInventory(player);
+		} else if (invName.equalsIgnoreCase(ChatColor.stripColor("Game Menu")) || invName.equalsIgnoreCase(ChatColor.stripColor("Game Menu"))) {
+			addPlayerToProtectedInventory(player);
+		}
+	}
+	
+	public static void addPlayerToProtectedInventory(Player player) {
+		UUID id = player.getUniqueId();
+		inventoryProtected.put(id, true);
+	}
+	
+	public static void removePlayerFromProtectedInventory(Player player) {
+		UUID id = player.getUniqueId();
+		inventoryProtected.remove(id);
+	}
+	
+	public static boolean isInventoryProtectedFromPlayer(Player player) {
+		UUID id = player.getUniqueId();
+		if (inventoryProtected.containsKey(id)) {
+			return true;
+		} else {
+			return false;
+		}
+	}
 	
 	public static Inventory buildMenuPage(Player player, String pageName) {
 		//Get config page

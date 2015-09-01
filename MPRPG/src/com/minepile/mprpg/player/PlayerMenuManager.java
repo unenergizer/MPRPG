@@ -67,7 +67,7 @@ public class PlayerMenuManager {
 		/// MAIN MENU ///
 		/////////////////
 		
-		Inventory mainMenu = Bukkit.createInventory(player, 27, playerName + "'s " + ChatColor.RED + gameMenu);
+		Inventory mainMenu = Bukkit.createInventory(player, 27, gameMenu);
 		//Define the items in the Main Menu.
 		mainMenu.setItem(0, new ItemBuilder(Material.BOOK, 1).setTitle(ChatColor.GREEN + "Rule Book").build());
         mainMenu.setItem(1, new ItemBuilder(Material.ENCHANTED_BOOK, 1).setTitle(ChatColor.GREEN + "Achievement").build());

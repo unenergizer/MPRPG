@@ -3,6 +3,7 @@ package com.minepile.mprpg.player;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
+import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 
@@ -75,6 +76,7 @@ public class PlayerMailManager {
      * @param player The player who clicked the Anvil.
      */
 	public static void toggleMailboxInteract(Player player) {
+		player.playSound(player.getLocation(), Sound.CHEST_OPEN, .8f, .8f);
 		player.openInventory(menu);
 	}
 }

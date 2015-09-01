@@ -8,6 +8,7 @@ import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
 
 import com.minepile.mprpg.MPRPG;
+import com.minepile.mprpg.gui.ChestMenuManager;
 import com.minepile.mprpg.items.LootTableChestManager;
 
 public class InventoryOpenListener implements Listener{
@@ -28,6 +29,11 @@ public class InventoryOpenListener implements Listener{
 			InventoryType invType = inv.getType();
 			String invName = inv.getName();
 			
+			//Test to see if the inventory is protected.
+			//If it is, this method will notify the chestMenuManager 
+			//that this inventory needs to be protected.
+			ChestMenuManager.protectInventoryFromPlayer(player, invName);
+			
 			switch(invType) {
 			case ANVIL:
 				event.setCancelled(true);
@@ -38,7 +44,8 @@ public class InventoryOpenListener implements Listener{
 			case BREWING:
 				event.setCancelled(true);
 				break;
-			case CHEST:
+			case CHEST:			
+				//If this chest is a loot chest, lets add loot to it.
 				if (invName.equalsIgnoreCase("container.chest")) {
 					LootTableChestManager.toggleChestLoot(player, inv);
 				}

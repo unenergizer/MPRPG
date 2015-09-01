@@ -9,6 +9,7 @@ import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.inventory.Inventory;
 
 import com.minepile.mprpg.MPRPG;
+import com.minepile.mprpg.gui.ChestMenuManager;
 
 public class InventoryCloseListener implements Listener{
 	
@@ -36,6 +37,11 @@ public class InventoryCloseListener implements Listener{
 			if (inv.getType().equals(Material.CHEST)) {
 				//Setup the broken chest to be regenerated.
 				//BlockRegenerationManager.setBlock(Material.CHEST, Material.AIR, block.getLocation());
+			}
+			
+			//Remove player from protectedInventoryChestHashMap if Possible.
+			if (ChestMenuManager.isInventoryProtectedFromPlayer(player)) {
+				ChestMenuManager.removePlayerFromProtectedInventory(player);
 			}
 		}
 	}

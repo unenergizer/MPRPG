@@ -1,11 +1,12 @@
 package com.minepile.mprpg.listeners;
 
+import net.md_5.bungee.api.ChatColor;
+
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.inventory.ItemStack;
 
 import com.minepile.mprpg.MPRPG;
 import com.minepile.mprpg.gui.ChestMenuManager;
@@ -37,7 +38,7 @@ public class InventoryClickListener implements Listener{
 			case CONTAINER:
 				//Name of the inventory.
 				String invName = event.getClickedInventory().getName().replace(" ", "_");
-				ItemStack clickedItem = event.getCurrentItem();
+				//ItemStack clickedItem = event.getCurrentItem();
 				
 				//Don't allow the player to move items in inventories.
 				//The players default inventory is called "container.inventory"
@@ -54,7 +55,7 @@ public class InventoryClickListener implements Listener{
 				
 				//Check if the string can be converted to a menu type.  If it can not, then 
 				//the event does not need to be canceled.
-				if (ChestMenuManager.getMenuExistsInConfig(invName) == true) {
+				if (ChestMenuManager.isInventoryProtectedFromPlayer(player) == true) {
 					//Toggles an item click.
 					//ChestMenuManager.toggleChestMenuClick(player, invName, clickedItem);
 					
@@ -84,7 +85,20 @@ public class InventoryClickListener implements Listener{
 			//This will make check if the player has shift clicked
 			//armor into the armor slot.
 			if (event.isShiftClick()) {
-				delayedSlotUpdate(player);
+				String invName = event.getClickedInventory().getName().replace(" ", "_");
+				
+				//Test if the chest is protected.
+				ChestMenuManager.protectInventoryFromPlayer(player, invName);
+				
+				//If the chest is protected, prevent the player from adding 
+				//items to the inventory with shift-click.
+				if (ChestMenuManager.isInventoryProtectedFromPlayer(player) == true) {
+					//Cancel event if the chest is a protected menu (inventory).
+					event.setCancelled(true);
+				} else {
+					//Update armor attributes.
+					delayedSlotUpdate(player);
+				}
 			}
 		}
 	}

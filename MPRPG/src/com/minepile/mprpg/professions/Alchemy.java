@@ -3,6 +3,7 @@ package com.minepile.mprpg.professions;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
+import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 
@@ -85,6 +86,7 @@ public class Alchemy {
      * @param player The player who clicked the Anvil.
      */
 	public static void toggleAnvilInteract(Player player) {
+		player.playSound(player.getLocation(), Sound.FIZZ, .8f, .8f);
 		player.openInventory(potionCraftMenu);
 	}
 }
