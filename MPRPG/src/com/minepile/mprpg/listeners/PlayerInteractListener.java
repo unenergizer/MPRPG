@@ -1,7 +1,6 @@
 package com.minepile.mprpg.listeners;
 
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.block.Block;
@@ -14,6 +13,7 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import com.minepile.mprpg.MPRPG;
 import com.minepile.mprpg.inventory.BankChestManager;
 import com.minepile.mprpg.items.ItemLoreFactory;
+import com.minepile.mprpg.items.LootTableChestManager;
 import com.minepile.mprpg.player.PlayerMailManager;
 import com.minepile.mprpg.player.PlayerMenuManager;
 import com.minepile.mprpg.professions.Alchemy;
@@ -204,6 +204,12 @@ public class PlayerInteractListener implements Listener{
 			
 			//Play a sound
 			player.playSound(player.getLocation(), Sound.CHEST_OPEN, .5F, 1F);
+		}
+		
+		//If a player clicks a loot chest.
+		if (event.getAction().equals(Action.RIGHT_CLICK_BLOCK) && block.getType().equals(Material.CHEST)) {
+			//Toggle that a player has opened a loot chest.
+			LootTableChestManager.playerOpenedLootChest(player, block.getLocation());
 		}
 		
 		//If player clicks a mail box.

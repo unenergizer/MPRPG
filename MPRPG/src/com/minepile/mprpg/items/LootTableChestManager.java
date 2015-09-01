@@ -3,11 +3,16 @@ package com.minepile.mprpg.items;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
+import java.util.UUID;
 
+import org.bukkit.Bukkit;
+import org.bukkit.Effect;
+import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.block.Block;
+import org.bukkit.Sound;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
@@ -25,8 +30,11 @@ public class LootTableChestManager {
 	static String LootTableFilePath = "plugins/MPRPG/items/LootTableChests.yml";
 
 	//Configuration file that holds currency information.
-	static File configFile;
-	static FileConfiguration lootTableConfig;
+	private static File configFile;
+	private static FileConfiguration lootTableConfig;
+
+	//Protect inventory hashmap.
+	private static HashMap<UUID, Location> inventoryOpened = new HashMap<UUID, Location>();
 
 	//Drop percentage
 	private static double dropPercentage = 2.5;
@@ -49,9 +57,24 @@ public class LootTableChestManager {
 			configFile = new File(LootTableFilePath);
 			lootTableConfig =  YamlConfiguration.loadConfiguration(configFile);
 		}
-	}	
+	}
 
-	public static void toggleChestEmpty(Inventory inv, Block block) {
+	public static void playerOpenedLootChest(Player player, Location location) {
+		UUID id = player.getUniqueId();
+		inventoryOpened.put(id, location);
+	}
+
+	public static void playerClosedLootChest(Player player) {
+		UUID id = player.getUniqueId();
+		inventoryOpened.remove(id);
+	}
+
+	public static Location getOpenedLootChestLocation(Player player) {
+		UUID id = player.getUniqueId();
+		return inventoryOpened.get(id);
+	}
+
+	public static boolean isChestEmpty(Inventory inv) {
 		int size = inv.getSize();
 		int air = 0;
 
@@ -64,34 +87,40 @@ public class LootTableChestManager {
 		}
 
 		if (size == air) {
-			//Delete chest
-			block.breakNaturally();
-
-			//Setup the broken chest to be regenerated.
-			BlockRegenerationManager.setBlock(Material.CHEST, Material.AIR, block.getLocation());
+			return true;
+		} else {
+			return false;
 		}
 	}
 
-	public static void toggleChestLoot(Player player, Inventory inv) {
-		int size = inv.getSize();
-		int air = 0;
-
-		for (ItemStack item : inv.getContents()) {
-			if (item == null) {
-				air++;
-			} else if (item.getType().equals(Material.AIR)) {
-				air++;
-			}
+	public static void toggleChestRespawn(Inventory inv, Location location) {
+		if (isChestEmpty(inv) == true) {
+			try {
+				//Play sound to show block is being respanwed.
+				Bukkit.getWorld("world").playSound(location, Sound.ITEM_BREAK, .8f, .8f);
+			} catch (NullPointerException e) {}
+			
+			try {
+				//Play a particle effect.
+				//Bukkit.getWorld("world").playEffect(location, Effect.LAVA_POP, 0);;
+			} catch (NullPointerException e) {}
+			
+			try {
+				//Setup the broken chest to be regenerated.
+				BlockRegenerationManager.setBlock(Material.CHEST, Material.AIR, location);
+			} catch (NullPointerException e) {}
 		}
+	}
 
-		if (size == air) {
+	public static void toggleChestLoot(Inventory inv) {
+		if (isChestEmpty(inv) == true) {
 			String lootTable = "junk01";
 
 			ArrayList armorItems = (ArrayList) lootTableConfig.getList(lootTable + ".armorItem");
 			ArrayList weaponItems = (ArrayList) lootTableConfig.getList(lootTable + ".weaponItem");
 			List<String> consumableItems = (List<String>) lootTableConfig.getList(lootTable + ".consumableItem");
 			List<String> miscItems = (List<String>) lootTableConfig.getList(lootTable + ".miscItem");
-			
+
 			String currencyType = lootTableConfig.getString(lootTable + ".currency");
 			int currencyMin = lootTableConfig.getInt(lootTable + ".currencyDropMin");
 			int currencyMax = lootTableConfig.getInt(lootTable + ".currencyDropMax");
@@ -153,7 +182,7 @@ public class LootTableChestManager {
 				Random rand = new Random();
 				int range = currencyMax - currencyMin + 1;
 				int randomNum =  rand.nextInt(range) + currencyMin;
-				
+
 				if (randomNum != 0) {
 					ItemStack money = CurrencyItemManager.makeItem(currencyType);
 					money.setAmount(randomNum);

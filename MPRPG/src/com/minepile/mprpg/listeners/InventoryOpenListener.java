@@ -47,7 +47,10 @@ public class InventoryOpenListener implements Listener{
 			case CHEST:			
 				//If this chest is a loot chest, lets add loot to it.
 				if (invName.equalsIgnoreCase("container.chest")) {
-					LootTableChestManager.toggleChestLoot(player, inv);
+					
+					//This method checks if the chest is empty.
+					//If it is it will generate some chest loot.
+					LootTableChestManager.toggleChestLoot(inv);
 				}
 				break;
 			case CRAFTING:

@@ -24,7 +24,7 @@ public class BlockRegenerationManager {
 	static BlockRegenerationManager blockRegenManagerInstance = new BlockRegenerationManager();
 	
 	//Setup regeneration variables
-	private static int chestRegenTime = 60 * 2;			//Time it takes for a chest to regenerate. 60 seconds * 15 (15 minutes)
+	private static int chestRegenTime = 60 * 1;				//Time it takes for a chest to regenerate. 60 seconds * 15 (15 minutes)
 	private static int blockRegenTime = 60 * 2; 			//Time it takes for an block to regenerate. 120 = 2 Minutes (60*2)
 	private static int blockRegenRate = 5; 					//The number of seconds the thread should update.
 	private static int blockRegenTick = blockRegenRate * 20;//How fast the thread is refreshed.
@@ -113,24 +113,26 @@ public class BlockRegenerationManager {
 	 */
 	public static void setBlock(Material type, Material tempBlock, Location location) {
 		
-		Block block = location.getBlock();
-		
-		//Replace the broken block with a temporary block, until it has regenerated.
-		block.setType(tempBlock);
-		
-		//Save the block's information.
-		blockType.put(blockID, type);
-		
-		//This will set the respawn times for chests and broken items.
-		if (type.equals(Material.CHEST)) {
-			blockTimeLeft.put(blockID, chestRegenTime);
-		} else {
-			blockTimeLeft.put(blockID, blockRegenTime);
-		}
-		
-		blockLoc.put(blockID, location);
-		
-		//Increment the block counter (used to get the block's ID number.
-		blockID++;
+		try {
+			Block block = location.getBlock();
+			
+			//Replace the broken block with a temporary block, until it has regenerated.
+			block.setType(tempBlock);
+			
+			//Save the block's information.
+			blockType.put(blockID, type);
+			
+			//This will set the respawn times for chests and broken items.
+			if (type.equals(Material.CHEST)) {
+				blockTimeLeft.put(blockID, chestRegenTime);
+			} else {
+				blockTimeLeft.put(blockID, blockRegenTime);
+			}
+			
+			blockLoc.put(blockID, location);
+			
+			//Increment the block counter (used to get the block's ID number.
+			blockID++;
+		} catch (NullPointerException exc) {}
 	}
 }
