@@ -14,11 +14,13 @@ import org.bukkit.Sound;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import com.minepile.mprpg.MPRPG;
 import com.minepile.mprpg.chat.MessageManager;
+import com.minepile.mprpg.gui.ChestMenuManager;
 import com.minepile.mprpg.player.PlayerManager;
 
 public class Mining {
@@ -31,6 +33,7 @@ public class Mining {
 	static File configFile;
     static FileConfiguration miningConfig;
 	
+    public static Inventory menu;
 	
 	//hashmap to hold levels in memory.
 	static HashMap<Integer, Integer> configMiningLevel = new HashMap<Integer, Integer>();
@@ -58,16 +61,25 @@ public class Mining {
             	configMiningLevel.put(i, totalEXPforLVL);
             }
         }
-	}
+
+		//Create npc menu
+		createMenu();
+	}	
 	
+	/**
+	 * This will build the menus for use with NPC's.
+	 */
+    private void createMenu() {
+		String pageName = "Mining_Trainer";
+    	menu = ChestMenuManager.buildMenuPage(null, pageName);
+	}
     /**
      * This will be toggled when a player left-clicks or right clicks a player.
      * 
      * @param player The player who clicked the NPC.
      */
 	public static void toggleCitizenInteract(Player player) {
-		// TODO Auto-generated method stub
-		player.sendMessage(player.getName() + " you have clicked a Mining Trainer NPC!");
+		player.openInventory(menu);
 	}
 	
 	/**

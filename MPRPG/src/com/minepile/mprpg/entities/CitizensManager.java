@@ -3,6 +3,7 @@ package com.minepile.mprpg.entities;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Random;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -159,6 +160,7 @@ public class CitizensManager {
 		String npcName = npc.getDisplayName();
 		CitizenType type = getCitizenType(npcName);
 		Location loc = npc.getLocation().add(0, 2, 0);
+		int rand = randomInt(1, 100);
 		
 		//Trigger code in appropriate Java Class file.
 		if (type == CitizenType.ALCHEMIST) {
@@ -174,9 +176,9 @@ public class CitizensManager {
 		} else if (type == CitizenType.MINING) {
 			Mining.toggleCitizenInteract(player);
 		} else if (type == CitizenType.ITEM_IDENTIFIER) {
-			ItemIdentifierManager.toggleCitizenInteract(player);
+			ItemIdentifierManager.toggleCitizenInteract(player, npc);
 		} else if (type == CitizenType.INN_KEEPER) {
-			//TODO
+			InnKeeperManager.toggleCitizenInteract(player, npc);
 		} else if (type == CitizenType.MERCHANT) {
 			MerchantManager.toggleCitizenInteract(player);
 		} else if (type == CitizenType.NONE) {
@@ -191,7 +193,29 @@ public class CitizensManager {
 		}
 		
 		//Player sound.
-		player.playSound(loc, Sound.VILLAGER_HAGGLE, .8f, .8f);
+		if (rand < 25) {
+			player.playSound(loc, Sound.VILLAGER_HAGGLE, .8f, .8f);
+		} else if (rand >= 25 && rand < 50) {
+			player.playSound(loc, Sound.VILLAGER_IDLE, .8f, .8f);
+		} else if (rand >= 50 && rand < 75) {
+			player.playSound(loc, Sound.VILLAGER_NO, .8f, .8f);
+		} else if (rand >= 75) {
+			player.playSound(loc, Sound.VILLAGER_YES, .8f, .8f);
+		}
+	}
+
+	/**
+	 * Generates a random integer between the min value and the max value.
+	 * 
+	 * @param min the minimal value
+	 * @param max the maximum value
+	 * @return a random value between the min value and the max value
+	 */
+	public static int randomInt(int min, int max) {
+		Random rand = new Random();
+
+		int randomNum = rand.nextInt((max - min) + 1) + min;
+		return randomNum;
 	}
 
 	/**
