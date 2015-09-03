@@ -95,20 +95,20 @@ public class LootTableChestManager {
 
 	public static void toggleChestRespawn(Inventory inv, Location location) {
 		if (isChestEmpty(inv) == true) {
-			try {
+			if (inv != null && location != null) {
 				//Play sound to show block is being respanwed.
 				Bukkit.getWorld("world").playSound(location, Sound.ITEM_BREAK, .8f, .8f);
-			} catch (NullPointerException e) {}
-			
-			try {
+
+
+
 				//Play a particle effect.
 				//Bukkit.getWorld("world").playEffect(location, Effect.LAVA_POP, 0);;
-			} catch (NullPointerException e) {}
-			
-			try {
+
+
+
 				//Setup the broken chest to be regenerated.
 				BlockRegenerationManager.setBlock(Material.CHEST, Material.AIR, location);
-			} catch (NullPointerException e) {}
+			}
 		}
 	}
 

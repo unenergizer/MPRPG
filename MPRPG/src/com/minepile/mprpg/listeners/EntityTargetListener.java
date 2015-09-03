@@ -24,7 +24,9 @@ public class EntityTargetListener implements Listener {
 			LivingEntity entity = (LivingEntity)event.getTarget();
 
 			if (entity instanceof Player) {
-				ItemLoreFactory.getInstance().applyHPBonus((Player) entity, false);
+				if (!entity.hasMetadata("NPC")) {
+					ItemLoreFactory.getInstance().applyHPBonus((Player) entity, false);
+				}
 			}
 		}
 	}

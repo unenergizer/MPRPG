@@ -85,7 +85,7 @@ public class Alchemy {
      * 
      * @param player The player who clicked the Anvil.
      */
-	public static void toggleAnvilInteract(Player player) {
+	public static void toggleBrewingStandInteract(Player player) {
 		player.playSound(player.getLocation(), Sound.FIZZ, .8f, .8f);
 		player.openInventory(potionCraftMenu);
 	}

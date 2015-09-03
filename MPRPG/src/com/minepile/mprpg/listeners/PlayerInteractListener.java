@@ -18,6 +18,7 @@ import com.minepile.mprpg.player.PlayerMailManager;
 import com.minepile.mprpg.player.PlayerMenuManager;
 import com.minepile.mprpg.professions.Alchemy;
 import com.minepile.mprpg.professions.Blacksmithing;
+import com.minepile.mprpg.professions.Cooking;
 
 public class PlayerInteractListener implements Listener{
 
@@ -229,7 +230,7 @@ public class PlayerInteractListener implements Listener{
 			event.setCancelled(true);
 
 			//Toggle potion stand interaction
-			Alchemy.toggleAnvilInteract(player);
+			Alchemy.toggleBrewingStandInteract(player);
 		}
 		
 		//If player clicks a Anvil (Blacksmithing profession).
@@ -240,6 +241,16 @@ public class PlayerInteractListener implements Listener{
 
 			//Toggle anvil interaction
 			Blacksmithing.toggleAnvilInteract(player);
+		}
+		
+		//If player clicks a Anvil (Blacksmithing profession).
+		if (event.getAction().equals(Action.RIGHT_CLICK_BLOCK) && block.getType().equals(Material.FURNACE) || event.getAction().equals(Action.LEFT_CLICK_BLOCK) && block.getType().equals(Material.FURNACE)) {
+
+			//Cancel opening the regular inventory.
+			event.setCancelled(true);
+
+			//Toggle anvil interaction
+			Cooking.toggleFurnaceInteract(player);
 		}
 	}
 

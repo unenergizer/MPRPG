@@ -1,5 +1,6 @@
 package com.minepile.mprpg.professions;
 
+import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 
@@ -41,6 +42,16 @@ public class Cooking {
      * @param player The player who clicked the NPC.
      */
 	public static void toggleCitizenInteract(Player player) {
+		player.openInventory(menu);
+	}
+
+    /**
+     * This will be toggled when a player left-clicks or right clicks an anvil.
+     * 
+     * @param player The player who clicked the Anvil.
+     */
+	public static void toggleFurnaceInteract(Player player) {
+		player.playSound(player.getLocation(), Sound.CHEST_OPEN, .4f, .4f);
 		player.openInventory(menu);
 	}
 	
