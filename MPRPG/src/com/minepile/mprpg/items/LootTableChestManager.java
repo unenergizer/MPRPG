@@ -99,13 +99,9 @@ public class LootTableChestManager {
 				//Play sound to show block is being respanwed.
 				Bukkit.getWorld("world").playSound(location, Sound.ITEM_BREAK, .8f, .8f);
 
-
-
 				//Play a particle effect.
-				//Bukkit.getWorld("world").playEffect(location, Effect.LAVA_POP, 0);;
-
-
-
+				Bukkit.getWorld("world").playEffect(location, Effect.LAVA_POP, 0);;
+				
 				//Setup the broken chest to be regenerated.
 				BlockRegenerationManager.setBlock(Material.CHEST, Material.AIR, location);
 			}

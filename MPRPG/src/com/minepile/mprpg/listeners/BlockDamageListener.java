@@ -1,5 +1,6 @@
 package com.minepile.mprpg.listeners;
 
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.Chest;
@@ -10,7 +11,6 @@ import org.bukkit.inventory.Inventory;
 
 import com.minepile.mprpg.MPRPG;
 import com.minepile.mprpg.items.LootTableChestManager;
-import com.minepile.mprpg.world.BlockRegenerationManager;
 
 public class BlockDamageListener implements Listener{
 	
@@ -31,7 +31,8 @@ public class BlockDamageListener implements Listener{
 			event.setInstaBreak(true);
 			
 			Chest chest = (Chest) block.getState();
-			Inventory inv = chest.getInventory();		
+			Inventory inv = chest.getInventory();
+			Location loc = block.getLocation();
 			
 			//If the block is a empty loot chest, put loot inside it.
 			if (LootTableChestManager.isChestEmpty(inv)) {
@@ -39,7 +40,7 @@ public class BlockDamageListener implements Listener{
 			}
 			
 			//Setup the broken chest to be regenerated.
-			BlockRegenerationManager.setBlock(Material.CHEST, Material.AIR, block.getLocation());
+			LootTableChestManager.toggleChestRespawn(inv, loc);
 		}
 	}
 }
