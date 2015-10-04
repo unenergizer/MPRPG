@@ -13,7 +13,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 
 import com.minepile.mprpg.MPRPG;
-import com.minepile.mprpg.player.PlayerManager;
+import com.minepile.mprpg.player.PlayerCharacterManager;
 
 
 public class GuildManager {
@@ -44,7 +44,7 @@ public class GuildManager {
 	 * @return Return a boolean true if player owns a guild.
 	  */
 	public static boolean getGuildOwner(Player player) {
-		if (PlayerManager.getPlayerConfigBoolean(player, "guild.owner") == true) {
+		if (PlayerCharacterManager.getPlayerConfigBoolean(player, "guild.owner") == true) {
 			return true;
 		} else {
 			return false;
@@ -60,7 +60,7 @@ public class GuildManager {
 	 * @param guildName Name The name of the guild.
 	  */
 	public static void setGuildOwner(Player player, boolean value) {
-		PlayerManager.setPlayerConfigBoolean(player, "guild.owner", value);
+		PlayerCharacterManager.setPlayerConfigBoolean(player, "guild.owner", value);
 	}
 	
 	/**
@@ -72,8 +72,8 @@ public class GuildManager {
 	 * @return Name of the guild the player is in.
 	  */
 	public static String getPlayerGuild(Player player) {
-		if (PlayerManager.getPlayerConfigString(player, "guild.name") != null) {
-			return PlayerManager.getPlayerConfigString(player, "guild.name");
+		if (PlayerCharacterManager.getPlayerConfigString(player, "guild.name") != null) {
+			return PlayerCharacterManager.getPlayerConfigString(player, "guild.name");
 		} else {
 			return null;
 		}
@@ -87,7 +87,7 @@ public class GuildManager {
 	 * @param guildName Name The name of the guild.
 	  */
 	public static void setPlayerGuild(Player player, String guildName) {
-		PlayerManager.setPlayerConfigString(player, "guild.name", guildName);
+		PlayerCharacterManager.setPlayerConfigString(player, "guild.name", guildName);
 	}
 	
 	/**

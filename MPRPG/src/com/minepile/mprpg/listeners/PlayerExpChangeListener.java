@@ -7,6 +7,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerExpChangeEvent;
 
 import com.minepile.mprpg.MPRPG;
+import com.minepile.mprpg.player.PlayerCharacterManager;
 import com.minepile.mprpg.player.PlayerManager;
 
 public class PlayerExpChangeListener implements Listener{
@@ -40,7 +41,7 @@ public class PlayerExpChangeListener implements Listener{
 				//PlayerManager.updatePlayerBossbar(player);
 				
 				int level = player.getLevel();
-				int configLevel = (int) PlayerManager.getPlayerConfigInt(player, "player.playerLVL");
+				int configLevel = (int) PlayerCharacterManager.getPlayerConfigDouble(player, "player.playerLVL");
 		      	
 				//Player level has changed.
 				if (level != configLevel) {

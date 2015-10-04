@@ -1,6 +1,7 @@
 package com.minepile.mprpg.items;
 
 import java.util.List;
+import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -72,11 +73,11 @@ public class ItemLoreFactory {
 	public void applyHPBonus(Player player, Boolean playSoundEffect) {
 		//Get armor HP bonuses
 		Double hpToAdd = Double.valueOf(getHealthPointsBonus(player));
-
-		String playerName = player.getName();
-		double currentHP = PlayerManager.getHealthPoints(playerName);
+		UUID uuid = player.getUniqueId();
+		
+		double currentHP = PlayerManager.getHealthPoints(uuid);
 		double newMaxHP = PlayerManager.getBaseHealthPoints() + hpToAdd.doubleValue();
-		double oldMaxHP = PlayerManager.getMaxHealthPoints(playerName);
+		double oldMaxHP = PlayerManager.getMaxHealthPoints(uuid);
 
 		//If the players HP is greater than the base HP + HP bonus,
 		//set the players HP.  BaseHP + Armor HP.
@@ -92,7 +93,7 @@ public class ItemLoreFactory {
 		}
 
 		//Lets grab the players HP again, just incase it was updated above.
-		double updatedHP = PlayerManager.getHealthPoints(playerName);
+		double updatedHP = PlayerManager.getHealthPoints(uuid);
 		//This is the percent determines how many play hearts are shown.
 		double healthPercent = ((20 * updatedHP) / newMaxHP);
 
@@ -101,7 +102,7 @@ public class ItemLoreFactory {
 		//then no change has been made and the user does not need updates.
 		if (newMaxHP != oldMaxHP) {
 
-			PlayerManager.setMaxHealthPoints(player.getName(), newMaxHP);
+			PlayerManager.setMaxHealthPoints(uuid, newMaxHP);
 			player.sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "New MaxHP: " + ChatColor.RESET + Integer.toString((int) newMaxHP));
 
 			//If the players HP percent is over 20,

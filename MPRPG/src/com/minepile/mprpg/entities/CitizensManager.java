@@ -21,6 +21,7 @@ import com.gmail.filoghost.holographicdisplays.api.HologramsAPI;
 import com.minepile.mprpg.MPRPG;
 import com.minepile.mprpg.items.ItemIdentifierManager;
 import com.minepile.mprpg.items.MerchantManager;
+import com.minepile.mprpg.player.PlayerCharacterManager;
 import com.minepile.mprpg.player.PlayerHealthTagManager;
 import com.minepile.mprpg.professions.Alchemy;
 import com.minepile.mprpg.professions.Blacksmithing;
@@ -82,19 +83,28 @@ public class CitizensManager {
 	 * @author Andrew
 	 */
 	public static enum CitizenType {
-
+		
+		//Class NPC's
+		ARCHER (ChatColor.GREEN + "" + ChatColor.BOLD + "Archer Class"),			//Archer class selection
+		MAGE (ChatColor.BLUE + "" + ChatColor.BOLD + "Mage Class"),				//Mage class selection
+		ROGUE (ChatColor.YELLOW + "" + ChatColor.BOLD + "Rogue Class"),			//Rogue class selection
+		WARRIOR (ChatColor.RED + "" + ChatColor.BOLD + "Warrior Class"),			//Warrior class selection
+		
+		//Profession NPC's
 		ALCHEMIST (namePrefix + "Alchemy Trainer"),			//Alchemist Trainer
 		BLACKSMITH (namePrefix + "Blacksmith Trainer"),		//Blacksmith Trainer
 		COOK (namePrefix + "Cooking Trainer"),				//Cooking Trainer
 		FISHER (namePrefix + "Fishing Trainer"),			//Fishing Trainer
 		HERBALIST (namePrefix + "Herbalisim Trainer"),		//Herbalism Trainer
 		MINING (namePrefix + "Mining Trainer"),				//Mining Trainer
+		
+		//Other NPC's
 		INN_KEEPER (namePrefix + "Inn Keeper"),				//Inn Keeper
 		ITEM_IDENTIFIER (namePrefix + "Item Identifier"),	//Item Identifier (NPC identifies unidentified items)
-		MERCHANT (namePrefix + "Item Merchant"),				//Merchant
-		NONE (""),																		//NONE.  This NPC is just filler.
+		MERCHANT (namePrefix + "Item Merchant"),			//Merchant
+		NONE (""),											//NONE.  This NPC is just filler.
 		QUEST_GIVER (namePrefix + "Quest Giver");			//NPC that gives quests.
-
+		
 		private String name;
 
 		CitizenType(String s) {
@@ -185,6 +195,18 @@ public class CitizensManager {
 			//Do nothing. This is a regular NPC.
 		} else if (type == CitizenType.QUEST_GIVER) {
 			//TODO
+		} else if (type == CitizenType.ARCHER) {
+			player.sendMessage(ChatColor.GREEN + "You have selected the " + ChatColor.DARK_GREEN + "Archer" + ChatColor.GREEN +" class.");
+			PlayerCharacterManager.toggleClassSelectionInteract(player, "archer");
+		} else if (type == CitizenType.MAGE) {
+			player.sendMessage(ChatColor.GREEN + "You have selected the " + ChatColor.BLUE + "Mage" + ChatColor.GREEN +" class.");
+			PlayerCharacterManager.toggleClassSelectionInteract(player, "mage");
+		} else if (type == CitizenType.ROGUE) {
+			player.sendMessage(ChatColor.GREEN + "You have selected the " + ChatColor.YELLOW + "Rogue" + ChatColor.GREEN +" class.");
+			PlayerCharacterManager.toggleClassSelectionInteract(player, "rogue");
+		} else if (type == CitizenType.WARRIOR) {
+			player.sendMessage(ChatColor.GREEN + "You have selected the " + ChatColor.RED + "Warrior" + ChatColor.GREEN +" class.");
+			PlayerCharacterManager.toggleClassSelectionInteract(player, "warrior");
 		}
 		
 		//Show particle effect.
@@ -281,6 +303,14 @@ public class CitizensManager {
 				return CitizenType.NONE;
 			} else if (type.equalsIgnoreCase("QUEST_GIVER")) {
 				return CitizenType.QUEST_GIVER;
+			} else if (type.equalsIgnoreCase("ARCHER")) {
+				return CitizenType.ARCHER;
+			} else if (type.equalsIgnoreCase("MAGE")) {
+				return CitizenType.MAGE;
+			} else if (type.equalsIgnoreCase("ROGUE")) {
+				return CitizenType.ROGUE;
+			} else if (type.equalsIgnoreCase("WARRIOR")) {
+				return CitizenType.WARRIOR;
 			} else {
 				//This should never happen.
 				return null;

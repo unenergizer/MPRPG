@@ -1,7 +1,5 @@
 package com.minepile.mprpg.listeners;
 
-import net.md_5.bungee.api.ChatColor;
-
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -11,11 +9,12 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import com.minepile.mprpg.MPRPG;
 import com.minepile.mprpg.gui.ChestMenuManager;
 import com.minepile.mprpg.items.ItemLoreFactory;
+import com.minepile.mprpg.player.PlayerCharacterManager;
 
 public class InventoryClickListener implements Listener{
 
 	public static MPRPG plugin;
-	
+
 	@SuppressWarnings("unused")
 	private static int taskID; 
 
@@ -38,31 +37,27 @@ public class InventoryClickListener implements Listener{
 			case CONTAINER:
 				//Name of the inventory.
 				String invName = event.getClickedInventory().getName().replace(" ", "_");
+				int slot = event.getSlot();
 				//ItemStack clickedItem = event.getCurrentItem();
-				
-				//Don't allow the player to move items in inventories.
-				//The players default inventory is called "container.inventory"
-				//Loot chests are called "container.chest"
-				//We should not stop them from moving items in that inventory.
-				
-				/*
-				if ((!(invName.equalsIgnoreCase("container.inventory"))) && (!(invName.equalsIgnoreCase("container.chest")))) {
-					ItemStack clickedItem = event.getCurrentItem();
-					PlayerMenuManager.playerInteractMenu(player, invName, clickedItem);
+
+				if (invName.equals("Character_Selection")) {
+					//Cancel the item pickup/click (or item move).
 					event.setCancelled(true);
+
+					//Toggle player clicking a character slot.
+					PlayerCharacterManager.toggleCharacterSelectionInteract(player, slot);
 				}
-				*/
-				
+
 				//Check if the string can be converted to a menu type.  If it can not, then 
 				//the event does not need to be canceled.
 				if (ChestMenuManager.isInventoryProtectedFromPlayer(player) == true) {
 					//Toggles an item click.
 					//ChestMenuManager.toggleChestMenuClick(player, invName, clickedItem);
-					
+
 					//Cancel the item pickup/click (or item move).
 					event.setCancelled(true);
 				}
-				
+
 				break;
 			case CRAFTING:
 				event.setCancelled(true);
@@ -80,16 +75,16 @@ public class InventoryClickListener implements Listener{
 			default:
 				break;
 			}
-			
+
 			//Check the armor slot if the player has shift clicked.
 			//This will make check if the player has shift clicked
 			//armor into the armor slot.
 			if (event.isShiftClick()) {
 				String invName = event.getClickedInventory().getName().replace(" ", "_");
-				
+
 				//Test if the chest is protected.
 				ChestMenuManager.protectInventoryFromPlayer(player, invName);
-				
+
 				//If the chest is protected, prevent the player from adding 
 				//items to the inventory with shift-click.
 				if (ChestMenuManager.isInventoryProtectedFromPlayer(player) == true) {
@@ -102,8 +97,8 @@ public class InventoryClickListener implements Listener{
 			}
 		}
 	}
-	
-	
+
+
 	//It seems that the client responds better if we give it time to
 	//set the armor, and then read the contents of the armor slots.
 	public void delayedSlotUpdate(final Player player) {

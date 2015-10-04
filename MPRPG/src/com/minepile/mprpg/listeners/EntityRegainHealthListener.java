@@ -1,5 +1,7 @@
 package com.minepile.mprpg.listeners;
 
+import java.util.UUID;
+
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -23,10 +25,10 @@ public class EntityRegainHealthListener implements Listener{
 	public void onEntityRegainHealth(EntityRegainHealthEvent event) {
 		if(event.getEntity() instanceof Player) {
 			Player player = (Player) event.getEntity();
-			String playerName = player.getName();
+			UUID uuid = player.getUniqueId();
 
-			double currentHP = PlayerManager.getHealthPoints(playerName);
-			double maxHealthPoints = PlayerManager.getMaxHealthPoints(playerName);
+			double currentHP = PlayerManager.getHealthPoints(uuid);
+			double maxHealthPoints = PlayerManager.getMaxHealthPoints(uuid);
 			
 			double healthRegen = PlayerManager.getBaseHealthRegenRate() + ItemLoreFactory.getInstance().getHealthPointsRegenerate(player);
 			double healthPointsFinal = currentHP + healthRegen;

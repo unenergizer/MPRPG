@@ -1,5 +1,7 @@
 package com.minepile.mprpg.listeners;
 
+import java.util.UUID;
+
 import net.md_5.bungee.api.ChatColor;
 
 import org.bukkit.Location;
@@ -11,6 +13,7 @@ import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.inventory.ItemStack;
 
 import com.minepile.mprpg.MPRPG;
+import com.minepile.mprpg.player.PlayerCharacterManager;
 import com.minepile.mprpg.player.PlayerManager;
 
 public class PlayerPickupItemListener implements Listener{
@@ -26,175 +29,182 @@ public class PlayerPickupItemListener implements Listener{
 	public void onPlayerPickupItem(PlayerPickupItemEvent event) {
 
 		Player player = event.getPlayer();
+		UUID uuid = player.getUniqueId();
 		ItemStack item = event.getItem().getItemStack();
 		Location loc = player.getLocation();
 		//Get the items name, to know what type of statistics to generate.
 		//TODO: Saved this for when item have names.
 		//String item = event.getItem().getName();
 
-		//Prevent dead players from picking up items.
-		if (PlayerManager.isPlayerDead(player.getName()) == true) {
-			//Player is dead. Stop them from picking up items.
-			event.setCancelled(true);
-		
-		} else { //Player is not dead. Let them pick up items.
+		if (PlayerCharacterManager.isPlayerLoaded(player)) {
 
-			switch(item.getType()) {
-			/////////////
-			//Currency //
-			/////////////
-			case CLAY_BRICK:
-				player.playSound(loc, Sound.ORB_PICKUP,  .8f, .8f);
-				player.sendMessage(ChatColor.GREEN + "" + ChatColor.BOLD + "+" + Integer.toString(item.getAmount()) + " Copper");
-				break;
-			case IRON_INGOT:
-				player.playSound(loc, Sound.ORB_PICKUP,  .8f, .8f);
-				player.sendMessage(ChatColor.GREEN + "" + ChatColor.BOLD + "+" + Integer.toString(item.getAmount()) + " Silver");
-				break;
-			case GOLD_INGOT:
-				player.playSound(loc, Sound.ORB_PICKUP,  .8f, .8f);
-				player.sendMessage(ChatColor.GREEN + "" + ChatColor.BOLD + "+" + Integer.toString(item.getAmount()) + " Gold");
-				break;
-			case PORTAL:
-				player.playSound(loc, Sound.ORB_PICKUP,  .8f, .8f);
-				player.sendMessage(ChatColor.GREEN + "" + ChatColor.BOLD + "+" + Integer.toString(item.getAmount()) + " eCash");
-				break;
+			//Prevent dead players from picking up items.
+			if (PlayerManager.isPlayerDead(uuid) == true) {
+				//Player is dead. Stop them from picking up items.
+				event.setCancelled(true);
 
-				//////////
-				//Armor //
-				//////////
+			} else { //Player is not dead. Let them pick up items.
 
-				//Tier #1
-			case LEATHER_BOOTS:
+				switch(item.getType()) {
+				/////////////
+				//Currency //
+				/////////////
+				case CLAY_BRICK:
+					player.playSound(loc, Sound.ORB_PICKUP,  .8f, .8f);
+					player.sendMessage(ChatColor.GREEN + "" + ChatColor.BOLD + "+" + Integer.toString(item.getAmount()) + " Copper");
+					break;
+				case IRON_INGOT:
+					player.playSound(loc, Sound.ORB_PICKUP,  .8f, .8f);
+					player.sendMessage(ChatColor.GREEN + "" + ChatColor.BOLD + "+" + Integer.toString(item.getAmount()) + " Silver");
+					break;
+				case GOLD_INGOT:
+					player.playSound(loc, Sound.ORB_PICKUP,  .8f, .8f);
+					player.sendMessage(ChatColor.GREEN + "" + ChatColor.BOLD + "+" + Integer.toString(item.getAmount()) + " Gold");
+					break;
+				case PORTAL:
+					player.playSound(loc, Sound.ORB_PICKUP,  .8f, .8f);
+					player.sendMessage(ChatColor.GREEN + "" + ChatColor.BOLD + "+" + Integer.toString(item.getAmount()) + " eCash");
+					break;
 
-				break;
-			case LEATHER_CHESTPLATE:
+					//////////
+					//Armor //
+					//////////
 
-				break;
-			case LEATHER_HELMET:
+					//Tier #1
+				case LEATHER_BOOTS:
 
-				break;
-			case LEATHER_LEGGINGS:
+					break;
+				case LEATHER_CHESTPLATE:
 
-				break;
+					break;
+				case LEATHER_HELMET:
 
-				//Tier #2	
-			case CHAINMAIL_BOOTS:
+					break;
+				case LEATHER_LEGGINGS:
 
-				break;
-			case CHAINMAIL_CHESTPLATE:
+					break;
 
-				break;
-			case CHAINMAIL_HELMET:
+					//Tier #2	
+				case CHAINMAIL_BOOTS:
 
-				break;
-			case CHAINMAIL_LEGGINGS:
+					break;
+				case CHAINMAIL_CHESTPLATE:
 
-				break;
+					break;
+				case CHAINMAIL_HELMET:
 
-				//Tier #3	
-			case IRON_BOOTS:
+					break;
+				case CHAINMAIL_LEGGINGS:
 
-				break;
-			case IRON_CHESTPLATE:
+					break;
 
-				break;
-			case IRON_HELMET:
+					//Tier #3	
+				case IRON_BOOTS:
 
-				break;
-			case IRON_LEGGINGS:
+					break;
+				case IRON_CHESTPLATE:
 
-				break;
+					break;
+				case IRON_HELMET:
 
-				//Tier #4
-			case GOLD_BOOTS:
+					break;
+				case IRON_LEGGINGS:
 
-				break;
-			case GOLD_CHESTPLATE:
+					break;
 
-				break;
-			case GOLD_HELMET:
+					//Tier #4
+				case GOLD_BOOTS:
 
-				break;
-			case GOLD_LEGGINGS:
+					break;
+				case GOLD_CHESTPLATE:
 
-				break;
+					break;
+				case GOLD_HELMET:
 
-				//Tier #5
-			case DIAMOND_BOOTS:
+					break;
+				case GOLD_LEGGINGS:
 
-				break;
-			case DIAMOND_CHESTPLATE:
+					break;
 
-				break;
-			case DIAMOND_HELMET:
+					//Tier #5
+				case DIAMOND_BOOTS:
 
-				break;
-			case DIAMOND_LEGGINGS:
+					break;
+				case DIAMOND_CHESTPLATE:
 
-				break;
+					break;
+				case DIAMOND_HELMET:
+
+					break;
+				case DIAMOND_LEGGINGS:
+
+					break;
 
 
-				/////////
-				//Axes //
-				/////////
-			case WOOD_AXE: //Tier #1
-				break;
-			case STONE_AXE: //Tier #2
-				break;
-			case IRON_AXE: //Tier #3
-				break;	
-			case GOLD_AXE: //Tier #4
-				break;
-			case DIAMOND_AXE: //Tier #5
-				break;		
+					/////////
+					//Axes //
+					/////////
+				case WOOD_AXE: //Tier #1
+					break;
+				case STONE_AXE: //Tier #2
+					break;
+				case IRON_AXE: //Tier #3
+					break;	
+				case GOLD_AXE: //Tier #4
+					break;
+				case DIAMOND_AXE: //Tier #5
+					break;		
 
-				//////////////////////
-				//Polearms / Spears //
-				//////////////////////
-			case WOOD_SPADE: //Tier #1
-				break;
-			case STONE_SPADE: //Tier #2
-				break;
-			case IRON_SPADE: //Tier #3
-				break;
-			case GOLD_SPADE: //Tier #4
-				break;		
-			case DIAMOND_SPADE: //Tier #5
-				break;
+					//////////////////////
+					//Polearms / Spears //
+					//////////////////////
+				case WOOD_SPADE: //Tier #1
+					break;
+				case STONE_SPADE: //Tier #2
+					break;
+				case IRON_SPADE: //Tier #3
+					break;
+				case GOLD_SPADE: //Tier #4
+					break;		
+				case DIAMOND_SPADE: //Tier #5
+					break;
 
-				///////////
-				//Swords //
-				///////////
-			case WOOD_SWORD: //Tier #1
-				break;
-			case STONE_SWORD: //Tier #2
-				break;
-			case IRON_SWORD: //Tier #3
-				break;
-			case GOLD_SWORD: //Tier #4
-				break;
-			case DIAMOND_SWORD: //Tier #5
-				break;
+					///////////
+					//Swords //
+					///////////
+				case WOOD_SWORD: //Tier #1
+					break;
+				case STONE_SWORD: //Tier #2
+					break;
+				case IRON_SWORD: //Tier #3
+					break;
+				case GOLD_SWORD: //Tier #4
+					break;
+				case DIAMOND_SWORD: //Tier #5
+					break;
 
-				//////////
-				//Wands //
-				//////////
-			case WOOD_HOE: //Tier #1
-				break;
-			case STONE_HOE: //Tier #2
-				break;
-			case IRON_HOE: //Tier #3
-				break;
-			case GOLD_HOE: //Tier #4
-				break;
-			case DIAMOND_HOE: //Tier #5
-				break;	
+					//////////
+					//Wands //
+					//////////
+				case WOOD_HOE: //Tier #1
+					break;
+				case STONE_HOE: //Tier #2
+					break;
+				case IRON_HOE: //Tier #3
+					break;
+				case GOLD_HOE: //Tier #4
+					break;
+				case DIAMOND_HOE: //Tier #5
+					break;	
 
-				//Default case.  "Everything else"
-			default:
-				break;
+					//Default case.  "Everything else"
+				default:
+					break;
+				}
 			}
+		} else {
+			//Lets prevent players from picking up items if they have not selected their character or class.
+			event.setCancelled(true);
 		}
 	}
 }

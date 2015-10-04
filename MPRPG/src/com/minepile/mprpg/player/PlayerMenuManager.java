@@ -207,15 +207,15 @@ public class PlayerMenuManager {
 				player.openInventory(playerSettingsMenu.get(player.getUniqueId()));
 			}
 		} else if (menuName.contains(gameSettingsMenu)) {
-			boolean healthDebugMessages = PlayerManager.getPlayerConfigBoolean(player, "setting.chat.healthDebug");
-			boolean monsterDebugMessages = PlayerManager.getPlayerConfigBoolean(player, "setting.chat.monsterDebug");
-			boolean professionDebugMessages = PlayerManager.getPlayerConfigBoolean(player, "setting.chat.professionDebug");
+			boolean healthDebugMessages = PlayerCharacterManager.getPlayerConfigBoolean(player, "setting.chat.healthDebug");
+			boolean monsterDebugMessages = PlayerCharacterManager.getPlayerConfigBoolean(player, "setting.chat.monsterDebug");
+			boolean professionDebugMessages = PlayerCharacterManager.getPlayerConfigBoolean(player, "setting.chat.professionDebug");
 			
 			if (item.equals(on) && (player.getInventory().getItem(27).equals(item))) {
-				PlayerManager.setPlayerConfigBoolean(player, "setting.chat.monsterDebug", false);
+				PlayerCharacterManager.setPlayerConfigBoolean(player, "setting.chat.monsterDebug", false);
 				//TODO: set the item icon to off
 			} else {
-				PlayerManager.setPlayerConfigBoolean(player, "setting.chat.monsterDebug", true);
+				PlayerCharacterManager.setPlayerConfigBoolean(player, "setting.chat.monsterDebug", true);
 				//TODO: set the item icon to on
 			}
 		}

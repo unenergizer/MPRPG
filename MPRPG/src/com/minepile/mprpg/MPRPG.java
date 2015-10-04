@@ -14,6 +14,7 @@ import com.minepile.mprpg.chat.LagManager;
 import com.minepile.mprpg.chat.MessageManager;
 import com.minepile.mprpg.commands.CommandManager;
 import com.minepile.mprpg.entities.CitizensManager;
+import com.minepile.mprpg.entities.InnKeeperManager;
 import com.minepile.mprpg.entities.MonsterCreatorManager;
 import com.minepile.mprpg.entities.MonsterManager;
 import com.minepile.mprpg.entities.NPCManager;
@@ -50,6 +51,7 @@ import com.minepile.mprpg.listeners.EntityExplodeListener;
 import com.minepile.mprpg.listeners.EntityRegainHealthListener;
 import com.minepile.mprpg.listeners.EntityShootBowListener;
 import com.minepile.mprpg.listeners.EntityTargetListener;
+import com.minepile.mprpg.listeners.FoodLevelChangeListener;
 import com.minepile.mprpg.listeners.InventoryClickListener;
 import com.minepile.mprpg.listeners.InventoryCloseListener;
 import com.minepile.mprpg.listeners.InventoryOpenListener;
@@ -66,6 +68,7 @@ import com.minepile.mprpg.listeners.PlayerQuitListener;
 import com.minepile.mprpg.listeners.PlayerRespawnListener;
 import com.minepile.mprpg.listeners.ProjectileHitListener;
 import com.minepile.mprpg.listeners.WeatherChangeListener;
+import com.minepile.mprpg.player.PlayerCharacterManager;
 import com.minepile.mprpg.player.PlayerHealthTagManager;
 import com.minepile.mprpg.player.PlayerMailManager;
 import com.minepile.mprpg.player.PlayerManager;
@@ -109,6 +112,7 @@ public class MPRPG extends JavaPlugin {
 		ChestMenuManager.getInstance().setup(this);
 
 		//setup player manager instances
+		PlayerCharacterManager.getInstance().setup(this);
 		PlayerMailManager.getInstance().setup(this);
 		PlayerManager.getInstance().setup(this);
 		PlayerHealthTagManager.getInstance().setup(this);
@@ -124,6 +128,7 @@ public class MPRPG extends JavaPlugin {
 
 		//setup entities manager instances
 		CitizensManager.getInstance().setup(this);
+		InnKeeperManager.getInstance().setup(this);
 		ItemIdentifierManager.getInstance().setup(this);
 		MonsterCreatorManager.getInstance().setup(this);
 		MonsterManager.getInstance().setup(this);
@@ -184,6 +189,8 @@ public class MPRPG extends JavaPlugin {
 		pluginManager.registerEvents(new EntityRegainHealthListener(this), this);
 		pluginManager.registerEvents(new EntityShootBowListener(this), this);
 		pluginManager.registerEvents(new EntityTargetListener(this), this);
+		
+		pluginManager.registerEvents(new FoodLevelChangeListener(this), this);
 
 		pluginManager.registerEvents(new InventoryClickListener(this), this);
 		pluginManager.registerEvents(new InventoryCloseListener(this), this);
@@ -257,6 +264,9 @@ public class MPRPG extends JavaPlugin {
 		
 		//Remove any existing Holograms
 		BankChestManager.disable();
+
+		//Remove character select holograms
+		PlayerCharacterManager.disable();
 
 		//Remove mail holograms
 		PlayerMailManager.disable();

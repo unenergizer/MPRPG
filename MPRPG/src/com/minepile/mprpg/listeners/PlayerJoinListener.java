@@ -10,41 +10,42 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import com.minepile.mprpg.MPRPG;
 import com.minepile.mprpg.chat.MessageManager;
 import com.minepile.mprpg.items.ItemLoreFactory;
+import com.minepile.mprpg.player.PlayerCharacterManager;
 import com.minepile.mprpg.player.PlayerManager;
 
 public class PlayerJoinListener implements Listener {
-	
+
 	public static MPRPG plugin;
-	
+
 	@SuppressWarnings("unused")
 	private static int taskID; 
-	
+
 	@SuppressWarnings("static-access")
 	public PlayerJoinListener(MPRPG plugin) {
 		this.plugin = plugin;
 	}
-	
+
 	@EventHandler
 	public void onPlayerJoin(PlayerJoinEvent event) {
-		
+
 		Player player = event.getPlayer();
 		String playerName = player.getName();
-		
+
 		//Show the user the welcome message.
 		MessageManager.displayWelcomeMessage(player);
-		
+
 		//Prevent the global user login message.
 		//"PlayerName" has joined the game.
 		event.setJoinMessage("");
-		
+
 		//Send player specific/private join message.
 		//This message is not displayed to all users.
 		player.sendMessage(ChatColor.GRAY + "Welcome " + playerName + "!");
-		
+
 		//Delay some important player updates to make sure they will work correctly.
 		delayedUpdate(player);
 	}
-	
+
 	//It seems that the client responds better if we give it time to
 	//set the experience, then update the players armor..
 	public void delayedUpdate(final Player player) {
@@ -52,13 +53,10 @@ public class PlayerJoinListener implements Listener {
 		taskID = Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
 			@Override
 			public void run() {
-				
+
 				//Load the player
-				PlayerManager.setupPlayer(player);
-				
-				//Update the players armor.
-				ItemLoreFactory.getInstance().applyHPBonus(player, false);
-				
+				PlayerCharacterManager.initializePlayer(player);
+
 			} //END Run method.
 		}, 5); //(20 ticks = 1 second)
 	}

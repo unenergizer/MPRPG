@@ -1,5 +1,7 @@
 package com.minepile.mprpg.listeners;
 
+import java.util.UUID;
+
 import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -23,12 +25,12 @@ public class EntityDeathListener implements Listener{
 	public void onEntityDeath(EntityDeathEvent event) {
 		if (event.getEntity() instanceof Player) {
 			Player player = (Player) event.getEntity();
-			String playerName = player.getName();
+			UUID uuid = player.getUniqueId();
 			
 			//Heal the player
 			player.setHealth(20);
 			player.setFoodLevel(20);
-			PlayerManager.setPlayerHitPoints(player, PlayerManager.getMaxHealthPoints(playerName));
+			PlayerManager.setPlayerHitPoints(player, PlayerManager.getMaxHealthPoints(uuid));
 			
 			player.setGameMode(GameMode.CREATIVE);
 			
@@ -36,7 +38,7 @@ public class EntityDeathListener implements Listener{
 			player.setGameMode(GameMode.SURVIVAL);
 
 			//Heal the player
-			PlayerManager.setPlayerHitPoints(player, PlayerManager.getMaxHealthPoints(playerName));
+			PlayerManager.setPlayerHitPoints(player, PlayerManager.getMaxHealthPoints(uuid));
 			new BukkitRunnable() {
 				@Override
 		    	public void run() {

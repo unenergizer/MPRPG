@@ -1,5 +1,7 @@
 package com.minepile.mprpg.entities;
 
+import java.util.UUID;
+
 import net.md_5.bungee.api.ChatColor;
 
 import org.bukkit.entity.Player;
@@ -31,8 +33,9 @@ public class InnKeeperManager {
      * @param player The player who clicked the NPC.
      */
 	public static void toggleCitizenInteract(Player player, Player npc) {
+		UUID uuid = player.getUniqueId();
 		String playerName = player.getName();
-		double hp = PlayerManager.getMaxHealthPoints(playerName);
+		double hp = PlayerManager.getMaxHealthPoints(uuid);
 		
 		//Send player a message.
 		player.sendMessage(ChatColor.GRAY + npc.getDisplayName() + ChatColor.DARK_GRAY + ": "

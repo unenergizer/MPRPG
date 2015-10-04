@@ -1,5 +1,7 @@
 package com.minepile.mprpg.player;
 
+import java.util.UUID;
+
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -11,51 +13,51 @@ import org.bukkit.scoreboard.Team;
 import com.minepile.mprpg.MPRPG;
 
 public class PlayerHealthTagManager {
-	
+
 	//setup instance variables
 	public static MPRPG plugin;
 	static PlayerHealthTagManager playerHealthTagManagerInstance = new PlayerHealthTagManager();
-	
+
 	@SuppressWarnings("unused")
 	private static int taskID; 
-	
+
 	//Variables to set up the scoreboard.
 	static Scoreboard sb;
 	static Team team;
 	private static Objective obj;
-	
+
 	//Create instance
 	public static PlayerHealthTagManager getInstance() {
 		return playerHealthTagManagerInstance;
 	}
-	
+
 	//Setup PlayerManager
 	@SuppressWarnings("static-access")
 	public void setup(MPRPG plugin) {
 		this.plugin = plugin;
-		
+
 		setupScoreboard();
-		
+
 		for (Player players : Bukkit.getOnlinePlayers()) {
-			addPlayer(players);
-			updateHealthTag(players);
+			//Remove a players HP tag on reload.
+			players.remove();
 		}
 	}	
-	
+
 	/**
 	 * This set's up a Scoreboard to show the players HP under their name.
 	 */
 	public void setupScoreboard() {
-		
+
 		sb = Bukkit.getScoreboardManager().getNewScoreboard();
-		
+
 		obj = sb.registerNewObjective("playerhealthtag", "dummy");
 		obj.setDisplayName(ChatColor.RED + "❤ ");
 		obj.setDisplaySlot(DisplaySlot.BELOW_NAME);
-		
+
 		setupTeam();
 	}
-	
+
 	/**
 	 * This set's up a Team for the Scoreboard.
 	 */
@@ -65,7 +67,7 @@ public class PlayerHealthTagManager {
 		team.setAllowFriendlyFire(true);
 		team.setPrefix("");
 	}
-	
+
 	/**
 	 * This adds a player to the Scoreboard.
 	 * 
@@ -73,11 +75,16 @@ public class PlayerHealthTagManager {
 	 */
 	@SuppressWarnings("deprecation")
 	public static void addPlayer(Player player) {
+		UUID uuid = player.getUniqueId();
 		player.setScoreboard(sb);
 		team.addPlayer(player);
-		obj.getScore(player).setScore((int) PlayerManager.getHealthPoints(player.getName()));
+		if (PlayerCharacterManager.isPlayerLoaded(player)) {
+			obj.getScore(player).setScore((int) PlayerManager.getHealthPoints(uuid));
+		} else {
+			obj.getScore(player).setScore(50);
+		}
 	}
-	
+
 	/**
 	 * This will update the players score on the scoreboard.  This will then show the players new HP under their name.
 	 * 
@@ -89,13 +96,13 @@ public class PlayerHealthTagManager {
 		taskID = Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
 			@Override
 			public void run() {
-				
-				obj.getScore(player).setScore((int) PlayerManager.getHealthPoints(player.getName()));
-				
+				UUID uuid = player.getUniqueId();
+				obj.getScore(player).setScore((int) PlayerManager.getHealthPoints(uuid));
+
 			} //END Run method.
 		}, 5); //(20 ticks = 1 second)
 	}
-	
+
 	/**
 	 * This will update the NPC score on the scoreboard.  This will then show the NPC new HP under its name.
 	 * 
@@ -107,9 +114,9 @@ public class PlayerHealthTagManager {
 		taskID = Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
 			@Override
 			public void run() {
-				
+
 				obj.getScore(npc).setScore((int) maxHP);
-				
+
 			} //END Run method.
 		}, 5); //(20 ticks = 1 second)
 	}
@@ -125,5 +132,5 @@ public class PlayerHealthTagManager {
 	public static Objective getObj() {
 		return obj;
 	}
-	
+
 }

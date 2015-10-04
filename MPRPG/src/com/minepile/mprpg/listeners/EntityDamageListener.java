@@ -15,6 +15,7 @@ import org.bukkit.inventory.ItemStack;
 
 import com.minepile.mprpg.MPRPG;
 import com.minepile.mprpg.entities.MonsterManager;
+import com.minepile.mprpg.player.PlayerCharacterManager;
 import com.minepile.mprpg.player.PlayerManager;
 
 public class EntityDamageListener implements Listener{
@@ -47,29 +48,33 @@ public class EntityDamageListener implements Listener{
 			LivingEntity victim = (LivingEntity) event.getEntity();
 
 			if (victim instanceof Player) {
-				
+
 				//Make sure the player taking damage is not an NPC.
 				if (victim.hasMetadata("NPC")) {
 					event.setCancelled(true);
-				
+
 				} else { //Player is not an NPC.
-					
+
 					Player player = (Player) victim;
+					UUID uuid = player.getUniqueId();
 					String playerName = player.getName();
+					
+					//Lets make sure the player actually has a player character loaded up and ready to play.
+					if (PlayerCharacterManager.isPlayerLoaded(player)) {
 
-					//Make sure the player is not dead.
-					//This will prevent dead players from doing damage to players or monsters.
-					if (PlayerManager.isPlayerDead(player.getName()) == true) {
-						
-						event.setCancelled(true);
-					} else {
+						//Make sure the player is not dead.
+						//This will prevent dead players from doing damage to players or monsters.
+						if (PlayerManager.isPlayerDead(uuid) == true) {
 
-						double playerHealth = PlayerManager.getHealthPoints(playerName);
-						double playerMaxHealth = PlayerManager.getMaxHealthPoints(playerName);
-						//double eventDamage = event.getDamage() + (.03 * playerMaxHealth);
-						double eventDamage = event.getDamage();
-						
-						/*
+							event.setCancelled(true);
+						} else {
+
+							double playerHealth = PlayerManager.getHealthPoints(uuid);
+							double playerMaxHealth = PlayerManager.getMaxHealthPoints(uuid);
+							//double eventDamage = event.getDamage() + (.03 * playerMaxHealth);
+							double eventDamage = event.getDamage();
+
+							/*
 						switch (event.getCause()) {
 						case BLOCK_EXPLOSION:
 							break;
@@ -136,37 +141,41 @@ public class EntityDamageListener implements Listener{
 							break;
 
 						}
-						*/
-						
-						//Apply final math.
-						double playerHitPointsFinal = playerHealth - eventDamage;
-						double healthBarPercent = (20 * playerHitPointsFinal) / playerMaxHealth;
+							 */
 
-						//Debug message
-						if (player.isOp()) {
-							player.sendMessage(playerName + "> "
-									+ ChatColor.GREEN +  "HP: " + ChatColor.RESET + playerHealth 
-									+ ChatColor.RED + " - D: " + ChatColor.RESET + eventDamage  
-									+ ChatColor.GOLD +  " = " + ChatColor.RESET + playerHitPointsFinal);
+							//Apply final math.
+							double playerHitPointsFinal = playerHealth - eventDamage;
+							double healthBarPercent = (20 * playerHitPointsFinal) / playerMaxHealth;
 
-							player.sendMessage("HP Percent: " + healthBarPercent);
+							//Debug message
+							if (player.isOp()) {
+								player.sendMessage(playerName + "> "
+										+ ChatColor.GREEN +  "HP: " + ChatColor.RESET + playerHealth 
+										+ ChatColor.RED + " - D: " + ChatColor.RESET + eventDamage  
+										+ ChatColor.GOLD +  " = " + ChatColor.RESET + playerHitPointsFinal);
+
+								player.sendMessage("HP Percent: " + healthBarPercent);
+							}
+
+							//Display action bar message
+							if (!event.getCause().equals(DamageCause.ENTITY_ATTACK)) {
+								//Send the player a hp change message.
+								PlayerManager.displayActionBar(player);
+							}
+
+							//Check if the player HP is too low. If it is, kill the player.
+							//Otherwise apply damage to the player
+							if (playerHitPointsFinal < 1) {
+								//kill player
+								PlayerManager.killPlayer(player);
+							} else {
+								//Set player HP.
+								PlayerManager.setPlayerHitPoints(player, playerHitPointsFinal);
+							}
 						}
-
-						//Display action bar message
-						if (!event.getCause().equals(DamageCause.ENTITY_ATTACK)) {
-							//Send the player a hp change message.
-							PlayerManager.displayActionBar(player);
-						}
-
-						//Check if the player HP is too low. If it is, kill the player.
-						//Otherwise apply damage to the player
-						if (playerHitPointsFinal < 1) {
-							//kill player
-							PlayerManager.killPlayer(player);
-						} else {
-							//Set player HP.
-							PlayerManager.setPlayerHitPoints(player, playerHitPointsFinal);
-						}
+					} else {
+						//Lets prevent users from taking damage if they have not selected a character or class.
+						event.setCancelled(true);
 					}
 				}
 			} else {

@@ -6,7 +6,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
 import com.minepile.mprpg.MPRPG;
-import com.minepile.mprpg.player.PlayerManager;
+import com.minepile.mprpg.player.PlayerCharacterManager;
 
 public class ChatManager {
 	
@@ -35,7 +35,7 @@ public class ChatManager {
 	 * @return The players clan tag, if one exists.
 	 */
 	public static String getClanTag(Player player) {
-		String clanTag = PlayerManager.getPlayerConfigString(player, "clan.tag");
+		String clanTag = PlayerCharacterManager.getPlayerConfigString(player, "clan.tag");
 		
 		if (clanTag != null) {
 			return ChatColor.GRAY + "[" + clanTag.toUpperCase() + "] ";
@@ -51,9 +51,9 @@ public class ChatManager {
 	 * @return The players staff tag, if one exists.
 	 */
 	public static String getStaffPrefix(Player player) {
-		int isAdmin = (int) PlayerManager.getPlayerConfigInt(player, "permissions.admin");
-		int isDev = (int) PlayerManager.getPlayerConfigInt(player, "permissions.dev");
-		int isMod = (int) PlayerManager.getPlayerConfigInt(player, "permissions.mod");
+		int isAdmin = (int) PlayerCharacterManager.getPlayerConfigDouble(player, "permissions.admin");
+		int isDev = (int) PlayerCharacterManager.getPlayerConfigDouble(player, "permissions.dev");
+		int isMod = (int) PlayerCharacterManager.getPlayerConfigDouble(player, "permissions.mod");
 
 		if (player.isOp()) {
 			return ChatColor.RED + "" + ChatColor.BOLD + "OP ";

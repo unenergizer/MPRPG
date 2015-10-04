@@ -109,7 +109,6 @@ public class ChestMenuManager {
 		//Define and place the items in the menu.
 		for (int i = 0; i <= loopSize; i++) {
 
-
 			try {
 				String itemName = menuPagesConfig.getString(pageName + "." + Integer.toString(i));
 				ItemStack item = buildItem(itemName);
