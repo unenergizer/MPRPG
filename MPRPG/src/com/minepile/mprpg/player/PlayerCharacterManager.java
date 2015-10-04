@@ -365,17 +365,48 @@ public class PlayerCharacterManager {
 	}
 	
 	private static void toggleClassSelectionText(Player player, String charClass) {
-		if (charClass.equalsIgnoreCase("ARCHER")) {
-			player.sendMessage(ChatColor.GREEN + "You have selected the " + ChatColor.DARK_GREEN + "Archer" + ChatColor.GREEN +" class.");
-		} else if (charClass.equalsIgnoreCase("MAGE")) {
-			player.sendMessage(ChatColor.GREEN + "You have selected the " + ChatColor.BLUE + "Mage" + ChatColor.GREEN +" class.");
-		} else if (charClass.equalsIgnoreCase("ROGUE")) {
-			player.sendMessage(ChatColor.GREEN + "You have selected the " + ChatColor.YELLOW + "Rogue" + ChatColor.GREEN +" class.");	
-		} else if (charClass.equalsIgnoreCase("WARRIOR")) {
-			player.sendMessage(ChatColor.GREEN + "You have selected the " + ChatColor.RED + "Warrior" + ChatColor.GREEN +" class.");
-		}
+		//Send Blank Message
+		player.sendMessage("");
+		player.sendMessage("");
 		
-		player.sendMessage(ChatColor.GOLD + "Click one more time to comfirm your selection or select a different class.");
+		//Show class specific title and info.
+		if (charClass.equalsIgnoreCase("ARCHER")) {
+			player.sendMessage(ChatColor.DARK_GRAY + "" + ChatColor.BOLD + "-------------------" +
+					ChatColor.DARK_GRAY + "<[" +
+					ChatColor.GOLD + " Archer " + ChatColor.DARK_GRAY + "]>" +
+					ChatColor.BOLD + "-----------------");
+			player.sendMessage("");
+			player.sendMessage(ChatColor.GREEN + "Info about the " + ChatColor.DARK_GREEN + "Archer" + ChatColor.GREEN +" class goes here.");
+			
+		} else if (charClass.equalsIgnoreCase("MAGE")) {
+			player.sendMessage(ChatColor.DARK_GRAY + "" + ChatColor.BOLD + "-------------------" +
+					ChatColor.DARK_GRAY + "<[" +
+					ChatColor.GOLD + " Mage " + ChatColor.DARK_GRAY + "]>" +
+					ChatColor.BOLD + "-------------------");
+			player.sendMessage("");
+			player.sendMessage(ChatColor.GREEN + "Info about the " + ChatColor.BLUE + "Mage" + ChatColor.GREEN +" class goes here.");
+			
+		} else if (charClass.equalsIgnoreCase("ROGUE")) {
+			player.sendMessage(ChatColor.DARK_GRAY + "" + ChatColor.BOLD + "-------------------" +
+					ChatColor.DARK_GRAY + "<[" +
+					ChatColor.GOLD + " Rogue " + ChatColor.DARK_GRAY + "]>" +
+					ChatColor.BOLD + "------------------");
+			player.sendMessage("");
+			player.sendMessage(ChatColor.GREEN + "Info about the " + ChatColor.YELLOW + "Rogue" + ChatColor.GREEN +" class goes here.");
+			
+		} else if (charClass.equalsIgnoreCase("WARRIOR")) {
+			player.sendMessage(ChatColor.DARK_GRAY + "" + ChatColor.BOLD + "-------------------" +
+					ChatColor.DARK_GRAY + "<[" +
+					ChatColor.GOLD + " Warrior " + ChatColor.DARK_GRAY + "]>" +
+					ChatColor.BOLD + "-----------------");
+			player.sendMessage("");
+			player.sendMessage(ChatColor.GREEN + "Info about the " + ChatColor.RED + "Warrior" + ChatColor.GREEN +" class goes here.");
+		}
+		player.sendMessage("");
+		player.sendMessage("");
+		player.sendMessage(ChatColor.YELLOW + "Click again to comfirm your selection.");
+		player.sendMessage("");
+		player.sendMessage(ChatColor.DARK_GRAY + "" + ChatColor.BOLD +"---------------------------------------------");
 	}
 
 	/**
