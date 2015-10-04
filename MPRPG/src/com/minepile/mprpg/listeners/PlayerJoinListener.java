@@ -1,6 +1,5 @@
 package com.minepile.mprpg.listeners;
 
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -9,16 +8,12 @@ import org.bukkit.event.player.PlayerJoinEvent;
 
 import com.minepile.mprpg.MPRPG;
 import com.minepile.mprpg.chat.MessageManager;
-import com.minepile.mprpg.items.ItemLoreFactory;
 import com.minepile.mprpg.player.PlayerCharacterManager;
-import com.minepile.mprpg.player.PlayerManager;
 
 public class PlayerJoinListener implements Listener {
 
 	public static MPRPG plugin;
 
-	@SuppressWarnings("unused")
-	private static int taskID; 
 
 	@SuppressWarnings("static-access")
 	public PlayerJoinListener(MPRPG plugin) {
@@ -42,22 +37,7 @@ public class PlayerJoinListener implements Listener {
 		//This message is not displayed to all users.
 		player.sendMessage(ChatColor.GRAY + "Welcome " + playerName + "!");
 
-		//Delay some important player updates to make sure they will work correctly.
-		delayedUpdate(player);
-	}
-
-	//It seems that the client responds better if we give it time to
-	//set the experience, then update the players armor..
-	public void delayedUpdate(final Player player) {
-		//Lets start a  task
-		taskID = Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
-			@Override
-			public void run() {
-
-				//Load the player
-				PlayerCharacterManager.initializePlayer(player);
-
-			} //END Run method.
-		}, 5); //(20 ticks = 1 second)
+		//Load the player
+		PlayerCharacterManager.initializePlayer(player);
 	}
 }

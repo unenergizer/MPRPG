@@ -294,7 +294,7 @@ public class PlayerInteractListener implements Listener{
 		}
 
 		//If a player clicks their bank.
-		if (event.getAction().equals(Action.RIGHT_CLICK_BLOCK) && block.getType().equals(Material.ENDER_CHEST)) {
+		if (event.getAction().equals(Action.RIGHT_CLICK_BLOCK) && block.getType().equals(Material.ENDER_CHEST) || event.getAction().equals(Action.LEFT_CLICK_BLOCK) && block.getType().equals(Material.ENDER_CHEST)) {
 
 			//Cancel opening the ender chest and show a custom chest.
 			event.setCancelled(true);

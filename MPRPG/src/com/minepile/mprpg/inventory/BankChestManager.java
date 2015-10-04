@@ -116,8 +116,8 @@ public class BankChestManager {
     }
     
     public static void setupBankHolograms() {
-    	Location bank01 = new Location(Bukkit.getWorld("world"), 16.5, 80.5, -5.5);
-    	Location bank02 = new Location(Bukkit.getWorld("world"), 18.5, 80.5, -7.5);
+    	Location bank01 = new Location(Bukkit.getWorld("world"), 16.5, 81, -5.5);
+    	Location bank02 = new Location(Bukkit.getWorld("world"), 18.5, 81, -7.5);
     	
     	bankHologram01 = HologramsAPI.createHologram(plugin, bank01);
     	bankHologram01.appendTextLine(ChatColor.GREEN + "" + ChatColor.BOLD + "Player Stash");

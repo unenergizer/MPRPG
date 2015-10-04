@@ -5,9 +5,9 @@ import io.puharesource.mc.titlemanager.api.TabTitleObject;
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
-import java.util.concurrent.ConcurrentHashMap;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -43,8 +43,8 @@ public class PlayerCharacterManager {
 	private static Hologram hologram0, hologram1, hologram2, hologram3;
 
 	//Player Menus
-	private static ConcurrentHashMap<UUID, Integer> currentCharacterSlot = new ConcurrentHashMap<UUID, Integer>();
-	private static ConcurrentHashMap<UUID, Inventory> characterSelectMenu = new ConcurrentHashMap<UUID, Inventory>();
+	private static HashMap<UUID, Integer> currentCharacterSlot = new HashMap<UUID, Integer>();
+	private static HashMap<UUID, Inventory> characterSelectMenu = new HashMap<UUID, Inventory>();
 
 	public static Inventory menu;
 
@@ -61,17 +61,36 @@ public class PlayerCharacterManager {
 		setupHolograms();
 
 		//Server reloaded.  Force players to go back to character selection screen.
-		for (Player players: Bukkit.getOnlinePlayers()) {
-			initializePlayer(players);
-		}
+		Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(plugin,  new Runnable() {
+			public void run() {
+				for (Player players: Bukkit.getOnlinePlayers()) {
+					if (!players.hasMetadata("NPC")) {
+						initializePlayer(players);
+					}
+				}
+			}
+		}, 20L);
 	}
 
 	/**
 	 * This will disable this class.
 	 */
 	public static void disable() {
+		//Removes holograms.
 		removeHolograms();
+
+		//Save any online players characters before disabling.
+		for (Player players : Bukkit.getOnlinePlayers()) {
+			if (!players.hasMetadata("NPC")) {
+				if (PlayerCharacterManager.isPlayerLoaded(players)) {
+					PlayerCharacterManager.saveCharacter(players);
+				}
+			}
+		}
+
+		//Clear HashMap.
 		characterSelectMenu.clear();
+		currentCharacterSlot.clear();
 	}	
 
 	/**
@@ -113,6 +132,33 @@ public class PlayerCharacterManager {
 		hologram3.delete();
 	}
 
+	public static void saveCharacter(Player player) {
+		UUID uuid = player.getUniqueId();
+
+		//Save player stats.
+		double logoutHP = PlayerManager.getHealthPoints(uuid);
+		double logoutMaxHP = PlayerManager.getMaxHealthPoints(uuid);
+		double logoutStamina = PlayerManager.getStaminaPoints(uuid);
+		double logoutMaxStamina = PlayerManager.getMaxStaminaPoints(uuid);
+		double logoutMana = PlayerManager.getManaPoints(uuid);
+		double logoutMaxMana = PlayerManager.getMaxManaPoints(uuid);
+		float experience = player.getExp();
+		double x = player.getLocation().getX();
+		double y = player.getLocation().getY();
+		double z = player.getLocation().getZ();
+
+		setPlayerConfigDouble(player, "player.logout.hp", logoutHP);
+		setPlayerConfigDouble(player, "player.logout.maxhp", logoutMaxHP);
+		setPlayerConfigDouble(player, "player.logout.stamina", logoutStamina);
+		setPlayerConfigDouble(player, "player.logout.maxStamina", logoutMaxStamina);
+		setPlayerConfigDouble(player, "player.logout.mana", logoutMana);
+		setPlayerConfigDouble(player, "player.logout.maxMana", logoutMaxMana);
+		setPlayerConfigDouble(player, "player.playerEXP", experience);
+		setPlayerConfigDouble(player, "player.logout.x", x);
+		setPlayerConfigDouble(player, "player.logout.y", y);
+		setPlayerConfigDouble(player, "player.logout.z", z);
+	}
+
 	public static void initializePlayer(Player player) {
 		UUID uuid = player.getUniqueId();
 
@@ -130,12 +176,9 @@ public class PlayerCharacterManager {
 		String footer = ChatColor.YELLOW + "" + ChatColor.UNDERLINE + "www.MinePile.com";
 		new TabTitleObject(header, footer).send(player);
 
-		//Teleport players to the character selection location.
-		player.teleport(new Location(Bukkit.getWorld("World"), 42.5, 81, -292.5));
-		
 		//Change player gamemode to 0, just incase.
 		player.setGameMode(GameMode.SURVIVAL);
-		
+
 		//Make sure the players HP and food levels are max.
 		player.setHealth(20);
 		player.setFoodLevel(20);
@@ -147,16 +190,19 @@ public class PlayerCharacterManager {
 		//Clear a players inventory of items and armor.
 		player.getInventory().clear();
 		player.getEquipment().clear();
-		
+
 		//update the players health tag
 		if (PlayerHealthTagManager.getSb() != null && PlayerHealthTagManager.getObj() != null) {
 			PlayerHealthTagManager.addPlayer(player);
 		}
 		
+		//Teleport players to the character selection location.
+		player.teleport(new Location(Bukkit.getWorld("World"), 42.5, 81, -292.5));
+				
 		//Create character selection menu.
 		createMenu(player);
 	}
-	
+
 	/**
 	 * This is a conditional test to see if the player has finished the character selection and class selection process.
 	 * 
@@ -170,25 +216,25 @@ public class PlayerCharacterManager {
 			return false;
 		}
 	}
-	
+
 	/**
 	 * This will create various menu's for the player logging in.
 	 * 
 	 * @param player The player who is getting menus created for them.
 	 */
 	public static void createMenu(Player player) {
-		
+
 		//Lets create some basic items.
 		ItemStack newChar = new ItemStack(Material.INK_SACK, 1, (short) 8);
 		ItemMeta meta = newChar.getItemMeta();
 		meta.setDisplayName(ChatColor.GREEN + "Create new Character!");
 		newChar.setItemMeta(meta);
-		
+
 		//Place the items in the menu.
-		
+
 		Inventory mainMenu = Bukkit.createInventory(player, 9, "Character Selection");
 		//Define the items in the Main Menu.
-		
+
 		//Lets loop through 9 inventory slots.
 		for (int i = 0; i <= 8; i++) {
 			//If the player has a character slot with a class name, then make a stats skull.
@@ -204,7 +250,7 @@ public class PlayerCharacterManager {
 		//Menu creation is finished.  Add menu to HashMap for player.
 		characterSelectMenu.put(player.getUniqueId(), mainMenu);
 	}
-	
+
 	public static ItemStack createMenuItems(Player player, int slot) {
 		String itemTitle = ChatColor.AQUA + "" +ChatColor.BOLD + "Character " + Integer.toString(slot + 1); 
 		String characterName = player.getName();
@@ -217,7 +263,7 @@ public class PlayerCharacterManager {
 		int mana = getPlayerConfigInt(player, "player.logout.mana", slot);
 		int maxMana = getPlayerConfigInt(player, "player.logout.maxMana", slot);
 		String guild = getPlayerConfigString(player, "guild.name", slot);
-		
+
 		List lores = Arrays.asList(" ",
 				ChatColor.GREEN + "Name: " + ChatColor.GRAY + characterName,
 				ChatColor.GREEN + "Class: " + ChatColor.GRAY + characterClass,
@@ -226,14 +272,14 @@ public class PlayerCharacterManager {
 				ChatColor.GREEN + "Stamina: " + ChatColor.GRAY + stamina + "/" + maxStamina,
 				ChatColor.GREEN + "Mana: " + ChatColor.GRAY + mana + "/" + maxMana,
 				ChatColor.GREEN + "Guild: " + ChatColor.GRAY + guild);
-		
+
 		ItemStack skull = new ItemStack(Material.SKULL_ITEM, 1, (byte) SkullType.PLAYER.ordinal());
-        SkullMeta skullMeta = (SkullMeta) Bukkit.getItemFactory().getItemMeta(Material.SKULL_ITEM);
-        skullMeta.setOwner(player.getName());
-        skullMeta.setDisplayName(itemTitle);
-        skullMeta.setLore(lores);
-        skull.setItemMeta(skullMeta);
-        return skull;
+		SkullMeta skullMeta = (SkullMeta) Bukkit.getItemFactory().getItemMeta(Material.SKULL_ITEM);
+		skullMeta.setOwner(player.getName());
+		skullMeta.setDisplayName(itemTitle);
+		skullMeta.setLore(lores);
+		skull.setItemMeta(skullMeta);
+		return skull;
 	}
 
 	/**
@@ -259,10 +305,10 @@ public class PlayerCharacterManager {
 			double z = getPlayerConfigDouble(player, "player.logout.z");
 
 			player.teleport(new Location(Bukkit.getWorld("World"), x, y + 1, z));
-			
+
 			//Remove character selection menu from memory.
 			characterSelectMenu.remove(player.getUniqueId());
-			
+
 			//Setup the player
 			PlayerManager.setupPlayer(player);
 
@@ -271,7 +317,7 @@ public class PlayerCharacterManager {
 			player.teleport(new Location(Bukkit.getWorld("World"), 42.5, 81, -175.5));
 		}
 	}
-	
+
 	/**
 	 * This happens when a new character is created and they have selected their class.
 	 * 
@@ -282,13 +328,13 @@ public class PlayerCharacterManager {
 
 		//Lets create the info needed to make a new player character.
 		createPlayerCharacter(player);
-		
+
 		//Set the player class the player choose.
 		setPlayerClassSelection(player, charClass);
 
 		//Teleport new players to the main spawn location.
 		player.teleport(new Location(Bukkit.getWorld("World"), 43, 78, -34));
-		
+
 		//Setup the player
 		PlayerManager.setupPlayer(player);
 	}
@@ -302,7 +348,7 @@ public class PlayerCharacterManager {
 	public static void removePlayer(Player player) {
 		currentCharacterSlot.remove(player.getUniqueId());
 	}
-	
+
 	public static void createPlayerCharacter(Player player) {
 
 		String uuid = player.getUniqueId().toString();

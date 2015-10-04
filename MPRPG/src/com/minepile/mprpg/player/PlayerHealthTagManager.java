@@ -39,8 +39,10 @@ public class PlayerHealthTagManager {
 		setupScoreboard();
 
 		for (Player players : Bukkit.getOnlinePlayers()) {
-			//Remove a players HP tag on reload.
-			players.remove();
+			if (!players.hasMetadata("NPC")) {
+				addPlayer(players);
+				updateHealthTag(players);
+			}
 		}
 	}	
 
@@ -86,19 +88,20 @@ public class PlayerHealthTagManager {
 	}
 
 	/**
-	 * This will update the players score on the scoreboard.  This will then show the players new HP under their name.
+	 * This will update the players HP under their name.
 	 * 
 	 * @param player The player who will have their HP updated under their name.
 	 */
 	@SuppressWarnings("deprecation")
 	public static void updateHealthTag(final Player player) {
 		//Lets start a  task
-		taskID = Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
+		Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
 			@Override
 			public void run() {
-				UUID uuid = player.getUniqueId();
-				obj.getScore(player).setScore((int) PlayerManager.getHealthPoints(uuid));
-
+				if (PlayerCharacterManager.isPlayerLoaded(player)) {
+					UUID uuid = player.getUniqueId();
+					obj.getScore(player).setScore((int) PlayerManager.getHealthPoints(uuid));
+				}
 			} //END Run method.
 		}, 5); //(20 ticks = 1 second)
 	}
@@ -111,7 +114,7 @@ public class PlayerHealthTagManager {
 	@SuppressWarnings("deprecation")
 	public static void updateNPCHealthTag(final Player npc, final double maxHP) {
 		//Lets start a  task
-		taskID = Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
+		Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
 			@Override
 			public void run() {
 

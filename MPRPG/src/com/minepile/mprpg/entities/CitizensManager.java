@@ -130,11 +130,12 @@ public class CitizensManager {
 				String npcName = ((Player) npc).getDisplayName();
 				double npcHP = getCitizenMaxHP(npcName);
 				String hologramText = getCitizenType(npcName).getName();
+				String click = ChatColor.BOLD + "RIGHT-CLICK";
 				
 				Location loc = getCitizenLocation(npcName);
 				World world = loc.getWorld();
 				double x = loc.getX();
-				double y = loc.getY() + 3;
+				double y = loc.getY() + 3.5;
 				double z = loc.getZ();
 				Location hologramLoc = new Location(world, x, y, z);
 				
@@ -144,6 +145,10 @@ public class CitizensManager {
 				//Setup NPC Hologram
 				Hologram hologram = HologramsAPI.createHologram(plugin, hologramLoc);
 		    	hologram.appendTextLine(hologramText);
+		    	
+		    	if (!hologramText.isEmpty()) {
+		    		hologram.appendTextLine(click);
+		    	}
 		    	
 		    	//Add hologram to the array list.
 		    	npcHolograms.add(hologram);

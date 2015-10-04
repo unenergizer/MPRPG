@@ -58,14 +58,6 @@ public class PlayerManager {
 	public void setup(MPRPG plugin) {
 		this.plugin = plugin;
 
-		//If the server reloads, lets remove all players from the ConcurrentHashMaps.
-		//We will add them back after this step.
-		for (Player players : Bukkit.getOnlinePlayers()) {
-			if (!players.hasMetadata("NPC")) {
-				removePlayer(players);
-			}
-		}
-
 		//Starts the thread that will refresh the action bar for the user, so they can see
 		//various stats above their health and hunger bar.
 		Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(plugin,  new Runnable() {
@@ -96,8 +88,10 @@ public class PlayerManager {
 	public static void disable() {
 		for (Player players : Bukkit.getOnlinePlayers()) {
 			if (PlayerCharacterManager.isPlayerLoaded(players)) {
-				double logoutHP = getHealthPoints(players.getUniqueId());
-				PlayerCharacterManager.setPlayerConfigDouble(players, "player.logoutHP", logoutHP);
+				if (!players.hasMetadata("NPC")) {
+					//If the server reloads, lets remove all players from the ConcurrentHashMaps.
+					removePlayer(players);
+				}
 			}
 		}
 	}
@@ -425,7 +419,7 @@ public class PlayerManager {
 	 */
 	public static void removePlayer(Player player) {
 		UUID uuid = player.getUniqueId();
-
+		
 		//remove player from ConcurrentHashMaps.
 		healthPoints.remove(uuid);
 		maxHealthPoints.remove(uuid);

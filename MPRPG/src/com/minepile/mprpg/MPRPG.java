@@ -117,7 +117,8 @@ public class MPRPG extends JavaPlugin {
 		PlayerManager.getInstance().setup(this);
 		PlayerHealthTagManager.getInstance().setup(this);
 		PlayerMenuManager.getInstance().setup(this);
-
+		
+		
 		//setup chat manager instances
 		ChatManager.getInstance().setup(this);
 		DiceRollManager.getInstance().setup(this);
@@ -168,10 +169,11 @@ public class MPRPG extends JavaPlugin {
 		//setup world manager instances
 		BlockRegenerationManager.getInstance().setup(this);
 
+		
 		/////////////////////////////
 		/// Setup Event Listeners ///
 		/////////////////////////////
-
+		
 		pluginManager.registerEvents(new AsyncPlayerChatListener(this), this);
 
 		pluginManager.registerEvents(new BlockBreakListener(this), this);
