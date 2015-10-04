@@ -1,6 +1,7 @@
 package com.minepile.mprpg.player;
 
 import io.puharesource.mc.titlemanager.api.TabTitleObject;
+import io.puharesource.mc.titlemanager.api.TitleObject;
 
 import java.io.File;
 import java.io.IOException;
@@ -45,6 +46,7 @@ public class PlayerCharacterManager {
 	//Player Menus
 	private static HashMap<UUID, Integer> currentCharacterSlot = new HashMap<UUID, Integer>();
 	private static HashMap<UUID, Inventory> characterSelectMenu = new HashMap<UUID, Inventory>();
+	private static HashMap<UUID, String> classSelectClickCount = new HashMap<UUID, String>();
 
 	public static Inventory menu;
 
@@ -91,6 +93,7 @@ public class PlayerCharacterManager {
 		//Clear HashMap.
 		characterSelectMenu.clear();
 		currentCharacterSlot.clear();
+		classSelectClickCount.clear();
 	}	
 
 	/**
@@ -301,10 +304,11 @@ public class PlayerCharacterManager {
 		if (isClassSelected(player) == true) {
 			//Teleport players to their last logout location.
 			double x = getPlayerConfigDouble(player, "player.logout.x");
-			double y = getPlayerConfigDouble(player, "player.logout.y");
+			double y = getPlayerConfigDouble(player, "player.logout.y") + 1;
 			double z = getPlayerConfigDouble(player, "player.logout.z");
-
-			player.teleport(new Location(Bukkit.getWorld("World"), x, y + 1, z));
+			Location loc = new Location(Bukkit.getWorld("World"), x, y, z);
+			
+			PlayerManager.teleportPlayerToSpawn(player, loc);
 
 			//Remove character selection menu from memory.
 			characterSelectMenu.remove(player.getUniqueId());
@@ -325,18 +329,53 @@ public class PlayerCharacterManager {
 	 * @param charClass The class the player choose.  Examples: archer, mage, rouge, and warrior.
 	 */
 	public static void toggleClassSelectionInteract(Player player, String charClass) {
+		UUID uuid = player.getUniqueId();
+		
+		//Enable click counting for confirmation.
+		if (!classSelectClickCount.containsKey(uuid)) {
+			
+			toggleClassSelectionText(player, charClass);
+			classSelectClickCount.put(uuid, charClass);
+			
+		} else if (classSelectClickCount.get(uuid).equals(charClass)) {
+			
+			//Lets create the info needed to make a new player character.
+			createPlayerCharacter(player);
+	
+			//Set the player class the player choose.
+			setPlayerClassSelection(player, charClass);
+	
+			//Teleport new players to the main spawn location.
+			PlayerManager.teleportPlayerToSpawn(player);
+	
+			//Setup the player
+			PlayerManager.setupPlayer(player);
 
-		//Lets create the info needed to make a new player character.
-		createPlayerCharacter(player);
-
-		//Set the player class the player choose.
-		setPlayerClassSelection(player, charClass);
-
-		//Teleport new players to the main spawn location.
-		player.teleport(new Location(Bukkit.getWorld("World"), 43, 78, -34));
-
-		//Setup the player
-		PlayerManager.setupPlayer(player);
+			//Show Success Message.
+			new TitleObject(ChatColor.GREEN + "Success!", ChatColor.GOLD + "You character has been created!").send(player);
+			
+			player.playSound(player.getLocation(), Sound.LEVEL_UP, 1f, 1f);
+			
+			//Remove the player from the ClickCount HashMap.
+			classSelectClickCount.remove(uuid);
+		} else {
+			toggleClassSelectionText(player, charClass);
+			classSelectClickCount.put(uuid, charClass);
+		}
+	}
+	
+	private static void toggleClassSelectionText(Player player, String charClass) {
+		if (charClass.equalsIgnoreCase("ARCHER")) {
+			player.sendMessage(ChatColor.GREEN + "You have selected the " + ChatColor.DARK_GREEN + "Archer" + ChatColor.GREEN +" class.");
+		} else if (charClass.equalsIgnoreCase("MAGE")) {
+			player.sendMessage(ChatColor.GREEN + "You have selected the " + ChatColor.BLUE + "Mage" + ChatColor.GREEN +" class.");
+		} else if (charClass.equalsIgnoreCase("ROGUE")) {
+			player.sendMessage(ChatColor.GREEN + "You have selected the " + ChatColor.YELLOW + "Rogue" + ChatColor.GREEN +" class.");	
+		} else if (charClass.equalsIgnoreCase("WARRIOR")) {
+			player.sendMessage(ChatColor.GREEN + "You have selected the " + ChatColor.RED + "Warrior" + ChatColor.GREEN +" class.");
+		}
+		
+		player.sendMessage(ChatColor.GOLD + "Click one more time to comfirm your selection or select a different class.");
 	}
 
 	/**

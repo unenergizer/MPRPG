@@ -37,7 +37,8 @@ public class PlayerHealthTagManager {
 		this.plugin = plugin;
 
 		setupScoreboard();
-
+		
+		//Resetup players on scoreboard.
 		for (Player players : Bukkit.getOnlinePlayers()) {
 			if (!players.hasMetadata("NPC")) {
 				addPlayer(players);

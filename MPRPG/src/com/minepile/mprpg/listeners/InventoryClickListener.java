@@ -91,8 +91,10 @@ public class InventoryClickListener implements Listener{
 					//Cancel event if the chest is a protected menu (inventory).
 					event.setCancelled(true);
 				} else {
-					//Update armor attributes.
-					delayedSlotUpdate(player);
+					if (PlayerCharacterManager.isPlayerLoaded(player)) {
+						//Update armor attributes.
+						delayedSlotUpdate(player);
+					}
 				}
 			}
 		}

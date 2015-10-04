@@ -116,6 +116,25 @@ public class PlayerManager {
 	}
 
 	/**
+	 * This will teleport the specified player to the main player Spawn location.
+	 * 
+	 * @param player The player that will be teleported.
+	 */
+	public static void teleportPlayerToSpawn(Player player, Location loc) {
+		//Player must be new, lets teleport them to the new player starting podouble.
+		player.teleport(loc);
+
+		//Play a sound effect for the player.
+		player.playSound(player.getLocation(), Sound.AMBIENCE_CAVE, .8f, .8f);
+
+		//Add temporary potion effects.
+		PotionEffect blind = new PotionEffect(PotionEffectType.BLINDNESS, 6*20, 10);
+		PotionEffect confuse = new PotionEffect(PotionEffectType.CONFUSION, 6*20, 20);
+		blind.apply(player);
+		confuse.apply(player);
+	}
+
+	/**
 	 * Sets the players health.  This will update all things health related.
 	 * 
 	 * @param player

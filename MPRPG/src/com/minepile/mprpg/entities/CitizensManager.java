@@ -201,16 +201,12 @@ public class CitizensManager {
 		} else if (type == CitizenType.QUEST_GIVER) {
 			//TODO
 		} else if (type == CitizenType.ARCHER) {
-			player.sendMessage(ChatColor.GREEN + "You have selected the " + ChatColor.DARK_GREEN + "Archer" + ChatColor.GREEN +" class.");
 			PlayerCharacterManager.toggleClassSelectionInteract(player, "archer");
 		} else if (type == CitizenType.MAGE) {
-			player.sendMessage(ChatColor.GREEN + "You have selected the " + ChatColor.BLUE + "Mage" + ChatColor.GREEN +" class.");
 			PlayerCharacterManager.toggleClassSelectionInteract(player, "mage");
 		} else if (type == CitizenType.ROGUE) {
-			player.sendMessage(ChatColor.GREEN + "You have selected the " + ChatColor.YELLOW + "Rogue" + ChatColor.GREEN +" class.");
 			PlayerCharacterManager.toggleClassSelectionInteract(player, "rogue");
 		} else if (type == CitizenType.WARRIOR) {
-			player.sendMessage(ChatColor.GREEN + "You have selected the " + ChatColor.RED + "Warrior" + ChatColor.GREEN +" class.");
 			PlayerCharacterManager.toggleClassSelectionInteract(player, "warrior");
 		}
 		
