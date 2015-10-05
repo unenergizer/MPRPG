@@ -66,6 +66,7 @@ public class ArmorItemManager {
 		String name = itemName.replaceAll("_", " ");
 		ItemTier tier = ItemTierManager.getItemTierEnum(armorItemConfig.getString(itemName + ".itemTier"));
 		ItemQuality quality = ItemQualityManager.getItemQualityEnum(armorItemConfig.getString(itemName + ".itemQuality"));
+		@SuppressWarnings("unchecked")
 		List<String> itemDescription = (List<String>) armorItemConfig.getList(itemName + ".itemDescription");
 		int itemNumber = armorItemConfig.getInt(itemName + ".item");
 		int armorMax = armorItemConfig.getInt(itemName + ".armorMax");	
@@ -173,27 +174,27 @@ public class ArmorItemManager {
 		lore.add(ChatColor.DARK_GRAY + "" + ChatColor.ITALIC + tier + ": " + itemQuality);	//Define the quality of item.
 		lore.add("");																		//create blank space
 
-		if (armor > 0) 		{ lore.add(ChatColor.GREEN + "+" + armor + " Armor"); }
-		if (blindness > 0) 	{ lore.add(ChatColor.DARK_PURPLE + "+" + blindness + " Blindness"); }
-		if (block > 0) 		{ lore.add(ChatColor.DARK_PURPLE + "+" + block + " Block Chance"); }
-		if (coldDamage > 0) { lore.add(ChatColor.RED + "+" + coldDamage + " Cold Damage"); }
-		if (coldResist > 0) { lore.add(ChatColor.BLUE + "+" + coldResist + " Cold Resistance"); }
+		if (armor > 0) 		{ lore.add(ChatColor.BLACK + "+" + armor + " Armor"); }
+		if (blindness > 0) 	{ lore.add(ChatColor.DARK_BLUE + "+" + blindness + " Blindness"); }
+		if (block > 0) 		{ lore.add(ChatColor.DARK_GREEN + "+" + block + " Block Chance"); }
+		if (coldDamage > 0) { lore.add(ChatColor.DARK_AQUA + "+" + coldDamage + " Cold Damage"); }
+		if (coldResist > 0) { lore.add(ChatColor.DARK_RED + "+" + coldResist + " Cold Resistance"); }
 		if (critChance > 0) { lore.add(ChatColor.DARK_PURPLE + "+" + critChance + " Critical Hit Chance"); }
-		if (damage > 0) 	{ lore.add(ChatColor.RED + "+" + damage + " Damage"); }
-		if (dodgeChance > 0){ lore.add(ChatColor.DARK_PURPLE + "+" + dodgeChance + " Dodge Chance"); }
-		if (fireDamage > 0) { lore.add(ChatColor.RED + "+" + fireDamage + " Fire Damage"); }
+		if (damage > 0) 	{ lore.add(ChatColor.GOLD + "+" + damage + " Damage"); }
+		if (dodgeChance > 0){ lore.add(ChatColor.GRAY + "+" + dodgeChance + " Dodge Chance"); }
+		if (fireDamage > 0) { lore.add(ChatColor.DARK_GRAY + "+" + fireDamage + " Fire Damage"); }
 		if (fireResist > 0) { lore.add(ChatColor.BLUE + "+" + fireResist + " Fire Resistance"); }
-		if (goldFind > 0)	{ lore.add(ChatColor.GOLD + "+" + goldFind + " Gold Find"); }			
-		if (hp > 0) 		{ lore.add(ChatColor.GREEN + "+" + hp + " Health"); }
-		if (hpRegen > 0) 	{ lore.add(ChatColor.GREEN + "+" + hpRegen + " Health Regeneration"); }
-		if (itemFind > 0)	{ lore.add(ChatColor.GOLD + "+" + itemFind + " Item Find"); }			
-		if (knockback > 0)	{ lore.add(ChatColor.DARK_PURPLE + "+" + knockback + " Knockback"); }			
-		if (lifesteal > 0)	{ lore.add(ChatColor.DARK_PURPLE + "+" + lifesteal + " Lifesteal"); }			
-		if (mana > 0)		{ lore.add(ChatColor.GREEN + "+" + mana + " Mana"); }			
-		if (manaRegen > 0)	{ lore.add(ChatColor.GREEN + "+" + manaRegen + " Mana Regeneration"); }			
-		if (manasteal > 0)	{ lore.add(ChatColor.GREEN + "+" + manasteal + " Manasteal"); }			
-		if (poisonDamage >0){ lore.add(ChatColor.RED + "+" + poisonDamage + " Poison Damage"); }			
-		if (poisonResist >0){ lore.add(ChatColor.BLUE + "+" + poisonResist + " Poison Resistance"); }			
+		if (goldFind > 0)	{ lore.add(ChatColor.GREEN + "+" + goldFind + " Gold Find"); }			
+		if (hp > 0) 		{ lore.add(ChatColor.AQUA + "+" + hp + " Health"); }
+		if (hpRegen > 0) 	{ lore.add(ChatColor.RED + "+" + hpRegen + " Health Regeneration"); }
+		if (itemFind > 0)	{ lore.add(ChatColor.LIGHT_PURPLE + "+" + itemFind + " Item Find"); }			
+		if (knockback > 0)	{ lore.add(ChatColor.YELLOW + "+" + knockback + " Knockback"); }			
+		if (lifesteal > 0)	{ lore.add(ChatColor.WHITE + "+" + lifesteal + " Lifesteal"); }			
+		if (mana > 0)		{ lore.add(ChatColor.BOLD + "+" + mana + " Mana"); }			
+		if (manaRegen > 0)	{ lore.add(ChatColor.STRIKETHROUGH + "+" + manaRegen + " Mana Regeneration"); }			
+		if (manasteal > 0)	{ lore.add(ChatColor.UNDERLINE + "+" + manasteal + " Manasteal"); }			
+		if (poisonDamage >0){ lore.add(ChatColor.ITALIC + "+" + poisonDamage + " Poison Damage"); }			
+		if (poisonResist >0){ lore.add(ChatColor.RESET + "+" + poisonResist + " Poison Resistance"); }			
 		if (reflection > 0) { lore.add(ChatColor.DARK_PURPLE + "+" + reflection + " Damage Reflection"); }
 		if (slowness > 0)	{ lore.add(ChatColor.DARK_PURPLE + "+" + slowness + " Slowness"); }			
 		if (stamina > 0)	{ lore.add(ChatColor.GREEN + "+" + stamina + " Stamina"); }			

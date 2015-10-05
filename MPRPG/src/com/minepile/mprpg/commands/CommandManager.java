@@ -205,15 +205,15 @@ public class CommandManager implements CommandExecutor{
 							PlayerCharacterManager.setPlayerConfigString(player, "setting.chat.lastpm", targetName);
 							PlayerCharacterManager.setPlayerConfigString(target, "setting.chat.lastpm", player.getName());
 
-							//Get clan tag (if any).
-							String clanTag = ChatManager.getClanTag(player);
+							//Get guild tag (if any).
+							String guildTag = ChatManager.getClanTag(player);
 
 							//Append a staff tag (if any).
 							String prefix = ChatManager.getStaffPrefix(player);
 
 							//Send target player the message.
 							target.sendMessage(ChatColor.LIGHT_PURPLE + "" + 
-									ChatColor.BOLD + "PM " + prefix + clanTag +
+									ChatColor.BOLD + "PM " + prefix + guildTag +
 									ChatColor.GRAY + senderName + ChatColor.LIGHT_PURPLE + " > " +
 									ChatColor.GRAY + target.getName() + ChatColor.DARK_GRAY + ": " + 
 									ChatColor.WHITE + msg);
@@ -223,7 +223,7 @@ public class CommandManager implements CommandExecutor{
 
 							//Send the sender the same message.
 							player.sendMessage(ChatColor.LIGHT_PURPLE + "" + 
-									ChatColor.BOLD + "PM " + prefix + clanTag +
+									ChatColor.BOLD + "PM " + prefix + guildTag +
 									ChatColor.GRAY + senderName + ChatColor.LIGHT_PURPLE + " > " +
 									ChatColor.GRAY + target.getName() + ChatColor.DARK_GRAY + ": " + 
 									ChatColor.WHITE + msg);
@@ -582,7 +582,7 @@ public class CommandManager implements CommandExecutor{
 				}
 
 				/////////////////////////////////////////////////////////////////////////////////
-				// GANG COMMANDS : These commands do various actions with player clans //////////
+				// GUILD COMMANDS : These commands do various actions with player clans /////////
 				/////////////////////////////////////////////////////////////////////////////////
 
 				//Roll command. Used to get a random number.
@@ -638,8 +638,8 @@ public class CommandManager implements CommandExecutor{
 						}
 					} else {
 						if (args.length == 2 && args[0].toString().startsWith("new")) {
-							String clanName = args[1].toString();
-							GuildManager.addGuild(player, clanName);
+							String guildName = args[1].toString();
+							GuildManager.addGuild(player, guildName);
 						} else {
 							//Default info text when "/guild" command is run.
 							player.sendMessage(ChatColor.RED + "  " + ChatColor.BOLD + "! " +

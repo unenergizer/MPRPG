@@ -1,4 +1,4 @@
-package com.minepile.mprpg.player;
+package com.minepile.mprpg.gui;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -16,6 +16,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.material.Dye;
 
 import com.minepile.mprpg.MPRPG;
+import com.minepile.mprpg.player.PlayerCharacterManager;
 import com.minepile.mprpg.util.ItemBuilder;
 
 public class PlayerMenuManager {

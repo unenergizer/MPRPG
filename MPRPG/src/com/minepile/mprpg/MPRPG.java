@@ -19,8 +19,12 @@ import com.minepile.mprpg.entities.MonsterCreatorManager;
 import com.minepile.mprpg.entities.MonsterManager;
 import com.minepile.mprpg.entities.NPCManager;
 import com.minepile.mprpg.gui.ChestMenuManager;
+import com.minepile.mprpg.gui.PlayerMailManager;
+import com.minepile.mprpg.gui.PlayerMenuManager;
 import com.minepile.mprpg.guild.GuildManager;
 import com.minepile.mprpg.inventory.BankChestManager;
+import com.minepile.mprpg.inventory.InventoryRestore;
+import com.minepile.mprpg.inventory.InventorySave;
 import com.minepile.mprpg.inventory.ShopChestManager;
 import com.minepile.mprpg.items.ArmorItemManager;
 import com.minepile.mprpg.items.ConsumableItemManager;
@@ -70,9 +74,7 @@ import com.minepile.mprpg.listeners.ProjectileHitListener;
 import com.minepile.mprpg.listeners.WeatherChangeListener;
 import com.minepile.mprpg.player.PlayerCharacterManager;
 import com.minepile.mprpg.player.PlayerHealthTagManager;
-import com.minepile.mprpg.player.PlayerMailManager;
 import com.minepile.mprpg.player.PlayerManager;
-import com.minepile.mprpg.player.PlayerMenuManager;
 import com.minepile.mprpg.professions.Alchemy;
 import com.minepile.mprpg.professions.Blacksmithing;
 import com.minepile.mprpg.professions.Cooking;
@@ -140,6 +142,8 @@ public class MPRPG extends JavaPlugin {
 
 		//setup inventory manager instances
 		BankChestManager.getInstance().setup(this);
+		InventoryRestore.getInstance().setup(this);
+		InventorySave.getInstance().setup(this);
 		ShopChestManager.getInstance().setup(this);
 
 		//setup item manager instances

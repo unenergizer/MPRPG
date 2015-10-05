@@ -16,6 +16,7 @@ import org.bukkit.Sound;
 import org.bukkit.World;
 import org.bukkit.entity.Firework;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.FireworkMeta;
 import org.bukkit.potion.PotionEffect;
@@ -23,6 +24,8 @@ import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import com.minepile.mprpg.MPRPG;
+import com.minepile.mprpg.gui.PlayerMenuManager;
+import com.minepile.mprpg.inventory.InventoryRestore;
 import com.minepile.mprpg.items.ItemLoreFactory;
 
 public class PlayerManager {
@@ -421,11 +424,37 @@ public class PlayerManager {
 		if (PlayerHealthTagManager.getSb() != null && PlayerHealthTagManager.getObj() != null) {
 			PlayerHealthTagManager.addPlayer(player);
 		}
-		
+
 		PlayerHealthTagManager.updateHealthTag(player);
 
 		//Give the player a Menu!
 		PlayerMenuManager.createMenu(player);
+
+		//Load player items
+		Inventory playerInv = player.getInventory();
+		for (int i = 0; i <= playerInv.getSize(); i++) {
+			try {
+				ItemStack item = InventoryRestore.restoreItemStack(player, "playerInv", i);
+				playerInv.setItem(i, item);
+			} catch (NullPointerException exc) {}
+		}
+
+		//Load player armor
+		try {
+			player.getEquipment().setBoots(InventoryRestore.restoreItemStack(player, "armorInv", 100));
+		} catch (NullPointerException exc) {}
+
+		try {
+			player.getEquipment().setLeggings(InventoryRestore.restoreItemStack(player, "armorInv", 101));
+		} catch (NullPointerException exc) {}
+
+		try {
+			player.getEquipment().setChestplate(InventoryRestore.restoreItemStack(player, "armorInv", 102));
+		} catch (NullPointerException exc) {}
+
+		try {
+			player.getEquipment().setHelmet(InventoryRestore.restoreItemStack(player, "armorInv", 103));
+		} catch (NullPointerException exc) {}
 
 		//Update the players armor.
 		ItemLoreFactory.getInstance().applyHPBonus(player, false);
@@ -438,7 +467,7 @@ public class PlayerManager {
 	 */
 	public static void removePlayer(Player player) {
 		UUID uuid = player.getUniqueId();
-		
+
 		//remove player from ConcurrentHashMaps.
 		healthPoints.remove(uuid);
 		maxHealthPoints.remove(uuid);

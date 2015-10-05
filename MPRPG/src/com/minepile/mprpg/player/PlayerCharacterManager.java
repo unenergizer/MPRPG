@@ -29,6 +29,7 @@ import org.bukkit.inventory.meta.SkullMeta;
 import com.gmail.filoghost.holographicdisplays.api.Hologram;
 import com.gmail.filoghost.holographicdisplays.api.HologramsAPI;
 import com.minepile.mprpg.MPRPG;
+import com.minepile.mprpg.inventory.InventorySave;
 
 public class PlayerCharacterManager {
 
@@ -134,11 +135,16 @@ public class PlayerCharacterManager {
 		hologram2.delete();
 		hologram3.delete();
 	}
-
+	
+	/**
+	 * This will save the state of the current character being played.
+	 * 
+	 * @param player The player who owns the character.
+	 */
 	public static void saveCharacter(Player player) {
 		UUID uuid = player.getUniqueId();
 
-		//Save player stats.
+		//Get player stats.
 		double logoutHP = PlayerManager.getHealthPoints(uuid);
 		double logoutMaxHP = PlayerManager.getMaxHealthPoints(uuid);
 		double logoutStamina = PlayerManager.getStaminaPoints(uuid);
@@ -149,7 +155,8 @@ public class PlayerCharacterManager {
 		double x = player.getLocation().getX();
 		double y = player.getLocation().getY();
 		double z = player.getLocation().getZ();
-
+		
+		//Save player stas.
 		setPlayerConfigDouble(player, "player.logout.hp", logoutHP);
 		setPlayerConfigDouble(player, "player.logout.maxhp", logoutMaxHP);
 		setPlayerConfigDouble(player, "player.logout.stamina", logoutStamina);
@@ -160,8 +167,38 @@ public class PlayerCharacterManager {
 		setPlayerConfigDouble(player, "player.logout.x", x);
 		setPlayerConfigDouble(player, "player.logout.y", y);
 		setPlayerConfigDouble(player, "player.logout.z", z);
-	}
+		
+		
+		//Lets save the players inventory.
+		Inventory playerInv = player.getInventory();
+		
+		for (int i = 0; i <= playerInv.getSize(); i++) {
+			ItemStack item = playerInv.getItem(i);
+			InventorySave.saveItemStack(player, "playerInv", i, item);
+		}
+		
+		//Lets save the players armor.
+		ItemStack boots = player.getEquipment().getBoots();
+		ItemStack leggings = player.getEquipment().getLeggings();
+		ItemStack chestplate = player.getEquipment().getChestplate();
+		ItemStack helmet = player.getEquipment().getHelmet();
 
+		InventorySave.saveItemStack(player, "armorInv", 100, boots);
+		InventorySave.saveItemStack(player, "armorInv", 101, leggings);
+		InventorySave.saveItemStack(player, "armorInv", 102, chestplate);
+		InventorySave.saveItemStack(player, "armorInv", 103, helmet);
+		
+		//Save the players bank
+		//TODO
+	}
+	
+	/**
+	 * This begins the setup of a player who has just logged in.  This
+	 * method is also ran if the server reloads, forcing all players to
+	 * select a character to play on.
+	 * 
+	 * @param player The player who has just logged into the server.
+	 */
 	public static void initializePlayer(Player player) {
 		UUID uuid = player.getUniqueId();
 
@@ -192,7 +229,10 @@ public class PlayerCharacterManager {
 
 		//Clear a players inventory of items and armor.
 		player.getInventory().clear();
-		player.getEquipment().clear();
+		player.getInventory().setHelmet(null);
+		player.getInventory().setChestplate(null);
+		player.getInventory().setLeggings(null);
+		player.getInventory().setBoots(null);
 
 		//update the players health tag
 		if (PlayerHealthTagManager.getSb() != null && PlayerHealthTagManager.getObj() != null) {
@@ -253,8 +293,16 @@ public class PlayerCharacterManager {
 		//Menu creation is finished.  Add menu to HashMap for player.
 		characterSelectMenu.put(player.getUniqueId(), mainMenu);
 	}
-
+	
+	/**
+	 * This will creat a player skull to represent a already made character.
+	 * 
+	 * @param player The player who we are making the menu items for.
+	 * @param slot The inventory slot number the item will go.
+	 * @return Returns an ItemStack of a player skull with various stats on it.
+	 */
 	public static ItemStack createMenuItems(Player player, int slot) {
+		//Get player stats.
 		String itemTitle = ChatColor.AQUA + "" +ChatColor.BOLD + "Character " + Integer.toString(slot + 1); 
 		String characterName = player.getName();
 		String characterClass = getPlayerConfigString(player, "player.charClass", slot);
@@ -266,16 +314,19 @@ public class PlayerCharacterManager {
 		int mana = getPlayerConfigInt(player, "player.logout.mana", slot);
 		int maxMana = getPlayerConfigInt(player, "player.logout.maxMana", slot);
 		String guild = getPlayerConfigString(player, "guild.name", slot);
-
+		
+		//Add stast to array list.
 		List lores = Arrays.asList(" ",
 				ChatColor.GREEN + "Name: " + ChatColor.GRAY + characterName,
+				ChatColor.GREEN + "Guild: " + ChatColor.GRAY + guild,
+				" ",
 				ChatColor.GREEN + "Class: " + ChatColor.GRAY + characterClass,
 				ChatColor.GREEN + "Level: " + ChatColor.GRAY + level,
 				ChatColor.GREEN + "HP: " + ChatColor.GRAY + hp + "/" + maxhp,
-				ChatColor.GREEN + "Stamina: " + ChatColor.GRAY + stamina + "/" + maxStamina,
 				ChatColor.GREEN + "Mana: " + ChatColor.GRAY + mana + "/" + maxMana,
-				ChatColor.GREEN + "Guild: " + ChatColor.GRAY + guild);
-
+				ChatColor.GREEN + "Stamina: " + ChatColor.GRAY + stamina + "/" + maxStamina);
+		
+		//Make the skull item.
 		ItemStack skull = new ItemStack(Material.SKULL_ITEM, 1, (byte) SkullType.PLAYER.ordinal());
 		SkullMeta skullMeta = (SkullMeta) Bukkit.getItemFactory().getItemMeta(Material.SKULL_ITEM);
 		skullMeta.setOwner(player.getName());
@@ -294,7 +345,13 @@ public class PlayerCharacterManager {
 		player.playSound(player.getLocation(), Sound.CHEST_OPEN, .8f, .8f);
 		player.openInventory(characterSelectMenu.get(player.getUniqueId()));
 	}
-
+	
+	/**
+	 * This happens when a player selects a menu item from the character selection menu.
+	 * 
+	 * @param player The player who has made a menu selection.
+	 * @param slot The slot the player clicked.
+	 */
 	public static void toggleCharacterSelectionInteract(Player player, int slot) {
 		UUID uuid = player.getUniqueId();
 
@@ -364,6 +421,12 @@ public class PlayerCharacterManager {
 		}
 	}
 	
+	/**
+	 * Displays information about the class that was clicked.
+	 * 
+	 * @param player The player who clicked a class NPC.
+	 * @param charClass The name of the class that was clicked.
+	 */
 	private static void toggleClassSelectionText(Player player, String charClass) {
 		//Send Blank Message
 		player.sendMessage("");
@@ -418,7 +481,11 @@ public class PlayerCharacterManager {
 	public static void removePlayer(Player player) {
 		currentCharacterSlot.remove(player.getUniqueId());
 	}
-
+	
+	/**
+	 * This creates additional configuration information based on what character slot the player clicked.
+	 * @param player The player who is having config info generated for them.
+	 */
 	public static void createPlayerCharacter(Player player) {
 
 		String uuid = player.getUniqueId().toString();
@@ -507,7 +574,7 @@ public class PlayerCharacterManager {
 			e.printStackTrace();
 		} 
 	}
-
+	
 	public static boolean isCharacterSelected(Player player) {
 		UUID uuid = player.getUniqueId();
 

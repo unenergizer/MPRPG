@@ -13,12 +13,12 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 
 import com.minepile.mprpg.MPRPG;
+import com.minepile.mprpg.gui.PlayerMailManager;
+import com.minepile.mprpg.gui.PlayerMenuManager;
 import com.minepile.mprpg.inventory.BankChestManager;
 import com.minepile.mprpg.items.ItemLoreFactory;
 import com.minepile.mprpg.items.LootTableChestManager;
 import com.minepile.mprpg.player.PlayerCharacterManager;
-import com.minepile.mprpg.player.PlayerMailManager;
-import com.minepile.mprpg.player.PlayerMenuManager;
 import com.minepile.mprpg.professions.Alchemy;
 import com.minepile.mprpg.professions.Blacksmithing;
 import com.minepile.mprpg.professions.Cooking;

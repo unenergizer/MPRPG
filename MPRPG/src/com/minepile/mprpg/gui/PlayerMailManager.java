@@ -1,4 +1,4 @@
-package com.minepile.mprpg.player;
+package com.minepile.mprpg.gui;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -10,7 +10,6 @@ import org.bukkit.inventory.Inventory;
 import com.gmail.filoghost.holographicdisplays.api.Hologram;
 import com.gmail.filoghost.holographicdisplays.api.HologramsAPI;
 import com.minepile.mprpg.MPRPG;
-import com.minepile.mprpg.gui.ChestMenuManager;
 
 public class PlayerMailManager {
 	
