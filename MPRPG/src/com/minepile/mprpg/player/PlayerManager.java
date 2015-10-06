@@ -25,6 +25,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import com.minepile.mprpg.MPRPG;
 import com.minepile.mprpg.gui.PlayerMenuManager;
+import com.minepile.mprpg.inventory.BankChestManager;
 import com.minepile.mprpg.inventory.InventoryRestore;
 import com.minepile.mprpg.items.ItemLoreFactory;
 
@@ -455,7 +456,10 @@ public class PlayerManager {
 		try {
 			player.getEquipment().setHelmet(InventoryRestore.restoreItemStack(player, "armorInv", 103));
 		} catch (NullPointerException exc) {}
-
+		
+		//Restore the players items
+		BankChestManager.restoreBank(player);
+		
 		//Update the players armor.
 		ItemLoreFactory.getInstance().applyHPBonus(player, false);
 	}

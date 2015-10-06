@@ -299,8 +299,8 @@ public class PlayerInteractListener implements Listener{
 			//Cancel opening the ender chest and show a custom chest.
 			event.setCancelled(true);
 
-			//Show custom chest.
-			player.openInventory(BankChestManager.getBank(player));
+			//Show custom bank chest.
+			player.openInventory(BankChestManager.getBank(player, 0));
 
 			//Play a sound
 			player.playSound(player.getLocation(), Sound.CHEST_OPEN, .5F, 1F);

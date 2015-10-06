@@ -29,6 +29,7 @@ import org.bukkit.inventory.meta.SkullMeta;
 import com.gmail.filoghost.holographicdisplays.api.Hologram;
 import com.gmail.filoghost.holographicdisplays.api.HologramsAPI;
 import com.minepile.mprpg.MPRPG;
+import com.minepile.mprpg.inventory.BankChestManager;
 import com.minepile.mprpg.inventory.InventorySave;
 
 public class PlayerCharacterManager {
@@ -189,7 +190,7 @@ public class PlayerCharacterManager {
 		InventorySave.saveItemStack(player, "armorInv", 103, helmet);
 		
 		//Save the players bank
-		//TODO
+		BankChestManager.saveBank(player);
 	}
 	
 	/**
@@ -536,7 +537,7 @@ public class PlayerCharacterManager {
 		playerConfig.set(slot + ".economy.silver", 0);
 		playerConfig.set(slot + ".economy.copper", 15);
 		playerConfig.set(slot + ".economy.portalCash", 0);
-		playerConfig.set(slot + ".economy.bankRows", 1);
+		playerConfig.set(slot + ".economy.bankRows", 2);
 		playerConfig.set(slot + ".economy.shopRows", 1);
 
 		try {
