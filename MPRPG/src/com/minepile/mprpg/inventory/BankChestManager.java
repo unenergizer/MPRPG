@@ -22,8 +22,8 @@ public class BankChestManager {
 	static BankChestManager weaponManagerInstance = new BankChestManager();
 
 	//Holograms
-	static Hologram bankHologram01;
-	static Hologram bankHologram02;
+	static Hologram bankHologram0;
+	static Hologram bankHologram1;
 
 	//Setup to save 5 bank chest pages.
 	private static ConcurrentHashMap<UUID, Inventory> playerBankPage0 = new ConcurrentHashMap<UUID, Inventory>();
@@ -37,7 +37,7 @@ public class BankChestManager {
 		return weaponManagerInstance;
 	}
 
-	//Setup PlayerManager
+	//Setup BankChestManager.
 	@SuppressWarnings("static-access")
 	public void setup(MPRPG plugin) {
 		this.plugin = plugin;
@@ -53,23 +53,34 @@ public class BankChestManager {
 		removeHolograms();
 	}
 
-	public static void setupBankHolograms() {
+	/**
+	 * This will setup Holograms to go over the players bank (ender-chest). 
+	 */
+	private static void setupBankHolograms() {
 		Location bank01 = new Location(Bukkit.getWorld("world"), 16.5, 81, -5.5);
 		Location bank02 = new Location(Bukkit.getWorld("world"), 18.5, 81, -7.5);
 
-		bankHologram01 = HologramsAPI.createHologram(plugin, bank01);
-		bankHologram01.appendTextLine(ChatColor.GREEN + "" + ChatColor.BOLD + "Player Stash");
+		bankHologram0 = HologramsAPI.createHologram(plugin, bank01);
+		bankHologram0.appendTextLine(ChatColor.GREEN + "" + ChatColor.BOLD + "Player Stash");
 
-		bankHologram02 = HologramsAPI.createHologram(plugin, bank02);
-		bankHologram02.appendTextLine(ChatColor.GREEN + "" + ChatColor.BOLD + "Player Stash");
+		bankHologram1 = HologramsAPI.createHologram(plugin, bank02);
+		bankHologram1.appendTextLine(ChatColor.GREEN + "" + ChatColor.BOLD + "Player Stash");
 	}
-
-	public static void removeHolograms() {
-		bankHologram01.delete();
-		bankHologram02.delete();
+	
+	/**
+	 * This will remove the holograms that are over the players bank.
+	 */
+	private static void removeHolograms() {
+		bankHologram0.delete();
+		bankHologram1.delete();
 	}
-
-	public static Inventory restoreBank(Player player) {
+	
+	/**
+	 * This will restore a players bank from a config file when they log-into a character.
+	 * 
+	 * @param player The player who owns the bank that will be restored.
+	 */
+	public static void restoreBank(Player player) {
 		UUID uuid = player.getUniqueId();
 		String playerName = player.getName();
 		int bankRows = PlayerCharacterManager.getPlayerConfigInt(player, "economy.bankRows");
@@ -158,10 +169,13 @@ public class BankChestManager {
 			//Save inventory in HashMap.
 			playerBankPage4.put(uuid, bank4);
 		}
-
-		return null;
 	}
-
+	
+	/**
+	 * This will save a players bank when the log-out of a character.
+	 * 
+	 * @param player The player who's bank will be saved.
+	 */
 	public static void saveBank(Player player) {
 		int bankRows = PlayerCharacterManager.getPlayerConfigInt(player, "economy.bankRows");
 
@@ -215,7 +229,14 @@ public class BankChestManager {
 			}
 		}
 	}
-
+	
+	/**
+	 * This will open the players bank inventory when they click on an ender-chest.
+	 * 
+	 * @param player The player who is requesting that their inventory be opened.
+	 * @param page The inventory page to be opened.
+	 * @return Returns the inventory page of the player.
+	 */
 	public static Inventory getBank(Player player, int page) {
 		UUID uuid = player.getUniqueId();
 
@@ -223,19 +244,19 @@ public class BankChestManager {
 		if (page == 0) {
 			return playerBankPage0.get(uuid);
 
-			//Page 2	
+		//Page 2	
 		} else if (page == 1) {
 			return playerBankPage1.get(uuid);
 
-			//Page 3
+		//Page 3
 		} else if (page == 2) {
 			return playerBankPage2.get(uuid);
 
-			//Page 4
+		//Page 4
 		} else if (page == 3) {
 			return playerBankPage3.get(uuid);
 
-			//Page 5
+		//Page 5
 		} else if (page == 4) {
 			return playerBankPage4.get(uuid);
 

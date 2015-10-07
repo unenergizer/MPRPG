@@ -79,7 +79,7 @@ public class PlayerManager {
 			public void run() {
 				for (Player players : Bukkit.getOnlinePlayers()) {
 					if (!players.hasMetadata("NPC")) {
-						regenerateHealthPoints(players);
+						regenerateStatPoints(players);
 					}
 				}
 			}
@@ -164,19 +164,20 @@ public class PlayerManager {
 	}
 
 	/**
-	 * Regenerates a players HitPoints every few seconds.
+	 * Regenerates a players stat points every few seconds.
+	 * This includes hit points, mana points, and stamina.
 	 * 
 	 * @param player The player who will have their HP regenerated.
 	 */
-	public static void regenerateHealthPoints(Player player) {
+	public static void regenerateStatPoints(Player player) {
 		UUID uuid = player.getUniqueId();
 
 		if (PlayerCharacterManager.isPlayerLoaded(player)) {
-			double playerRegen = ItemLoreFactory.getInstance().getHealthPointsRegenerate(player);
-			double totalRegen = baseHealthRegenRate + playerRegen;
+			double playerHitPointRegen = ItemLoreFactory.getInstance().getHealthPointsRegenerate(player);
+			double totalHitPointRegen = (baseHealthRegenRate + playerHitPointRegen) / 100;
 			double playerHP = getHealthPoints(uuid);
 			double playerMaxHP = getMaxHealthPoints(uuid);
-			double newHP = playerHP + totalRegen;
+			double newHP = playerHP + totalHitPointRegen;
 
 			//Set the players HP HashMap values.
 			if (newHP >= playerMaxHP) {
@@ -415,8 +416,9 @@ public class PlayerManager {
 		//Give new players the MinePile game menu.
 		PlayerMenuManager.givePlayerMenu(player);
 
-		//Monster bar at the top of the screen.
-		//updatePlayerBossbar(player);
+		//Set player level and experience
+		player.setLevel(PlayerCharacterManager.getPlayerConfigInt(player, "player.playerLVL"));
+		player.setExp(Float.parseFloat(PlayerCharacterManager.getPlayerConfigString(player, "player.playerEXP")));
 
 		//Feed player.
 		player.setFoodLevel(20);

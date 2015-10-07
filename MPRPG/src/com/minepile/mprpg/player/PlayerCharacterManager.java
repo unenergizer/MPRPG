@@ -152,7 +152,7 @@ public class PlayerCharacterManager {
 		double logoutMaxStamina = PlayerManager.getMaxStaminaPoints(uuid);
 		double logoutMana = PlayerManager.getManaPoints(uuid);
 		double logoutMaxMana = PlayerManager.getMaxManaPoints(uuid);
-		float experience = player.getExp();
+		String experience = Float.toString(player.getExp());
 		double x = player.getLocation().getX();
 		double y = player.getLocation().getY();
 		double z = player.getLocation().getZ();
@@ -164,7 +164,7 @@ public class PlayerCharacterManager {
 		setPlayerConfigDouble(player, "player.logout.maxStamina", logoutMaxStamina);
 		setPlayerConfigDouble(player, "player.logout.mana", logoutMana);
 		setPlayerConfigDouble(player, "player.logout.maxMana", logoutMaxMana);
-		setPlayerConfigDouble(player, "player.playerEXP", experience);
+		setPlayerConfigString(player, "player.playerEXP", experience);
 		setPlayerConfigDouble(player, "player.logout.x", x);
 		setPlayerConfigDouble(player, "player.logout.y", y);
 		setPlayerConfigDouble(player, "player.logout.z", z);
@@ -440,7 +440,7 @@ public class PlayerCharacterManager {
 					ChatColor.GOLD + " Archer " + ChatColor.DARK_GRAY + "]>" +
 					ChatColor.BOLD + "-----------------");
 			player.sendMessage("");
-			player.sendMessage(ChatColor.GREEN + "Info about the " + ChatColor.DARK_GREEN + "Archer" + ChatColor.GREEN +" class goes here.");
+			player.sendMessage(ChatColor.GREEN + "Archers are associated with the wisdom of nature. Archers tend to be wise, cunning, and perceptive.  Many are skilled in stealth, wilderness survival, herbalism, and tracking. Archery and swordplay are common to them, though there are many instances where archers use a variety of weapons, skills, and sometimes magic or have a resistance to magic.");
 			
 		} else if (charClass.equalsIgnoreCase("MAGE")) {
 			player.sendMessage(ChatColor.DARK_GRAY + "" + ChatColor.BOLD + "-------------------" +
@@ -448,7 +448,7 @@ public class PlayerCharacterManager {
 					ChatColor.GOLD + " Mage " + ChatColor.DARK_GRAY + "]>" +
 					ChatColor.BOLD + "-------------------");
 			player.sendMessage("");
-			player.sendMessage(ChatColor.GREEN + "Info about the " + ChatColor.BLUE + "Mage" + ChatColor.GREEN +" class goes here.");
+			player.sendMessage(ChatColor.GREEN + "Magi are wizards of immense knowledge and skill. Their obvious physical frailty is deceptive, for they can call upon the cosmic energies of the Twisting Nether.  Rarely do magi engage in melee combat.  Instead, they prefer to attack from a distance, hurling powerful bolts of frost and flame at their unsuspecting enemies.");
 			
 		} else if (charClass.equalsIgnoreCase("ROGUE")) {
 			player.sendMessage(ChatColor.DARK_GRAY + "" + ChatColor.BOLD + "-------------------" +
@@ -456,7 +456,7 @@ public class PlayerCharacterManager {
 					ChatColor.GOLD + " Rogue " + ChatColor.DARK_GRAY + "]>" +
 					ChatColor.BOLD + "------------------");
 			player.sendMessage("");
-			player.sendMessage(ChatColor.GREEN + "Info about the " + ChatColor.YELLOW + "Rogue" + ChatColor.GREEN +" class goes here.");
+			player.sendMessage(ChatColor.GREEN + "Rogues are most successful when their deeds never come to light.  Fond of poisons and silent projectile weapons, rogues rely on a blend of stealth and minor mysticism.  Usually employed by rich nobles or local governments, the rogue redistributes wealth or eliminates designated targets. A rogue's allegiance lasts only as long as the latest contract.");
 			
 		} else if (charClass.equalsIgnoreCase("WARRIOR")) {
 			player.sendMessage(ChatColor.DARK_GRAY + "" + ChatColor.BOLD + "-------------------" +
@@ -464,12 +464,10 @@ public class PlayerCharacterManager {
 					ChatColor.GOLD + " Warrior " + ChatColor.DARK_GRAY + "]>" +
 					ChatColor.BOLD + "-----------------");
 			player.sendMessage("");
-			player.sendMessage(ChatColor.GREEN + "Info about the " + ChatColor.RED + "Warrior" + ChatColor.GREEN +" class goes here.");
+			player.sendMessage(ChatColor.GREEN + "Warriors train constantly and strive for perfection in armed combat.  Though they come from all walks of life, they are united by their singular commitment to engage in glorious battle.  Many warriors become adventurers and danger-seeking fortune hunters.  A typical warrior is strong, tough, and exceptionally violent.");
 		}
-		player.sendMessage("");
-		player.sendMessage("");
+
 		player.sendMessage(ChatColor.YELLOW + "Click again to comfirm your selection.");
-		player.sendMessage("");
 		player.sendMessage(ChatColor.DARK_GRAY + "" + ChatColor.BOLD +"---------------------------------------------");
 	}
 
