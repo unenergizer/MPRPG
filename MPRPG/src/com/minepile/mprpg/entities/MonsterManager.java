@@ -17,6 +17,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.potion.PotionEffect;
@@ -410,6 +411,7 @@ public class MonsterManager {
 	 * @param z The Entities Z coordinate in the world.
 	 */
 	public static void toggleEntityDeath(final UUID id, int x, int y, int z) {
+		
 		//Make sure the mob exists in the hashmap.
 		//If the mob does not exist, do nothing.
 		if (mobId.get(id) != null) {

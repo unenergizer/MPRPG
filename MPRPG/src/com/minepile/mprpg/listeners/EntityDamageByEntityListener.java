@@ -2,6 +2,7 @@ package com.minepile.mprpg.listeners;
 
 import java.util.UUID;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Arrow;
@@ -214,7 +215,7 @@ public class EntityDamageByEntityListener implements Listener{
 				}
 
 				if (damager instanceof Player) {
-
+					
 					//get the damagers damage values
 					double playerDamage = ItemLoreFactory.getInstance().getDamageBonus((LivingEntity) damager);
 					double coldDamage = ItemLoreFactory.getInstance().getColdDamage((LivingEntity) damager);
@@ -243,11 +244,16 @@ public class EntityDamageByEntityListener implements Listener{
 
 					//Set victim health
 					if (victimHealth <= 1) {
+						Bukkit.broadcastMessage("EDBEL: toggling1...");
 						int x = victim.getLocation().getBlockX();
 						int y = victim.getLocation().getBlockY();
 						int z = victim.getLocation().getBlockZ();
 
+						//Remove the mob.
 						victim.remove();
+						
+						//Killer was a player, so drop loot.
+						Bukkit.broadcastMessage("EDBEL: toggling2...");
 						MonsterManager.toggleEntityDeath(victimID, x, y, z);
 					} else {
 						victim.setHealth(15);
@@ -264,12 +270,12 @@ public class EntityDamageByEntityListener implements Listener{
 					}
 
 					if (victimHealth <= 1) {
-						int x = victim.getLocation().getBlockX();
-						int y = victim.getLocation().getBlockY();
-						int z = victim.getLocation().getBlockZ();
+						//int x = victim.getLocation().getBlockX();
+						//int y = victim.getLocation().getBlockY();
+						//int z = victim.getLocation().getBlockZ();
 
 						victim.remove();
-						MonsterManager.toggleEntityDeath(victimID, x, y, z);
+						//MonsterManager.toggleEntityDeath((Player)damager, victimID, x, y, z);
 					} else {
 						victim.setHealth(15);
 						MonsterManager.toggleDamage(victimID, damage);

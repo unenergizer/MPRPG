@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Random;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -23,7 +24,7 @@ public class RandomItemFactory {
 	private static String randomArmorFilePath = "plugins/MPRPG/items/RandomArmor.yml";
 	private static String randomWeaponFilePath = "plugins/MPRPG/items/RandomWeapon.yml";
 
-	//Configuration file that holds armor information.
+	//Configuration file that holds item information.
 	private static File armorConfigFile;
 	private static File weaponConfigFile;
 
@@ -35,12 +36,10 @@ public class RandomItemFactory {
 		return randomItemFactoryInstance;
 	}
 
-	//Setup PlayerManager
+	//Setup RandomItemFactory
 	@SuppressWarnings("static-access")
 	public void setup(MPRPG plugin) {
 		this.plugin = plugin;
-
-		//If mining configuration does not exist, create it. Otherwise lets load the config.
 
 		if(!(new File(randomArmorFilePath)).exists()){
 			createConfig();
@@ -50,249 +49,34 @@ public class RandomItemFactory {
 		}
 	}
 
-	public static ItemStack createArmor(ItemStack item, ItemTier tier, ItemQuality quality) {
+	/**
+	 * This will take a number of attributes in a list and randomly select
+	 * a number of attributes based on the minimum and maximum attribute values.
+	 * 
+	 * @param list A list of attributes.
+	 * @param attributesMin The minimum amount of attributes to return.
+	 * @param attributesMax The maximum amount of attributes to return.
+	 * @return A new list of processedBase attributes that will be on an item.
+	 */
+	private static ArrayList<String> getRandomArrayIndex(ArrayList<String> list, int attributesMin, int attributesMax) {
+		ArrayList<String> tempList = new ArrayList<String>();
+		int roll = randomInt(attributesMin, attributesMax);
 
-		/////////////////////////////
-		/// GRAB ITEM FROM CONFIG ///
-		/////////////////////////////
-		armorConfigFile = new File(randomArmorFilePath);
-		armorConfig =  YamlConfiguration.loadConfiguration(armorConfigFile);
+		//Loops a number of times based on how many attributes are needed.
+		for (int i = 1; i <= roll; i++) {
 
-		//String name = tier.replaceAll("_", " ");
-		//List<String> itemDescription = (List<String>) armorConfig.getList(tier + ".itemDescription");
+			//Get random number from 0 (array index start) to array size (-1).
+			int randIndex = randomInt(0, list.size() - 1);
+			String attribute = list.get(randIndex);
 
-		int armorMax = armorConfig.getInt(tier + "." + quality + ".armorMax");
-		int armorMin = armorConfig.getInt(tier + "." + quality + ".armorMin");
-		int blockMax = armorConfig.getInt(tier + "." + quality + ".blockMax");	
-		int blockMin = armorConfig.getInt(tier + "." + quality + ".blockMin");		
-		int coldResistMax = armorConfig.getInt(tier + "." + quality + ".coldResistMax");	
-		int coldResistMin = armorConfig.getInt(tier + "." + quality + ".coldResistMin");		
-		int dodgeMax = armorConfig.getInt(tier + "." + quality + ".dodgeMax");	
-		int dodgeMin = armorConfig.getInt(tier + "." + quality + ".dodgeMin");		
-		int fireResistMax = armorConfig.getInt(tier + "." + quality + ".fireResistMax");	
-		int fireResistMin = armorConfig.getInt(tier + "." + quality + ".fireResistMin");	
-		int goldFindMax = armorConfig.getInt(tier + "." + quality + ".goldFindMax");	
-		int goldFindMin = armorConfig.getInt(tier + "." + quality + ".goldFindMin");	
-		int hpMax = armorConfig.getInt(tier + "." + quality + ".healthPointsMax");	
-		int hpMin = armorConfig.getInt(tier + "." + quality + ".healthPointsMin");	
-		int hpRegenMax = armorConfig.getInt(tier + "." + quality + ".healthRegenMax");	
-		int hpRegenMin = armorConfig.getInt(tier + "." + quality + ".healthRegenMin");	
-		int itemFindMax = armorConfig.getInt(tier + "." + quality + ".itemFindMax");	
-		int itemFindMin = armorConfig.getInt(tier + "." + quality + ".itemFindMin");	
-		int manaMax = armorConfig.getInt(tier + "." + quality + ".manaPointsMax");	
-		int manaMin = armorConfig.getInt(tier + "." + quality + ".manaPointsMin");	
-		int manaRegenMax = armorConfig.getInt(tier + "." + quality + ".manaRegenMax");	
-		int manaRegenMin = armorConfig.getInt(tier + "." + quality + ".manaRegenMin");			
-		int poisonResistMax = armorConfig.getInt(tier + "." + quality + ".poisonResistMax");	
-		int poisonResistMin = armorConfig.getInt(tier + "." + quality + ".poisonResistMin");	
-		int reflectionMax = armorConfig.getInt(tier + "." + quality + ".reflectionMax");	
-		int reflectionMin = armorConfig.getInt(tier + "." + quality + ".reflectionMin");		
-		int staminaMax = armorConfig.getInt(tier + "." + quality + ".staminaMax");	
-		int staminaMin = armorConfig.getInt(tier + "." + quality + ".staminaMin");	
-		int staminaRegenMax = armorConfig.getInt(tier + "." + quality + ".staminaRegenMax");	
-		int staminaRegenMin = armorConfig.getInt(tier + "." + quality + ".staminaRegenMin");
-		int thornsResistMax = armorConfig.getInt(tier + "." + quality + ".thornsResistMax");	
-		int thornsResistMin = armorConfig.getInt(tier + "." + quality + ".thornsResistMin");
-
-		////////////////////////////
-		/// Calculate Item Stats ///
-		////////////////////////////
-		int armor = randomInt(armorMin, armorMax);
-		int block = randomInt(blockMin, blockMax);
-		int coldResist = randomInt(coldResistMin, coldResistMax);
-		int dodgeChance = randomInt(dodgeMin, dodgeMax);
-		int fireResist = randomInt(fireResistMin, fireResistMax);
-		int goldFind = randomInt(goldFindMin, goldFindMax);
-		int hp = randomInt(hpMin, hpMax);
-		int hpRegen = randomInt(hpRegenMin, hpRegenMax);
-		int itemFind = randomInt(itemFindMin, itemFindMax);
-		int mana = randomInt(manaMin, manaMax);
-		int manaRegen = randomInt(manaRegenMin, manaRegenMax);
-		int poisonResist = randomInt(poisonResistMin, poisonResistMax);
-		int reflection = randomInt(reflectionMin, reflectionMax);
-		int stamina = randomInt(staminaMin, staminaMax);
-		int staminaRegen = randomInt(staminaRegenMin, staminaRegenMax);
-		int thornsResist = randomInt(thornsResistMin, thornsResistMax);
-
-		/////////////////////
-		/// SET ITEM LORE ///
-		/////////////////////
-		ItemMeta im = item.getItemMeta();
-
-		String nameFormatting = ChatColor.BOLD + ItemQualityManager.getStringFormatting(quality);
-		String itemType = item.getType().toString().replace("_", " ");
-		String itemInfo = ChatColor.DARK_GRAY + "" + ChatColor.ITALIC + quality + " " + tier + " " + itemType;
-		double randSocket = Math.random() * 100;
-
-		//Set the items Name
-		im.setDisplayName(nameFormatting + "BetterNameComingSoon");
-
-		//Set the item lore
-		ArrayList<String> lore = new ArrayList<String>();
-
-		lore.add(itemInfo);	//Define the quality of item.
-
-		lore.add(" "); //Spacer																
-		if (armor > 0) 		{ lore.add(ChatColor.WHITE + "+" + armor + " Armor"); }
-		if (hp > 0) 		{ lore.add(ChatColor.WHITE + "+" + hp + " Health"); }
-		if (hpRegen > 0) 	{ lore.add(ChatColor.WHITE + "+" + hpRegen + " Health Regeneration"); }		
-		if (mana > 0)		{ lore.add(ChatColor.WHITE + "+" + mana + " Mana"); }			
-		if (manaRegen > 0)	{ lore.add(ChatColor.WHITE + "+" + manaRegen + " Mana Regeneration"); }	
-		if (stamina > 0)	{ lore.add(ChatColor.WHITE + "+" + stamina + " Stamina"); }
-		if (staminaRegen >0){ lore.add(ChatColor.WHITE + "+" + staminaRegen + " Stamina Regeneration"); }
-
-		//Magic attributes
-		if (block != 0 || reflection != 0 || dodgeChance != 0 || coldResist != 0 
-				|| fireResist != 0 || poisonResist != 0 || thornsResist != 0 
-				|| goldFind != 0 || itemFind != 0) {
-			lore.add(" "); //Spacer
-		}
-		if (block > 0) 		{ lore.add(ChatColor.BLUE + "+" + block + " Block Chance"); }
-		if (reflection > 0) { lore.add(ChatColor.BLUE + "+" + reflection + " Damage Reflection"); }
-		if (dodgeChance > 0){ lore.add(ChatColor.BLUE + "+" + dodgeChance + " Dodge Chance"); }
-		if (coldResist > 0) { lore.add(ChatColor.BLUE + "+" + coldResist + " Cold Resistance"); }	
-		if (fireResist > 0) { lore.add(ChatColor.BLUE + "+" + fireResist + " Fire Resistance"); }			
-		if (poisonResist >0){ lore.add(ChatColor.BLUE + "+" + poisonResist + " Poison Resistance"); }	
-		if (thornsResist > 0){lore.add(ChatColor.BLUE + "+" + thornsResist + " Thorn Resistance"); }			
-		if (goldFind > 0)	{ lore.add(ChatColor.GOLD + "+" + goldFind + " Gold Find"); }			
-		if (itemFind > 0)	{ lore.add(ChatColor.GOLD + "+" + itemFind + " Item Find"); }	
-
-		//Spacer
-		if (quality != ItemQuality.JUNK) {
-			if (randSocket > 80) {
-				lore.add(" ");
-				lore.add(ChatColor.LIGHT_PURPLE + " ⊡" + ChatColor.RESET + " Socketable");
-			} else if (randSocket > 90) {
-				lore.add(ChatColor.LIGHT_PURPLE + " ⊡" + ChatColor.RESET + " Socketable");
-			} else if (randSocket >95) {
-				lore.add(ChatColor.LIGHT_PURPLE + " ⊡" + ChatColor.RESET + " Socketable");
+			//Prevent duplicates.
+			if (!tempList.contains(attribute)) {
+				tempList.add(attribute);
 			}
 		}
 
-		//Spacer
-		lore.add("");
-		lore.add("Sell Price" + ChatColor.DARK_GRAY + ": " 
-				+ ChatColor.RESET + "0" + ChatColor.GOLD + "• " 
-				+ ChatColor.RESET + "0" + ChatColor.GRAY + "• " 
-				+ ChatColor.RESET + "10" + ChatColor.RED + "•");
-
-		//Set the item lore
-		im.setLore(lore);
-		//Set the item meta
-		item.setItemMeta(im);
-
-		return item;
-	}
-
-	public static ItemStack createWeapon(ItemStack item, ItemTier tier, ItemQuality quality) {
-
-		/////////////////////////////
-		/// GRAB ITEM FROM CONFIG ///
-		/////////////////////////////
-		weaponConfigFile = new File(randomArmorFilePath);
-		weaponConfig =  YamlConfiguration.loadConfiguration(weaponConfigFile);
-
-		int blindnessMax = weaponConfig.getInt(tier + "." + quality + ".blindnessMax");	
-		int blindnessMin = weaponConfig.getInt(tier + "." + quality + ".blindnessMin");	
-		int coldDamageMax = weaponConfig.getInt(tier + "." + quality + ".coldDamageMax");	
-		int coldDamageMin = weaponConfig.getInt(tier + "." + quality + ".coldDamageMin");		
-		int critChanceMax = weaponConfig.getInt(tier + "." + quality + ".critChanceMax");	
-		int critChanceMin = weaponConfig.getInt(tier + "." + quality + ".critChanceMin");	
-		int damageMax = weaponConfig.getInt(tier + "." + quality + ".damageMax");	
-		int damageMin = weaponConfig.getInt(tier + "." + quality + ".damageMin");	
-		int fireDamageMax = weaponConfig.getInt(tier + "." + quality + ".fireDamageMax");	
-		int fireDamageMin = weaponConfig.getInt(tier + "." + quality + ".fireDamageMin");	
-		int knockbackMax = weaponConfig.getInt(tier + "." + quality + ".knockbackMax");	
-		int knockbackMin = weaponConfig.getInt(tier + "." + quality + ".knockbackMin");	
-		int lifestealMax = weaponConfig.getInt(tier + "." + quality + ".lifestealMax");	
-		int lifestealMin = weaponConfig.getInt(tier + "." + quality + ".lifestealMin");	
-		int manastealMax = weaponConfig.getInt(tier + "." + quality + ".manastealMax");	
-		int manastealMin = weaponConfig.getInt(tier + "." + quality + ".manastealMin");	
-		int poisonDamageMax = weaponConfig.getInt(tier + "." + quality + ".poisonDamageMax");	
-		int poisonDamageMin = weaponConfig.getInt(tier + "." + quality + ".poisonDamageMin");	
-		int slownessMax = weaponConfig.getInt(tier + "." + quality + ".slownessMax");	
-		int slownessMin = weaponConfig.getInt(tier + "." + quality + ".slownessMin");		
-		int thornsDamageMax = weaponConfig.getInt(tier + "." + quality + ".thornsDamageMax");	
-		int thornsDamageMin = weaponConfig.getInt(tier + "." + quality + ".thornsDamageMin");
-
-		////////////////////////////
-		/// Calculate Item Stats ///
-		////////////////////////////
-		int blindness = randomInt(blindnessMin, blindnessMax);
-		int coldDamage = randomInt(coldDamageMin, coldDamageMax);
-		int critChance = randomInt(critChanceMin, critChanceMax);
-		int damage = randomInt(damageMin, damageMax);
-		int fireDamage = randomInt(fireDamageMin, fireDamageMax);
-		int knockback = randomInt(knockbackMin, knockbackMax);
-		int lifesteal = randomInt(lifestealMin, lifestealMax);
-		int manasteal = randomInt(manastealMin, manastealMax);
-		int poisonDamage = randomInt(poisonDamageMin, poisonDamageMax);
-		int slowness = randomInt(slownessMin, slownessMax);
-		int thornsDamage = randomInt(thornsDamageMin, thornsDamageMax);
-
-		/////////////////////
-		/// SET ITEM LORE ///
-		/////////////////////
-		ItemMeta im = item.getItemMeta();
-
-		String nameFormatting = ChatColor.BOLD + ItemQualityManager.getStringFormatting(quality);
-		String itemType = item.getType().toString().replace("_", " ");
-		String itemInfo = ChatColor.DARK_GRAY + "" + ChatColor.ITALIC + quality + " " + tier + " " + itemType;
-		double randSocket = Math.random() * 100;
-
-		//Set the items Name
-		im.setDisplayName(nameFormatting + "BetterNameComingSoon");
-
-		//Set the item lore
-		ArrayList<String> lore = new ArrayList<String>();
-
-		lore.add(itemInfo);	//Define the quality of item.
-
-		lore.add(" "); //Spacer
-		if (damage > 0) 	{ lore.add(ChatColor.WHITE + "+" + damage + " Damage"); }
-
-		//Magic attributes
-		if (coldDamage != 0 || fireDamage != 0 || poisonDamage != 0 || thornsDamage != 0
-				|| blindness != 0 || critChance != 0 || knockback != 0 || slowness != 0 
-				|| lifesteal != 0 || manasteal != 0) {
-			lore.add(" "); //Spacer
-		}																
-		if (coldDamage > 0) { lore.add(ChatColor.BLUE + "+" + coldDamage + " Cold Damage"); }
-		if (fireDamage > 0) { lore.add(ChatColor.BLUE + "+" + fireDamage + " Fire Damage"); }		
-		if (poisonDamage >0){ lore.add(ChatColor.BLUE + "+" + poisonDamage + " Poison Damage"); }
-		if (thornsDamage > 0){ lore.add(ChatColor.BLUE + "+" + thornsDamage + " Thorn Damage"); }	
-		if (blindness > 0) { lore.add(ChatColor.BLUE + "+" + blindness + " Blindness"); }
-		if (critChance > 0) { lore.add(ChatColor.BLUE + "+" + critChance + " Critical Hit Chance"); }
-		if (knockback > 0)	{ lore.add(ChatColor.BLUE + "+" + knockback + " Knockback"); }			
-		if (slowness > 0)	{ lore.add(ChatColor.BLUE + "+" + slowness + " Slowness"); }		
-		if (lifesteal > 0)	{ lore.add(ChatColor.BLUE + "+" + lifesteal + " Lifesteal"); }		
-		if (manasteal > 0)	{ lore.add(ChatColor.BLUE + "+" + manasteal + " Manasteal"); }	
-
-		//Spacer
-		if (quality != ItemQuality.JUNK) {
-			if (randSocket > 80) {
-				lore.add(" ");
-				lore.add(ChatColor.LIGHT_PURPLE + " ⊡" + ChatColor.RESET + " Socketable");
-			} else if (randSocket > 90) {
-				lore.add(ChatColor.LIGHT_PURPLE + " ⊡" + ChatColor.RESET + " Socketable");
-			} else if (randSocket >95) {
-				lore.add(ChatColor.LIGHT_PURPLE + " ⊡" + ChatColor.RESET + " Socketable");
-			}
-		}
-		
-		//Spacer
-		lore.add("");
-		lore.add("Sell Price" + ChatColor.DARK_GRAY + ": " 
-				+ ChatColor.RESET + "0" + ChatColor.GOLD + "• " 
-				+ ChatColor.RESET + "0" + ChatColor.GRAY + "• " 
-				+ ChatColor.RESET + "10" + ChatColor.RED + "•");
-
-		//Set the item lore
-		im.setLore(lore);
-		//Set the item meta
-		item.setItemMeta(im);
-
-		return item;
+		//Return new array.
+		return tempList;
 	}
 
 	/**
@@ -310,12 +94,1557 @@ public class RandomItemFactory {
 	}
 
 	/**
-	 * Creates a new configuration file for random armor and weapons.
+	 * Generates random attributes based on the item tier and quality.
+	 * 
+	 * @param item The item that we are adding attributes to.
+	 * @param tier The tier of the item we are adding attributes to.
+	 * @param quality The quality of the item we are adding attributes to.
+	 * @return Returns a item with random attributes.
+	 */
+	public static ItemStack createArmor(ItemStack item, ItemTier tier, ItemQuality quality) {
+
+		/////////////////////////////
+		/// GRAB ITEM FROM CONFIG ///
+		/////////////////////////////
+		armorConfigFile = new File(randomArmorFilePath);
+		armorConfig =  YamlConfiguration.loadConfiguration(armorConfigFile);
+
+		//String name = tier.replaceAll("_", " ");
+		//List<String> itemDescription = (List<String>) armorConfig.getList(tier + ".itemDescription");
+
+		/**
+		 * Base Stats:
+		 * 	Strength
+		 * 	Agility
+		 * 	Stamina
+		 * 	Intellect
+		 * 	Spirit
+		 * 	+ Armor (must have every time)
+		 * 
+		 * Resistances:
+		 * 	Fire Resistance
+		 * 	Ice Resistance
+		 * 	Lightning Resistance
+		 * 	Poison Resistance
+		 * 	Paralyze Resistance
+		 * 
+		 * Extras:
+		 * 	Waterbreathing
+		 * 	Personality
+		 *  Gold Find
+		 *  Magic Find
+		 */
+
+		//Base stats
+		int strengthMin = armorConfig.getInt(tier + "." + quality + ".strengthMin");
+		int strengthMax = armorConfig.getInt(tier + "." + quality + ".strengthMax");
+		int agilityMin = armorConfig.getInt(tier + "." + quality + ".agilityMin");
+		int agilityMax = armorConfig.getInt(tier + "." + quality + ".agilityMax");
+		int staminaMin = armorConfig.getInt(tier + "." + quality + ".staminaMin");
+		int staminaMax = armorConfig.getInt(tier + "." + quality + ".staminaMax");
+		int intellectMin = armorConfig.getInt(tier + "." + quality + ".intellectMin");
+		int intellectMax = armorConfig.getInt(tier + "." + quality + ".intellectMax");
+		int spiritMin = armorConfig.getInt(tier + "." + quality + ".spiritMin");
+		int spiritMax = armorConfig.getInt(tier + "." + quality + ".spiritMax");
+		int armorMin = armorConfig.getInt(tier + "." + quality + ".armorMin");		//EVERY ARMOR ITEM MUST HAVE ARMOR STAT!!!
+		int armorMax = armorConfig.getInt(tier + "." + quality + ".armorMax");		//EVERY ARMOR ITEM MUST HAVE ARMOR STAT!!!
+
+		//Resistances
+		int fireResistMin = armorConfig.getInt(tier + "." + quality + ".fireResistMin");
+		int fireResistMax = armorConfig.getInt(tier + "." + quality + ".fireResistMax");
+		int iceResistMin = armorConfig.getInt(tier + "." + quality + ".iceResistMin");
+		int iceResistMax = armorConfig.getInt(tier + "." + quality + ".iceResistMax");
+		int lightningResistMin = armorConfig.getInt(tier + "." + quality + ".lightningResistMin");
+		int lightningResistMax = armorConfig.getInt(tier + "." + quality + ".lightningResistMax");
+		int poisonResistMin = armorConfig.getInt(tier + "." + quality + ".poisonResistMin");
+		int poisonResistMax = armorConfig.getInt(tier + "." + quality + ".poisonResistMax");
+		int paralyzeResistMin = armorConfig.getInt(tier + "." + quality + ".paralyzeResistMin");
+		int paralyzeResistMax = armorConfig.getInt(tier + "." + quality + ".paralyzeResistMax");
+
+		//Extras
+		int waterBreathingMin = armorConfig.getInt(tier + "." + quality + ".waterBreathingMin");
+		int waterBreathingMax = armorConfig.getInt(tier + "." + quality + ".waterBreathingMax");
+		int personalityMin = armorConfig.getInt(tier + "." + quality + ".personalityMin");
+		int personalityMax = armorConfig.getInt(tier + "." + quality + ".personalityMax");
+		int goldFindMin = armorConfig.getInt(tier + "." + quality + ".goldFindMin");
+		int goldFindMax = armorConfig.getInt(tier + "." + quality + ".goldFindMax");
+		int magicFindMin = armorConfig.getInt(tier + "." + quality + ".magicFindMin");
+		int magicFindMax = armorConfig.getInt(tier + "." + quality + ".magicFindMax");
+
+
+		////////////////////////////
+		/// Calculate Item Stats ///
+		////////////////////////////
+
+		//Base stats
+		int strength = randomInt(strengthMin, strengthMax);
+		int agility = randomInt(agilityMin, agilityMax);
+		int stamina = randomInt(staminaMin, staminaMax);
+		int intellect = randomInt(intellectMin, intellectMax);
+		int spirit = randomInt(spiritMin, spiritMax);
+		int armor = randomInt(armorMin, armorMax);		//EVERY ARMOR ITEM MUST HAVE ARMOR STAT!!!
+
+		//Resistances
+		int fireResist = randomInt(fireResistMin, fireResistMax);
+		int iceResist = randomInt(iceResistMin, iceResistMax);
+		int lightningResist = randomInt(lightningResistMin, lightningResistMax);
+		int poisonResist = randomInt(poisonResistMin, poisonResistMax);
+		int paralyzeResist = randomInt(paralyzeResistMin, paralyzeResistMax);
+
+		//Extras
+		int waterBreathing = randomInt(waterBreathingMin, waterBreathingMax);
+		int personality = randomInt(personalityMin, personalityMax);
+		int goldFind = randomInt(goldFindMin, goldFindMax);
+		int magicFind = randomInt(magicFindMin, magicFindMax);
+
+
+
+		///////////////////////////////////
+		/// PICK RANDOM ITEM ATTRIBUTES ///
+		///////////////////////////////////
+
+		/**
+		 * ItemTiers: T1, T2, T3, T4, T5, T6
+		 * 
+		 * ItemQuality: Junk, Common, Uncommon, Rare, Epic, Legendary
+		 */
+
+		//Final arrays (processedBase).
+		ArrayList<String> attributesBaseFinal = new ArrayList<String>();
+		ArrayList<String> attributesMagicFinal = new ArrayList<String>();
+		ArrayList<String> attributesExtrasFinal = new ArrayList<String>();
+
+		//Temporary arrays
+		ArrayList<String> attributesBaseTemp = new ArrayList<String>();
+		ArrayList<String> attributesMagicTemp = new ArrayList<String>();
+		ArrayList<String> attributesExtrasTemp = new ArrayList<String>();
+
+		//Always add "armor" attribute to an armor item.
+		//Lets do this beforehand, it does not need to be picked, its automatic.
+		attributesBaseFinal.add(ChatColor.WHITE + Integer.toString(armor) + " Armor");
+
+		//Lets start the break down and see what attributes can be on what tier and quality item.
+
+		if (quality.equals(ItemQuality.JUNK)) {
+
+			////////////////////////////////////////////////
+			//// JUNK //////////////////////////////////////
+			////////////////////////////////////////////////
+
+			attributesBaseTemp.add(ChatColor.WHITE + " +" + strength + " Strength");
+			attributesBaseTemp.add(ChatColor.WHITE + " +" + agility + " Agility");
+			attributesBaseTemp.add(ChatColor.WHITE + " +" + stamina + " Stamina");
+			attributesBaseTemp.add(ChatColor.WHITE + " +" + intellect + " Intellect");
+			attributesBaseTemp.add(ChatColor.WHITE + " +" + spirit + " Spirit");
+
+
+			//Get random amount of attributes (1 or 2).
+			if (tier.equals(ItemTier.T1)) {
+				//ArrayList<String> processedBase = getRandomArrayIndex(attributesBaseTemp, 0, 1);
+			} else if (tier.equals(ItemTier.T2)) {
+				ArrayList<String> processedBase = getRandomArrayIndex(attributesBaseTemp, 0, 1);
+
+				//Add the processedBase attributes to the Final Attributes list.
+				for (int i = 0; i <= processedBase.size() - 1; i++) {
+					attributesBaseFinal.add(processedBase.get(i));
+				}
+				//Clean up
+				processedBase.clear();
+			} else if (tier.equals(ItemTier.T3)) {
+				ArrayList<String> processedBase = getRandomArrayIndex(attributesBaseTemp, 0, 1);
+
+				//Add the processedBase attributes to the Final Attributes list.
+				for (int i = 0; i <= processedBase.size() - 1; i++) {
+					attributesBaseFinal.add(processedBase.get(i));
+				}
+				//Clean up
+				processedBase.clear();
+			} else if (tier.equals(ItemTier.T4)) {
+				ArrayList<String> processedBase = getRandomArrayIndex(attributesBaseTemp, 0, 1);
+
+				//Add the processedBase attributes to the Final Attributes list.
+				for (int i = 0; i <= processedBase.size() - 1; i++) {
+					attributesBaseFinal.add(processedBase.get(i));
+				}
+				//Clean up
+				processedBase.clear();
+			} else if (tier.equals(ItemTier.T5)) {
+				ArrayList<String> processedBase = getRandomArrayIndex(attributesBaseTemp, 0, 1);
+
+				//Add the processedBase attributes to the Final Attributes list.
+				for (int i = 0; i <= processedBase.size() - 1; i++) {
+					attributesBaseFinal.add(processedBase.get(i));
+				}
+				//Clean up
+				processedBase.clear();
+			} else if (tier.equals(ItemTier.T6)) {
+				ArrayList<String> processedBase = getRandomArrayIndex(attributesBaseTemp, 0, 1);
+
+				//Add the processedBase attributes to the Final Attributes list.
+				for (int i = 0; i <= processedBase.size() - 1; i++) {
+					attributesBaseFinal.add(processedBase.get(i));
+				}
+				//Clean up
+				processedBase.clear();
+			}
+
+			//Lets do some cleanup.
+			attributesBaseTemp.clear();
+			attributesMagicTemp.clear();
+			attributesExtrasTemp.clear();
+
+		} else if (quality.equals(ItemQuality.COMMON)) {
+
+			////////////////////////////////////////////////
+			//// COMMON ////////////////////////////////////
+			////////////////////////////////////////////////
+
+			//Randomly pick 1 or 2 attributes.
+
+			attributesBaseTemp.add(ChatColor.WHITE + " +" + strength + " Strength");
+			attributesBaseTemp.add(ChatColor.WHITE + " +" + agility + " Agility");
+			attributesBaseTemp.add(ChatColor.WHITE + " +" + stamina + " Stamina");
+			attributesBaseTemp.add(ChatColor.WHITE + " +" + intellect + " Intellect");
+			attributesBaseTemp.add(ChatColor.WHITE + " +" + spirit + " Spirit");
+
+			//Get random amount of attributes (1 or 2).
+			if (tier.equals(ItemTier.T1)) {
+				ArrayList<String> processedBase = getRandomArrayIndex(attributesBaseTemp, 0, 2);
+
+				//Add the processedBase attributes to the Final Attributes list.
+				for (int i = 0; i <= processedBase.size() - 1; i++) {
+					attributesBaseFinal.add(processedBase.get(i));
+				}
+			} else if (tier.equals(ItemTier.T2)) {
+				ArrayList<String> processedBase = getRandomArrayIndex(attributesBaseTemp, 0, 2);
+
+				//Add the processedBase attributes to the Final Attributes list.
+				for (int i = 0; i <= processedBase.size() - 1; i++) {
+					attributesBaseFinal.add(processedBase.get(i));
+				}
+				//Clean up
+				processedBase.clear();
+			} else if (tier.equals(ItemTier.T3)) {
+				ArrayList<String> processedBase = getRandomArrayIndex(attributesBaseTemp, 0, 2);
+
+				//Add the processedBase attributes to the Final Attributes list.
+				for (int i = 0; i <= processedBase.size() - 1; i++) {
+					attributesBaseFinal.add(processedBase.get(i));
+				}
+				//Clean up
+				processedBase.clear();
+			} else if (tier.equals(ItemTier.T4)) {
+				ArrayList<String> processedBase = getRandomArrayIndex(attributesBaseTemp, 0, 2);
+
+				//Add the processedBase attributes to the Final Attributes list.
+				for (int i = 0; i <= processedBase.size() - 1; i++) {
+					attributesBaseFinal.add(processedBase.get(i));
+				}
+				//Clean up
+				processedBase.clear();
+			} else if (tier.equals(ItemTier.T5)) {
+				ArrayList<String> processedBase = getRandomArrayIndex(attributesBaseTemp, 0, 2);
+
+				//Add the processedBase attributes to the Final Attributes list.
+				for (int i = 0; i <= processedBase.size() - 1; i++) {
+					attributesBaseFinal.add(processedBase.get(i));
+				}
+				//Clean up
+				processedBase.clear();
+			} else if (tier.equals(ItemTier.T6)) {
+				ArrayList<String> processedBase = getRandomArrayIndex(attributesBaseTemp, 0, 2);
+
+				//Add the processedBase attributes to the Final Attributes list.
+				for (int i = 0; i <= processedBase.size() - 1; i++) {
+					attributesBaseFinal.add(processedBase.get(i));
+				}
+				//Clean up
+				processedBase.clear();
+			}
+
+			//Lets do some cleanup.
+			attributesBaseTemp.clear();
+			attributesMagicTemp.clear();
+			attributesExtrasTemp.clear();
+
+		} else if (quality.equals(ItemQuality.UNCOMMON)) {
+
+			////////////////////////////////////////////////
+			//// UNCOMMON //////////////////////////////////
+			////////////////////////////////////////////////
+
+
+			//Randomly pick 1, 2, or 3 attributes,
+			//With possibility of magic resistance and
+			//attribute extras.
+
+			attributesBaseTemp.add(ChatColor.WHITE + " +" + strength + " Strength");
+			attributesBaseTemp.add(ChatColor.WHITE + " +" + agility + " Agility");
+			attributesBaseTemp.add(ChatColor.WHITE + " +" + stamina + " Stamina");
+			attributesBaseTemp.add(ChatColor.WHITE + " +" + intellect + " Intellect");
+			attributesBaseTemp.add(ChatColor.WHITE + " +" + spirit + " Spirit");
+
+			attributesMagicTemp.add(ChatColor.WHITE + " +" + fireResist + " Fire Resistance");
+			attributesMagicTemp.add(ChatColor.WHITE + " +" + iceResist + " Ice Resistance");
+			attributesMagicTemp.add(ChatColor.WHITE + " +" + lightningResist + " Lightning Resistance");
+			attributesMagicTemp.add(ChatColor.WHITE + " +" + poisonResist + " Poison Resistance");
+			attributesMagicTemp.add(ChatColor.WHITE + " +" + paralyzeResist + " Fire Resistance");
+
+			attributesExtrasTemp.add(ChatColor.WHITE + " +" + waterBreathing + " Water Breathing");
+			attributesExtrasTemp.add(ChatColor.WHITE + " +" + personality + " Personality");
+			attributesExtrasTemp.add(ChatColor.WHITE + " +" + goldFind + " Gold Find");
+			attributesExtrasTemp.add(ChatColor.WHITE + " +" + magicFind + " Magic FInd");
+
+			//Get random amount of attributes (1 or 2).
+			if (tier.equals(ItemTier.T1)) {
+				ArrayList<String> processedBase = getRandomArrayIndex(attributesBaseTemp, 1, 2);
+				ArrayList<String> processedMagic = getRandomArrayIndex(attributesMagicTemp, 0, 1);
+				ArrayList<String> processedExtras = getRandomArrayIndex(attributesExtrasTemp, 0, 1);
+
+				//Add the processedBase attributes to the Final Attributes list.
+				for (int i = 0; i <= processedBase.size() - 1; i++) {
+					attributesBaseFinal.add(processedBase.get(i));
+				}
+
+				//Add the processedMagic attributes to the Final Attributes list.
+				for (int i = 0; i <= processedMagic.size() - 1; i++) {
+					attributesMagicFinal.add(processedMagic.get(i));
+				}
+
+				//Add the processedMagic attributes to the Final Attributes list.
+				for (int i = 0; i <= processedExtras.size() - 1; i++) {
+					attributesExtrasFinal.add(processedExtras.get(i));
+				}
+
+				//Clean up
+				processedBase.clear();
+			} else if (tier.equals(ItemTier.T2)) {
+				ArrayList<String> processedBase = getRandomArrayIndex(attributesBaseTemp, 1, 2);
+				ArrayList<String> processedMagic = getRandomArrayIndex(attributesMagicTemp, 0, 2);
+				ArrayList<String> processedExtras = getRandomArrayIndex(attributesExtrasTemp, 0, 1);
+
+				//Add the processedBase attributes to the Final Attributes list.
+				for (int i = 0; i <= processedBase.size() - 1; i++) {
+					attributesBaseFinal.add(processedBase.get(i));
+				}
+
+				//Add the processedMagic attributes to the Final Attributes list.
+				for (int i = 0; i <= processedMagic.size() - 1; i++) {
+					attributesMagicFinal.add(processedMagic.get(i));
+				}
+
+				//Add the processedMagic attributes to the Final Attributes list.
+				for (int i = 0; i <= processedExtras.size() - 1; i++) {
+					attributesExtrasFinal.add(processedExtras.get(i));
+				}
+
+				//Clean up
+				processedBase.clear();
+			} else if (tier.equals(ItemTier.T3)) {
+				ArrayList<String> processedBase = getRandomArrayIndex(attributesBaseTemp, 1, 2);
+				ArrayList<String> processedMagic = getRandomArrayIndex(attributesMagicTemp, 0, 2);
+				ArrayList<String> processedExtras = getRandomArrayIndex(attributesExtrasTemp, 0, 1);
+
+				//Add the processedBase attributes to the Final Attributes list.
+				for (int i = 0; i <= processedBase.size() - 1; i++) {
+					attributesBaseFinal.add(processedBase.get(i));
+				}
+
+				//Add the processedMagic attributes to the Final Attributes list.
+				for (int i = 0; i <= processedMagic.size() - 1; i++) {
+					attributesMagicFinal.add(processedMagic.get(i));
+				}
+
+				//Add the processedMagic attributes to the Final Attributes list.
+				for (int i = 0; i <= processedExtras.size() - 1; i++) {
+					attributesExtrasFinal.add(processedExtras.get(i));
+				}
+
+				//Clean up
+				processedBase.clear();
+			} else if (tier.equals(ItemTier.T4)) {
+				ArrayList<String> processedBase = getRandomArrayIndex(attributesBaseTemp, 1, 2);
+				ArrayList<String> processedMagic = getRandomArrayIndex(attributesMagicTemp, 0, 2);
+				ArrayList<String> processedExtras = getRandomArrayIndex(attributesExtrasTemp, 0, 1);
+
+				//Add the processedBase attributes to the Final Attributes list.
+				for (int i = 0; i <= processedBase.size() - 1; i++) {
+					attributesBaseFinal.add(processedBase.get(i));
+				}
+
+				//Add the processedMagic attributes to the Final Attributes list.
+				for (int i = 0; i <= processedMagic.size() - 1; i++) {
+					attributesMagicFinal.add(processedMagic.get(i));
+				}
+
+				//Add the processedMagic attributes to the Final Attributes list.
+				for (int i = 0; i <= processedExtras.size() - 1; i++) {
+					attributesExtrasFinal.add(processedExtras.get(i));
+				}
+
+				//Clean up
+				processedBase.clear();
+			} else if (tier.equals(ItemTier.T5)) {
+				ArrayList<String> processedBase = getRandomArrayIndex(attributesBaseTemp, 1, 2);
+				ArrayList<String> processedMagic = getRandomArrayIndex(attributesMagicTemp, 0, 2);
+				ArrayList<String> processedExtras = getRandomArrayIndex(attributesExtrasTemp, 0, 1);
+
+				//Add the processedBase attributes to the Final Attributes list.
+				for (int i = 0; i <= processedBase.size() - 1; i++) {
+					attributesBaseFinal.add(processedBase.get(i));
+				}
+
+				//Add the processedMagic attributes to the Final Attributes list.
+				for (int i = 0; i <= processedMagic.size() - 1; i++) {
+					attributesMagicFinal.add(processedMagic.get(i));
+				}
+
+				//Add the processedMagic attributes to the Final Attributes list.
+				for (int i = 0; i <= processedExtras.size() - 1; i++) {
+					attributesExtrasFinal.add(processedExtras.get(i));
+				}
+
+				//Clean up
+				processedBase.clear();
+			} else if (tier.equals(ItemTier.T6)) {
+				ArrayList<String> processedBase = getRandomArrayIndex(attributesBaseTemp, 1, 2);
+				ArrayList<String> processedMagic = getRandomArrayIndex(attributesMagicTemp, 0, 2);
+				ArrayList<String> processedExtras = getRandomArrayIndex(attributesExtrasTemp, 0, 1);
+
+				//Add the processedBase attributes to the Final Attributes list.
+				for (int i = 0; i <= processedBase.size() - 1; i++) {
+					attributesBaseFinal.add(processedBase.get(i));
+				}
+
+				//Add the processedMagic attributes to the Final Attributes list.
+				for (int i = 0; i <= processedMagic.size() - 1; i++) {
+					attributesMagicFinal.add(processedMagic.get(i));
+				}
+
+				//Add the processedMagic attributes to the Final Attributes list.
+				for (int i = 0; i <= processedExtras.size() - 1; i++) {
+					attributesExtrasFinal.add(processedExtras.get(i));
+				}
+
+				//Clean up
+				processedBase.clear();
+			}
+
+			//Lets do some cleanup.
+			attributesBaseTemp.clear();
+			attributesMagicTemp.clear();
+			attributesExtrasTemp.clear();
+
+		} else if (quality.equals(ItemQuality.RARE)) {
+
+			////////////////////////////////////////////////
+			//// RARE //////////////////////////////////////
+			////////////////////////////////////////////////
+
+			//Randomly pick 2 or 3 attributes,
+			//With possibility of magic resistance and
+			//attribute extras.
+
+			attributesBaseTemp.add(ChatColor.WHITE + " +" + strength + " Strength");
+			attributesBaseTemp.add(ChatColor.WHITE + " +" + agility + " Agility");
+			attributesBaseTemp.add(ChatColor.WHITE + " +" + stamina + " Stamina");
+			attributesBaseTemp.add(ChatColor.WHITE + " +" + intellect + " Intellect");
+			attributesBaseTemp.add(ChatColor.WHITE + " +" + spirit + " Spirit");
+
+			attributesMagicTemp.add(ChatColor.WHITE + " +" + fireResist + " Fire Resistance");
+			attributesMagicTemp.add(ChatColor.WHITE + " +" + iceResist + " Ice Resistance");
+			attributesMagicTemp.add(ChatColor.WHITE + " +" + lightningResist + " Lightning Resistance");
+			attributesMagicTemp.add(ChatColor.WHITE + " +" + poisonResist + " Poison Resistance");
+			attributesMagicTemp.add(ChatColor.WHITE + " +" + paralyzeResist + " Fire Resistance");
+
+			attributesExtrasTemp.add(ChatColor.WHITE + " +" + waterBreathing + " Water Breathing");
+			attributesExtrasTemp.add(ChatColor.WHITE + " +" + personality + " Personality");
+			attributesExtrasTemp.add(ChatColor.WHITE + " +" + goldFind + " Gold Find");
+			attributesExtrasTemp.add(ChatColor.WHITE + " +" + magicFind + " Magic FInd");
+
+			//Get random amount of attributes (1 or 2).
+			if (tier.equals(ItemTier.T1)) {
+				ArrayList<String> processedBase = getRandomArrayIndex(attributesBaseTemp, 2, 3);
+				ArrayList<String> processedMagic = getRandomArrayIndex(attributesMagicTemp, 1, 2);
+				ArrayList<String> processedExtras = getRandomArrayIndex(attributesExtrasTemp, 1, 2);
+
+				//Add the processedBase attributes to the Final Attributes list.
+				for (int i = 0; i <= processedBase.size() - 1; i++) {
+					attributesBaseFinal.add(processedBase.get(i));
+				}
+
+				//Add the processedMagic attributes to the Final Attributes list.
+				for (int i = 0; i <= processedMagic.size() - 1; i++) {
+					attributesMagicFinal.add(processedMagic.get(i));
+				}
+
+				//Add the processedMagic attributes to the Final Attributes list.
+				for (int i = 0; i <= processedExtras.size() - 1; i++) {
+					attributesExtrasFinal.add(processedExtras.get(i));
+				}
+
+				//Clean up
+				processedBase.clear();
+			} else if (tier.equals(ItemTier.T2)) {
+				ArrayList<String> processedBase = getRandomArrayIndex(attributesBaseTemp, 2, 3);
+				ArrayList<String> processedMagic = getRandomArrayIndex(attributesMagicTemp, 1, 2);
+				ArrayList<String> processedExtras = getRandomArrayIndex(attributesExtrasTemp, 1, 2);
+
+				//Add the processedBase attributes to the Final Attributes list.
+				for (int i = 0; i <= processedBase.size() - 1; i++) {
+					attributesBaseFinal.add(processedBase.get(i));
+				}
+
+				//Add the processedMagic attributes to the Final Attributes list.
+				for (int i = 0; i <= processedMagic.size() - 1; i++) {
+					attributesMagicFinal.add(processedMagic.get(i));
+				}
+
+				//Add the processedMagic attributes to the Final Attributes list.
+				for (int i = 0; i <= processedExtras.size() - 1; i++) {
+					attributesExtrasFinal.add(processedExtras.get(i));
+				}
+
+				//Clean up
+				processedBase.clear();
+			} else if (tier.equals(ItemTier.T3)) {
+				ArrayList<String> processedBase = getRandomArrayIndex(attributesBaseTemp, 2, 3);
+				ArrayList<String> processedMagic = getRandomArrayIndex(attributesMagicTemp, 1, 2);
+				ArrayList<String> processedExtras = getRandomArrayIndex(attributesExtrasTemp, 1, 2);
+
+				//Add the processedBase attributes to the Final Attributes list.
+				for (int i = 0; i <= processedBase.size() - 1; i++) {
+					attributesBaseFinal.add(processedBase.get(i));
+				}
+
+				//Add the processedMagic attributes to the Final Attributes list.
+				for (int i = 0; i <= processedMagic.size() - 1; i++) {
+					attributesMagicFinal.add(processedMagic.get(i));
+				}
+
+				//Add the processedMagic attributes to the Final Attributes list.
+				for (int i = 0; i <= processedExtras.size() - 1; i++) {
+					attributesExtrasFinal.add(processedExtras.get(i));
+				}
+
+				//Clean up
+				processedBase.clear();
+			} else if (tier.equals(ItemTier.T4)) {
+				ArrayList<String> processedBase = getRandomArrayIndex(attributesBaseTemp, 2, 3);
+				ArrayList<String> processedMagic = getRandomArrayIndex(attributesMagicTemp, 1, 2);
+				ArrayList<String> processedExtras = getRandomArrayIndex(attributesExtrasTemp, 1, 2);
+
+				//Add the processedBase attributes to the Final Attributes list.
+				for (int i = 0; i <= processedBase.size() - 1; i++) {
+					attributesBaseFinal.add(processedBase.get(i));
+				}
+
+				//Add the processedMagic attributes to the Final Attributes list.
+				for (int i = 0; i <= processedMagic.size() - 1; i++) {
+					attributesMagicFinal.add(processedMagic.get(i));
+				}
+
+				//Add the processedMagic attributes to the Final Attributes list.
+				for (int i = 0; i <= processedExtras.size() - 1; i++) {
+					attributesExtrasFinal.add(processedExtras.get(i));
+				}
+
+				//Clean up
+				processedBase.clear();
+			} else if (tier.equals(ItemTier.T5)) {
+				ArrayList<String> processedBase = getRandomArrayIndex(attributesBaseTemp, 2, 3);
+				ArrayList<String> processedMagic = getRandomArrayIndex(attributesMagicTemp, 1, 2);
+				ArrayList<String> processedExtras = getRandomArrayIndex(attributesExtrasTemp, 1, 2);
+
+				//Add the processedBase attributes to the Final Attributes list.
+				for (int i = 0; i <= processedBase.size() - 1; i++) {
+					attributesBaseFinal.add(processedBase.get(i));
+				}
+
+				//Add the processedMagic attributes to the Final Attributes list.
+				for (int i = 0; i <= processedMagic.size() - 1; i++) {
+					attributesMagicFinal.add(processedMagic.get(i));
+				}
+
+				//Add the processedMagic attributes to the Final Attributes list.
+				for (int i = 0; i <= processedExtras.size() - 1; i++) {
+					attributesExtrasFinal.add(processedExtras.get(i));
+				}
+
+				//Clean up
+				processedBase.clear();
+			} else if (tier.equals(ItemTier.T6)) {
+				ArrayList<String> processedBase = getRandomArrayIndex(attributesBaseTemp, 2, 3);
+				ArrayList<String> processedMagic = getRandomArrayIndex(attributesMagicTemp, 1, 2);
+				ArrayList<String> processedExtras = getRandomArrayIndex(attributesExtrasTemp, 1, 2);
+
+				//Add the processedBase attributes to the Final Attributes list.
+				for (int i = 0; i <= processedBase.size() - 1; i++) {
+					attributesBaseFinal.add(processedBase.get(i));
+				}
+
+				//Add the processedMagic attributes to the Final Attributes list.
+				for (int i = 0; i <= processedMagic.size() - 1; i++) {
+					attributesMagicFinal.add(processedMagic.get(i));
+				}
+
+				//Add the processedMagic attributes to the Final Attributes list.
+				for (int i = 0; i <= processedExtras.size() - 1; i++) {
+					attributesExtrasFinal.add(processedExtras.get(i));
+				}
+
+				//Clean up
+				processedBase.clear();
+			}
+
+			//Lets do some cleanup.
+			attributesBaseTemp.clear();
+			attributesMagicTemp.clear();
+			attributesExtrasTemp.clear();
+
+		} else if (quality.equals(ItemQuality.LEGENDARY)) {
+
+			///////////////////////////////////////////////////////////////////////////////////////////////////////
+			//// LEGENDARY ////////////////////////////////////////////////////////////////////////////////////////
+			///////////////////////////////////////////////////////////////////////////////////////////////////////
+
+			//Randomly pick 4 or 5 attributes,
+			//With possibility of magic resistance and
+			//attribute extras.
+
+			attributesBaseTemp.add(ChatColor.WHITE + " +" + strength + " Strength");
+			attributesBaseTemp.add(ChatColor.WHITE + " +" + agility + " Agility");
+			attributesBaseTemp.add(ChatColor.WHITE + " +" + stamina + " Stamina");
+			attributesBaseTemp.add(ChatColor.WHITE + " +" + intellect + " Intellect");
+			attributesBaseTemp.add(ChatColor.WHITE + " +" + spirit + " Spirit");
+
+			attributesMagicTemp.add(ChatColor.WHITE + " +" + fireResist + " Fire Resistance");
+			attributesMagicTemp.add(ChatColor.WHITE + " +" + iceResist + " Ice Resistance");
+			attributesMagicTemp.add(ChatColor.WHITE + " +" + lightningResist + " Lightning Resistance");
+			attributesMagicTemp.add(ChatColor.WHITE + " +" + poisonResist + " Poison Resistance");
+			attributesMagicTemp.add(ChatColor.WHITE + " +" + paralyzeResist + " Fire Resistance");
+
+			attributesExtrasTemp.add(ChatColor.WHITE + " +" + waterBreathing + " Water Breathing");
+			attributesExtrasTemp.add(ChatColor.WHITE + " +" + personality + " Personality");
+			attributesExtrasTemp.add(ChatColor.WHITE + " +" + goldFind + " Gold Find");
+			attributesExtrasTemp.add(ChatColor.WHITE + " +" + magicFind + " Magic FInd");
+
+			//Get random amount of attributes (1 or 2).
+			if (tier.equals(ItemTier.T1)) {
+				ArrayList<String> processedBase = getRandomArrayIndex(attributesBaseTemp, 4, 5);
+				ArrayList<String> processedMagic = getRandomArrayIndex(attributesMagicTemp, 2, 3);
+				ArrayList<String> processedExtras = getRandomArrayIndex(attributesExtrasTemp, 2, 3);
+
+				//Add the processedBase attributes to the Final Attributes list.
+				for (int i = 0; i <= processedBase.size() - 1; i++) {
+					attributesBaseFinal.add(processedBase.get(i));
+				}
+
+				//Add the processedMagic attributes to the Final Attributes list.
+				for (int i = 0; i <= processedMagic.size() - 1; i++) {
+					attributesMagicFinal.add(processedMagic.get(i));
+				}
+
+				//Add the processedMagic attributes to the Final Attributes list.
+				for (int i = 0; i <= processedExtras.size() - 1; i++) {
+					attributesExtrasFinal.add(processedExtras.get(i));
+				}
+
+				//Clean up
+				processedBase.clear();
+			} else if (tier.equals(ItemTier.T2)) {
+				ArrayList<String> processedBase = getRandomArrayIndex(attributesBaseTemp, 4, 5);
+				ArrayList<String> processedMagic = getRandomArrayIndex(attributesMagicTemp, 2, 3);
+				ArrayList<String> processedExtras = getRandomArrayIndex(attributesExtrasTemp, 2, 3);
+
+				//Add the processedBase attributes to the Final Attributes list.
+				for (int i = 0; i <= processedBase.size() - 1; i++) {
+					attributesBaseFinal.add(processedBase.get(i));
+				}
+
+				//Add the processedMagic attributes to the Final Attributes list.
+				for (int i = 0; i <= processedMagic.size() - 1; i++) {
+					attributesMagicFinal.add(processedMagic.get(i));
+				}
+
+				//Add the processedMagic attributes to the Final Attributes list.
+				for (int i = 0; i <= processedExtras.size() - 1; i++) {
+					attributesExtrasFinal.add(processedExtras.get(i));
+				}
+
+				//Clean up
+				processedBase.clear();
+			} else if (tier.equals(ItemTier.T3)) {
+				ArrayList<String> processedBase = getRandomArrayIndex(attributesBaseTemp, 4, 5);
+				ArrayList<String> processedMagic = getRandomArrayIndex(attributesMagicTemp, 2, 3);
+				ArrayList<String> processedExtras = getRandomArrayIndex(attributesExtrasTemp, 2, 3);
+
+				//Add the processedBase attributes to the Final Attributes list.
+				for (int i = 0; i <= processedBase.size() - 1; i++) {
+					attributesBaseFinal.add(processedBase.get(i));
+				}
+
+				//Add the processedMagic attributes to the Final Attributes list.
+				for (int i = 0; i <= processedMagic.size() - 1; i++) {
+					attributesMagicFinal.add(processedMagic.get(i));
+				}
+
+				//Add the processedMagic attributes to the Final Attributes list.
+				for (int i = 0; i <= processedExtras.size() - 1; i++) {
+					attributesExtrasFinal.add(processedExtras.get(i));
+				}
+
+				//Clean up
+				processedBase.clear();
+			} else if (tier.equals(ItemTier.T4)) {
+				ArrayList<String> processedBase = getRandomArrayIndex(attributesBaseTemp, 4, 5);
+				ArrayList<String> processedMagic = getRandomArrayIndex(attributesMagicTemp, 2, 3);
+				ArrayList<String> processedExtras = getRandomArrayIndex(attributesExtrasTemp, 2, 3);
+
+				//Add the processedBase attributes to the Final Attributes list.
+				for (int i = 0; i <= processedBase.size() - 1; i++) {
+					attributesBaseFinal.add(processedBase.get(i));
+				}
+
+				//Add the processedMagic attributes to the Final Attributes list.
+				for (int i = 0; i <= processedMagic.size() - 1; i++) {
+					attributesMagicFinal.add(processedMagic.get(i));
+				}
+
+				//Add the processedMagic attributes to the Final Attributes list.
+				for (int i = 0; i <= processedExtras.size() - 1; i++) {
+					attributesExtrasFinal.add(processedExtras.get(i));
+				}
+
+				//Clean up
+				processedBase.clear();
+			} else if (tier.equals(ItemTier.T5)) {
+				ArrayList<String> processedBase = getRandomArrayIndex(attributesBaseTemp, 4, 5);
+				ArrayList<String> processedMagic = getRandomArrayIndex(attributesMagicTemp, 2, 3);
+				ArrayList<String> processedExtras = getRandomArrayIndex(attributesExtrasTemp, 2, 3);
+
+				//Add the processedBase attributes to the Final Attributes list.
+				for (int i = 0; i <= processedBase.size() - 1; i++) {
+					attributesBaseFinal.add(processedBase.get(i));
+				}
+
+				//Add the processedMagic attributes to the Final Attributes list.
+				for (int i = 0; i <= processedMagic.size() - 1; i++) {
+					attributesMagicFinal.add(processedMagic.get(i));
+				}
+
+				//Add the processedMagic attributes to the Final Attributes list.
+				for (int i = 0; i <= processedExtras.size() - 1; i++) {
+					attributesExtrasFinal.add(processedExtras.get(i));
+				}
+
+				//Clean up
+				processedBase.clear();
+			} else if (tier.equals(ItemTier.T6)) {
+				ArrayList<String> processedBase = getRandomArrayIndex(attributesBaseTemp, 4, 5);
+				ArrayList<String> processedMagic = getRandomArrayIndex(attributesMagicTemp, 2, 3);
+				ArrayList<String> processedExtras = getRandomArrayIndex(attributesExtrasTemp, 2, 3);
+
+				//Add the processedBase attributes to the Final Attributes list.
+				for (int i = 0; i <= processedBase.size() - 1; i++) {
+					attributesBaseFinal.add(processedBase.get(i));
+				}
+
+				//Add the processedMagic attributes to the Final Attributes list.
+				for (int i = 0; i <= processedMagic.size() - 1; i++) {
+					attributesMagicFinal.add(processedMagic.get(i));
+				}
+
+				//Add the processedMagic attributes to the Final Attributes list.
+				for (int i = 0; i <= processedExtras.size() - 1; i++) {
+					attributesExtrasFinal.add(processedExtras.get(i));
+				}
+
+				//Clean up
+				processedBase.clear();
+			}
+
+			//Lets do some cleanup.
+			attributesBaseTemp.clear();
+			attributesMagicTemp.clear();
+			attributesExtrasTemp.clear();
+
+		}	
+
+
+
+		/////////////////////
+		/// SET ITEM LORE ///
+		/////////////////////
+		ItemMeta im = item.getItemMeta();
+
+		String nameFormatting = ChatColor.BOLD + ItemQualityManager.getStringFormatting(quality);
+		String itemType = item.getType().toString().replace("_", " ");
+		String itemInfo = ChatColor.DARK_GRAY + "" + ChatColor.ITALIC + quality + " " + tier + " " + itemType;
+
+		double randSocket = Math.random() * 100;
+
+		//Set the items Name
+		im.setDisplayName(nameFormatting + "BetterNameComingSoon v2");
+
+		//Set the item lore
+		ArrayList<String> lore = new ArrayList<String>();
+
+		lore.add(itemInfo.toUpperCase());	//Define the quality of item.
+
+		lore.add(" "); //Spacer																
+
+		//Add base attributes
+		for (int i = 0; i < attributesBaseFinal.size(); i++) {
+			lore.add(attributesBaseFinal.get(i));
+		}
+
+		//Add magic Resistance attributes
+		if (!attributesMagicFinal.isEmpty()) {
+			for (int i = 0; i < attributesMagicFinal.size(); i++) {
+				lore.add(attributesMagicFinal.get(i));
+			}
+		}
+
+		//Add "extras" attributes
+		if (!attributesExtrasFinal.isEmpty()) {
+			for (int i = 0; i < attributesExtrasFinal.size(); i++) {
+				lore.add(attributesExtrasFinal.get(i));
+			}
+		}
+
+		//Add random socket
+		if (quality != ItemQuality.JUNK) {
+			if (randSocket > 80) {
+				lore.add(" ");
+				lore.add(ChatColor.LIGHT_PURPLE + " ⊡" + ChatColor.RESET + " Socketable");
+			} else if (randSocket > 90) {
+				lore.add(ChatColor.LIGHT_PURPLE + " ⊡" + ChatColor.RESET + " Socketable");
+			} else if (randSocket >95) {
+				lore.add(ChatColor.LIGHT_PURPLE + " ⊡" + ChatColor.RESET + " Socketable");
+			}
+		}
+
+		//Add merchant sell price
+		lore.add("");
+		lore.add("Merchant Sell Price" + ChatColor.DARK_GRAY + ":"); 
+		lore.add(ChatColor.RESET + "0" + ChatColor.GOLD + "g " 
+				+ ChatColor.RESET + "0" + ChatColor.GRAY + "s " 
+				+ ChatColor.RESET + "10" + ChatColor.RED + "c");
+
+		//Set the item lore
+		im.setLore(lore);
+		//Set the item meta
+		item.setItemMeta(im);
+
+		return item;
+	}
+
+
+
+	/**
+	 * Generates random attributes based on the item tier and quality.
+	 * 
+	 * @param item The item that we are adding attributes to.
+	 * @param tier The tier of the item we are adding attributes to.
+	 * @param quality The quality of the item we are adding attributes to.
+	 * @return Returns a item with random attributes.
+	 */
+	public static ItemStack createWeapon(ItemStack item, ItemTier tier, ItemQuality quality) {
+
+		/////////////////////////////
+		/// GRAB ITEM FROM CONFIG ///
+		/////////////////////////////
+		weaponConfigFile = new File(randomWeaponFilePath);
+		weaponConfig =  YamlConfiguration.loadConfiguration(weaponConfigFile);
+
+		//String name = tier.replaceAll("_", " ");
+		//List<String> itemDescription = (List<String>) weaponConfig.getList(tier + ".itemDescription");
+
+		/**
+		 * Base Stats:
+		 * 	Strength
+		 * 	Agility
+		 * 	Stamina
+		 * 	Intellect
+		 * 	Spirit
+		 * 	+ Damage (must have every time)
+		 * 
+		 * Magic Damage:
+		 * 	Fire Damage
+		 * 	Ice Damage
+		 * 	Lightning Damage
+		 * 	Poison Damage
+		 * 	Paralyze Damage
+		 */
+
+		//Base stats
+		int strengthMin = weaponConfig.getInt(tier + "." + quality + ".strengthMin");
+		int strengthMax = weaponConfig.getInt(tier + "." + quality + ".strengthMax");
+		int agilityMin = weaponConfig.getInt(tier + "." + quality + ".agilityMin");
+		int agilityMax = weaponConfig.getInt(tier + "." + quality + ".agilityMax");
+		int staminaMin = weaponConfig.getInt(tier + "." + quality + ".staminaMin");
+		int staminaMax = weaponConfig.getInt(tier + "." + quality + ".staminaMax");
+		int intellectMin = weaponConfig.getInt(tier + "." + quality + ".intellectMin");
+		int intellectMax = weaponConfig.getInt(tier + "." + quality + ".intellectMax");
+		int spiritMin = weaponConfig.getInt(tier + "." + quality + ".spiritMin");
+		int spiritMax = weaponConfig.getInt(tier + "." + quality + ".spiritMax");
+		int damageLowMin = weaponConfig.getInt(tier + "." + quality + ".damageLowMin");
+		int damageLowMax = weaponConfig.getInt(tier + "." + quality + ".damageLowMax");
+		int damageHighMin = weaponConfig.getInt(tier + "." + quality + ".damageHighMin");
+		int damageHighMax = weaponConfig.getInt(tier + "." + quality + ".damageHighMax");
+
+		//Magical Damage
+		int fireDamageMin = weaponConfig.getInt(tier + "." + quality + ".fireDamageMin");
+		int fireDamageMax = weaponConfig.getInt(tier + "." + quality + ".fireDamageMax");
+		int iceDamageMin = weaponConfig.getInt(tier + "." + quality + ".iceDamageMin");
+		int iceDamageMax = weaponConfig.getInt(tier + "." + quality + ".iceDamageMax");
+		int lightningDamageMin = weaponConfig.getInt(tier + "." + quality + ".lightningDamageMin");
+		int lightningDamageMax = weaponConfig.getInt(tier + "." + quality + ".lightningDamageMax");
+		int poisonDamageMin = weaponConfig.getInt(tier + "." + quality + ".poisonDamageMin");
+		int poisonDamageMax = weaponConfig.getInt(tier + "." + quality + ".poisonDamageMax");
+		int paralyzeDamageMin = weaponConfig.getInt(tier + "." + quality + ".paralyzeDamageMin");
+		int paralyzeDamageMax = weaponConfig.getInt(tier + "." + quality + ".paralyzeDamageMax");
+
+
+		////////////////////////////
+		/// Calculate Item Stats ///
+		////////////////////////////
+
+		//Base stats
+		int strength = randomInt(strengthMin, strengthMax);
+		int agility = randomInt(agilityMin, agilityMax);
+		int stamina = randomInt(staminaMin, staminaMax);
+		int intellect = randomInt(intellectMin, intellectMax);
+		int spirit = randomInt(spiritMin, spiritMax);
+		int damageMin = randomInt(damageLowMin, damageLowMax);
+		int damageMax = randomInt(damageHighMin, damageHighMax);
+
+		//Damage
+		int fireDamage = randomInt(fireDamageMin, fireDamageMax);
+		int iceDamage = randomInt(iceDamageMin, iceDamageMax);
+		int lightningDamage = randomInt(lightningDamageMin, lightningDamageMax);
+		int poisonDamage = randomInt(poisonDamageMin, poisonDamageMax);
+		int paralyzeDamage = randomInt(paralyzeDamageMin, paralyzeDamageMax);
+
+
+		Bukkit.broadcastMessage("DamageLowMin: " + Integer.toString(damageLowMin));
+		Bukkit.broadcastMessage("DamageLowMax: " + Integer.toString(damageLowMax));
+		Bukkit.broadcastMessage("DamageHighMin: " + Integer.toString(damageHighMin));
+		Bukkit.broadcastMessage("DamageHighMax: " + Integer.toString(damageHighMax));
+
+
+		///////////////////////////////////
+		/// PICK RANDOM ITEM ATTRIBUTES ///
+		///////////////////////////////////
+
+		/**
+		 * ItemTiers: T1, T2, T3, T4, T5, T6
+		 * 
+		 * ItemQuality: Junk, Common, Uncommon, Rare, Epic, Legendary
+		 */
+
+		//Final arrays (processedBase).
+		ArrayList<String> attributesBaseFinal = new ArrayList<String>();
+		ArrayList<String> attributesMagicFinal = new ArrayList<String>();
+
+		//Temporary arrays
+		ArrayList<String> attributesBaseTemp = new ArrayList<String>();
+		ArrayList<String> attributesMagicTemp = new ArrayList<String>();
+
+		//Always add "damage" attribute to an weapon item.
+		//Lets do this beforehand, it does not need to be picked, its automatic.
+		attributesBaseFinal.add(ChatColor.WHITE + "" + damageMin + "-" + damageMax + " Weapon");
+
+		//Lets start the break down and see what attributes can be on what tier and quality item.
+
+		if (quality.equals(ItemQuality.JUNK)) {
+
+			////////////////////////////////////////////////
+			//// JUNK //////////////////////////////////////
+			////////////////////////////////////////////////
+
+			attributesBaseTemp.add(ChatColor.WHITE + " +" + strength + " Strength");
+			attributesBaseTemp.add(ChatColor.WHITE + " +" + agility + " Agility");
+			attributesBaseTemp.add(ChatColor.WHITE + " +" + stamina + " Stamina");
+			attributesBaseTemp.add(ChatColor.WHITE + " +" + intellect + " Intellect");
+			attributesBaseTemp.add(ChatColor.WHITE + " +" + spirit + " Spirit");
+
+
+			//Get random amount of attributes (1 or 2).
+			if (tier.equals(ItemTier.T1)) {
+				//ArrayList<String> processedBase = getRandomArrayIndex(attributesBaseTemp, 0, 1);
+			} else if (tier.equals(ItemTier.T2)) {
+				ArrayList<String> processedBase = getRandomArrayIndex(attributesBaseTemp, 0, 1);
+
+				//Add the processedBase attributes to the Final Attributes list.
+				for (int i = 0; i <= processedBase.size() - 1; i++) {
+					attributesBaseFinal.add(processedBase.get(i));
+				}
+				//Clean up
+				processedBase.clear();
+			} else if (tier.equals(ItemTier.T3)) {
+				ArrayList<String> processedBase = getRandomArrayIndex(attributesBaseTemp, 0, 1);
+
+				//Add the processedBase attributes to the Final Attributes list.
+				for (int i = 0; i <= processedBase.size() - 1; i++) {
+					attributesBaseFinal.add(processedBase.get(i));
+				}
+				//Clean up
+				processedBase.clear();
+			} else if (tier.equals(ItemTier.T4)) {
+				ArrayList<String> processedBase = getRandomArrayIndex(attributesBaseTemp, 0, 1);
+
+				//Add the processedBase attributes to the Final Attributes list.
+				for (int i = 0; i <= processedBase.size() - 1; i++) {
+					attributesBaseFinal.add(processedBase.get(i));
+				}
+				//Clean up
+				processedBase.clear();
+			} else if (tier.equals(ItemTier.T5)) {
+				ArrayList<String> processedBase = getRandomArrayIndex(attributesBaseTemp, 0, 1);
+
+				//Add the processedBase attributes to the Final Attributes list.
+				for (int i = 0; i <= processedBase.size() - 1; i++) {
+					attributesBaseFinal.add(processedBase.get(i));
+				}
+				//Clean up
+				processedBase.clear();
+			} else if (tier.equals(ItemTier.T6)) {
+				ArrayList<String> processedBase = getRandomArrayIndex(attributesBaseTemp, 0, 1);
+
+				//Add the processedBase attributes to the Final Attributes list.
+				for (int i = 0; i <= processedBase.size() - 1; i++) {
+					attributesBaseFinal.add(processedBase.get(i));
+				}
+				//Clean up
+				processedBase.clear();
+			}
+
+			//Lets do some cleanup.
+			attributesBaseTemp.clear();
+			attributesMagicTemp.clear();
+
+		} else if (quality.equals(ItemQuality.COMMON)) {
+
+			////////////////////////////////////////////////
+			//// COMMON ////////////////////////////////////
+			////////////////////////////////////////////////
+
+			//Randomly pick 1 or 2 attributes.
+
+			attributesBaseTemp.add(ChatColor.WHITE + " +" + strength + " Strength");
+			attributesBaseTemp.add(ChatColor.WHITE + " +" + agility + " Agility");
+			attributesBaseTemp.add(ChatColor.WHITE + " +" + stamina + " Stamina");
+			attributesBaseTemp.add(ChatColor.WHITE + " +" + intellect + " Intellect");
+			attributesBaseTemp.add(ChatColor.WHITE + " +" + spirit + " Spirit");
+
+			//Get random amount of attributes (1 or 2).
+			if (tier.equals(ItemTier.T1)) {
+				ArrayList<String> processedBase = getRandomArrayIndex(attributesBaseTemp, 0, 2);
+
+				//Add the processedBase attributes to the Final Attributes list.
+				for (int i = 0; i <= processedBase.size() - 1; i++) {
+					attributesBaseFinal.add(processedBase.get(i));
+				}
+			} else if (tier.equals(ItemTier.T2)) {
+				ArrayList<String> processedBase = getRandomArrayIndex(attributesBaseTemp, 0, 2);
+
+				//Add the processedBase attributes to the Final Attributes list.
+				for (int i = 0; i <= processedBase.size() - 1; i++) {
+					attributesBaseFinal.add(processedBase.get(i));
+				}
+				//Clean up
+				processedBase.clear();
+			} else if (tier.equals(ItemTier.T3)) {
+				ArrayList<String> processedBase = getRandomArrayIndex(attributesBaseTemp, 0, 2);
+
+				//Add the processedBase attributes to the Final Attributes list.
+				for (int i = 0; i <= processedBase.size() - 1; i++) {
+					attributesBaseFinal.add(processedBase.get(i));
+				}
+				//Clean up
+				processedBase.clear();
+			} else if (tier.equals(ItemTier.T4)) {
+				ArrayList<String> processedBase = getRandomArrayIndex(attributesBaseTemp, 0, 2);
+
+				//Add the processedBase attributes to the Final Attributes list.
+				for (int i = 0; i <= processedBase.size() - 1; i++) {
+					attributesBaseFinal.add(processedBase.get(i));
+				}
+				//Clean up
+				processedBase.clear();
+			} else if (tier.equals(ItemTier.T5)) {
+				ArrayList<String> processedBase = getRandomArrayIndex(attributesBaseTemp, 0, 2);
+
+				//Add the processedBase attributes to the Final Attributes list.
+				for (int i = 0; i <= processedBase.size() - 1; i++) {
+					attributesBaseFinal.add(processedBase.get(i));
+				}
+				//Clean up
+				processedBase.clear();
+			} else if (tier.equals(ItemTier.T6)) {
+				ArrayList<String> processedBase = getRandomArrayIndex(attributesBaseTemp, 0, 2);
+
+				//Add the processedBase attributes to the Final Attributes list.
+				for (int i = 0; i <= processedBase.size() - 1; i++) {
+					attributesBaseFinal.add(processedBase.get(i));
+				}
+				//Clean up
+				processedBase.clear();
+			}
+
+			//Lets do some cleanup.
+			attributesBaseTemp.clear();
+			attributesMagicTemp.clear();
+
+		} else if (quality.equals(ItemQuality.UNCOMMON)) {
+
+			////////////////////////////////////////////////
+			//// UNCOMMON //////////////////////////////////
+			////////////////////////////////////////////////
+
+
+			//Randomly pick 1, 2, or 3 attributes,
+			//With possibility of magic resistance and
+			//attribute extras.
+
+			attributesBaseTemp.add(ChatColor.WHITE + " +" + strength + " Strength");
+			attributesBaseTemp.add(ChatColor.WHITE + " +" + agility + " Agility");
+			attributesBaseTemp.add(ChatColor.WHITE + " +" + stamina + " Stamina");
+			attributesBaseTemp.add(ChatColor.WHITE + " +" + intellect + " Intellect");
+			attributesBaseTemp.add(ChatColor.WHITE + " +" + spirit + " Spirit");
+
+			attributesMagicTemp.add(ChatColor.WHITE + " +" + fireDamage + " Fire Damage");
+			attributesMagicTemp.add(ChatColor.WHITE + " +" + iceDamage + " Ice Damage");
+			attributesMagicTemp.add(ChatColor.WHITE + " +" + lightningDamage + " Lightning Damage");
+			attributesMagicTemp.add(ChatColor.WHITE + " +" + poisonDamage + " Poison Damage");
+			attributesMagicTemp.add(ChatColor.WHITE + " +" + paralyzeDamage + " Fire Damage");
+
+			//Get random amount of attributes (1 or 2).
+			if (tier.equals(ItemTier.T1)) {
+				ArrayList<String> processedBase = getRandomArrayIndex(attributesBaseTemp, 1, 2);
+				ArrayList<String> processedMagic = getRandomArrayIndex(attributesMagicTemp, 0, 1);
+
+				//Add the processedBase attributes to the Final Attributes list.
+				for (int i = 0; i <= processedBase.size() - 1; i++) {
+					attributesBaseFinal.add(processedBase.get(i));
+				}
+
+				//Add the processedMagic attributes to the Final Attributes list.
+				for (int i = 0; i <= processedMagic.size() - 1; i++) {
+					attributesMagicFinal.add(processedMagic.get(i));
+				}
+
+				//Clean up
+				processedBase.clear();
+			} else if (tier.equals(ItemTier.T2)) {
+				ArrayList<String> processedBase = getRandomArrayIndex(attributesBaseTemp, 1, 2);
+				ArrayList<String> processedMagic = getRandomArrayIndex(attributesMagicTemp, 0, 2);
+
+				//Add the processedBase attributes to the Final Attributes list.
+				for (int i = 0; i <= processedBase.size() - 1; i++) {
+					attributesBaseFinal.add(processedBase.get(i));
+				}
+
+				//Add the processedMagic attributes to the Final Attributes list.
+				for (int i = 0; i <= processedMagic.size() - 1; i++) {
+					attributesMagicFinal.add(processedMagic.get(i));
+				}
+
+				//Clean up
+				processedBase.clear();
+			} else if (tier.equals(ItemTier.T3)) {
+				ArrayList<String> processedBase = getRandomArrayIndex(attributesBaseTemp, 1, 2);
+				ArrayList<String> processedMagic = getRandomArrayIndex(attributesMagicTemp, 0, 2);
+
+				//Add the processedBase attributes to the Final Attributes list.
+				for (int i = 0; i <= processedBase.size() - 1; i++) {
+					attributesBaseFinal.add(processedBase.get(i));
+				}
+
+				//Add the processedMagic attributes to the Final Attributes list.
+				for (int i = 0; i <= processedMagic.size() - 1; i++) {
+					attributesMagicFinal.add(processedMagic.get(i));
+				}
+
+				//Clean up
+				processedBase.clear();
+			} else if (tier.equals(ItemTier.T4)) {
+				ArrayList<String> processedBase = getRandomArrayIndex(attributesBaseTemp, 1, 2);
+				ArrayList<String> processedMagic = getRandomArrayIndex(attributesMagicTemp, 0, 2);
+
+				//Add the processedBase attributes to the Final Attributes list.
+				for (int i = 0; i <= processedBase.size() - 1; i++) {
+					attributesBaseFinal.add(processedBase.get(i));
+				}
+
+				//Add the processedMagic attributes to the Final Attributes list.
+				for (int i = 0; i <= processedMagic.size() - 1; i++) {
+					attributesMagicFinal.add(processedMagic.get(i));
+				}
+
+				//Clean up
+				processedBase.clear();
+			} else if (tier.equals(ItemTier.T5)) {
+				ArrayList<String> processedBase = getRandomArrayIndex(attributesBaseTemp, 1, 2);
+				ArrayList<String> processedMagic = getRandomArrayIndex(attributesMagicTemp, 0, 2);
+
+				//Add the processedBase attributes to the Final Attributes list.
+				for (int i = 0; i <= processedBase.size() - 1; i++) {
+					attributesBaseFinal.add(processedBase.get(i));
+				}
+
+				//Add the processedMagic attributes to the Final Attributes list.
+				for (int i = 0; i <= processedMagic.size() - 1; i++) {
+					attributesMagicFinal.add(processedMagic.get(i));
+				}
+
+				//Clean up
+				processedBase.clear();
+			} else if (tier.equals(ItemTier.T6)) {
+				ArrayList<String> processedBase = getRandomArrayIndex(attributesBaseTemp, 1, 2);
+				ArrayList<String> processedMagic = getRandomArrayIndex(attributesMagicTemp, 0, 2);
+
+				//Add the processedBase attributes to the Final Attributes list.
+				for (int i = 0; i <= processedBase.size() - 1; i++) {
+					attributesBaseFinal.add(processedBase.get(i));
+				}
+
+				//Add the processedMagic attributes to the Final Attributes list.
+				for (int i = 0; i <= processedMagic.size() - 1; i++) {
+					attributesMagicFinal.add(processedMagic.get(i));
+				}
+
+				//Clean up
+				processedBase.clear();
+			}
+
+			//Lets do some cleanup.
+			attributesBaseTemp.clear();
+			attributesMagicTemp.clear();
+
+		} else if (quality.equals(ItemQuality.RARE)) {
+
+			////////////////////////////////////////////////
+			//// RARE //////////////////////////////////////
+			////////////////////////////////////////////////
+
+			//Randomly pick 2 or 3 attributes,
+			//With possibility of magic resistance and
+			//attribute extras.
+
+			attributesBaseTemp.add(ChatColor.WHITE + " +" + strength + " Strength");
+			attributesBaseTemp.add(ChatColor.WHITE + " +" + agility + " Agility");
+			attributesBaseTemp.add(ChatColor.WHITE + " +" + stamina + " Stamina");
+			attributesBaseTemp.add(ChatColor.WHITE + " +" + intellect + " Intellect");
+			attributesBaseTemp.add(ChatColor.WHITE + " +" + spirit + " Spirit");
+
+			attributesMagicTemp.add(ChatColor.WHITE + " +" + fireDamage + " Fire Damage");
+			attributesMagicTemp.add(ChatColor.WHITE + " +" + iceDamage + " Ice Damage");
+			attributesMagicTemp.add(ChatColor.WHITE + " +" + lightningDamage + " Lightning Damage");
+			attributesMagicTemp.add(ChatColor.WHITE + " +" + poisonDamage + " Poison Damage");
+			attributesMagicTemp.add(ChatColor.WHITE + " +" + paralyzeDamage + " Fire Damage");
+
+			//Get random amount of attributes (1 or 2).
+			if (tier.equals(ItemTier.T1)) {
+				ArrayList<String> processedBase = getRandomArrayIndex(attributesBaseTemp, 2, 3);
+				ArrayList<String> processedMagic = getRandomArrayIndex(attributesMagicTemp, 1, 2);
+
+				//Add the processedBase attributes to the Final Attributes list.
+				for (int i = 0; i <= processedBase.size() - 1; i++) {
+					attributesBaseFinal.add(processedBase.get(i));
+				}
+
+				//Add the processedMagic attributes to the Final Attributes list.
+				for (int i = 0; i <= processedMagic.size() - 1; i++) {
+					attributesMagicFinal.add(processedMagic.get(i));
+				}
+
+				//Clean up
+				processedBase.clear();
+			} else if (tier.equals(ItemTier.T2)) {
+				ArrayList<String> processedBase = getRandomArrayIndex(attributesBaseTemp, 2, 3);
+				ArrayList<String> processedMagic = getRandomArrayIndex(attributesMagicTemp, 1, 2);
+
+				//Add the processedBase attributes to the Final Attributes list.
+				for (int i = 0; i <= processedBase.size() - 1; i++) {
+					attributesBaseFinal.add(processedBase.get(i));
+				}
+
+				//Add the processedMagic attributes to the Final Attributes list.
+				for (int i = 0; i <= processedMagic.size() - 1; i++) {
+					attributesMagicFinal.add(processedMagic.get(i));
+				}
+
+				//Clean up
+				processedBase.clear();
+			} else if (tier.equals(ItemTier.T3)) {
+				ArrayList<String> processedBase = getRandomArrayIndex(attributesBaseTemp, 2, 3);
+				ArrayList<String> processedMagic = getRandomArrayIndex(attributesMagicTemp, 1, 2);
+
+				//Add the processedBase attributes to the Final Attributes list.
+				for (int i = 0; i <= processedBase.size() - 1; i++) {
+					attributesBaseFinal.add(processedBase.get(i));
+				}
+
+				//Add the processedMagic attributes to the Final Attributes list.
+				for (int i = 0; i <= processedMagic.size() - 1; i++) {
+					attributesMagicFinal.add(processedMagic.get(i));
+				}
+
+				//Clean up
+				processedBase.clear();
+			} else if (tier.equals(ItemTier.T4)) {
+				ArrayList<String> processedBase = getRandomArrayIndex(attributesBaseTemp, 2, 3);
+				ArrayList<String> processedMagic = getRandomArrayIndex(attributesMagicTemp, 1, 2);
+
+				//Add the processedBase attributes to the Final Attributes list.
+				for (int i = 0; i <= processedBase.size() - 1; i++) {
+					attributesBaseFinal.add(processedBase.get(i));
+				}
+
+				//Add the processedMagic attributes to the Final Attributes list.
+				for (int i = 0; i <= processedMagic.size() - 1; i++) {
+					attributesMagicFinal.add(processedMagic.get(i));
+				}
+
+				//Clean up
+				processedBase.clear();
+			} else if (tier.equals(ItemTier.T5)) {
+				ArrayList<String> processedBase = getRandomArrayIndex(attributesBaseTemp, 2, 3);
+				ArrayList<String> processedMagic = getRandomArrayIndex(attributesMagicTemp, 1, 2);
+
+				//Add the processedBase attributes to the Final Attributes list.
+				for (int i = 0; i <= processedBase.size() - 1; i++) {
+					attributesBaseFinal.add(processedBase.get(i));
+				}
+
+				//Add the processedMagic attributes to the Final Attributes list.
+				for (int i = 0; i <= processedMagic.size() - 1; i++) {
+					attributesMagicFinal.add(processedMagic.get(i));
+				}
+
+				//Clean up
+				processedBase.clear();
+			} else if (tier.equals(ItemTier.T6)) {
+				ArrayList<String> processedBase = getRandomArrayIndex(attributesBaseTemp, 2, 3);
+				ArrayList<String> processedMagic = getRandomArrayIndex(attributesMagicTemp, 1, 2);
+
+				//Add the processedBase attributes to the Final Attributes list.
+				for (int i = 0; i <= processedBase.size() - 1; i++) {
+					attributesBaseFinal.add(processedBase.get(i));
+				}
+
+				//Add the processedMagic attributes to the Final Attributes list.
+				for (int i = 0; i <= processedMagic.size() - 1; i++) {
+					attributesMagicFinal.add(processedMagic.get(i));
+				}
+
+				//Clean up
+				processedBase.clear();
+			}
+
+			//Lets do some cleanup.
+			attributesBaseTemp.clear();
+			attributesMagicTemp.clear();
+
+		} else if (quality.equals(ItemQuality.LEGENDARY)) {
+
+			///////////////////////////////////////////////////////////////////////////////////////////////////////
+			//// LEGENDARY ////////////////////////////////////////////////////////////////////////////////////////
+			///////////////////////////////////////////////////////////////////////////////////////////////////////
+
+			//Randomly pick 4 or 5 attributes,
+			//With possibility of magic resistance and
+			//attribute extras.
+
+			attributesBaseTemp.add(ChatColor.WHITE + " +" + strength + " Strength");
+			attributesBaseTemp.add(ChatColor.WHITE + " +" + agility + " Agility");
+			attributesBaseTemp.add(ChatColor.WHITE + " +" + stamina + " Stamina");
+			attributesBaseTemp.add(ChatColor.WHITE + " +" + intellect + " Intellect");
+			attributesBaseTemp.add(ChatColor.WHITE + " +" + spirit + " Spirit");
+
+			attributesMagicTemp.add(ChatColor.WHITE + " +" + fireDamage + " Fire Damage");
+			attributesMagicTemp.add(ChatColor.WHITE + " +" + iceDamage + " Ice Damage");
+			attributesMagicTemp.add(ChatColor.WHITE + " +" + lightningDamage + " Lightning Damage");
+			attributesMagicTemp.add(ChatColor.WHITE + " +" + poisonDamage + " Poison Damage");
+			attributesMagicTemp.add(ChatColor.WHITE + " +" + paralyzeDamage + " Fire Damage");
+
+			//Get random amount of attributes (1 or 2).
+			if (tier.equals(ItemTier.T1)) {
+				ArrayList<String> processedBase = getRandomArrayIndex(attributesBaseTemp, 4, 5);
+				ArrayList<String> processedMagic = getRandomArrayIndex(attributesMagicTemp, 2, 3);
+
+				//Add the processedBase attributes to the Final Attributes list.
+				for (int i = 0; i <= processedBase.size() - 1; i++) {
+					attributesBaseFinal.add(processedBase.get(i));
+				}
+
+				//Add the processedMagic attributes to the Final Attributes list.
+				for (int i = 0; i <= processedMagic.size() - 1; i++) {
+					attributesMagicFinal.add(processedMagic.get(i));
+				}
+
+				//Clean up
+				processedBase.clear();
+			} else if (tier.equals(ItemTier.T2)) {
+				ArrayList<String> processedBase = getRandomArrayIndex(attributesBaseTemp, 4, 5);
+				ArrayList<String> processedMagic = getRandomArrayIndex(attributesMagicTemp, 2, 3);
+
+				//Add the processedBase attributes to the Final Attributes list.
+				for (int i = 0; i <= processedBase.size() - 1; i++) {
+					attributesBaseFinal.add(processedBase.get(i));
+				}
+
+				//Add the processedMagic attributes to the Final Attributes list.
+				for (int i = 0; i <= processedMagic.size() - 1; i++) {
+					attributesMagicFinal.add(processedMagic.get(i));
+				}
+
+				//Clean up
+				processedBase.clear();
+			} else if (tier.equals(ItemTier.T3)) {
+				ArrayList<String> processedBase = getRandomArrayIndex(attributesBaseTemp, 4, 5);
+				ArrayList<String> processedMagic = getRandomArrayIndex(attributesMagicTemp, 2, 3);
+
+				//Add the processedBase attributes to the Final Attributes list.
+				for (int i = 0; i <= processedBase.size() - 1; i++) {
+					attributesBaseFinal.add(processedBase.get(i));
+				}
+
+				//Add the processedMagic attributes to the Final Attributes list.
+				for (int i = 0; i <= processedMagic.size() - 1; i++) {
+					attributesMagicFinal.add(processedMagic.get(i));
+				}
+
+				//Clean up
+				processedBase.clear();
+			} else if (tier.equals(ItemTier.T4)) {
+				ArrayList<String> processedBase = getRandomArrayIndex(attributesBaseTemp, 4, 5);
+				ArrayList<String> processedMagic = getRandomArrayIndex(attributesMagicTemp, 2, 3);
+
+				//Add the processedBase attributes to the Final Attributes list.
+				for (int i = 0; i <= processedBase.size() - 1; i++) {
+					attributesBaseFinal.add(processedBase.get(i));
+				}
+
+				//Add the processedMagic attributes to the Final Attributes list.
+				for (int i = 0; i <= processedMagic.size() - 1; i++) {
+					attributesMagicFinal.add(processedMagic.get(i));
+				}
+
+				//Clean up
+				processedBase.clear();
+			} else if (tier.equals(ItemTier.T5)) {
+				ArrayList<String> processedBase = getRandomArrayIndex(attributesBaseTemp, 4, 5);
+				ArrayList<String> processedMagic = getRandomArrayIndex(attributesMagicTemp, 2, 3);
+
+				//Add the processedBase attributes to the Final Attributes list.
+				for (int i = 0; i <= processedBase.size() - 1; i++) {
+					attributesBaseFinal.add(processedBase.get(i));
+				}
+
+				//Add the processedMagic attributes to the Final Attributes list.
+				for (int i = 0; i <= processedMagic.size() - 1; i++) {
+					attributesMagicFinal.add(processedMagic.get(i));
+				}
+
+				//Clean up
+				processedBase.clear();
+			} else if (tier.equals(ItemTier.T6)) {
+				ArrayList<String> processedBase = getRandomArrayIndex(attributesBaseTemp, 4, 5);
+				ArrayList<String> processedMagic = getRandomArrayIndex(attributesMagicTemp, 2, 3);
+
+				//Add the processedBase attributes to the Final Attributes list.
+				for (int i = 0; i <= processedBase.size() - 1; i++) {
+					attributesBaseFinal.add(processedBase.get(i));
+				}
+
+				//Add the processedMagic attributes to the Final Attributes list.
+				for (int i = 0; i <= processedMagic.size() - 1; i++) {
+					attributesMagicFinal.add(processedMagic.get(i));
+				}
+
+				//Clean up
+				processedBase.clear();
+			}
+
+			//Lets do some cleanup.
+			attributesBaseTemp.clear();
+			attributesMagicTemp.clear();
+		}	
+
+
+
+		/////////////////////
+		/// SET ITEM LORE ///
+		/////////////////////
+		ItemMeta im = item.getItemMeta();
+
+		String nameFormatting = ChatColor.BOLD + ItemQualityManager.getStringFormatting(quality);
+		String itemType = item.getType().toString().replace("_", " ");
+		String itemInfo = ChatColor.DARK_GRAY + "" + ChatColor.ITALIC + quality + " " + tier + " " + itemType;
+
+		double randSocket = Math.random() * 100;
+
+		//Set the items Name
+		im.setDisplayName(nameFormatting + "BetterNameComingSoon v2");
+
+		//Set the item lore
+		ArrayList<String> lore = new ArrayList<String>();
+
+		lore.add(itemInfo.toUpperCase());	//Define the quality of item.
+
+		lore.add(" "); //Spacer																
+
+		//Add base attributes
+		for (int i = 0; i < attributesBaseFinal.size(); i++) {
+			lore.add(attributesBaseFinal.get(i));
+		}
+
+		//Add magic Damage attributes
+		if (!attributesMagicFinal.isEmpty()) {
+			for (int i = 0; i < attributesMagicFinal.size(); i++) {
+				lore.add(attributesMagicFinal.get(i));
+			}
+		}
+
+		//Add random socket
+		if (quality != ItemQuality.JUNK) {
+			if (randSocket > 80) {
+				lore.add(" ");
+				lore.add(ChatColor.LIGHT_PURPLE + " ⊡" + ChatColor.RESET + " Socketable");
+			} else if (randSocket > 90) {
+				lore.add(ChatColor.LIGHT_PURPLE + " ⊡" + ChatColor.RESET + " Socketable");
+			} else if (randSocket >95) {
+				lore.add(ChatColor.LIGHT_PURPLE + " ⊡" + ChatColor.RESET + " Socketable");
+			}
+		}
+
+		//Add merchant sell price
+		lore.add("");
+		lore.add("Merchant Sell Price" + ChatColor.DARK_GRAY + ":"); 
+		lore.add(ChatColor.RESET + "0" + ChatColor.GOLD + "g " 
+				+ ChatColor.RESET + "0" + ChatColor.GRAY + "s " 
+				+ ChatColor.RESET + "10" + ChatColor.RED + "c");
+
+		//Set the item lore
+		im.setLore(lore);
+		//Set the item meta
+		item.setItemMeta(im);
+
+		return item;
+	}
+
+
+	/**
+	 * Creates a new configuration file for random weapon and weapons.
 	 */
 	private static void createConfig() {
 
-		//Create the configuration file for random armor and weapons. 
-		File armorConfigFile = new File(randomArmorFilePath);
+		//Create the configuration file for random weapon and weapons. 
+		File armorConfigFile = new File(randomWeaponFilePath);
 		File weaponConfigFile = new File(randomWeaponFilePath);
 
 		FileConfiguration armorConfig =  YamlConfiguration.loadConfiguration(armorConfigFile);
@@ -325,70 +1654,66 @@ public class RandomItemFactory {
 		/// RANDOM ARMOR ///
 		////////////////////
 		armorConfig.set("T1", "T1");
-		armorConfig.set("T1.JUNK.armorMin", 5);
+		armorConfig.set("T1.JUNK.strengthMin", 1);
+		armorConfig.set("T1.JUNK.strengthMax", 5);
+		armorConfig.set("T1.JUNK.agilityMin", 1);
+		armorConfig.set("T1.JUNK.agilityMax", 5);
+		armorConfig.set("T1.JUNK.staminaMin", 1);
+		armorConfig.set("T1.JUNK.staminaMax", 5);
+		armorConfig.set("T1.JUNK.intellectMin", 1);
+		armorConfig.set("T1.JUNK.intellectMax", 5);
+		armorConfig.set("T1.JUNK.spiritMin", 1);
+		armorConfig.set("T1.JUNK.spiritMax", 5);
+		armorConfig.set("T1.JUNK.armorMin", 1);
 		armorConfig.set("T1.JUNK.armorMax", 5);
-		armorConfig.set("T1.JUNK.blockChanceMin", 5);
-		armorConfig.set("T1.JUNK.blockChanceMax", 5);
-		armorConfig.set("T1.JUNK.coldResistMin", 5);
-		armorConfig.set("T1.JUNK.coldResistMax", 5);
-		armorConfig.set("T1.JUNK.dodgeChanceMin", 5);
-		armorConfig.set("T1.JUNK.dodgeChanceMax", 5);
-		armorConfig.set("T1.JUNK.fireResistMin", 5);
+		armorConfig.set("T1.JUNK.fireResistMin", 1);
 		armorConfig.set("T1.JUNK.fireResistMax", 5);
-		armorConfig.set("T1.JUNK.goldFindMin", 5);
-		armorConfig.set("T1.JUNK.goldFindMax", 5);
-		armorConfig.set("T1.JUNK.healthPointsMin", 5);
-		armorConfig.set("T1.JUNK.healthPointsMax", 5);
-		armorConfig.set("T1.JUNK.healthRegenMin", 5);
-		armorConfig.set("T1.JUNK.healthRegenMax", 5);
-		armorConfig.set("T1.JUNK.itemFindMin", 5);
-		armorConfig.set("T1.JUNK.itemFindMax", 5);
-		armorConfig.set("T1.JUNK.knockbackMin", 5);
-		armorConfig.set("T1.JUNK.knockbackMax", 5);
-		armorConfig.set("T1.JUNK.manaPointsMin", 5);
-		armorConfig.set("T1.JUNK.manaPointsMax", 5);
-		armorConfig.set("T1.JUNK.manaRegenMin", 5);
-		armorConfig.set("T1.JUNK.manaRegenMax", 5);
-		armorConfig.set("T1.JUNK.poisonResistMin", 5);
+		armorConfig.set("T1.JUNK.iceResistMin", 1);
+		armorConfig.set("T1.JUNK.iceResistMax", 5);
+		armorConfig.set("T1.JUNK.lightningResistMin", 1);
+		armorConfig.set("T1.JUNK.lightningResistMax", 5);
+		armorConfig.set("T1.JUNK.poisonResistMin", 1);
 		armorConfig.set("T1.JUNK.poisonResistMax", 5);
-		armorConfig.set("T1.JUNK.reflectionMin", 5);
-		armorConfig.set("T1.JUNK.reflectionMax", 5);
-		armorConfig.set("T1.JUNK.staminaPointMin", 5);
-		armorConfig.set("T1.JUNK.staminaPointMax", 5);
-		armorConfig.set("T1.JUNK.thornResistMin", 5);
-		armorConfig.set("T1.JUNK.thornResistMax", 5);
+		armorConfig.set("T1.JUNK.paralyzeResistMin", 1);
+		armorConfig.set("T1.JUNK.paralyzeResistMax", 5);
+		armorConfig.set("T1.JUNK.waterBreathingMin", 1);
+		armorConfig.set("T1.JUNK.waterBreathingMax", 5);
+		armorConfig.set("T1.JUNK.personalityMin", 1);
+		armorConfig.set("T1.JUNK.personalityMax", 5);
+		armorConfig.set("T1.JUNK.goldFindMin", 1);
+		armorConfig.set("T1.JUNK.goldFindMax", 5);
+		armorConfig.set("T1.JUNK.magicFindMin", 1);
+		armorConfig.set("T1.JUNK.magicFindMax", 5);
 
 
 		//////////////////////
 		/// RANDOM WEAPONS ///
-		//////////////////////		 
+		//////////////////////
 		weaponConfig.set("T1", "T1");
-		weaponConfig.set("T1.JUNK.blindnessMin", 5);
-		weaponConfig.set("T1.JUNK.blindnessMax", 5);
-		weaponConfig.set("T1.JUNK.blockChanceMin", 5);
-		weaponConfig.set("T1.JUNK.blockChanceMax", 5);
-		weaponConfig.set("T1.JUNK.coldDamageMin", 5);
-		weaponConfig.set("T1.JUNK.coldDamageMax", 5);
-		weaponConfig.set("T1.JUNK.critChanceMin", 5);
-		weaponConfig.set("T1.JUNK.critChanceMax", 5);
-		weaponConfig.set("T1.JUNK.damageMin", 5);
-		weaponConfig.set("T1.JUNK.damageMax", 5);
-		weaponConfig.set("T1.JUNK.fireDamageMin", 5);
-		weaponConfig.set("T1.JUNK.fireDamageMax", 5);
-		weaponConfig.set("T1.JUNK.knockbackMin", 5);
-		weaponConfig.set("T1.JUNK.knockbackMax", 5);
-		weaponConfig.set("T1.JUNK.lifestealMin", 5);
-		weaponConfig.set("T1.JUNK.lifestealMax", 5);
-		weaponConfig.set("T1.JUNK.manastealMin", 5);
-		weaponConfig.set("T1.JUNK.manastealMax", 5);
-		weaponConfig.set("T1.JUNK.poisonDamageMin", 5);
-		weaponConfig.set("T1.JUNK.poisonDamageMax", 5);
-		weaponConfig.set("T1.JUNK.reflectionMin", 5);
-		weaponConfig.set("T1.JUNK.reflectionMax", 5);
-		weaponConfig.set("T1.JUNK.slownessMin", 5);
-		weaponConfig.set("T1.JUNK.slownessMax", 5);
-		weaponConfig.set("T1.JUNK.thornDamageMin", 5);
-		weaponConfig.set("T1.JUNK.thornDamageMax", 5);
+		weaponConfig.set("T1.JUNK.damageLowMin", 1);
+		weaponConfig.set("T1.JUNK.damageLowMax", 5);
+		weaponConfig.set("T1.JUNK.damageHighMin", 1);
+		weaponConfig.set("T1.JUNK.damageHighMax", 5);
+		weaponConfig.set("T1.JUNK.strengthMin", 1);
+		weaponConfig.set("T1.JUNK.strengthMax", 5);
+		weaponConfig.set("T1.JUNK.agilityMin", 1);
+		weaponConfig.set("T1.JUNK.agilityMax", 5);
+		weaponConfig.set("T1.JUNK.staminaMin", 1);
+		weaponConfig.set("T1.JUNK.staminaMax", 5);
+		weaponConfig.set("T1.JUNK.intellectMin", 1);
+		weaponConfig.set("T1.JUNK.intellectMax", 5);
+		weaponConfig.set("T1.JUNK.spiritMin", 1);
+		weaponConfig.set("T1.JUNK.spiritMax", 5);
+		weaponConfig.set("T1.JUNK.fireResistMin", 1);
+		weaponConfig.set("T1.JUNK.fireResistMax", 5);
+		weaponConfig.set("T1.JUNK.iceResistMin", 1);
+		weaponConfig.set("T1.JUNK.iceResistMax", 5);
+		weaponConfig.set("T1.JUNK.lightningResistMin", 1);
+		weaponConfig.set("T1.JUNK.lightningResistMax", 5);
+		weaponConfig.set("T1.JUNK.poisonResistMin", 1);
+		weaponConfig.set("T1.JUNK.poisonResistMax", 5);
+		weaponConfig.set("T1.JUNK.paralyzeResistMin", 1);
+		weaponConfig.set("T1.JUNK.paralyzeResistMax", 5);
 
 		try {
 			armorConfig.save(armorConfigFile);

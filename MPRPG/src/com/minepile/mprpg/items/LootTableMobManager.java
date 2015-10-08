@@ -10,6 +10,7 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import com.minepile.mprpg.MPRPG;
@@ -57,10 +58,14 @@ public class LootTableMobManager {
 	 * @param loc The location that items should drop in the World
 	 */
 	public static void toggleLootTableDrop(String lootTable, Location loc) {
-
+		
+		@SuppressWarnings("unchecked")
 		List<String> armorItems = (List<String>) lootTableConfig.getList(lootTable + ".armorItem");
+		@SuppressWarnings("unchecked")
 		List<String> weaponItems = (List<String>) lootTableConfig.getList(lootTable + ".weaponItem");
+		@SuppressWarnings("unchecked")
 		List<String> consumableItems = (List<String>) lootTableConfig.getList(lootTable + ".consumableItem");
+		@SuppressWarnings("unchecked")
 		List<String> miscItems = (List<String>) lootTableConfig.getList(lootTable + ".miscItem");
 
 		//Random armor drops
