@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Random;
 
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -1028,12 +1027,6 @@ public class RandomItemFactory {
 		int paralyzeDamage = randomInt(paralyzeDamageMin, paralyzeDamageMax);
 
 
-		Bukkit.broadcastMessage("DamageLowMin: " + Integer.toString(damageLowMin));
-		Bukkit.broadcastMessage("DamageLowMax: " + Integer.toString(damageLowMax));
-		Bukkit.broadcastMessage("DamageHighMin: " + Integer.toString(damageHighMin));
-		Bukkit.broadcastMessage("DamageHighMax: " + Integer.toString(damageHighMax));
-
-
 		///////////////////////////////////
 		/// PICK RANDOM ITEM ATTRIBUTES ///
 		///////////////////////////////////
@@ -1704,16 +1697,16 @@ public class RandomItemFactory {
 		weaponConfig.set("T1.JUNK.intellectMax", 5);
 		weaponConfig.set("T1.JUNK.spiritMin", 1);
 		weaponConfig.set("T1.JUNK.spiritMax", 5);
-		weaponConfig.set("T1.JUNK.fireResistMin", 1);
-		weaponConfig.set("T1.JUNK.fireResistMax", 5);
-		weaponConfig.set("T1.JUNK.iceResistMin", 1);
-		weaponConfig.set("T1.JUNK.iceResistMax", 5);
-		weaponConfig.set("T1.JUNK.lightningResistMin", 1);
-		weaponConfig.set("T1.JUNK.lightningResistMax", 5);
-		weaponConfig.set("T1.JUNK.poisonResistMin", 1);
-		weaponConfig.set("T1.JUNK.poisonResistMax", 5);
-		weaponConfig.set("T1.JUNK.paralyzeResistMin", 1);
-		weaponConfig.set("T1.JUNK.paralyzeResistMax", 5);
+		weaponConfig.set("T1.JUNK.fireDamageMin", 1);
+		weaponConfig.set("T1.JUNK.fireDamageMax", 5);
+		weaponConfig.set("T1.JUNK.iceDamageMin", 1);
+		weaponConfig.set("T1.JUNK.iceDamageMax", 5);
+		weaponConfig.set("T1.JUNK.lightningDamageMin", 1);
+		weaponConfig.set("T1.JUNK.lightningDamageMax", 5);
+		weaponConfig.set("T1.JUNK.poisonDamageMin", 1);
+		weaponConfig.set("T1.JUNK.poisonDamageMax", 5);
+		weaponConfig.set("T1.JUNK.paralyzeDamageMin", 1);
+		weaponConfig.set("T1.JUNK.paralyzeDamageMax", 5);
 
 		try {
 			armorConfig.save(armorConfigFile);
