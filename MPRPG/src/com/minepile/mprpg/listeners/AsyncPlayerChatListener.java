@@ -1,6 +1,9 @@
 package com.minepile.mprpg.listeners;
 
+import java.util.List;
+
 import org.bukkit.ChatColor;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -25,7 +28,9 @@ public class AsyncPlayerChatListener implements Listener{
 
 		if (event.getPlayer() instanceof Player) {
 			Player player = event.getPlayer();
-
+			String playerName = player.getName();
+			String msg = event.getMessage();
+			
 			if (PlayerCharacterManager.isPlayerLoaded(player)) {
 				String chatFocus = PlayerCharacterManager.getPlayerConfigString(player, "setting.chat.focus");
 
@@ -69,10 +74,50 @@ public class AsyncPlayerChatListener implements Listener{
 							ChatColor.GRAY + "%s" + ChatColor.DARK_GRAY + ": " + 
 							ChatColor.WHITE + "%s");
 				} else if (chatFocus.equalsIgnoreCase("local")) {
-					event.setFormat(ChatColor.GRAY + "" + ChatColor.BOLD + "Local " +
+					
+					//Cancel the even because we don't want to broadcast this message globally.
+					event.setCancelled(true);
+					
+					//Get players near by that will recieve this message.
+					List<Entity> localPlayers = player.getNearbyEntities(20, 20, 20);
+					int messagesRecieved = 0;
+					
+					//Loop through the list of entities.
+					for (int i = 0; i < localPlayers.size(); i++) {
+						//The entity that is near by the player
+						Entity entity = localPlayers.get(i);
+						
+						//If the entity is a player, then send them the message.
+						if (entity instanceof Player) {
+							
+							//Make sure the entity is not a npc
+							if (!entity.hasMetadata("NPC")) {
+								
+								//Finally display the local message to near by players.
+								entity.sendMessage(ChatColor.GRAY + "" + ChatColor.BOLD + "Local " +
+										prefix + clanTag +
+										ChatColor.GRAY + playerName + ChatColor.DARK_GRAY + ": " + 
+										ChatColor.WHITE + msg);
+								
+								//Increment how many players received the message.
+								messagesRecieved++;
+							}
+						}
+					}
+					
+					//Send player their own message.
+					player.sendMessage(ChatColor.GRAY + "" + ChatColor.BOLD + "Local " +
 							prefix + clanTag +
-							ChatColor.GRAY + "%s" + ChatColor.DARK_GRAY + ": " + 
-							ChatColor.WHITE + "%s");
+							ChatColor.GRAY + playerName + ChatColor.DARK_GRAY + ": " + 
+							ChatColor.WHITE + msg);
+					
+					//If no one is around to hear their message, let the player know.
+					if (messagesRecieved == 0) {
+						player.sendMessage("");
+						player.sendMessage(ChatColor.RED + "No one heard your message!");
+						player.sendMessage(ChatColor.GRAY + "Change your chat channel with the command: /c");
+					}
+					
 				} else if (chatFocus.equalsIgnoreCase("mod")) {
 					event.setFormat(ChatColor.GOLD + "" + ChatColor.BOLD + "Staff " +
 							prefix + clanTag +
