@@ -126,12 +126,14 @@ public class RandomItemFactory {
 		 * 	Lightning Resistance
 		 * 	Poison Resistance
 		 * 	Paralyze Resistance
-		 * 
+		 *  Blindness Resistance
+		 *  
 		 * Extras:
 		 * 	Waterbreathing
 		 * 	Personality
 		 *  Gold Find
 		 *  Magic Find
+		 *  Critical Chance
 		 */
 
 		//Base stats
@@ -171,6 +173,8 @@ public class RandomItemFactory {
 		int goldFindMax = armorConfig.getInt(tier + "." + quality + ".goldFindMax");
 		int magicFindMin = armorConfig.getInt(tier + "." + quality + ".magicFindMin");
 		int magicFindMax = armorConfig.getInt(tier + "." + quality + ".magicFindMax");
+		int criticalChanceMin = armorConfig.getInt(tier + "." + quality + ".criticalChanceMin");
+		int criticalChanceMax = armorConfig.getInt(tier + "." + quality + ".criticalChanceMax");
 
 
 		////////////////////////////
@@ -198,6 +202,7 @@ public class RandomItemFactory {
 		int personality = randomInt(personalityMin, personalityMax);
 		int goldFind = randomInt(goldFindMin, goldFindMax);
 		int magicFind = randomInt(magicFindMin, magicFindMax);
+		int criticalChance = randomInt(criticalChanceMin, criticalChanceMax);
 
 
 
@@ -396,7 +401,8 @@ public class RandomItemFactory {
 			attributesExtrasTemp.add(ChatColor.WHITE + " +" + waterBreathing + " Water Breathing");
 			attributesExtrasTemp.add(ChatColor.WHITE + " +" + personality + " Personality");
 			attributesExtrasTemp.add(ChatColor.WHITE + " +" + goldFind + " Gold Find");
-			attributesExtrasTemp.add(ChatColor.WHITE + " +" + magicFind + " Magic FInd");
+			attributesExtrasTemp.add(ChatColor.WHITE + " +" + magicFind + " Magic Find");
+			attributesExtrasTemp.add(ChatColor.WHITE + " +" + criticalChance + " Critical Chance");
 
 			//Get random amount of attributes (1 or 2).
 			if (tier.equals(ItemTier.T1)) {
@@ -565,6 +571,7 @@ public class RandomItemFactory {
 			attributesExtrasTemp.add(ChatColor.WHITE + " +" + personality + " Personality");
 			attributesExtrasTemp.add(ChatColor.WHITE + " +" + goldFind + " Gold Find");
 			attributesExtrasTemp.add(ChatColor.WHITE + " +" + magicFind + " Magic FInd");
+			attributesExtrasTemp.add(ChatColor.WHITE + " +" + criticalChance + " Critical Chance");
 
 			//Get random amount of attributes (1 or 2).
 			if (tier.equals(ItemTier.T1)) {
@@ -733,6 +740,7 @@ public class RandomItemFactory {
 			attributesExtrasTemp.add(ChatColor.WHITE + " +" + personality + " Personality");
 			attributesExtrasTemp.add(ChatColor.WHITE + " +" + goldFind + " Gold Find");
 			attributesExtrasTemp.add(ChatColor.WHITE + " +" + magicFind + " Magic FInd");
+			attributesExtrasTemp.add(ChatColor.WHITE + " +" + criticalChance + " Critical Chance");
 
 			//Get random amount of attributes (1 or 2).
 			if (tier.equals(ItemTier.T1)) {
@@ -901,6 +909,7 @@ public class RandomItemFactory {
 			attributesExtrasTemp.add(ChatColor.WHITE + " +" + personality + " Personality");
 			attributesExtrasTemp.add(ChatColor.WHITE + " +" + goldFind + " Gold Find");
 			attributesExtrasTemp.add(ChatColor.WHITE + " +" + magicFind + " Magic FInd");
+			attributesExtrasTemp.add(ChatColor.WHITE + " +" + criticalChance + " Critical Chance");
 
 			//Get random amount of attributes (1 or 2).
 			if (tier.equals(ItemTier.T1)) {
@@ -1142,6 +1151,7 @@ public class RandomItemFactory {
 		 * 	Intellect
 		 * 	Spirit
 		 * 	+ Damage (must have every time)
+		 * 	Critical Damage
 		 * 
 		 * Magic Damage:
 		 * 	Fire Damage
@@ -1149,6 +1159,7 @@ public class RandomItemFactory {
 		 * 	Lightning Damage
 		 * 	Poison Damage
 		 * 	Paralyze Damage
+		 * 	Blindness Damage
 		 */
 
 		//Base stats
@@ -1180,6 +1191,8 @@ public class RandomItemFactory {
 		int paralyzeDamageMax = weaponConfig.getInt(tier + "." + quality + ".paralyzeDamageMax");
 		int blindnessDamageMin = weaponConfig.getInt(tier + "." + quality + ".blindnessDamageMin");
 		int blindnessDamageMax = weaponConfig.getInt(tier + "." + quality + ".blindnessDamageMax");
+		int criticalDamageMin = weaponConfig.getInt(tier + "." + quality + ".criticalDamageMin");
+		int criticalDamageMax = weaponConfig.getInt(tier + "." + quality + ".criticalDamageMax");
 
 
 		////////////////////////////
@@ -1202,6 +1215,7 @@ public class RandomItemFactory {
 		int poisonDamage = randomInt(poisonDamageMin, poisonDamageMax);
 		int paralyzeDamage = randomInt(paralyzeDamageMin, paralyzeDamageMax);
 		int blindnessDamage = randomInt(blindnessDamageMin, blindnessDamageMax);
+		int criticalDamage = randomInt(criticalDamageMin, criticalDamageMax);
 
 
 		///////////////////////////////////
@@ -1391,6 +1405,7 @@ public class RandomItemFactory {
 			attributesMagicTemp.add(ChatColor.WHITE + " +" + poisonDamage + " Poison Damage");
 			attributesMagicTemp.add(ChatColor.WHITE + " +" + paralyzeDamage + " Fire Damage");
 			attributesMagicTemp.add(ChatColor.WHITE + " +" + blindnessDamage + " Blindness Damage");
+			attributesMagicTemp.add(ChatColor.WHITE + " +" + criticalDamage + " Critical Damage");
 
 			//Get random amount of attributes (1 or 2).
 			if (tier.equals(ItemTier.T1)) {
@@ -1517,6 +1532,7 @@ public class RandomItemFactory {
 			attributesMagicTemp.add(ChatColor.WHITE + " +" + poisonDamage + " Poison Damage");
 			attributesMagicTemp.add(ChatColor.WHITE + " +" + paralyzeDamage + " Fire Damage");
 			attributesMagicTemp.add(ChatColor.WHITE + " +" + blindnessDamage + " Blindness Damage");
+			attributesMagicTemp.add(ChatColor.WHITE + " +" + criticalDamage + " Critical Damage");
 
 			//Get random amount of attributes (1 or 2).
 			if (tier.equals(ItemTier.T1)) {
@@ -1643,6 +1659,7 @@ public class RandomItemFactory {
 			attributesMagicTemp.add(ChatColor.WHITE + " +" + poisonDamage + " Poison Damage");
 			attributesMagicTemp.add(ChatColor.WHITE + " +" + paralyzeDamage + " Fire Damage");
 			attributesMagicTemp.add(ChatColor.WHITE + " +" + blindnessDamage + " Blindness Damage");
+			attributesMagicTemp.add(ChatColor.WHITE + " +" + criticalDamage + " Critical Damage");
 
 			//Get random amount of attributes (1 or 2).
 			if (tier.equals(ItemTier.T1)) {
@@ -1769,6 +1786,7 @@ public class RandomItemFactory {
 			attributesMagicTemp.add(ChatColor.WHITE + " +" + poisonDamage + " Poison Damage");
 			attributesMagicTemp.add(ChatColor.WHITE + " +" + paralyzeDamage + " Fire Damage");
 			attributesMagicTemp.add(ChatColor.WHITE + " +" + blindnessDamage + " Blindness Damage");
+			attributesMagicTemp.add(ChatColor.WHITE + " +" + criticalDamage + " Critical Damage");
 
 			//Get random amount of attributes (1 or 2).
 			if (tier.equals(ItemTier.T1)) {
@@ -1975,6 +1993,8 @@ public class RandomItemFactory {
 		armorConfig.set("T1.JUNK.poisonResistMax", 5);
 		armorConfig.set("T1.JUNK.paralyzeResistMin", 1);
 		armorConfig.set("T1.JUNK.paralyzeResistMax", 5);
+		armorConfig.set("T1.JUNK.blindnessResistMin", 1);
+		armorConfig.set("T1.JUNK.blindnessResistMax", 5);
 		armorConfig.set("T1.JUNK.waterBreathingMin", 1);
 		armorConfig.set("T1.JUNK.waterBreathingMax", 5);
 		armorConfig.set("T1.JUNK.personalityMin", 1);
@@ -1983,6 +2003,8 @@ public class RandomItemFactory {
 		armorConfig.set("T1.JUNK.goldFindMax", 5);
 		armorConfig.set("T1.JUNK.magicFindMin", 1);
 		armorConfig.set("T1.JUNK.magicFindMax", 5);
+		armorConfig.set("T1.JUNK.criticalChanceMin", 1);
+		armorConfig.set("T1.JUNK.criticalChanceMax", 5);
 
 
 		//////////////////////
@@ -2013,6 +2035,10 @@ public class RandomItemFactory {
 		weaponConfig.set("T1.JUNK.poisonDamageMax", 5);
 		weaponConfig.set("T1.JUNK.paralyzeDamageMin", 1);
 		weaponConfig.set("T1.JUNK.paralyzeDamageMax", 5);
+		weaponConfig.set("T1.JUNK.blindnessDamageMin", 1);
+		weaponConfig.set("T1.JUNK.blindnessDamageMax", 5);
+		weaponConfig.set("T1.JUNK.criticalDamageMin", 1);
+		weaponConfig.set("T1.JUNK.criticalDamageMax", 5);
 
 		try {
 			armorConfig.save(armorConfigFile);
