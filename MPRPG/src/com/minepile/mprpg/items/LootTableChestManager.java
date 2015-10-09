@@ -2,7 +2,6 @@ package com.minepile.mprpg.items;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
@@ -20,6 +19,8 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 import com.minepile.mprpg.MPRPG;
+import com.minepile.mprpg.items.ItemQualityManager.ItemQuality;
+import com.minepile.mprpg.items.ItemTierManager.ItemTier;
 import com.minepile.mprpg.world.BlockRegenerationManager;
 
 public class LootTableChestManager {
@@ -108,53 +109,244 @@ public class LootTableChestManager {
 		}
 	}
 
+	@SuppressWarnings("unchecked")
 	public static void toggleChestLoot(Inventory inv) {
 		if (isChestEmpty(inv) == true) {
 			String lootTable = "junk01";
 
-			ArrayList armorItems = (ArrayList) lootTableConfig.getList(lootTable + ".armorItem");
-			ArrayList weaponItems = (ArrayList) lootTableConfig.getList(lootTable + ".weaponItem");
 			List<String> consumableItems = (List<String>) lootTableConfig.getList(lootTable + ".consumableItem");
 			List<String> miscItems = (List<String>) lootTableConfig.getList(lootTable + ".miscItem");
-
+			
+			//Random armor drops
+			boolean dropRandomArmor = lootTableConfig.getBoolean(lootTable + ".random.armor.enabled");
+			ItemTier randArmorTier = ItemTierManager.getItemTierEnum((String) lootTableConfig.get(lootTable + ".random.armor.tier"));
+			ItemQuality randArmorQuality = ItemQualityManager.getItemQualityEnum((String) lootTableConfig.get(lootTable + ".random.armor.quality"));
+			
+			//Random weapon drops
+			boolean dropRandomWeapon = lootTableConfig.getBoolean(lootTable + ".random.weapon.enabled");
+			ItemTier randWeaponTier = ItemTierManager.getItemTierEnum((String) lootTableConfig.get(lootTable + ".random.weapon.tier"));
+			ItemQuality randWeaponQuality = ItemQualityManager.getItemQualityEnum((String) lootTableConfig.get(lootTable + ".random.weapon.quality"));
+			
+			//Currency Drops
 			String currencyType = lootTableConfig.getString(lootTable + ".currency");
 			int currencyMin = lootTableConfig.getInt(lootTable + ".currencyDropMin");
 			int currencyMax = lootTableConfig.getInt(lootTable + ".currencyDropMax");
-
-			//Drop armor
-			if (armorItems != null) {
-				for (int i = 0; i < armorItems.size(); i++) {
-					if (dropItem() == true) {
-
-						ItemStack armor = ArmorItemManager.makeItem((String) armorItems.get(i));
-
-						//Place items in chest
-						inv.setItem(i, armor);
-
+			
+			//Random slots
+			int smallChest = 27;
+			int randArmorSlot = (int) ((Math.random() * smallChest) - 1);
+			int randWeaponSlot = (int) ((Math.random() * smallChest) - 1);
+			int randConsumableSlot = (int) ((Math.random() * smallChest) - 1);
+			int randMiscSlot = (int) ((Math.random() * smallChest) - 1);
+			int randCurrencySlot = (int) ((Math.random() * smallChest) - 1);
+			
+			//Drops random armor.
+			if (dropRandomArmor == true) {
+				if (dropItem() == true) {
+					double randNumber = Math.random() * 100;
+					
+					if (randArmorTier.equals(ItemTier.T1)) {
+						if (randNumber <= 25) {
+							ItemStack randArmor = RandomItemFactory.createArmor(new ItemStack(Material.LEATHER_BOOTS, 1), randArmorTier, randArmorQuality);
+							
+							inv.setItem(randArmorSlot, randArmor);
+						} else if (randNumber > 25 && randNumber <= 50) {
+							ItemStack randArmor = RandomItemFactory.createArmor(new ItemStack(Material.LEATHER_CHESTPLATE, 1), randArmorTier, randArmorQuality);
+							inv.setItem(randArmorSlot, randArmor);
+						} else if (randNumber > 50 && randNumber <= 75) {
+							ItemStack randArmor = RandomItemFactory.createArmor(new ItemStack(Material.LEATHER_HELMET, 1), randArmorTier, randArmorQuality);
+							inv.setItem(randArmorSlot, randArmor);
+						} else if (randNumber > 75 && randNumber <= 100) {
+							ItemStack randArmor = RandomItemFactory.createArmor(new ItemStack(Material.LEATHER_LEGGINGS, 1), randArmorTier, randArmorQuality);
+							inv.setItem(randArmorSlot, randArmor);
+						}
+					} else if (randArmorTier.equals(ItemTier.T2)) {
+						if (randNumber <= 25) {
+							ItemStack randArmor = RandomItemFactory.createArmor(new ItemStack(Material.LEATHER_BOOTS, 1), randArmorTier, randArmorQuality);
+							inv.setItem(randArmorSlot, randArmor);
+						} else if (randNumber > 25 && randNumber <= 50) {
+							ItemStack randArmor = RandomItemFactory.createArmor(new ItemStack(Material.LEATHER_CHESTPLATE, 1), randArmorTier, randArmorQuality);
+							inv.setItem(randArmorSlot, randArmor);
+						} else if (randNumber > 50 && randNumber <= 75) {
+							ItemStack randArmor = RandomItemFactory.createArmor(new ItemStack(Material.LEATHER_HELMET, 1), randArmorTier, randArmorQuality);
+							inv.setItem(randArmorSlot, randArmor);
+						} else if (randNumber > 75 && randNumber <= 100) {
+							ItemStack randArmor = RandomItemFactory.createArmor(new ItemStack(Material.LEATHER_LEGGINGS, 1), randArmorTier, randArmorQuality);
+							inv.setItem(randArmorSlot, randArmor);
+						}
+						
+					} else if (randArmorTier.equals(ItemTier.T3)) {
+						if (randNumber <= 25) {
+							ItemStack randArmor = RandomItemFactory.createArmor(new ItemStack(Material.CHAINMAIL_BOOTS, 1), randArmorTier, randArmorQuality);
+							inv.setItem(randArmorSlot, randArmor);
+						} else if (randNumber > 25 && randNumber <= 50) {
+							ItemStack randArmor = RandomItemFactory.createArmor(new ItemStack(Material.CHAINMAIL_CHESTPLATE, 1), randArmorTier, randArmorQuality);
+							inv.setItem(randArmorSlot, randArmor);
+						} else if (randNumber > 50 && randNumber <= 75) {
+							ItemStack randArmor = RandomItemFactory.createArmor(new ItemStack(Material.CHAINMAIL_HELMET, 1), randArmorTier, randArmorQuality);
+							inv.setItem(randArmorSlot, randArmor);
+						} else if (randNumber > 75 && randNumber <= 100) {
+							ItemStack randArmor = RandomItemFactory.createArmor(new ItemStack(Material.CHAINMAIL_LEGGINGS, 1), randArmorTier, randArmorQuality);
+							inv.setItem(randArmorSlot, randArmor);
+						}
+						
+					} else if (randArmorTier.equals(ItemTier.T4)) {
+						if (randNumber <= 25) {
+							ItemStack randArmor = RandomItemFactory.createArmor(new ItemStack(Material.IRON_BOOTS, 1), randArmorTier, randArmorQuality);
+							inv.setItem(randArmorSlot, randArmor);
+						} else if (randNumber > 25 && randNumber <= 50) {
+							ItemStack randArmor = RandomItemFactory.createArmor(new ItemStack(Material.IRON_CHESTPLATE, 1), randArmorTier, randArmorQuality);
+							inv.setItem(randArmorSlot, randArmor);
+						} else if (randNumber > 50 && randNumber <= 75) {
+							ItemStack randArmor = RandomItemFactory.createArmor(new ItemStack(Material.IRON_HELMET, 1), randArmorTier, randArmorQuality);
+							inv.setItem(randArmorSlot, randArmor);
+						} else if (randNumber > 75 && randNumber <= 100) {
+							ItemStack randArmor = RandomItemFactory.createArmor(new ItemStack(Material.IRON_LEGGINGS, 1), randArmorTier, randArmorQuality);
+							inv.setItem(randArmorSlot, randArmor);
+						}
+						
+					} else if (randArmorTier.equals(ItemTier.T5)) {
+						if (randNumber <= 25) {
+							ItemStack randArmor = RandomItemFactory.createArmor(new ItemStack(Material.DIAMOND_BOOTS, 1), randArmorTier, randArmorQuality);
+							inv.setItem(randArmorSlot, randArmor);
+						} else if (randNumber > 25 && randNumber <= 50) {
+							ItemStack randArmor = RandomItemFactory.createArmor(new ItemStack(Material.DIAMOND_CHESTPLATE, 1), randArmorTier, randArmorQuality);
+							inv.setItem(randArmorSlot, randArmor);
+						} else if (randNumber > 50 && randNumber <= 75) {
+							ItemStack randArmor = RandomItemFactory.createArmor(new ItemStack(Material.DIAMOND_HELMET, 1), randArmorTier, randArmorQuality);
+							inv.setItem(randArmorSlot, randArmor);
+						} else if (randNumber > 75 && randNumber <= 100) {
+							ItemStack randArmor = RandomItemFactory.createArmor(new ItemStack(Material.DIAMOND_LEGGINGS, 1), randArmorTier, randArmorQuality);
+							inv.setItem(randArmorSlot, randArmor);
+						}
+						
+					} else if (randArmorTier.equals(ItemTier.T6)) {
+						if (randNumber <= 25) {
+							ItemStack randArmor = RandomItemFactory.createArmor(new ItemStack(Material.GOLD_BOOTS, 1), randArmorTier, randArmorQuality);
+							inv.setItem(randArmorSlot, randArmor);
+						} else if (randNumber > 25 && randNumber <= 50) {
+							ItemStack randArmor = RandomItemFactory.createArmor(new ItemStack(Material.GOLD_CHESTPLATE, 1), randArmorTier, randArmorQuality);
+							inv.setItem(randArmorSlot, randArmor);
+						} else if (randNumber > 50 && randNumber <= 75) {
+							ItemStack randArmor = RandomItemFactory.createArmor(new ItemStack(Material.GOLD_HELMET, 1), randArmorTier, randArmorQuality);
+							inv.setItem(randArmorSlot, randArmor);
+						} else if (randNumber > 75 && randNumber <= 100) {
+							ItemStack randArmor = RandomItemFactory.createArmor(new ItemStack(Material.GOLD_LEGGINGS, 1), randArmorTier, randArmorQuality);
+							inv.setItem(randArmorSlot, randArmor);
+						}
 					}
 				}
-			}
-			//Drop weapons
-			if (weaponItems != null) {
-				for (int i = 0; i < weaponItems.size(); i++) {
-					if (dropItem() == true) {
+			}	
+			//Drops random weapon.
+			if (dropRandomWeapon == true) {
+				if (dropItem() == true) {
+					//ItemStack randWeapon = RandomItemFactory.createWeapon(new ItemStack(Material.GOLD_SWORD, 1), randWeaponTier, randWeaponQuality);
 
-						ItemStack weapon = WeaponItemManager.makeItem((String) weaponItems.get(i));
-
-						//Place weapons on third row in chest.
-						inv.setItem(i + 19, weapon);
+					//Generate drops
+					//inv.setItem(randArmorSlot, randArmor);
+					
+					double randNumber = Math.random() * 100;
+					
+					if (randWeaponTier.equals(ItemTier.T1)) {
+						if (randNumber <= 25) {
+							ItemStack randWeapon = RandomItemFactory.createWeapon(new ItemStack(Material.WOOD_AXE, 1), randWeaponTier, randWeaponQuality);
+							inv.setItem(randWeaponSlot, randWeapon);
+						} else if (randNumber > 25 && randNumber <= 50) {
+							ItemStack randWeapon = RandomItemFactory.createWeapon(new ItemStack(Material.WOOD_SPADE, 1), randWeaponTier, randWeaponQuality);
+							inv.setItem(randWeaponSlot, randWeapon);
+						} else if (randNumber > 50 && randNumber <= 75) {
+							ItemStack randWeapon = RandomItemFactory.createWeapon(new ItemStack(Material.WOOD_SWORD, 1), randWeaponTier, randWeaponQuality);
+							inv.setItem(randWeaponSlot, randWeapon);
+						} else if (randNumber > 75 && randNumber <= 100) {
+							ItemStack randWeapon = RandomItemFactory.createWeapon(new ItemStack(Material.STICK, 1), randWeaponTier, randWeaponQuality);
+							inv.setItem(randWeaponSlot, randWeapon);
+						}
+					} else if (randWeaponTier.equals(ItemTier.T2)) {
+						if (randNumber <= 25) {
+							ItemStack randWeapon = RandomItemFactory.createWeapon(new ItemStack(Material.STONE_AXE, 1), randWeaponTier, randWeaponQuality);
+							inv.setItem(randWeaponSlot, randWeapon);
+						} else if (randNumber > 25 && randNumber <= 50) {
+							ItemStack randWeapon = RandomItemFactory.createWeapon(new ItemStack(Material.STONE_SPADE, 1), randWeaponTier, randWeaponQuality);
+							inv.setItem(randWeaponSlot, randWeapon);
+						} else if (randNumber > 50 && randNumber <= 75) {
+							ItemStack randWeapon = RandomItemFactory.createWeapon(new ItemStack(Material.STONE_SWORD, 1), randWeaponTier, randWeaponQuality);
+							inv.setItem(randWeaponSlot, randWeapon);
+						} else if (randNumber > 75 && randNumber <= 100) {
+							ItemStack randWeapon = RandomItemFactory.createWeapon(new ItemStack(Material.STICK, 1), randWeaponTier, randWeaponQuality);
+							inv.setItem(randWeaponSlot, randWeapon);
+						}
+						
+					} else if (randWeaponTier.equals(ItemTier.T3)) {
+						if (randNumber <= 25) {
+							ItemStack randWeapon = RandomItemFactory.createWeapon(new ItemStack(Material.STONE_AXE, 1), randWeaponTier, randWeaponQuality);
+							inv.setItem(randWeaponSlot, randWeapon);
+						} else if (randNumber > 25 && randNumber <= 50) {
+							ItemStack randWeapon = RandomItemFactory.createWeapon(new ItemStack(Material.STONE_SPADE, 1), randWeaponTier, randWeaponQuality);
+							inv.setItem(randWeaponSlot, randWeapon);
+						} else if (randNumber > 50 && randNumber <= 75) {
+							ItemStack randWeapon = RandomItemFactory.createWeapon(new ItemStack(Material.STONE_SWORD, 1), randWeaponTier, randWeaponQuality);
+							inv.setItem(randWeaponSlot, randWeapon);
+						} else if (randNumber > 75 && randNumber <= 100) {
+							ItemStack randWeapon = RandomItemFactory.createWeapon(new ItemStack(Material.BONE, 1), randWeaponTier, randWeaponQuality);
+							inv.setItem(randWeaponSlot, randWeapon);
+						}
+						
+					} else if (randWeaponTier.equals(ItemTier.T4)) {
+						if (randNumber <= 25) {
+							ItemStack randWeapon = RandomItemFactory.createWeapon(new ItemStack(Material.IRON_AXE, 1), randWeaponTier, randWeaponQuality);
+							inv.setItem(randWeaponSlot, randWeapon);
+						} else if (randNumber > 25 && randNumber <= 50) {
+							ItemStack randWeapon = RandomItemFactory.createWeapon(new ItemStack(Material.IRON_SPADE, 1), randWeaponTier, randWeaponQuality);
+							inv.setItem(randWeaponSlot, randWeapon);
+						} else if (randNumber > 50 && randNumber <= 75) {
+							ItemStack randWeapon = RandomItemFactory.createWeapon(new ItemStack(Material.IRON_SWORD, 1), randWeaponTier, randWeaponQuality);
+							inv.setItem(randWeaponSlot, randWeapon);
+						} else if (randNumber > 75 && randNumber <= 100) {
+							ItemStack randWeapon = RandomItemFactory.createWeapon(new ItemStack(Material.BONE, 1), randWeaponTier, randWeaponQuality);
+							inv.setItem(randWeaponSlot, randWeapon);
+						}
+						
+					} else if (randWeaponTier.equals(ItemTier.T5)) {
+						if (randNumber <= 25) {
+							ItemStack randWeapon = RandomItemFactory.createWeapon(new ItemStack(Material.DIAMOND_AXE, 1), randWeaponTier, randWeaponQuality);
+							inv.setItem(randWeaponSlot, randWeapon);
+						} else if (randNumber > 25 && randNumber <= 50) {
+							ItemStack randWeapon = RandomItemFactory.createWeapon(new ItemStack(Material.DIAMOND_SPADE, 1), randWeaponTier, randWeaponQuality);
+							inv.setItem(randWeaponSlot, randWeapon);
+						} else if (randNumber > 50 && randNumber <= 75) {
+							ItemStack randWeapon = RandomItemFactory.createWeapon(new ItemStack(Material.DIAMOND_SWORD, 1), randWeaponTier, randWeaponQuality);
+							inv.setItem(randWeaponSlot, randWeapon);
+						} else if (randNumber > 75 && randNumber <= 100) {
+							ItemStack randWeapon = RandomItemFactory.createWeapon(new ItemStack(Material.BLAZE_ROD, 1), randWeaponTier, randWeaponQuality);
+							inv.setItem(randWeaponSlot, randWeapon);
+						}
+						
+					} else if (randWeaponTier.equals(ItemTier.T6)) {
+						if (randNumber <= 25) {
+							ItemStack randWeapon = RandomItemFactory.createWeapon(new ItemStack(Material.GOLD_AXE, 1), randWeaponTier, randWeaponQuality);
+							inv.setItem(randWeaponSlot, randWeapon);
+						} else if (randNumber > 25 && randNumber <= 50) {
+							ItemStack randWeapon = RandomItemFactory.createWeapon(new ItemStack(Material.GOLD_SPADE, 1), randWeaponTier, randWeaponQuality);
+							inv.setItem(randWeaponSlot, randWeapon);
+						} else if (randNumber > 50 && randNumber <= 75) {
+							ItemStack randWeapon = RandomItemFactory.createWeapon(new ItemStack(Material.GOLD_SWORD, 1), randWeaponTier, randWeaponQuality);
+							inv.setItem(randWeaponSlot, randWeapon);
+						} else if (randNumber > 75 && randNumber <= 100) {
+							ItemStack randWeapon = RandomItemFactory.createWeapon(new ItemStack(Material.BLAZE_ROD, 1), randWeaponTier, randWeaponQuality);
+							inv.setItem(randWeaponSlot, randWeapon);
+						}
 					}
 				}
 			}
 			//Drop consumable items.
 			if (consumableItems != null) {
-				for (int i = 0; i < weaponItems.size(); i++) {
+				for (int i = 0; i < consumableItems.size(); i++) {
 					if (dropItem() == true) {
 
 						ItemStack consumable = ConsumableItemManager.makeItem((String) consumableItems.get(i));
 
 						//Place weapons on third row in chest.
-						inv.setItem(i + 15, consumable);
+						inv.setItem(randConsumableSlot, consumable);
 
 					}
 				}
@@ -167,7 +359,7 @@ public class LootTableChestManager {
 						ItemStack misc = MiscItemManager.makeItem((String) miscItems.get(i));
 
 						//Place weapons on third row in chest.
-						inv.setItem(i + 17, misc);
+						inv.setItem(randMiscSlot, misc);
 
 					}
 				}
@@ -183,7 +375,7 @@ public class LootTableChestManager {
 					ItemStack money = CurrencyItemManager.makeItem(currencyType);
 					money.setAmount(randomNum);
 					//Place weapons on third row in chest.
-					inv.setItem(23, money);
+					inv.setItem(randCurrencySlot, money);
 				}
 
 			}
@@ -217,11 +409,15 @@ public class LootTableChestManager {
 
 		//set a default loot table
 		lootTableConfig.set("junk01", "junk01");
-		lootTableConfig.set("junk01.armorItem", "testArmorDrop");
-		lootTableConfig.set("junk01.weaponItem", "testWeaponDrop");
 		lootTableConfig.set("junk01.currency", "copper");
 		lootTableConfig.set("junk01.currencyDropMin", 0);
 		lootTableConfig.set("junk01.currencyDropMax", 10);
+		lootTableConfig.set("junk01.random.armor.enabled", true);
+		lootTableConfig.set("junk01.random.armor.tier", "T1");
+		lootTableConfig.set("junk01.random.armor.quality", "JUNK");
+		lootTableConfig.set("junk01.random.weapon.enabled", true);
+		lootTableConfig.set("junk01.random.weapon.tier", "T1");
+		lootTableConfig.set("junk01.random.weapon.quality", "JUNK");
 
 		try {
 			lootTableConfig.save(configFile);	//Save the file.
