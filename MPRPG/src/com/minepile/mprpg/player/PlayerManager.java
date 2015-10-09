@@ -12,6 +12,7 @@ import org.bukkit.Color;
 import org.bukkit.FireworkEffect;
 import org.bukkit.FireworkEffect.Type;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.World;
 import org.bukkit.entity.Firework;
@@ -28,6 +29,9 @@ import com.minepile.mprpg.gui.PlayerMenuManager;
 import com.minepile.mprpg.inventory.BankChestManager;
 import com.minepile.mprpg.inventory.InventoryRestore;
 import com.minepile.mprpg.items.ItemLoreFactory;
+import com.minepile.mprpg.items.ItemQualityManager.ItemQuality;
+import com.minepile.mprpg.items.ItemTierManager.ItemTier;
+import com.minepile.mprpg.items.RandomItemFactory;
 
 public class PlayerManager {
 
@@ -432,7 +436,7 @@ public class PlayerManager {
 
 		//Give the player a Menu!
 		PlayerMenuManager.createMenu(player);
-
+		
 		//Load player items
 		Inventory playerInv = player.getInventory();
 		for (int i = 0; i <= playerInv.getSize(); i++) {
@@ -458,6 +462,29 @@ public class PlayerManager {
 		try {
 			player.getEquipment().setHelmet(InventoryRestore.restoreItemStack(player, "armorInv", 103));
 		} catch (NullPointerException exc) {}
+		
+		//If the character is a new player, lets give them some items.
+		if (PlayerCharacterManager.getPlayerConfigBoolean(player, "player.charNew")) {
+			//Armor
+			ItemStack boots = RandomItemFactory.createArmor(new ItemStack(Material.LEATHER_BOOTS), ItemTier.T1, ItemQuality.JUNK, true);
+			ItemStack leggings = RandomItemFactory.createArmor(new ItemStack(Material.LEATHER_LEGGINGS), ItemTier.T1, ItemQuality.JUNK, true);
+			ItemStack chestplate = RandomItemFactory.createArmor(new ItemStack(Material.LEATHER_CHESTPLATE), ItemTier.T1, ItemQuality.JUNK, true);
+			ItemStack helmet = RandomItemFactory.createArmor(new ItemStack(Material.LEATHER_HELMET), ItemTier.T1, ItemQuality.JUNK, true);
+			
+			//Weapon
+			ItemStack sword = RandomItemFactory.createWeapon(new ItemStack(Material.WOOD_SWORD), ItemTier.T1, ItemQuality.JUNK, true);
+			
+			//Give new player the items.
+			player.getEquipment().setBoots(boots);
+			player.getEquipment().setLeggings(leggings);
+			player.getEquipment().setChestplate(chestplate);
+			player.getEquipment().setHelmet(helmet);
+			playerInv.setItem(0, sword);
+			
+			//Set the player as not a new player.
+			//This will prevent them from getting new items on next join.
+			PlayerCharacterManager.setPlayerConfigBoolean(player, "player.charNew", false);
+		}
 		
 		//Restore the players items
 		BankChestManager.restoreBank(player);

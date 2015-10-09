@@ -128,9 +128,10 @@ public class RandomItemFactory {
 	 * @param item The item that we are adding attributes to.
 	 * @param tier The tier of the item we are adding attributes to.
 	 * @param quality The quality of the item we are adding attributes to.
+	 * @param soulbound This will make the item trade-able or not.
 	 * @return Returns a item with random attributes.
 	 */
-	public static ItemStack createArmor(ItemStack item, ItemTier tier, ItemQuality quality) {
+	public static ItemStack createArmor(ItemStack item, ItemTier tier, ItemQuality quality, boolean soulbound) {
 
 		/////////////////////////////
 		/// GRAB ITEM FROM CONFIG ///
@@ -1103,6 +1104,11 @@ public class RandomItemFactory {
 		ArrayList<String> lore = new ArrayList<String>();
 
 		lore.add(itemInfo.toUpperCase());	//Define the quality of item.
+		
+		//Mark if item is soulbound
+		if (soulbound == true) {
+			lore.add(ChatColor.GRAY + "Soulbound");
+		}
 
 		lore.add(" "); //Spacer																
 
@@ -1161,9 +1167,10 @@ public class RandomItemFactory {
 	 * @param item The item that we are adding attributes to.
 	 * @param tier The tier of the item we are adding attributes to.
 	 * @param quality The quality of the item we are adding attributes to.
+	 * @param soulbound This will make the item trade-able or not.
 	 * @return Returns a item with random attributes.
 	 */
-	public static ItemStack createWeapon(ItemStack item, ItemTier tier, ItemQuality quality) {
+	public static ItemStack createWeapon(ItemStack item, ItemTier tier, ItemQuality quality, boolean soulbound) {
 
 		/////////////////////////////
 		/// GRAB ITEM FROM CONFIG ///
@@ -1946,6 +1953,11 @@ public class RandomItemFactory {
 		ArrayList<String> lore = new ArrayList<String>();
 
 		lore.add(itemInfo.toUpperCase());	//Define the quality of item.
+		
+		//Mark if item is soulbound
+		if (soulbound == true) {
+			lore.add(ChatColor.GRAY + "Soulbound");
+		}
 
 		lore.add(" "); //Spacer																
 

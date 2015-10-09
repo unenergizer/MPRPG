@@ -88,7 +88,7 @@ public class ConsumableItemManager {
 		//Set the item lore
 		ArrayList<String> lore = new ArrayList<String>();
 		lore.add(ChatColor.DARK_GRAY + "" + ChatColor.ITALIC + tier + ": " + itemQuality);	//Define the quality of item.
-		lore.add(ChatColor.WHITE + "" + type);	//Define the quality of item.
+		lore.add(ChatColor.GRAY + "" + type);	//Define the quality of item.
 		lore.add("");																		//create blank space		
 
 		//Set the items description

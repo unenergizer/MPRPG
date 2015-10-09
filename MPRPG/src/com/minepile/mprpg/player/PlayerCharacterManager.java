@@ -302,6 +302,7 @@ public class PlayerCharacterManager {
 	 * @param slot The inventory slot number the item will go.
 	 * @return Returns an ItemStack of a player skull with various stats on it.
 	 */
+	@SuppressWarnings("unchecked")
 	public static ItemStack createMenuItems(Player player, int slot) {
 		//Get player stats.
 		String itemTitle = ChatColor.AQUA + "" +ChatColor.BOLD + "Character " + Integer.toString(slot + 1); 
@@ -317,6 +318,7 @@ public class PlayerCharacterManager {
 		String guild = getPlayerConfigString(player, "guild.name", slot);
 		
 		//Add stast to array list.
+		@SuppressWarnings("rawtypes")
 		List lores = Arrays.asList(" ",
 				ChatColor.GREEN + "Name: " + ChatColor.GRAY + characterName,
 				ChatColor.GREEN + "Guild: " + ChatColor.GRAY + guild,
@@ -558,14 +560,23 @@ public class PlayerCharacterManager {
 		playerConfig.set("playerName", playerName);
 		playerConfig.set("lastCharacterPlayed", 0);
 		playerConfig.set("0.player.charClass", "none");
+		playerConfig.set("0.player.charNew", true);
 		playerConfig.set("1.player.charClass", "none");
+		playerConfig.set("1.player.charNew", true);
 		playerConfig.set("2.player.charClass", "none");
+		playerConfig.set("2.player.charNew", true);
 		playerConfig.set("3.player.charClass", "none");
+		playerConfig.set("3.player.charNew", true);
 		playerConfig.set("4.player.charClass", "none");
+		playerConfig.set("4.player.charNew", true);
 		playerConfig.set("5.player.charClass", "none");
+		playerConfig.set("5.player.charNew", true);
 		playerConfig.set("6.player.charClass", "none");
+		playerConfig.set("6.player.charNew", true);
 		playerConfig.set("7.player.charClass", "none");
+		playerConfig.set("7.player.charNew", true);
 		playerConfig.set("8.player.charClass", "none");
+		playerConfig.set("8.player.charNew", true);
 
 		try {
 			playerConfig.save(configFile);
@@ -610,7 +621,12 @@ public class PlayerCharacterManager {
 		}
 	}
 
-
+	/**
+	 * Sets the current character slot the player is playing on.
+	 * 
+	 * @param uuid The UUID of the player.
+	 * @param slot The slot number the player is playing on.
+	 */
 	public static void setCurrentCharacterSlot(UUID uuid, int slot) {
 		currentCharacterSlot.put(uuid, slot);
 	}

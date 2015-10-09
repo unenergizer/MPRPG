@@ -76,11 +76,11 @@ public class MiscItemManager {
 		ItemMeta im = item.getItemMeta();
 		
 		//Set the items Name
-		im.setDisplayName(ChatColor.AQUA + name);
+		im.setDisplayName(ChatColor.WHITE + name);
 
 		//Set the item lore
 		ArrayList<String> lore = new ArrayList<String>();
-		lore.add(ChatColor.WHITE + type);	//Define the quality of item.
+		lore.add(ChatColor.GRAY + type);	//Define the quality of item.
 		lore.add("");																		//create blank space		
 
 		//Set the items description
