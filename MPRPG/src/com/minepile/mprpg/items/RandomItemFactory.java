@@ -1484,6 +1484,11 @@ public class RandomItemFactory {
 					attributesMagicFinal.add(processedMagic.get(i));
 				}
 
+				//Add the processedExtras attributes to the Final Attributes list.
+				for (int i = 0; i <= processedExtras.size() - 1; i++) {
+					attributesExtrasFinal.add(processedExtras.get(i));
+				}
+
 				//Clean up
 				processedBase.clear();
 			} else if (tier.equals(ItemTier.T2)) {
@@ -1499,6 +1504,11 @@ public class RandomItemFactory {
 				//Add the processedMagic attributes to the Final Attributes list.
 				for (int i = 0; i <= processedMagic.size() - 1; i++) {
 					attributesMagicFinal.add(processedMagic.get(i));
+				}
+
+				//Add the processedExtras attributes to the Final Attributes list.
+				for (int i = 0; i <= processedExtras.size() - 1; i++) {
+					attributesExtrasFinal.add(processedExtras.get(i));
 				}
 
 				//Clean up
@@ -1518,6 +1528,11 @@ public class RandomItemFactory {
 					attributesMagicFinal.add(processedMagic.get(i));
 				}
 
+				//Add the processedExtras attributes to the Final Attributes list.
+				for (int i = 0; i <= processedExtras.size() - 1; i++) {
+					attributesExtrasFinal.add(processedExtras.get(i));
+				}
+
 				//Clean up
 				processedBase.clear();
 			} else if (tier.equals(ItemTier.T4)) {
@@ -1533,6 +1548,11 @@ public class RandomItemFactory {
 				//Add the processedMagic attributes to the Final Attributes list.
 				for (int i = 0; i <= processedMagic.size() - 1; i++) {
 					attributesMagicFinal.add(processedMagic.get(i));
+				}
+
+				//Add the processedExtras attributes to the Final Attributes list.
+				for (int i = 0; i <= processedExtras.size() - 1; i++) {
+					attributesExtrasFinal.add(processedExtras.get(i));
 				}
 
 				//Clean up
@@ -1552,6 +1572,11 @@ public class RandomItemFactory {
 					attributesMagicFinal.add(processedMagic.get(i));
 				}
 
+				//Add the processedExtras attributes to the Final Attributes list.
+				for (int i = 0; i <= processedExtras.size() - 1; i++) {
+					attributesExtrasFinal.add(processedExtras.get(i));
+				}
+
 				//Clean up
 				processedBase.clear();
 			} else if (tier.equals(ItemTier.T6)) {
@@ -1567,6 +1592,11 @@ public class RandomItemFactory {
 				//Add the processedMagic attributes to the Final Attributes list.
 				for (int i = 0; i <= processedMagic.size() - 1; i++) {
 					attributesMagicFinal.add(processedMagic.get(i));
+				}
+
+				//Add the processedExtras attributes to the Final Attributes list.
+				for (int i = 0; i <= processedExtras.size() - 1; i++) {
+					attributesExtrasFinal.add(processedExtras.get(i));
 				}
 
 				//Clean up
@@ -1620,6 +1650,11 @@ public class RandomItemFactory {
 					attributesMagicFinal.add(processedMagic.get(i));
 				}
 
+				//Add the processedExtras attributes to the Final Attributes list.
+				for (int i = 0; i <= processedExtras.size() - 1; i++) {
+					attributesExtrasFinal.add(processedExtras.get(i));
+				}
+
 				//Clean up
 				processedBase.clear();
 			} else if (tier.equals(ItemTier.T2)) {
@@ -1635,6 +1670,11 @@ public class RandomItemFactory {
 				//Add the processedMagic attributes to the Final Attributes list.
 				for (int i = 0; i <= processedMagic.size() - 1; i++) {
 					attributesMagicFinal.add(processedMagic.get(i));
+				}
+
+				//Add the processedExtras attributes to the Final Attributes list.
+				for (int i = 0; i <= processedExtras.size() - 1; i++) {
+					attributesExtrasFinal.add(processedExtras.get(i));
 				}
 
 				//Clean up
@@ -1654,6 +1694,11 @@ public class RandomItemFactory {
 					attributesMagicFinal.add(processedMagic.get(i));
 				}
 
+				//Add the processedExtras attributes to the Final Attributes list.
+				for (int i = 0; i <= processedExtras.size() - 1; i++) {
+					attributesExtrasFinal.add(processedExtras.get(i));
+				}
+
 				//Clean up
 				processedBase.clear();
 			} else if (tier.equals(ItemTier.T4)) {
@@ -1669,6 +1714,11 @@ public class RandomItemFactory {
 				//Add the processedMagic attributes to the Final Attributes list.
 				for (int i = 0; i <= processedMagic.size() - 1; i++) {
 					attributesMagicFinal.add(processedMagic.get(i));
+				}
+
+				//Add the processedExtras attributes to the Final Attributes list.
+				for (int i = 0; i <= processedExtras.size() - 1; i++) {
+					attributesExtrasFinal.add(processedExtras.get(i));
 				}
 
 				//Clean up
@@ -1688,6 +1738,11 @@ public class RandomItemFactory {
 					attributesMagicFinal.add(processedMagic.get(i));
 				}
 
+				//Add the processedExtras attributes to the Final Attributes list.
+				for (int i = 0; i <= processedExtras.size() - 1; i++) {
+					attributesExtrasFinal.add(processedExtras.get(i));
+				}
+
 				//Clean up
 				processedBase.clear();
 			} else if (tier.equals(ItemTier.T6)) {
@@ -1703,6 +1758,11 @@ public class RandomItemFactory {
 				//Add the processedMagic attributes to the Final Attributes list.
 				for (int i = 0; i <= processedMagic.size() - 1; i++) {
 					attributesMagicFinal.add(processedMagic.get(i));
+				}
+
+				//Add the processedExtras attributes to the Final Attributes list.
+				for (int i = 0; i <= processedExtras.size() - 1; i++) {
+					attributesExtrasFinal.add(processedExtras.get(i));
 				}
 
 				//Clean up
@@ -1756,6 +1816,11 @@ public class RandomItemFactory {
 					attributesMagicFinal.add(processedMagic.get(i));
 				}
 
+				//Add the processedExtras attributes to the Final Attributes list.
+				for (int i = 0; i <= processedExtras.size() - 1; i++) {
+					attributesExtrasFinal.add(processedExtras.get(i));
+				}
+
 				//Clean up
 				processedBase.clear();
 			} else if (tier.equals(ItemTier.T2)) {
@@ -1771,6 +1836,11 @@ public class RandomItemFactory {
 				//Add the processedMagic attributes to the Final Attributes list.
 				for (int i = 0; i <= processedMagic.size() - 1; i++) {
 					attributesMagicFinal.add(processedMagic.get(i));
+				}
+
+				//Add the processedExtras attributes to the Final Attributes list.
+				for (int i = 0; i <= processedExtras.size() - 1; i++) {
+					attributesExtrasFinal.add(processedExtras.get(i));
 				}
 
 				//Clean up
@@ -1790,6 +1860,11 @@ public class RandomItemFactory {
 					attributesMagicFinal.add(processedMagic.get(i));
 				}
 
+				//Add the processedExtras attributes to the Final Attributes list.
+				for (int i = 0; i <= processedExtras.size() - 1; i++) {
+					attributesExtrasFinal.add(processedExtras.get(i));
+				}
+
 				//Clean up
 				processedBase.clear();
 			} else if (tier.equals(ItemTier.T4)) {
@@ -1805,6 +1880,11 @@ public class RandomItemFactory {
 				//Add the processedMagic attributes to the Final Attributes list.
 				for (int i = 0; i <= processedMagic.size() - 1; i++) {
 					attributesMagicFinal.add(processedMagic.get(i));
+				}
+
+				//Add the processedExtras attributes to the Final Attributes list.
+				for (int i = 0; i <= processedExtras.size() - 1; i++) {
+					attributesExtrasFinal.add(processedExtras.get(i));
 				}
 
 				//Clean up
@@ -1824,6 +1904,11 @@ public class RandomItemFactory {
 					attributesMagicFinal.add(processedMagic.get(i));
 				}
 
+				//Add the processedExtras attributes to the Final Attributes list.
+				for (int i = 0; i <= processedExtras.size() - 1; i++) {
+					attributesExtrasFinal.add(processedExtras.get(i));
+				}
+
 				//Clean up
 				processedBase.clear();
 			} else if (tier.equals(ItemTier.T6)) {
@@ -1839,6 +1924,11 @@ public class RandomItemFactory {
 				//Add the processedMagic attributes to the Final Attributes list.
 				for (int i = 0; i <= processedMagic.size() - 1; i++) {
 					attributesMagicFinal.add(processedMagic.get(i));
+				}
+
+				//Add the processedExtras attributes to the Final Attributes list.
+				for (int i = 0; i <= processedExtras.size() - 1; i++) {
+					attributesExtrasFinal.add(processedExtras.get(i));
 				}
 
 				//Clean up
@@ -1892,6 +1982,11 @@ public class RandomItemFactory {
 					attributesMagicFinal.add(processedMagic.get(i));
 				}
 
+				//Add the processedExtras attributes to the Final Attributes list.
+				for (int i = 0; i <= processedExtras.size() - 1; i++) {
+					attributesExtrasFinal.add(processedExtras.get(i));
+				}
+
 				//Clean up
 				processedBase.clear();
 			} else if (tier.equals(ItemTier.T2)) {
@@ -1907,6 +2002,11 @@ public class RandomItemFactory {
 				//Add the processedMagic attributes to the Final Attributes list.
 				for (int i = 0; i <= processedMagic.size() - 1; i++) {
 					attributesMagicFinal.add(processedMagic.get(i));
+				}
+
+				//Add the processedExtras attributes to the Final Attributes list.
+				for (int i = 0; i <= processedExtras.size() - 1; i++) {
+					attributesExtrasFinal.add(processedExtras.get(i));
 				}
 
 				//Clean up
@@ -1926,6 +2026,11 @@ public class RandomItemFactory {
 					attributesMagicFinal.add(processedMagic.get(i));
 				}
 
+				//Add the processedExtras attributes to the Final Attributes list.
+				for (int i = 0; i <= processedExtras.size() - 1; i++) {
+					attributesExtrasFinal.add(processedExtras.get(i));
+				}
+
 				//Clean up
 				processedBase.clear();
 			} else if (tier.equals(ItemTier.T4)) {
@@ -1941,6 +2046,11 @@ public class RandomItemFactory {
 				//Add the processedMagic attributes to the Final Attributes list.
 				for (int i = 0; i <= processedMagic.size() - 1; i++) {
 					attributesMagicFinal.add(processedMagic.get(i));
+				}
+
+				//Add the processedExtras attributes to the Final Attributes list.
+				for (int i = 0; i <= processedExtras.size() - 1; i++) {
+					attributesExtrasFinal.add(processedExtras.get(i));
 				}
 
 				//Clean up
@@ -1960,6 +2070,11 @@ public class RandomItemFactory {
 					attributesMagicFinal.add(processedMagic.get(i));
 				}
 
+				//Add the processedExtras attributes to the Final Attributes list.
+				for (int i = 0; i <= processedExtras.size() - 1; i++) {
+					attributesExtrasFinal.add(processedExtras.get(i));
+				}
+
 				//Clean up
 				processedBase.clear();
 			} else if (tier.equals(ItemTier.T6)) {
@@ -1975,6 +2090,11 @@ public class RandomItemFactory {
 				//Add the processedMagic attributes to the Final Attributes list.
 				for (int i = 0; i <= processedMagic.size() - 1; i++) {
 					attributesMagicFinal.add(processedMagic.get(i));
+				}
+
+				//Add the processedExtras attributes to the Final Attributes list.
+				for (int i = 0; i <= processedExtras.size() - 1; i++) {
+					attributesExtrasFinal.add(processedExtras.get(i));
 				}
 
 				//Clean up
