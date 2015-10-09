@@ -159,6 +159,8 @@ public class RandomItemFactory {
 		int poisonResistMax = armorConfig.getInt(tier + "." + quality + ".poisonResistMax");
 		int paralyzeResistMin = armorConfig.getInt(tier + "." + quality + ".paralyzeResistMin");
 		int paralyzeResistMax = armorConfig.getInt(tier + "." + quality + ".paralyzeResistMax");
+		int blindnessResistMin = armorConfig.getInt(tier + "." + quality + ".blindnessResistMin");
+		int blindnessResistMax = armorConfig.getInt(tier + "." + quality + ".blindnessResistMax");
 
 		//Extras
 		int waterBreathingMin = armorConfig.getInt(tier + "." + quality + ".waterBreathingMin");
@@ -189,6 +191,7 @@ public class RandomItemFactory {
 		int lightningResist = randomInt(lightningResistMin, lightningResistMax);
 		int poisonResist = randomInt(poisonResistMin, poisonResistMax);
 		int paralyzeResist = randomInt(paralyzeResistMin, paralyzeResistMax);
+		int blindnessResist = randomInt(blindnessResistMin, blindnessResistMax);
 
 		//Extras
 		int waterBreathing = randomInt(waterBreathingMin, waterBreathingMax);
@@ -388,6 +391,7 @@ public class RandomItemFactory {
 			attributesMagicTemp.add(ChatColor.WHITE + " +" + lightningResist + " Lightning Resistance");
 			attributesMagicTemp.add(ChatColor.WHITE + " +" + poisonResist + " Poison Resistance");
 			attributesMagicTemp.add(ChatColor.WHITE + " +" + paralyzeResist + " Fire Resistance");
+			attributesMagicTemp.add(ChatColor.WHITE + " +" + blindnessResist + " Blindness Resistance");
 
 			attributesExtrasTemp.add(ChatColor.WHITE + " +" + waterBreathing + " Water Breathing");
 			attributesExtrasTemp.add(ChatColor.WHITE + " +" + personality + " Personality");
@@ -534,6 +538,174 @@ public class RandomItemFactory {
 			attributesMagicTemp.clear();
 			attributesExtrasTemp.clear();
 
+		} else if (quality.equals(ItemQuality.EPIC)) {
+
+			////////////////////////////////////////////////
+			//// EPIC //////////////////////////////////////
+			////////////////////////////////////////////////
+
+			//Randomly pick 2 or 3 attributes,
+			//With possibility of magic resistance and
+			//attribute extras.
+
+			attributesBaseTemp.add(ChatColor.WHITE + " +" + strength + " Strength");
+			attributesBaseTemp.add(ChatColor.WHITE + " +" + agility + " Agility");
+			attributesBaseTemp.add(ChatColor.WHITE + " +" + stamina + " Stamina");
+			attributesBaseTemp.add(ChatColor.WHITE + " +" + intellect + " Intellect");
+			attributesBaseTemp.add(ChatColor.WHITE + " +" + spirit + " Spirit");
+
+			attributesMagicTemp.add(ChatColor.WHITE + " +" + fireResist + " Fire Resistance");
+			attributesMagicTemp.add(ChatColor.WHITE + " +" + iceResist + " Ice Resistance");
+			attributesMagicTemp.add(ChatColor.WHITE + " +" + lightningResist + " Lightning Resistance");
+			attributesMagicTemp.add(ChatColor.WHITE + " +" + poisonResist + " Poison Resistance");
+			attributesMagicTemp.add(ChatColor.WHITE + " +" + paralyzeResist + " Fire Resistance");
+			attributesMagicTemp.add(ChatColor.WHITE + " +" + blindnessResist + " Blindness Resistance");
+
+			attributesExtrasTemp.add(ChatColor.WHITE + " +" + waterBreathing + " Water Breathing");
+			attributesExtrasTemp.add(ChatColor.WHITE + " +" + personality + " Personality");
+			attributesExtrasTemp.add(ChatColor.WHITE + " +" + goldFind + " Gold Find");
+			attributesExtrasTemp.add(ChatColor.WHITE + " +" + magicFind + " Magic FInd");
+
+			//Get random amount of attributes (1 or 2).
+			if (tier.equals(ItemTier.T1)) {
+				ArrayList<String> processedBase = getRandomArrayIndex(attributesBaseTemp, 2, 3);
+				ArrayList<String> processedMagic = getRandomArrayIndex(attributesMagicTemp, 1, 2);
+				ArrayList<String> processedExtras = getRandomArrayIndex(attributesExtrasTemp, 1, 2);
+
+				//Add the processedBase attributes to the Final Attributes list.
+				for (int i = 0; i <= processedBase.size() - 1; i++) {
+					attributesBaseFinal.add(processedBase.get(i));
+				}
+
+				//Add the processedMagic attributes to the Final Attributes list.
+				for (int i = 0; i <= processedMagic.size() - 1; i++) {
+					attributesMagicFinal.add(processedMagic.get(i));
+				}
+
+				//Add the processedMagic attributes to the Final Attributes list.
+				for (int i = 0; i <= processedExtras.size() - 1; i++) {
+					attributesExtrasFinal.add(processedExtras.get(i));
+				}
+
+				//Clean up
+				processedBase.clear();
+			} else if (tier.equals(ItemTier.T2)) {
+				ArrayList<String> processedBase = getRandomArrayIndex(attributesBaseTemp, 2, 3);
+				ArrayList<String> processedMagic = getRandomArrayIndex(attributesMagicTemp, 1, 2);
+				ArrayList<String> processedExtras = getRandomArrayIndex(attributesExtrasTemp, 1, 2);
+
+				//Add the processedBase attributes to the Final Attributes list.
+				for (int i = 0; i <= processedBase.size() - 1; i++) {
+					attributesBaseFinal.add(processedBase.get(i));
+				}
+
+				//Add the processedMagic attributes to the Final Attributes list.
+				for (int i = 0; i <= processedMagic.size() - 1; i++) {
+					attributesMagicFinal.add(processedMagic.get(i));
+				}
+
+				//Add the processedMagic attributes to the Final Attributes list.
+				for (int i = 0; i <= processedExtras.size() - 1; i++) {
+					attributesExtrasFinal.add(processedExtras.get(i));
+				}
+
+				//Clean up
+				processedBase.clear();
+			} else if (tier.equals(ItemTier.T3)) {
+				ArrayList<String> processedBase = getRandomArrayIndex(attributesBaseTemp, 2, 3);
+				ArrayList<String> processedMagic = getRandomArrayIndex(attributesMagicTemp, 1, 2);
+				ArrayList<String> processedExtras = getRandomArrayIndex(attributesExtrasTemp, 1, 2);
+
+				//Add the processedBase attributes to the Final Attributes list.
+				for (int i = 0; i <= processedBase.size() - 1; i++) {
+					attributesBaseFinal.add(processedBase.get(i));
+				}
+
+				//Add the processedMagic attributes to the Final Attributes list.
+				for (int i = 0; i <= processedMagic.size() - 1; i++) {
+					attributesMagicFinal.add(processedMagic.get(i));
+				}
+
+				//Add the processedMagic attributes to the Final Attributes list.
+				for (int i = 0; i <= processedExtras.size() - 1; i++) {
+					attributesExtrasFinal.add(processedExtras.get(i));
+				}
+
+				//Clean up
+				processedBase.clear();
+			} else if (tier.equals(ItemTier.T4)) {
+				ArrayList<String> processedBase = getRandomArrayIndex(attributesBaseTemp, 2, 3);
+				ArrayList<String> processedMagic = getRandomArrayIndex(attributesMagicTemp, 1, 2);
+				ArrayList<String> processedExtras = getRandomArrayIndex(attributesExtrasTemp, 1, 2);
+
+				//Add the processedBase attributes to the Final Attributes list.
+				for (int i = 0; i <= processedBase.size() - 1; i++) {
+					attributesBaseFinal.add(processedBase.get(i));
+				}
+
+				//Add the processedMagic attributes to the Final Attributes list.
+				for (int i = 0; i <= processedMagic.size() - 1; i++) {
+					attributesMagicFinal.add(processedMagic.get(i));
+				}
+
+				//Add the processedMagic attributes to the Final Attributes list.
+				for (int i = 0; i <= processedExtras.size() - 1; i++) {
+					attributesExtrasFinal.add(processedExtras.get(i));
+				}
+
+				//Clean up
+				processedBase.clear();
+			} else if (tier.equals(ItemTier.T5)) {
+				ArrayList<String> processedBase = getRandomArrayIndex(attributesBaseTemp, 2, 3);
+				ArrayList<String> processedMagic = getRandomArrayIndex(attributesMagicTemp, 1, 2);
+				ArrayList<String> processedExtras = getRandomArrayIndex(attributesExtrasTemp, 1, 2);
+
+				//Add the processedBase attributes to the Final Attributes list.
+				for (int i = 0; i <= processedBase.size() - 1; i++) {
+					attributesBaseFinal.add(processedBase.get(i));
+				}
+
+				//Add the processedMagic attributes to the Final Attributes list.
+				for (int i = 0; i <= processedMagic.size() - 1; i++) {
+					attributesMagicFinal.add(processedMagic.get(i));
+				}
+
+				//Add the processedMagic attributes to the Final Attributes list.
+				for (int i = 0; i <= processedExtras.size() - 1; i++) {
+					attributesExtrasFinal.add(processedExtras.get(i));
+				}
+
+				//Clean up
+				processedBase.clear();
+			} else if (tier.equals(ItemTier.T6)) {
+				ArrayList<String> processedBase = getRandomArrayIndex(attributesBaseTemp, 2, 3);
+				ArrayList<String> processedMagic = getRandomArrayIndex(attributesMagicTemp, 1, 2);
+				ArrayList<String> processedExtras = getRandomArrayIndex(attributesExtrasTemp, 1, 2);
+
+				//Add the processedBase attributes to the Final Attributes list.
+				for (int i = 0; i <= processedBase.size() - 1; i++) {
+					attributesBaseFinal.add(processedBase.get(i));
+				}
+
+				//Add the processedMagic attributes to the Final Attributes list.
+				for (int i = 0; i <= processedMagic.size() - 1; i++) {
+					attributesMagicFinal.add(processedMagic.get(i));
+				}
+
+				//Add the processedMagic attributes to the Final Attributes list.
+				for (int i = 0; i <= processedExtras.size() - 1; i++) {
+					attributesExtrasFinal.add(processedExtras.get(i));
+				}
+
+				//Clean up
+				processedBase.clear();
+			}
+
+			//Lets do some cleanup.
+			attributesBaseTemp.clear();
+			attributesMagicTemp.clear();
+			attributesExtrasTemp.clear();
+
 		} else if (quality.equals(ItemQuality.RARE)) {
 
 			////////////////////////////////////////////////
@@ -555,6 +727,7 @@ public class RandomItemFactory {
 			attributesMagicTemp.add(ChatColor.WHITE + " +" + lightningResist + " Lightning Resistance");
 			attributesMagicTemp.add(ChatColor.WHITE + " +" + poisonResist + " Poison Resistance");
 			attributesMagicTemp.add(ChatColor.WHITE + " +" + paralyzeResist + " Fire Resistance");
+			attributesMagicTemp.add(ChatColor.WHITE + " +" + blindnessResist + " Blindness Resistance");
 
 			attributesExtrasTemp.add(ChatColor.WHITE + " +" + waterBreathing + " Water Breathing");
 			attributesExtrasTemp.add(ChatColor.WHITE + " +" + personality + " Personality");
@@ -722,6 +895,7 @@ public class RandomItemFactory {
 			attributesMagicTemp.add(ChatColor.WHITE + " +" + lightningResist + " Lightning Resistance");
 			attributesMagicTemp.add(ChatColor.WHITE + " +" + poisonResist + " Poison Resistance");
 			attributesMagicTemp.add(ChatColor.WHITE + " +" + paralyzeResist + " Fire Resistance");
+			attributesMagicTemp.add(ChatColor.WHITE + " +" + blindnessResist + " Blindness Resistance");
 
 			attributesExtrasTemp.add(ChatColor.WHITE + " +" + waterBreathing + " Water Breathing");
 			attributesExtrasTemp.add(ChatColor.WHITE + " +" + personality + " Personality");
@@ -1004,6 +1178,8 @@ public class RandomItemFactory {
 		int poisonDamageMax = weaponConfig.getInt(tier + "." + quality + ".poisonDamageMax");
 		int paralyzeDamageMin = weaponConfig.getInt(tier + "." + quality + ".paralyzeDamageMin");
 		int paralyzeDamageMax = weaponConfig.getInt(tier + "." + quality + ".paralyzeDamageMax");
+		int blindnessDamageMin = weaponConfig.getInt(tier + "." + quality + ".blindnessDamageMin");
+		int blindnessDamageMax = weaponConfig.getInt(tier + "." + quality + ".blindnessDamageMax");
 
 
 		////////////////////////////
@@ -1025,6 +1201,7 @@ public class RandomItemFactory {
 		int lightningDamage = randomInt(lightningDamageMin, lightningDamageMax);
 		int poisonDamage = randomInt(poisonDamageMin, poisonDamageMax);
 		int paralyzeDamage = randomInt(paralyzeDamageMin, paralyzeDamageMax);
+		int blindnessDamage = randomInt(blindnessDamageMin, blindnessDamageMax);
 
 
 		///////////////////////////////////
@@ -1213,6 +1390,7 @@ public class RandomItemFactory {
 			attributesMagicTemp.add(ChatColor.WHITE + " +" + lightningDamage + " Lightning Damage");
 			attributesMagicTemp.add(ChatColor.WHITE + " +" + poisonDamage + " Poison Damage");
 			attributesMagicTemp.add(ChatColor.WHITE + " +" + paralyzeDamage + " Fire Damage");
+			attributesMagicTemp.add(ChatColor.WHITE + " +" + blindnessDamage + " Blindness Damage");
 
 			//Get random amount of attributes (1 or 2).
 			if (tier.equals(ItemTier.T1)) {
@@ -1317,6 +1495,132 @@ public class RandomItemFactory {
 			attributesBaseTemp.clear();
 			attributesMagicTemp.clear();
 
+		} else if (quality.equals(ItemQuality.EPIC)) {
+
+			////////////////////////////////////////////////
+			//// EPIC //////////////////////////////////////
+			////////////////////////////////////////////////
+
+			//Randomly pick 2 or 3 attributes,
+			//With possibility of magic resistance and
+			//attribute extras.
+
+			attributesBaseTemp.add(ChatColor.WHITE + " +" + strength + " Strength");
+			attributesBaseTemp.add(ChatColor.WHITE + " +" + agility + " Agility");
+			attributesBaseTemp.add(ChatColor.WHITE + " +" + stamina + " Stamina");
+			attributesBaseTemp.add(ChatColor.WHITE + " +" + intellect + " Intellect");
+			attributesBaseTemp.add(ChatColor.WHITE + " +" + spirit + " Spirit");
+
+			attributesMagicTemp.add(ChatColor.WHITE + " +" + fireDamage + " Fire Damage");
+			attributesMagicTemp.add(ChatColor.WHITE + " +" + iceDamage + " Ice Damage");
+			attributesMagicTemp.add(ChatColor.WHITE + " +" + lightningDamage + " Lightning Damage");
+			attributesMagicTemp.add(ChatColor.WHITE + " +" + poisonDamage + " Poison Damage");
+			attributesMagicTemp.add(ChatColor.WHITE + " +" + paralyzeDamage + " Fire Damage");
+			attributesMagicTemp.add(ChatColor.WHITE + " +" + blindnessDamage + " Blindness Damage");
+
+			//Get random amount of attributes (1 or 2).
+			if (tier.equals(ItemTier.T1)) {
+				ArrayList<String> processedBase = getRandomArrayIndex(attributesBaseTemp, 2, 3);
+				ArrayList<String> processedMagic = getRandomArrayIndex(attributesMagicTemp, 1, 2);
+
+				//Add the processedBase attributes to the Final Attributes list.
+				for (int i = 0; i <= processedBase.size() - 1; i++) {
+					attributesBaseFinal.add(processedBase.get(i));
+				}
+
+				//Add the processedMagic attributes to the Final Attributes list.
+				for (int i = 0; i <= processedMagic.size() - 1; i++) {
+					attributesMagicFinal.add(processedMagic.get(i));
+				}
+
+				//Clean up
+				processedBase.clear();
+			} else if (tier.equals(ItemTier.T2)) {
+				ArrayList<String> processedBase = getRandomArrayIndex(attributesBaseTemp, 2, 3);
+				ArrayList<String> processedMagic = getRandomArrayIndex(attributesMagicTemp, 1, 2);
+
+				//Add the processedBase attributes to the Final Attributes list.
+				for (int i = 0; i <= processedBase.size() - 1; i++) {
+					attributesBaseFinal.add(processedBase.get(i));
+				}
+
+				//Add the processedMagic attributes to the Final Attributes list.
+				for (int i = 0; i <= processedMagic.size() - 1; i++) {
+					attributesMagicFinal.add(processedMagic.get(i));
+				}
+
+				//Clean up
+				processedBase.clear();
+			} else if (tier.equals(ItemTier.T3)) {
+				ArrayList<String> processedBase = getRandomArrayIndex(attributesBaseTemp, 2, 3);
+				ArrayList<String> processedMagic = getRandomArrayIndex(attributesMagicTemp, 1, 2);
+
+				//Add the processedBase attributes to the Final Attributes list.
+				for (int i = 0; i <= processedBase.size() - 1; i++) {
+					attributesBaseFinal.add(processedBase.get(i));
+				}
+
+				//Add the processedMagic attributes to the Final Attributes list.
+				for (int i = 0; i <= processedMagic.size() - 1; i++) {
+					attributesMagicFinal.add(processedMagic.get(i));
+				}
+
+				//Clean up
+				processedBase.clear();
+			} else if (tier.equals(ItemTier.T4)) {
+				ArrayList<String> processedBase = getRandomArrayIndex(attributesBaseTemp, 2, 3);
+				ArrayList<String> processedMagic = getRandomArrayIndex(attributesMagicTemp, 1, 2);
+
+				//Add the processedBase attributes to the Final Attributes list.
+				for (int i = 0; i <= processedBase.size() - 1; i++) {
+					attributesBaseFinal.add(processedBase.get(i));
+				}
+
+				//Add the processedMagic attributes to the Final Attributes list.
+				for (int i = 0; i <= processedMagic.size() - 1; i++) {
+					attributesMagicFinal.add(processedMagic.get(i));
+				}
+
+				//Clean up
+				processedBase.clear();
+			} else if (tier.equals(ItemTier.T5)) {
+				ArrayList<String> processedBase = getRandomArrayIndex(attributesBaseTemp, 2, 3);
+				ArrayList<String> processedMagic = getRandomArrayIndex(attributesMagicTemp, 1, 2);
+
+				//Add the processedBase attributes to the Final Attributes list.
+				for (int i = 0; i <= processedBase.size() - 1; i++) {
+					attributesBaseFinal.add(processedBase.get(i));
+				}
+
+				//Add the processedMagic attributes to the Final Attributes list.
+				for (int i = 0; i <= processedMagic.size() - 1; i++) {
+					attributesMagicFinal.add(processedMagic.get(i));
+				}
+
+				//Clean up
+				processedBase.clear();
+			} else if (tier.equals(ItemTier.T6)) {
+				ArrayList<String> processedBase = getRandomArrayIndex(attributesBaseTemp, 2, 3);
+				ArrayList<String> processedMagic = getRandomArrayIndex(attributesMagicTemp, 1, 2);
+
+				//Add the processedBase attributes to the Final Attributes list.
+				for (int i = 0; i <= processedBase.size() - 1; i++) {
+					attributesBaseFinal.add(processedBase.get(i));
+				}
+
+				//Add the processedMagic attributes to the Final Attributes list.
+				for (int i = 0; i <= processedMagic.size() - 1; i++) {
+					attributesMagicFinal.add(processedMagic.get(i));
+				}
+
+				//Clean up
+				processedBase.clear();
+			}
+
+			//Lets do some cleanup.
+			attributesBaseTemp.clear();
+			attributesMagicTemp.clear();
+
 		} else if (quality.equals(ItemQuality.RARE)) {
 
 			////////////////////////////////////////////////
@@ -1338,6 +1642,7 @@ public class RandomItemFactory {
 			attributesMagicTemp.add(ChatColor.WHITE + " +" + lightningDamage + " Lightning Damage");
 			attributesMagicTemp.add(ChatColor.WHITE + " +" + poisonDamage + " Poison Damage");
 			attributesMagicTemp.add(ChatColor.WHITE + " +" + paralyzeDamage + " Fire Damage");
+			attributesMagicTemp.add(ChatColor.WHITE + " +" + blindnessDamage + " Blindness Damage");
 
 			//Get random amount of attributes (1 or 2).
 			if (tier.equals(ItemTier.T1)) {
@@ -1463,6 +1768,7 @@ public class RandomItemFactory {
 			attributesMagicTemp.add(ChatColor.WHITE + " +" + lightningDamage + " Lightning Damage");
 			attributesMagicTemp.add(ChatColor.WHITE + " +" + poisonDamage + " Poison Damage");
 			attributesMagicTemp.add(ChatColor.WHITE + " +" + paralyzeDamage + " Fire Damage");
+			attributesMagicTemp.add(ChatColor.WHITE + " +" + blindnessDamage + " Blindness Damage");
 
 			//Get random amount of attributes (1 or 2).
 			if (tier.equals(ItemTier.T1)) {
