@@ -59,6 +59,8 @@ public class RandomItemFactory {
 	private static String magicFindStr = ChatColor.GRAY + " Magic Find";
 	private static String criticalChanceStr = ChatColor.GRAY + " Critical Chance";
 	private static String criticalDamageStr = ChatColor.GRAY + " Critical Damage";
+	private static String knockbackStr = ChatColor.GRAY + " Knockback";
+	private static String lifestealStr = ChatColor.GRAY + " Lifesteal";
 
 	//Create instance
 	public static RandomItemFactory getInstance() {
@@ -1198,6 +1200,10 @@ public class RandomItemFactory {
 		 * 	Poison Damage
 		 * 	Paralyze Damage
 		 * 	Blindness Damage
+		 * 
+		 * Extras:
+		 *  Knockback
+		 *  Lifesteal
 		 */
 
 		//Base stats
@@ -1234,6 +1240,12 @@ public class RandomItemFactory {
 		int blindnessDamageMax = weaponConfig.getInt(configPath + ".blindnessDamageMax");
 		int criticalDamageMin = weaponConfig.getInt(configPath + ".criticalDamageMin");
 		int criticalDamageMax = weaponConfig.getInt(configPath + ".criticalDamageMax");
+		
+		//Extras
+		int knockbackMin = weaponConfig.getInt(configPath + ".knockbackMin");
+		int knockbackMax = weaponConfig.getInt(configPath + ".knockbackMax");
+		int lifestealMin = weaponConfig.getInt(configPath + ".lifestealMin");
+		int lifestealMax = weaponConfig.getInt(configPath + ".lifestealMax");
 
 
 		////////////////////////////
@@ -1258,6 +1270,9 @@ public class RandomItemFactory {
 		int blindnessDamage = randomInt(blindnessDamageMin, blindnessDamageMax);
 		int criticalDamage = randomInt(criticalDamageMin, criticalDamageMax);
 
+		//Extras
+		int knockback = randomInt(knockbackMin, knockbackMax);
+		int lifesteal = randomInt(lifestealMin, lifestealMax);
 
 		///////////////////////////////////
 		/// PICK RANDOM ITEM ATTRIBUTES ///
@@ -1272,10 +1287,12 @@ public class RandomItemFactory {
 		//Final arrays (processedBase).
 		ArrayList<String> attributesBaseFinal = new ArrayList<String>();
 		ArrayList<String> attributesMagicFinal = new ArrayList<String>();
+		ArrayList<String> attributesExtrasFinal = new ArrayList<String>();
 
 		//Temporary arrays
 		ArrayList<String> attributesBaseTemp = new ArrayList<String>();
 		ArrayList<String> attributesMagicTemp = new ArrayList<String>();
+		ArrayList<String> attributesExtrasTemp = new ArrayList<String>();
 
 		//Always add "damage" attribute to an weapon item.
 		//Lets do this beforehand, it does not need to be picked, its automatic.
@@ -1448,10 +1465,14 @@ public class RandomItemFactory {
 			attributesMagicTemp.add(ChatColor.RED + "+" + blindnessDamage + blindnessDamageStr);
 			attributesMagicTemp.add(ChatColor.RED + "+" + criticalDamage + criticalDamageStr);
 
+			attributesExtrasTemp.add(ChatColor.RED + "+" + knockback + knockbackStr);
+			attributesExtrasTemp.add(ChatColor.RED + "+" + lifesteal + lifestealStr);
+
 			//Get random amount of attributes (1 or 2).
 			if (tier.equals(ItemTier.T1)) {
 				ArrayList<String> processedBase = getRandomArrayIndex(attributesBaseTemp, 1, 2);
 				ArrayList<String> processedMagic = getRandomArrayIndex(attributesMagicTemp, 0, 1);
+				ArrayList<String> processedExtras = getRandomArrayIndex(attributesMagicTemp, 0, 1);
 
 				//Add the processedBase attributes to the Final Attributes list.
 				for (int i = 0; i <= processedBase.size() - 1; i++) {
@@ -1468,6 +1489,7 @@ public class RandomItemFactory {
 			} else if (tier.equals(ItemTier.T2)) {
 				ArrayList<String> processedBase = getRandomArrayIndex(attributesBaseTemp, 1, 2);
 				ArrayList<String> processedMagic = getRandomArrayIndex(attributesMagicTemp, 0, 2);
+				ArrayList<String> processedExtras = getRandomArrayIndex(attributesMagicTemp, 0, 1);
 
 				//Add the processedBase attributes to the Final Attributes list.
 				for (int i = 0; i <= processedBase.size() - 1; i++) {
@@ -1484,6 +1506,7 @@ public class RandomItemFactory {
 			} else if (tier.equals(ItemTier.T3)) {
 				ArrayList<String> processedBase = getRandomArrayIndex(attributesBaseTemp, 1, 2);
 				ArrayList<String> processedMagic = getRandomArrayIndex(attributesMagicTemp, 0, 2);
+				ArrayList<String> processedExtras = getRandomArrayIndex(attributesMagicTemp, 0, 1);
 
 				//Add the processedBase attributes to the Final Attributes list.
 				for (int i = 0; i <= processedBase.size() - 1; i++) {
@@ -1500,6 +1523,7 @@ public class RandomItemFactory {
 			} else if (tier.equals(ItemTier.T4)) {
 				ArrayList<String> processedBase = getRandomArrayIndex(attributesBaseTemp, 1, 2);
 				ArrayList<String> processedMagic = getRandomArrayIndex(attributesMagicTemp, 0, 2);
+				ArrayList<String> processedExtras = getRandomArrayIndex(attributesMagicTemp, 0, 1);
 
 				//Add the processedBase attributes to the Final Attributes list.
 				for (int i = 0; i <= processedBase.size() - 1; i++) {
@@ -1516,6 +1540,7 @@ public class RandomItemFactory {
 			} else if (tier.equals(ItemTier.T5)) {
 				ArrayList<String> processedBase = getRandomArrayIndex(attributesBaseTemp, 1, 2);
 				ArrayList<String> processedMagic = getRandomArrayIndex(attributesMagicTemp, 0, 2);
+				ArrayList<String> processedExtras = getRandomArrayIndex(attributesMagicTemp, 0, 1);
 
 				//Add the processedBase attributes to the Final Attributes list.
 				for (int i = 0; i <= processedBase.size() - 1; i++) {
@@ -1532,6 +1557,7 @@ public class RandomItemFactory {
 			} else if (tier.equals(ItemTier.T6)) {
 				ArrayList<String> processedBase = getRandomArrayIndex(attributesBaseTemp, 1, 2);
 				ArrayList<String> processedMagic = getRandomArrayIndex(attributesMagicTemp, 0, 2);
+				ArrayList<String> processedExtras = getRandomArrayIndex(attributesMagicTemp, 0, 1);
 
 				//Add the processedBase attributes to the Final Attributes list.
 				for (int i = 0; i <= processedBase.size() - 1; i++) {
@@ -1575,10 +1601,14 @@ public class RandomItemFactory {
 			attributesMagicTemp.add(ChatColor.RED + "+" + blindnessDamage + blindnessDamageStr);
 			attributesMagicTemp.add(ChatColor.RED + "+" + criticalDamage + criticalDamageStr);
 
+			attributesExtrasTemp.add(ChatColor.RED + "+" + knockback + knockbackStr);
+			attributesExtrasTemp.add(ChatColor.RED + "+" + lifesteal + lifestealStr);
+
 			//Get random amount of attributes (1 or 2).
 			if (tier.equals(ItemTier.T1)) {
 				ArrayList<String> processedBase = getRandomArrayIndex(attributesBaseTemp, 2, 3);
 				ArrayList<String> processedMagic = getRandomArrayIndex(attributesMagicTemp, 1, 2);
+				ArrayList<String> processedExtras = getRandomArrayIndex(attributesMagicTemp, 0, 1);
 
 				//Add the processedBase attributes to the Final Attributes list.
 				for (int i = 0; i <= processedBase.size() - 1; i++) {
@@ -1595,6 +1625,7 @@ public class RandomItemFactory {
 			} else if (tier.equals(ItemTier.T2)) {
 				ArrayList<String> processedBase = getRandomArrayIndex(attributesBaseTemp, 2, 3);
 				ArrayList<String> processedMagic = getRandomArrayIndex(attributesMagicTemp, 1, 2);
+				ArrayList<String> processedExtras = getRandomArrayIndex(attributesMagicTemp, 0, 1);
 
 				//Add the processedBase attributes to the Final Attributes list.
 				for (int i = 0; i <= processedBase.size() - 1; i++) {
@@ -1611,6 +1642,7 @@ public class RandomItemFactory {
 			} else if (tier.equals(ItemTier.T3)) {
 				ArrayList<String> processedBase = getRandomArrayIndex(attributesBaseTemp, 2, 3);
 				ArrayList<String> processedMagic = getRandomArrayIndex(attributesMagicTemp, 1, 2);
+				ArrayList<String> processedExtras = getRandomArrayIndex(attributesMagicTemp, 0, 1);
 
 				//Add the processedBase attributes to the Final Attributes list.
 				for (int i = 0; i <= processedBase.size() - 1; i++) {
@@ -1627,6 +1659,7 @@ public class RandomItemFactory {
 			} else if (tier.equals(ItemTier.T4)) {
 				ArrayList<String> processedBase = getRandomArrayIndex(attributesBaseTemp, 2, 3);
 				ArrayList<String> processedMagic = getRandomArrayIndex(attributesMagicTemp, 1, 2);
+				ArrayList<String> processedExtras = getRandomArrayIndex(attributesMagicTemp, 0, 1);
 
 				//Add the processedBase attributes to the Final Attributes list.
 				for (int i = 0; i <= processedBase.size() - 1; i++) {
@@ -1643,6 +1676,7 @@ public class RandomItemFactory {
 			} else if (tier.equals(ItemTier.T5)) {
 				ArrayList<String> processedBase = getRandomArrayIndex(attributesBaseTemp, 2, 3);
 				ArrayList<String> processedMagic = getRandomArrayIndex(attributesMagicTemp, 1, 2);
+				ArrayList<String> processedExtras = getRandomArrayIndex(attributesMagicTemp, 0, 1);
 
 				//Add the processedBase attributes to the Final Attributes list.
 				for (int i = 0; i <= processedBase.size() - 1; i++) {
@@ -1659,6 +1693,7 @@ public class RandomItemFactory {
 			} else if (tier.equals(ItemTier.T6)) {
 				ArrayList<String> processedBase = getRandomArrayIndex(attributesBaseTemp, 2, 3);
 				ArrayList<String> processedMagic = getRandomArrayIndex(attributesMagicTemp, 1, 2);
+				ArrayList<String> processedExtras = getRandomArrayIndex(attributesMagicTemp, 0, 1);
 
 				//Add the processedBase attributes to the Final Attributes list.
 				for (int i = 0; i <= processedBase.size() - 1; i++) {
@@ -1702,10 +1737,14 @@ public class RandomItemFactory {
 			attributesMagicTemp.add(ChatColor.RED + "+" + blindnessDamage + blindnessDamageStr);
 			attributesMagicTemp.add(ChatColor.RED + "+" + criticalDamage + criticalDamageStr);
 
+			attributesExtrasTemp.add(ChatColor.RED + "+" + knockback + knockbackStr);
+			attributesExtrasTemp.add(ChatColor.RED + "+" + lifesteal + lifestealStr);
+
 			//Get random amount of attributes (1 or 2).
 			if (tier.equals(ItemTier.T1)) {
 				ArrayList<String> processedBase = getRandomArrayIndex(attributesBaseTemp, 2, 3);
 				ArrayList<String> processedMagic = getRandomArrayIndex(attributesMagicTemp, 1, 2);
+				ArrayList<String> processedExtras = getRandomArrayIndex(attributesMagicTemp, 0, 1);
 
 				//Add the processedBase attributes to the Final Attributes list.
 				for (int i = 0; i <= processedBase.size() - 1; i++) {
@@ -1722,6 +1761,7 @@ public class RandomItemFactory {
 			} else if (tier.equals(ItemTier.T2)) {
 				ArrayList<String> processedBase = getRandomArrayIndex(attributesBaseTemp, 2, 3);
 				ArrayList<String> processedMagic = getRandomArrayIndex(attributesMagicTemp, 1, 2);
+				ArrayList<String> processedExtras = getRandomArrayIndex(attributesMagicTemp, 0, 1);
 
 				//Add the processedBase attributes to the Final Attributes list.
 				for (int i = 0; i <= processedBase.size() - 1; i++) {
@@ -1738,6 +1778,7 @@ public class RandomItemFactory {
 			} else if (tier.equals(ItemTier.T3)) {
 				ArrayList<String> processedBase = getRandomArrayIndex(attributesBaseTemp, 2, 3);
 				ArrayList<String> processedMagic = getRandomArrayIndex(attributesMagicTemp, 1, 2);
+				ArrayList<String> processedExtras = getRandomArrayIndex(attributesMagicTemp, 0, 1);
 
 				//Add the processedBase attributes to the Final Attributes list.
 				for (int i = 0; i <= processedBase.size() - 1; i++) {
@@ -1754,6 +1795,7 @@ public class RandomItemFactory {
 			} else if (tier.equals(ItemTier.T4)) {
 				ArrayList<String> processedBase = getRandomArrayIndex(attributesBaseTemp, 2, 3);
 				ArrayList<String> processedMagic = getRandomArrayIndex(attributesMagicTemp, 1, 2);
+				ArrayList<String> processedExtras = getRandomArrayIndex(attributesMagicTemp, 0, 1);
 
 				//Add the processedBase attributes to the Final Attributes list.
 				for (int i = 0; i <= processedBase.size() - 1; i++) {
@@ -1770,6 +1812,7 @@ public class RandomItemFactory {
 			} else if (tier.equals(ItemTier.T5)) {
 				ArrayList<String> processedBase = getRandomArrayIndex(attributesBaseTemp, 2, 3);
 				ArrayList<String> processedMagic = getRandomArrayIndex(attributesMagicTemp, 1, 2);
+				ArrayList<String> processedExtras = getRandomArrayIndex(attributesMagicTemp, 0, 1);
 
 				//Add the processedBase attributes to the Final Attributes list.
 				for (int i = 0; i <= processedBase.size() - 1; i++) {
@@ -1786,6 +1829,7 @@ public class RandomItemFactory {
 			} else if (tier.equals(ItemTier.T6)) {
 				ArrayList<String> processedBase = getRandomArrayIndex(attributesBaseTemp, 2, 3);
 				ArrayList<String> processedMagic = getRandomArrayIndex(attributesMagicTemp, 1, 2);
+				ArrayList<String> processedExtras = getRandomArrayIndex(attributesMagicTemp, 0, 1);
 
 				//Add the processedBase attributes to the Final Attributes list.
 				for (int i = 0; i <= processedBase.size() - 1; i++) {
@@ -1829,10 +1873,14 @@ public class RandomItemFactory {
 			attributesMagicTemp.add(ChatColor.RED + "+" + blindnessDamage + blindnessDamageStr);
 			attributesMagicTemp.add(ChatColor.RED + "+" + criticalDamage + criticalDamageStr);
 
+			attributesExtrasTemp.add(ChatColor.RED + "+" + knockback + knockbackStr);
+			attributesExtrasTemp.add(ChatColor.RED + "+" + lifesteal + lifestealStr);
+
 			//Get random amount of attributes (1 or 2).
 			if (tier.equals(ItemTier.T1)) {
 				ArrayList<String> processedBase = getRandomArrayIndex(attributesBaseTemp, 4, 5);
 				ArrayList<String> processedMagic = getRandomArrayIndex(attributesMagicTemp, 2, 3);
+				ArrayList<String> processedExtras = getRandomArrayIndex(attributesMagicTemp, 0, 1);
 
 				//Add the processedBase attributes to the Final Attributes list.
 				for (int i = 0; i <= processedBase.size() - 1; i++) {
@@ -1849,6 +1897,7 @@ public class RandomItemFactory {
 			} else if (tier.equals(ItemTier.T2)) {
 				ArrayList<String> processedBase = getRandomArrayIndex(attributesBaseTemp, 4, 5);
 				ArrayList<String> processedMagic = getRandomArrayIndex(attributesMagicTemp, 2, 3);
+				ArrayList<String> processedExtras = getRandomArrayIndex(attributesMagicTemp, 0, 1);
 
 				//Add the processedBase attributes to the Final Attributes list.
 				for (int i = 0; i <= processedBase.size() - 1; i++) {
@@ -1865,6 +1914,7 @@ public class RandomItemFactory {
 			} else if (tier.equals(ItemTier.T3)) {
 				ArrayList<String> processedBase = getRandomArrayIndex(attributesBaseTemp, 4, 5);
 				ArrayList<String> processedMagic = getRandomArrayIndex(attributesMagicTemp, 2, 3);
+				ArrayList<String> processedExtras = getRandomArrayIndex(attributesMagicTemp, 0, 1);
 
 				//Add the processedBase attributes to the Final Attributes list.
 				for (int i = 0; i <= processedBase.size() - 1; i++) {
@@ -1881,6 +1931,7 @@ public class RandomItemFactory {
 			} else if (tier.equals(ItemTier.T4)) {
 				ArrayList<String> processedBase = getRandomArrayIndex(attributesBaseTemp, 4, 5);
 				ArrayList<String> processedMagic = getRandomArrayIndex(attributesMagicTemp, 2, 3);
+				ArrayList<String> processedExtras = getRandomArrayIndex(attributesMagicTemp, 0, 1);
 
 				//Add the processedBase attributes to the Final Attributes list.
 				for (int i = 0; i <= processedBase.size() - 1; i++) {
@@ -1897,6 +1948,7 @@ public class RandomItemFactory {
 			} else if (tier.equals(ItemTier.T5)) {
 				ArrayList<String> processedBase = getRandomArrayIndex(attributesBaseTemp, 4, 5);
 				ArrayList<String> processedMagic = getRandomArrayIndex(attributesMagicTemp, 2, 3);
+				ArrayList<String> processedExtras = getRandomArrayIndex(attributesMagicTemp, 0, 1);
 
 				//Add the processedBase attributes to the Final Attributes list.
 				for (int i = 0; i <= processedBase.size() - 1; i++) {
@@ -1913,6 +1965,7 @@ public class RandomItemFactory {
 			} else if (tier.equals(ItemTier.T6)) {
 				ArrayList<String> processedBase = getRandomArrayIndex(attributesBaseTemp, 4, 5);
 				ArrayList<String> processedMagic = getRandomArrayIndex(attributesMagicTemp, 2, 3);
+				ArrayList<String> processedExtras = getRandomArrayIndex(attributesMagicTemp, 0, 1);
 
 				//Add the processedBase attributes to the Final Attributes list.
 				for (int i = 0; i <= processedBase.size() - 1; i++) {
@@ -1970,6 +2023,13 @@ public class RandomItemFactory {
 		if (!attributesMagicFinal.isEmpty()) {
 			for (int i = 0; i < attributesMagicFinal.size(); i++) {
 				lore.add(attributesMagicFinal.get(i));
+			}
+		}
+
+		//Add magic Damage attributes
+		if (!attributesExtrasFinal.isEmpty()) {
+			for (int i = 0; i < attributesExtrasFinal.size(); i++) {
+				lore.add(attributesExtrasFinal.get(i));
 			}
 		}
 
@@ -2086,6 +2146,10 @@ public class RandomItemFactory {
 		weaponConfig.set("T1.JUNK.blindnessDamageMax", 5);
 		weaponConfig.set("T1.JUNK.criticalDamageMin", 1);
 		weaponConfig.set("T1.JUNK.criticalDamageMax", 5);
+		weaponConfig.set("T1.JUNK.knockbackMin", 1);
+		weaponConfig.set("T1.JUNK.knockbackMax", 5);
+		weaponConfig.set("T1.JUNK.lifestealMin", 1);
+		weaponConfig.set("T1.JUNK.lifestealMax", 5);
 
 		try {
 			armorConfig.save(armorConfigFile);
