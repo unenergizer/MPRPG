@@ -29,7 +29,6 @@ import com.minepile.mprpg.inventory.ShopChestManager;
 import com.minepile.mprpg.items.ArmorItemManager;
 import com.minepile.mprpg.items.ConsumableItemManager;
 import com.minepile.mprpg.items.CurrencyItemManager;
-import com.minepile.mprpg.items.ItemAttributes;
 import com.minepile.mprpg.items.ItemGeneratorManager;
 import com.minepile.mprpg.items.ItemIdentifierManager;
 import com.minepile.mprpg.items.ItemLoreFactory;
@@ -70,8 +69,10 @@ import com.minepile.mprpg.listeners.PlayerJoinListener;
 import com.minepile.mprpg.listeners.PlayerPickupItemListener;
 import com.minepile.mprpg.listeners.PlayerQuitListener;
 import com.minepile.mprpg.listeners.PlayerRespawnListener;
+import com.minepile.mprpg.listeners.PlayerToggleSprintListener;
 import com.minepile.mprpg.listeners.ProjectileHitListener;
 import com.minepile.mprpg.listeners.WeatherChangeListener;
+import com.minepile.mprpg.player.PlayerAttributesManager;
 import com.minepile.mprpg.player.PlayerCharacterManager;
 import com.minepile.mprpg.player.PlayerHealthTagManager;
 import com.minepile.mprpg.player.PlayerManager;
@@ -114,6 +115,7 @@ public class MPRPG extends JavaPlugin {
 		ChestMenuManager.getInstance().setup(this);
 
 		//setup player manager instances
+		PlayerAttributesManager.getInstance().setup(this);
 		PlayerCharacterManager.getInstance().setup(this);
 		PlayerMailManager.getInstance().setup(this);
 		PlayerManager.getInstance().setup(this);
@@ -150,7 +152,6 @@ public class MPRPG extends JavaPlugin {
 		ArmorItemManager.getInstance().setup(this);
 		ConsumableItemManager.getInstance().setup(this);
 		CurrencyItemManager.getInstance().setup(this);
-		ItemAttributes.getInstance().setup(this);
 		ItemGeneratorManager.getInstance().setup(this);
 		ItemQualityManager.getInstance().setup(this);
 		ItemTierManager.getInstance().setup(this);
@@ -213,6 +214,7 @@ public class MPRPG extends JavaPlugin {
 		pluginManager.registerEvents(new PlayerPickupItemListener(this), this);
 		pluginManager.registerEvents(new PlayerQuitListener(this), this);
 		pluginManager.registerEvents(new PlayerRespawnListener(this), this);
+		pluginManager.registerEvents(new PlayerToggleSprintListener(this), this);
 		
 		pluginManager.registerEvents(new ProjectileHitListener(this), this);
 
@@ -249,8 +251,11 @@ public class MPRPG extends JavaPlugin {
 		//sends operator to the spawn location.
 		getCommand("spawn").setExecutor(new CommandManager(this));
 
-		//various commands to manage a gang.
+		//various commands to manage a guild.
 		getCommand("guild").setExecutor(new CommandManager(this));
+
+		//opens a menu so a player can assing attribute points.
+		getCommand("stats").setExecutor(new CommandManager(this));
 
 		///////////////////
 		/// Startup End ///

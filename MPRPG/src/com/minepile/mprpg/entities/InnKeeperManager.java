@@ -43,7 +43,7 @@ public class InnKeeperManager {
 		player.sendMessage(ChatColor.GREEN + "You have been healed.");
 		
 		//Heal and feed player.
-		PlayerManager.setPlayerHitPoints(player, hp);
+		PlayerManager.setHealthPoints(player, hp);
 		player.setFoodLevel(20);
 	}
 }

@@ -28,7 +28,6 @@ import com.minepile.mprpg.MPRPG;
 import com.minepile.mprpg.gui.PlayerMenuManager;
 import com.minepile.mprpg.inventory.BankChestManager;
 import com.minepile.mprpg.inventory.InventoryRestore;
-import com.minepile.mprpg.items.ItemLoreFactory;
 import com.minepile.mprpg.items.ItemQualityManager.ItemQuality;
 import com.minepile.mprpg.items.ItemTierManager.ItemTier;
 import com.minepile.mprpg.items.RandomItemFactory;
@@ -48,13 +47,49 @@ public class PlayerManager {
 	private static ConcurrentHashMap<UUID, Double> maxManaPoints = new ConcurrentHashMap<UUID, Double>();
 	private static ConcurrentHashMap<UUID, Boolean> playerDead = new ConcurrentHashMap<UUID, Boolean>();
 
-	//Base statistic rates
-	private static double baseHealthPoints = 100;
-	private static double baseHealthRegenRate = .5;
-	private static double baseStaminaPoints = 100;
-	private static double baseManaPoints = 100;
-	private static double baseStaminaRegenRate = 1;
-	private static double baseManaRegenRate = 1;
+	//Flashing action bar message
+	private static int classColor = 1;
+
+	/**
+	 * Base Stats:
+	 * 	Strength
+	 * 	Agility
+	 * 	Stamina
+	 * 	Intellect
+	 * 	Spirit
+	 * 	Armor
+	 * 	Damage
+	 * 
+	 *  Reflect
+	 *  Block
+	 *  Dodge
+	 * 	Critical Damage
+	 *  Critical Chance
+	 * 
+	 * Magic Damage:
+	 * 	Fire Damage
+	 * 	Ice Damage
+	 * 	Lightning Damage
+	 * 	Poison Damage
+	 * 	Paralyze Damage
+	 * 	Blindness Damage
+	 * 
+	 * Resistances:
+	 * 	Fire Resistance
+	 * 	Ice Resistance
+	 * 	Lightning Resistance
+	 * 	Poison Resistance
+	 * 	Paralyze Resistance
+	 *  Blindness Resistance
+	 *  
+	 * Extras:
+	 * 	Waterbreathing
+	 * 	Personality
+	 *  Gold Find
+	 *  Magic Find
+	 *  Knockback
+	 *  Lifesteal
+	 */
 
 	//Create instance
 	public static PlayerManager getInstance() {
@@ -75,8 +110,19 @@ public class PlayerManager {
 						displayActionBar(players);
 					}
 				}
+				
+				//This will rotate colors for the action bar messages.
+				if (getColor() == 1) {
+					setColor(2);
+				} else if (getColor() == 2) {
+					setColor(3);
+				} else if (getColor() == 3) {
+					setColor(4);
+				} else if (getColor() == 4) {
+					setColor(1);
+				}
 			}
-		}, 0L, 2 * 20);
+		}, 0L, 20);
 
 		//Starts a thread that will regen a players health every few seconds.
 		Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(plugin,  new Runnable() {
@@ -124,11 +170,11 @@ public class PlayerManager {
 	}
 
 	/**
-	 * This will teleport the specified player to the main player Spawn location.
+	 * This will teleport the specified player to the last logout location.
 	 * 
 	 * @param player The player that will be teleported.
 	 */
-	public static void teleportPlayerToSpawn(Player player, Location loc) {
+	public static void teleportPlayerToLocation(Player player, Location loc) {
 		//Player must be new, lets teleport them to the new player starting podouble.
 		player.teleport(loc);
 
@@ -143,52 +189,57 @@ public class PlayerManager {
 	}
 
 	/**
-	 * Sets the players health.  This will update all things health related.
-	 * 
-	 * @param player
-	 * @param playerHitPointsFinal
-	 */
-	public static void setPlayerHitPoints(Player player, double hp) {
-		UUID uuid = player.getUniqueId();
-		double playerMaxHealth = getMaxHealthPoints(uuid);
-		double healthBarPercent = (20 * hp) / playerMaxHealth;
-
-		//Set the players health map
-		setHealthPoints(uuid, hp);
-
-		//Set players health tag under their name
-		PlayerHealthTagManager.updateHealthTag(player);
-
-		//Set hearts
-		if (healthBarPercent <= 3) {
-			player.setHealth(healthBarPercent + 2);
-		} else {
-			player.setHealth(healthBarPercent);
-		}
-	}
-
-	/**
 	 * Regenerates a players stat points every few seconds.
 	 * This includes hit points, mana points, and stamina.
 	 * 
 	 * @param player The player who will have their HP regenerated.
 	 */
 	public static void regenerateStatPoints(Player player) {
-		UUID uuid = player.getUniqueId();
-
 		if (PlayerCharacterManager.isPlayerLoaded(player)) {
-			double playerHitPointRegen = ItemLoreFactory.getInstance().getHealthPointsRegenerate(player);
-			double totalHitPointRegen = (baseHealthRegenRate + playerHitPointRegen) / 100;
-			double playerHP = getHealthPoints(uuid);
-			double playerMaxHP = getMaxHealthPoints(uuid);
-			double newHP = playerHP + totalHitPointRegen;
+
+			UUID uuid = player.getUniqueId();
+			double currentHP = PlayerManager.getHealthPoints(uuid);
+			double currentSP = PlayerManager.getStaminaPoints(uuid);
+			double currentMP = PlayerManager.getManaPoints(uuid);
+
+			double maxHealthPoints = PlayerManager.getMaxHealthPoints(uuid);
+			double maxStaminaPoints = PlayerManager.getMaxStaminaPoints(uuid);
+			double maxManaPoints = PlayerManager.getMaxManaPoints(uuid);
+
+			double healthRegen = PlayerAttributesManager.getHealthPointRegeneration(player);
+			double staminaRegen = PlayerAttributesManager.getStaminaPointRegeneration(player);
+			double manaRegen = PlayerAttributesManager.getManaPointRegeneration(player);
+
+			double totalHealthRegen = maxHealthPoints * healthRegen;
+			double totalStaminaRegen = maxStaminaPoints * staminaRegen;
+			double totalManaRegen = maxManaPoints * manaRegen;
+
+
+			double healthPointsFinal = currentHP + totalHealthRegen;
+			double staminaPointsFinal = currentSP + totalStaminaRegen;
+			double manaPointsFinal = currentMP + totalManaRegen;
 
 			//Set the players HP HashMap values.
-			if (newHP >= playerMaxHP) {
-				setPlayerHitPoints(player, playerMaxHP);
+			if (healthPointsFinal >= maxHealthPoints) {
+				setHealthPoints(player, maxHealthPoints);
 			} else {
-				setPlayerHitPoints(player, newHP);
+				setHealthPoints(player, healthPointsFinal);
 			}
+
+			//Set the players SP HashMap values.
+			if (staminaPointsFinal >= maxStaminaPoints) {
+				setStaminaPoints(player, maxStaminaPoints);
+			} else {
+				setStaminaPoints(player, staminaPointsFinal);
+			}
+
+			//Set the players MP HashMap values.
+			if (staminaPointsFinal >= maxStaminaPoints) {
+				setManaPoints(uuid, maxManaPoints);
+			} else {
+				setManaPoints(uuid, manaPointsFinal);
+			}
+
 
 			//Update the players health tag under their name.
 			PlayerHealthTagManager.updateHealthTag(player);
@@ -250,11 +301,11 @@ public class PlayerManager {
 		new TitleObject(ChatColor.RED + "You have died!", ChatColor.YELLOW + "You are now being respawned.").send(player);
 
 		//Update the players armor.
-		ItemLoreFactory.getInstance().applyHPBonus(player, true);
+		PlayerAttributesManager.applyNewAttributes(player, false);
 
 		//Heal the player.
 		double maxHp = getMaxHealthPoints(uuid);
-		setHealthPoints(uuid, maxHp);
+		setHealthPoints(player, maxHp);
 		player.setHealth(20);
 		player.setFoodLevel(20);
 
@@ -276,36 +327,67 @@ public class PlayerManager {
 		if (PlayerCharacterManager.isPlayerLoaded(player)) {
 
 			//Show player important attributes!
-			String hp = Integer.toString((int) getHealthPoints(uuid));
-			String maxHP = Integer.toString((int) getMaxHealthPoints(uuid));
-			String stamina = Integer.toString((int) getStaminaPoints(uuid));
-			String maxStamina = Integer.toString((int) getMaxStaminaPoints(uuid));
-			String mana = Integer.toString((int) getManaPoints(uuid));
-			String maxMana = Integer.toString((int) getMaxManaPoints(uuid));
+			double hp = getHealthPoints(uuid);
+			double maxHP = PlayerAttributesManager.getMaxHealthPoints(player);
+			double stamina = getStaminaPoints(uuid);
+			double maxStamina = PlayerAttributesManager.getMaxStaminaPoints(player);
+			double mana = getManaPoints(uuid);
+			double maxMana = PlayerAttributesManager.getMaxManaPoints(player);
+			
+			String hpString = Integer.toString((int) hp);
+			String maxHPString = Integer.toString((int) maxHP);
+			String staminaString = Integer.toString((int) stamina);
+			String maxStaminaString = Integer.toString((int) maxStamina);
+			String manaString = Integer.toString((int) mana);
+			String maxManaString = Integer.toString((int) maxMana);
 
 			new ActionbarTitleObject(ChatColor.GREEN + "" + ChatColor.BOLD + "HP" 
 					+ ChatColor.GRAY + ChatColor.BOLD + ": " 
-					+ ChatColor.WHITE + ChatColor.BOLD + hp 
+					+ ChatColor.WHITE + ChatColor.BOLD + hpString 
 					+ ChatColor.GREEN + ChatColor.BOLD + "/" 
-					+ ChatColor.WHITE + ChatColor.BOLD + maxHP 
+					+ ChatColor.WHITE + ChatColor.BOLD + maxHPString 
 					+ ChatColor.AQUA + ChatColor.BOLD + "   Stamina" 
 					+ ChatColor.GRAY + ChatColor.BOLD + ": "
-					+ ChatColor.WHITE + ChatColor.BOLD + stamina 
+					+ ChatColor.WHITE + ChatColor.BOLD + staminaString 
 					+ ChatColor.AQUA + ChatColor.BOLD + "/" 
-					+ ChatColor.WHITE + ChatColor.BOLD + maxStamina
+					+ ChatColor.WHITE + ChatColor.BOLD + maxStaminaString
 					+ ChatColor.LIGHT_PURPLE + ChatColor.BOLD + "   Mana" 
 					+ ChatColor.GRAY + ChatColor.BOLD + ": " 
-					+ ChatColor.WHITE + ChatColor.BOLD + mana 
+					+ ChatColor.WHITE + ChatColor.BOLD + manaString 
 					+ ChatColor.LIGHT_PURPLE + ChatColor.BOLD +  "/" 
-					+ ChatColor.WHITE + ChatColor.BOLD + maxMana).send(player);
-
+					+ ChatColor.WHITE + ChatColor.BOLD + maxManaString).send(player);
+			
+			if (hp > maxHP || stamina > maxStamina || mana > maxMana) {
+				PlayerAttributesManager.applyNewAttributes(player, false);
+			}
+			
 		} else if (PlayerCharacterManager.isCharacterSelected(player) == true && PlayerCharacterManager.isClassSelected(player) == false) {
 			//Please select your class!
-			new ActionbarTitleObject(ChatColor.GREEN + "" + ChatColor.BOLD + "Please select a class!").send(player);
+			String message = ChatColor.BOLD + "Please select a class!";
+			
+			if (getColor() == 1) {
+				new ActionbarTitleObject(ChatColor.RED + message).send(player);
+			} else if (getColor() == 2) {
+				new ActionbarTitleObject(ChatColor.YELLOW + message).send(player);
+			} else if (getColor() == 3) {
+				new ActionbarTitleObject(ChatColor.GREEN + message).send(player);
+			} else if (getColor() == 4) {
+				new ActionbarTitleObject(ChatColor.BLUE + message).send(player);
+			}
 
 		} else {
 			//Please select you character!
-			new ActionbarTitleObject(ChatColor.AQUA + "" + ChatColor.BOLD + "Please select a character!").send(player);
+			String message = ChatColor.BOLD + "Please select a character!";
+			
+			if (getColor() == 1) {
+				new ActionbarTitleObject(ChatColor.RED + message).send(player);
+			} else if (getColor() == 2) {
+				new ActionbarTitleObject(ChatColor.YELLOW + message).send(player);
+			} else if (getColor() == 3) {
+				new ActionbarTitleObject(ChatColor.GREEN + message).send(player);
+			} else if (getColor() == 4) {
+				new ActionbarTitleObject(ChatColor.BLUE + message).send(player);
+			}
 		}
 	}
 
@@ -375,7 +457,7 @@ public class PlayerManager {
 			}
 
 			//Heal the player
-			setHealthPoints(uuid, hp);	//Sets payer HP ConcurrentHashMap
+			setHealthPoints(player, hp);	//Sets payer HP ConcurrentHashMap
 			player.setHealth(20); 				//Sets player HP bar
 
 			//Send the player a message
@@ -402,20 +484,47 @@ public class PlayerManager {
 
 		//Read armor and set statistics.
 		//update ConcurrentHashMap info
-		if (PlayerCharacterManager.getPlayerConfigDouble(player, "player.logout.hp") < ItemLoreFactory.getInstance().getHealthPointsBonus(player)) {
-			setHealthPoints(uuid, baseHealthPoints);
-		} else {
-			setHealthPoints(uuid, PlayerCharacterManager.getPlayerConfigDouble(player, "player.logout.hp"));
-		}
-		setMaxHealthPoints(uuid, baseHealthPoints);
-		setStaminaPoints(uuid, baseStaminaPoints);
-		setMaxStaminaPoints(uuid, baseStaminaPoints);
-		setManaPoints(uuid, baseManaPoints);
-		setMaxManaPoints(uuid, baseManaPoints);
-		setPlayerDead(uuid, false);
+		double maxHP = PlayerAttributesManager.getMaxHealthPoints(player);
+		double logoutHP = PlayerCharacterManager.getPlayerConfigDouble(player, "player.logout.hp");
+		double maxStamina = PlayerAttributesManager.getMaxStaminaPoints(player);
+		double logoutStamina = PlayerCharacterManager.getPlayerConfigDouble(player, "player.logout.stamina");
+		double maxMana = PlayerAttributesManager.getMaxManaPoints(player);
+		double logoutMana = PlayerCharacterManager.getPlayerConfigDouble(player, "player.logout.mana");
 
-		//Set players health to max on the health bar.
-		//player.setMaxHealth(200);
+		//If the character has 0 logoutHP, lets set their HP to max.
+		//This is good if the character is new and has never had
+		//an HP value assigned to them.
+		if (logoutHP == 0) {
+			setHealthPoints(player, maxHP);
+		} else {
+			//The player is not new, so give
+			//them the HP value they logged out with.
+			setHealthPoints(player, logoutHP);
+		}
+
+		//If the character has 0 logoutStamina, lets set their Stamina to max.
+		if (logoutStamina == 0) {
+			setStaminaPoints(player, maxStamina);
+		} else {
+			//The player is not new, so give
+			//them the Stamina Point value they logged out with.
+			setStaminaPoints(player, logoutStamina);
+		}
+
+		//If the character has 0 logoutMana, lets set their Mana to max.
+		if (logoutMana == 0) {
+			setManaPoints(uuid, maxMana);
+		} else {
+			//The player is not new, so give
+			//them the Mana Point value they logged out with.
+			setManaPoints(uuid, logoutMana);
+		}
+
+		//Setup HashMaps.
+		setMaxHealthPoints(uuid, maxHP);
+		setMaxStaminaPoints(uuid, maxStamina);
+		setMaxManaPoints(uuid, maxMana);
+		setPlayerDead(uuid, false);
 
 		//Give new players the MinePile game menu.
 		PlayerMenuManager.givePlayerMenu(player);
@@ -427,16 +536,16 @@ public class PlayerManager {
 		//Feed player.
 		player.setFoodLevel(20);
 
-		//update the players health tag
+		//Add player to the HealthTagManager if they are not already on it.
 		if (PlayerHealthTagManager.getSb() != null && PlayerHealthTagManager.getObj() != null) {
 			PlayerHealthTagManager.addPlayer(player);
 		}
-
+		//Update the player's HP tag above their head.
 		PlayerHealthTagManager.updateHealthTag(player);
 
 		//Give the player a Menu!
 		PlayerMenuManager.createMenu(player);
-		
+
 		//Load player items
 		Inventory playerInv = player.getInventory();
 		for (int i = 0; i <= playerInv.getSize(); i++) {
@@ -462,7 +571,7 @@ public class PlayerManager {
 		try {
 			player.getEquipment().setHelmet(InventoryRestore.restoreItemStack(player, "armorInv", 103));
 		} catch (NullPointerException exc) {}
-		
+
 		//If the character is a new player, lets give them some items.
 		if (PlayerCharacterManager.getPlayerConfigBoolean(player, "player.charNew")) {
 			//Armor
@@ -470,27 +579,30 @@ public class PlayerManager {
 			ItemStack leggings = RandomItemFactory.createArmor(new ItemStack(Material.LEATHER_LEGGINGS), ItemTier.T1, ItemQuality.JUNK, true);
 			ItemStack chestplate = RandomItemFactory.createArmor(new ItemStack(Material.LEATHER_CHESTPLATE), ItemTier.T1, ItemQuality.JUNK, true);
 			ItemStack helmet = RandomItemFactory.createArmor(new ItemStack(Material.LEATHER_HELMET), ItemTier.T1, ItemQuality.JUNK, true);
-			
+
 			//Weapon
 			ItemStack sword = RandomItemFactory.createWeapon(new ItemStack(Material.WOOD_SWORD), ItemTier.T1, ItemQuality.JUNK, true);
-			
+
 			//Give new player the items.
 			player.getEquipment().setBoots(boots);
 			player.getEquipment().setLeggings(leggings);
 			player.getEquipment().setChestplate(chestplate);
 			player.getEquipment().setHelmet(helmet);
 			playerInv.setItem(0, sword);
-			
+
 			//Set the player as not a new player.
 			//This will prevent them from getting new items on next join.
 			PlayerCharacterManager.setPlayerConfigBoolean(player, "player.charNew", false);
 		}
-		
+
 		//Restore the players items
 		BankChestManager.restoreBank(player);
-		
+
 		//Update the players armor.
-		ItemLoreFactory.getInstance().applyHPBonus(player, false);
+		PlayerAttributesManager.applyNewAttributes(player, false);
+
+		//GIVE PLAYER TEST ITEM
+		RandomItemFactory.makeTestItem(player);
 	}
 
 	/**
@@ -515,11 +627,38 @@ public class PlayerManager {
 	}
 
 	public static double getHealthPoints(UUID uuid) {
-		return healthPoints.get(uuid);
+		double health = healthPoints.get(uuid);
+		double maxHealth = getMaxHealthPoints(uuid);
+		if (health > maxHealth) {
+			return maxHealth;
+		} else {
+			return health;
+		}
 	}
 
-	private static void setHealthPoints(UUID uuid, double newHealthTotal) {
+	public static void setHealthPoints(Player player, double newHealthTotal) {
+		UUID uuid = player.getUniqueId();
+
+		//Set the players health map
 		healthPoints.put(uuid, newHealthTotal);
+
+		if (maxHealthPoints.containsKey(uuid)) {
+			double playerMaxHealth = getMaxHealthPoints(uuid);
+			double healthPercent = newHealthTotal / playerMaxHealth;
+			double hpDisplay = healthPercent * 20;
+
+			//Set players health tag under their name
+			PlayerHealthTagManager.updateHealthTag(player);
+
+			//Set hearts
+			if (hpDisplay > 20) {
+				player.setHealth(20);
+			} else if (hpDisplay <= 0) {
+				player.setHealth(1);
+			} else {
+				player.setHealth(hpDisplay);
+			}
+		}
 	}
 
 	public static double getMaxHealthPoints(UUID uuid) {
@@ -531,11 +670,39 @@ public class PlayerManager {
 	}
 
 	public static double getStaminaPoints(UUID uuid) {
-		return staminaPoints.get(uuid);
+		double stamina = staminaPoints.get(uuid);
+		double maxStamina = getMaxStaminaPoints(uuid);
+		if (stamina > maxStamina) {
+			return maxStamina;
+		} else {
+			return stamina;
+		}
 	}
 
-	public static void setStaminaPoints(UUID uuid, double stamina) {
+	public static void setStaminaPoints(Player player, double stamina) {
+		UUID uuid = player.getUniqueId();
+		
+		//Apply stamina points to hashmap.
 		staminaPoints.put(uuid, stamina);
+		
+		if (maxStaminaPoints.containsKey(uuid)) {
+			double playerMaxStamina = getMaxStaminaPoints(uuid);
+			double staminaPercent = stamina / playerMaxStamina;
+			double spDisplay = staminaPercent * 20;
+			
+			//Set food level
+			if (spDisplay > 20) {
+				player.setFoodLevel(20);
+			} else if (spDisplay < 1) {
+				player.setFoodLevel(1);
+			} else {
+				player.setFoodLevel((int) spDisplay);
+				
+				if (spDisplay <= 7) {
+					player.playSound(player.getLocation(), Sound.WOLF_PANT, 10F, 1.5F);
+				}
+			}
+		}
 	}
 
 	public static double getMaxStaminaPoints(UUID uuid) {
@@ -547,7 +714,13 @@ public class PlayerManager {
 	}
 
 	public static double getManaPoints(UUID uuid) {
-		return manaPoints.get(uuid);
+		double mana = manaPoints.get(uuid);
+		double maxMana = getMaxManaPoints(uuid);
+		if (mana > maxMana) {
+			return maxMana;
+		} else {
+			return mana;
+		}
 	}
 
 	public static void setManaPoints(UUID uuid, double mana) {
@@ -570,51 +743,11 @@ public class PlayerManager {
 		playerDead.put(uuid, dead);
 	}
 
-	public static double getBaseHealthPoints() {
-		return baseHealthPoints;
+	public static int getColor() {
+		return classColor;
 	}
 
-	public static void setBaseHealthPoints(double baseHealth) {
-		baseHealthPoints = baseHealth;
-	}
-
-	public static double getBaseStaminaPoints() {
-		return baseStaminaPoints;
-	}
-
-	public static void setBaseStaminaPoints(double baseStamina) {
-		baseStaminaPoints = baseStamina;
-	}
-
-	public static double getBaseManaPoints() {
-		return baseManaPoints;
-	}
-
-	public static void setBaseManaPoints(double baseMana) {
-		baseManaPoints = baseMana;
-	}
-
-	public static double getBaseHealthRegenRate() {
-		return baseHealthRegenRate;
-	}
-
-	public static void setBaseHealthRegenRate(double baseHealthRegen) {
-		baseHealthRegenRate = baseHealthRegen;
-	}
-
-	public static double getBaseStaminaRegenRate() {
-		return baseStaminaRegenRate;
-	}
-
-	public static void setBaseStaminaRegenRate(double baseStaminaRegen) {
-		baseStaminaRegenRate = baseStaminaRegen;
-	}
-
-	public static double getBaseManaRegenRate() {
-		return baseManaRegenRate;
-	}
-
-	public static void setBaseManaRegenRate(double baseManaRegen) {
-		baseManaRegenRate = baseManaRegen;
+	public static void setColor(int color) {
+		PlayerManager.classColor = color;
 	}
 }

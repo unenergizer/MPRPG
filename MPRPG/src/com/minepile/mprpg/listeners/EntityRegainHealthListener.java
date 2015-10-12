@@ -8,7 +8,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityRegainHealthEvent;
 
 import com.minepile.mprpg.MPRPG;
-import com.minepile.mprpg.items.ItemLoreFactory;
+import com.minepile.mprpg.player.PlayerAttributesManager;
 import com.minepile.mprpg.player.PlayerHealthTagManager;
 import com.minepile.mprpg.player.PlayerManager;
 
@@ -26,25 +26,29 @@ public class EntityRegainHealthListener implements Listener{
 		if(event.getEntity() instanceof Player) {
 			Player player = (Player) event.getEntity();
 			UUID uuid = player.getUniqueId();
-
+			//TODO
+			
+			
 			double currentHP = PlayerManager.getHealthPoints(uuid);
 			double maxHealthPoints = PlayerManager.getMaxHealthPoints(uuid);
 			
-			double healthRegen = PlayerManager.getBaseHealthRegenRate() + ItemLoreFactory.getInstance().getHealthPointsRegenerate(player);
-			double healthPointsFinal = currentHP + healthRegen;
+			double healthRegen = PlayerAttributesManager.getHealthPointRegeneration(player);
+			double totalRegen = maxHealthPoints * healthRegen;
+			double healthPointsFinal = currentHP + totalRegen;
 			
-			double hpBarPercent = (20 * healthPointsFinal) / maxHealthPoints;		
-
+			double hpPercent = healthPointsFinal / maxHealthPoints;
+			double hpDisplay = hpPercent * 20;
+			
 			if (healthPointsFinal < maxHealthPoints){
-				PlayerManager.setPlayerHitPoints(player, healthPointsFinal);
+				PlayerManager.setHealthPoints(player, healthPointsFinal);
 
 
-				if ((hpBarPercent + 1) >= 18 && healthPointsFinal < maxHealthPoints) {
-					player.setHealth(18);
+				if (hpDisplay > 20 && healthPointsFinal < maxHealthPoints) {
+					player.setHealth(19);
 				} else if (healthPointsFinal >= maxHealthPoints) {
 					player.setHealth(20);
 				} else {
-					player.setHealth(hpBarPercent);
+					player.setHealth(hpDisplay);
 				}
 
 				//Shows the player a bar with their stats.
@@ -52,9 +56,11 @@ public class EntityRegainHealthListener implements Listener{
 
 				//Update the players health tag.
 				PlayerHealthTagManager.updateHealthTag(player);
-			} else if (hpBarPercent <= 0) {
+				
+			} else if (hpDisplay <= 0) {
 				event.setCancelled(true);
 			}
+			
 		}
 	}
 }

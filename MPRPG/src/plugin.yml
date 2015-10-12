@@ -29,5 +29,7 @@ commands:
    gethp:
       description: Displays your current HP as Integer.
    guild:
-      description: Displays your current HP in number form.
+      description: Performs various guild functions.
+   stats:
+      description: Lets player assign attribute points.
   

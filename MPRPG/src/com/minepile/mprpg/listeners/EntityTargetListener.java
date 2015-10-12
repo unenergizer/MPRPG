@@ -7,7 +7,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityTargetEvent;
 
 import com.minepile.mprpg.MPRPG;
-import com.minepile.mprpg.items.ItemLoreFactory;
+import com.minepile.mprpg.player.PlayerAttributesManager;
 
 public class EntityTargetListener implements Listener {
 
@@ -25,7 +25,8 @@ public class EntityTargetListener implements Listener {
 
 			if (entity instanceof Player) {
 				if (!entity.hasMetadata("NPC")) {
-					ItemLoreFactory.getInstance().applyHPBonus((Player) entity, false);
+					//TODO: ItemLoreFactory.getInstance().applyHPBonus((Player) entity, false);
+					PlayerAttributesManager.applyNewAttributes((Player) entity, false);
 				}
 			}
 		}

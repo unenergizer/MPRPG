@@ -13,6 +13,7 @@ import java.util.UUID;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
+import org.bukkit.Instrument;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.SkullType;
@@ -144,7 +145,7 @@ public class PlayerCharacterManager {
 	 */
 	public static void saveCharacter(Player player) {
 		UUID uuid = player.getUniqueId();
-
+		
 		//Get player stats.
 		double logoutHP = PlayerManager.getHealthPoints(uuid);
 		double logoutMaxHP = PlayerManager.getMaxHealthPoints(uuid);
@@ -368,7 +369,7 @@ public class PlayerCharacterManager {
 			double z = getPlayerConfigDouble(player, "player.logout.z");
 			Location loc = new Location(Bukkit.getWorld("World"), x, y, z);
 			
-			PlayerManager.teleportPlayerToSpawn(player, loc);
+			PlayerManager.teleportPlayerToLocation(player, loc);
 
 			//Remove character selection menu from memory.
 			characterSelectMenu.remove(player.getUniqueId());
@@ -379,6 +380,9 @@ public class PlayerCharacterManager {
 		} else {
 			//Teleport new players to the character class selection location.
 			player.teleport(new Location(Bukkit.getWorld("World"), 42.5, 81, -175.5));
+			
+			//Play a sound
+			player.playSound(player.getLocation(), Sound.NOTE_PLING, 1F, 1F);
 		}
 	}
 
@@ -498,16 +502,22 @@ public class PlayerCharacterManager {
 		playerConfig.set(slot + ".player.charClass", "none");
 		playerConfig.set(slot + ".player.playerLVL", 1);
 		playerConfig.set(slot + ".player.playerEXP", 0);
-		playerConfig.set(slot + ".player.logout.hp", 100);
-		playerConfig.set(slot + ".player.logout.maxhp", 100);
-		playerConfig.set(slot + ".player.logout.stamina", 100);
-		playerConfig.set(slot + ".player.logout.maxStamina", 100);
-		playerConfig.set(slot + ".player.logout.mana", 100);
-		playerConfig.set(slot + ".player.logout.maxMana", 100);
+		playerConfig.set(slot + ".player.logout.hp", 0);
+		playerConfig.set(slot + ".player.logout.maxhp", 0);
+		playerConfig.set(slot + ".player.logout.stamina", 0);
+		playerConfig.set(slot + ".player.logout.maxStamina", 0);
+		playerConfig.set(slot + ".player.logout.mana", 0);
+		playerConfig.set(slot + ".player.logout.maxMana", 0);
 		playerConfig.set(slot + ".player.logout.x", 43);
 		playerConfig.set(slot + ".player.logout.y", 76);
 		playerConfig.set(slot + ".player.logout.z", -34);
 
+		playerConfig.set(slot + ".player.attributes.strength", 0);
+		playerConfig.set(slot + ".player.attributes.agility", 0);
+		playerConfig.set(slot + ".player.attributes.intellect", 0);
+		playerConfig.set(slot + ".player.attributes.vitality", 0);
+		playerConfig.set(slot + ".player.attributes.spirit", 0);
+		
 		playerConfig.set(slot + ".guild.owner", false);
 		playerConfig.set(slot + ".guild.name", null);
 

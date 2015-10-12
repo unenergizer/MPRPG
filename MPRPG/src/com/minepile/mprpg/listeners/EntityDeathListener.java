@@ -30,7 +30,7 @@ public class EntityDeathListener implements Listener{
 			//Heal the player
 			player.setHealth(20);
 			player.setFoodLevel(20);
-			PlayerManager.setPlayerHitPoints(player, PlayerManager.getMaxHealthPoints(uuid));
+			PlayerManager.setHealthPoints(player, PlayerManager.getMaxHealthPoints(uuid));
 			
 			player.setGameMode(GameMode.CREATIVE);
 			
@@ -38,7 +38,7 @@ public class EntityDeathListener implements Listener{
 			player.setGameMode(GameMode.SURVIVAL);
 
 			//Heal the player
-			PlayerManager.setPlayerHitPoints(player, PlayerManager.getMaxHealthPoints(uuid));
+			PlayerManager.setHealthPoints(player, PlayerManager.getMaxHealthPoints(uuid));
 			new BukkitRunnable() {
 				@Override
 		    	public void run() {

@@ -8,7 +8,7 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 
 import com.minepile.mprpg.MPRPG;
 import com.minepile.mprpg.gui.ChestMenuManager;
-import com.minepile.mprpg.items.ItemLoreFactory;
+import com.minepile.mprpg.player.PlayerAttributesManager;
 import com.minepile.mprpg.player.PlayerCharacterManager;
 
 public class InventoryClickListener implements Listener{
@@ -108,8 +108,8 @@ public class InventoryClickListener implements Listener{
 		taskID = Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
 			@Override
 			public void run() {
-				ItemLoreFactory.getInstance().applyHPBonus(player, true);
-
+				//TODO: ItemLoreFactory.getInstance().applyHPBonus(player, true);
+				PlayerAttributesManager.applyNewAttributes(player, true);
 			} //END Run method.
 		}, 5); //(20 ticks = 1 second)
 	}

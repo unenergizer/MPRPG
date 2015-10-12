@@ -170,7 +170,7 @@ public class EntityDamageListener implements Listener{
 								PlayerManager.killPlayer(player);
 							} else {
 								//Set player HP.
-								PlayerManager.setPlayerHitPoints(player, playerHitPointsFinal);
+								PlayerManager.setHealthPoints(player, playerHitPointsFinal);
 							}
 						}
 					} else {

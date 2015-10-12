@@ -2,7 +2,6 @@ package com.minepile.mprpg.listeners;
 
 import java.util.UUID;
 
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Arrow;
@@ -18,7 +17,6 @@ import org.bukkit.inventory.ItemStack;
 import com.minepile.mprpg.MPRPG;
 import com.minepile.mprpg.entities.CitizensManager;
 import com.minepile.mprpg.entities.MonsterManager;
-import com.minepile.mprpg.items.ItemLoreFactory;
 import com.minepile.mprpg.player.PlayerCharacterManager;
 import com.minepile.mprpg.player.PlayerManager;
 
@@ -89,7 +87,9 @@ public class EntityDamageByEntityListener implements Listener{
 								event.setCancelled(true);
 
 							} else { //Player is not dead.
-
+								
+								//TODO: 
+								/*
 								//get the damagers damage values
 								double damage = ItemLoreFactory.getInstance().getDamageBonus(damager);
 								double coldDamage = ItemLoreFactory.getInstance().getColdDamage((LivingEntity) damager);
@@ -139,6 +139,7 @@ public class EntityDamageByEntityListener implements Listener{
 											+ ChatColor.YELLOW +  " > " + ChatColor.RESET + playerHealth 
 											+ ChatColor.GREEN +  " >> " + ChatColor.RESET + playerHitPointsFinal);
 								}
+								
 
 								//Send the player a hp change message.
 								PlayerManager.displayActionBar(player);
@@ -152,6 +153,7 @@ public class EntityDamageByEntityListener implements Listener{
 									//Set player HP.
 									PlayerManager.setPlayerHitPoints(player, playerHitPointsFinal);
 								}
+								*/
 							}
 
 							//PLayer shot arrow.
@@ -215,7 +217,10 @@ public class EntityDamageByEntityListener implements Listener{
 				}
 
 				if (damager instanceof Player) {
+
+					//TODO
 					
+					/*
 					//get the damagers damage values
 					double playerDamage = ItemLoreFactory.getInstance().getDamageBonus((LivingEntity) damager);
 					double coldDamage = ItemLoreFactory.getInstance().getColdDamage((LivingEntity) damager);
@@ -260,6 +265,7 @@ public class EntityDamageByEntityListener implements Listener{
 						MonsterManager.toggleDamage(victimID, totalDamage);
 
 					}
+					*/
 
 				} else { //This damage type was not by a player.
 

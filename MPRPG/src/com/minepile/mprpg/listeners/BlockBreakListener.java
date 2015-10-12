@@ -36,20 +36,22 @@ public class BlockBreakListener implements Listener{
 		event.setExpToDrop(0);
 
 		switch(blockType) {
-		
+
 		///////////////////
 		/// Loot Chests ///
 		///////////////////
 		case CHEST:
 			//Chest was broken. Lets reset it after some time.
-			BlockRegenerationManager.setBlock(blockType, Material.AIR, block.getLocation());
-			
-			event.setCancelled(false);
+			if (!player.isOp() && !player.getGameMode().equals(GameMode.CREATIVE)) {
+				BlockRegenerationManager.setBlock(blockType, Material.AIR, block.getLocation());
+
+				event.setCancelled(false);
+			}
 			break;
-			
-		/////////////////////////
-		/// Mining Profession ///
-		/////////////////////////
+
+			/////////////////////////
+			/// Mining Profession ///
+			/////////////////////////
 
 		case COAL_ORE: //Mining profession
 			if(tool.equals(Material.WOOD_PICKAXE) || tool.equals(Material.STONE_PICKAXE) ||
@@ -154,7 +156,7 @@ public class BlockBreakListener implements Listener{
 				}
 			}
 			break;
-			
+
 			////////////////////////////
 			/// Herbalism Profession ///
 			////////////////////////////

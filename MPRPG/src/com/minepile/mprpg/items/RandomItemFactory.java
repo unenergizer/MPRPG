@@ -6,8 +6,10 @@ import java.util.ArrayList;
 import java.util.Random;
 
 import org.bukkit.ChatColor;
+import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
@@ -33,7 +35,7 @@ public class RandomItemFactory {
 	//String Attribute names
 	private static String strengthStr = ChatColor.GRAY + " Strength";
 	private static String agilityStr = ChatColor.GRAY + " Agility";
-	private static String staminaStr = ChatColor.GRAY + " Stamina";
+	private static String vitalityStr = ChatColor.GRAY + " Vitality";
 	private static String intellectStr = ChatColor.GRAY + " Intellect";
 	private static String spiritStr = ChatColor.GRAY + " Spirit";
 	private static String armorStr = ChatColor.GRAY + " Armor";
@@ -57,10 +59,14 @@ public class RandomItemFactory {
 	private static String personalityStr = ChatColor.GRAY + " Personality";
 	private static String goldFindStr = ChatColor.GRAY + " Gold Find";
 	private static String magicFindStr = ChatColor.GRAY + " Magic Find";
-	private static String criticalChanceStr = ChatColor.GRAY + " Critical Chance";
-	private static String criticalDamageStr = ChatColor.GRAY + " Critical Damage";
+	private static String criticalChanceStr = ChatColor.GRAY + " Critical Hit Chance";
+	private static String criticalDamageStr = ChatColor.GRAY + " Critical Hit Damage";
 	private static String knockbackStr = ChatColor.GRAY + " Knockback";
 	private static String lifestealStr = ChatColor.GRAY + " Lifesteal";
+	
+	private static String reflectStr = ChatColor.GRAY + " Reflection";
+	private static String blockStr = ChatColor.GRAY + " Block";
+	private static String dodgeStr = ChatColor.GRAY + " Dodge";
 
 	//Create instance
 	public static RandomItemFactory getInstance() {
@@ -123,6 +129,62 @@ public class RandomItemFactory {
 		int randomNum = rand.nextInt((max - min) + 1) + min;
 		return randomNum;
 	}
+	
+	public static void makeTestItem(Player player) {
+		ItemStack item = new ItemStack(Material.WOOD_SWORD);
+		ItemMeta im = item.getItemMeta();
+
+		//Set the items Name
+		im.setDisplayName(ChatColor.RED + "TEST ITEM");
+
+		//Set the item lore
+		ArrayList<String> lore = new ArrayList<String>();
+
+		lore.add(ChatColor.AQUA + "THIS ITEM IS ONLY FOR TESTING");
+		
+		lore.add(ChatColor.RED + "+" + "1" + strengthStr);
+		lore.add(ChatColor.RED + "+" + "2" + agilityStr);
+		lore.add(ChatColor.RED + "+" + "3" + vitalityStr);
+		lore.add(ChatColor.RED + "+" + "4" + intellectStr);
+		lore.add(ChatColor.RED + "+" + "5" + spiritStr);
+		lore.add(ChatColor.RED + "6" + armorStr);
+		lore.add(ChatColor.RED + "+" + "7" + damageStr);
+		
+		lore.add(ChatColor.RED + "+" + "8" + fireResistStr);
+		lore.add(ChatColor.RED + "+" + "9" + iceResistStr);
+		lore.add(ChatColor.RED + "+" + "10" + lightningResistStr);
+		lore.add(ChatColor.RED + "+" + "11" + poisonResistStr);
+		lore.add(ChatColor.RED + "+" + "12" + paralyzeResistStr);
+		lore.add(ChatColor.RED + "+" + "13" + blindnessResistStr);
+		
+		lore.add(ChatColor.RED + "+" + "14" + fireDamageStr);
+		lore.add(ChatColor.RED + "+" + "15" + iceDamageStr);
+		lore.add(ChatColor.RED + "+" + "16" + lightningDamageStr);
+		lore.add(ChatColor.RED + "+" + "17" + poisonDamageStr);
+		lore.add(ChatColor.RED + "+" + "18" + paralyzeDamageStr);
+		lore.add(ChatColor.RED + "+" + "19" + blindnessDamageStr);
+		
+		lore.add(ChatColor.RED + "+" + "20" + waterBreathingStr);
+		lore.add(ChatColor.RED + "+" + "21" + personalityStr);
+		lore.add(ChatColor.RED + "+" + "22" + goldFindStr);
+		lore.add(ChatColor.RED + "+" + "23" + magicFindStr);
+		lore.add(ChatColor.RED + "+" + "24" + criticalChanceStr);
+		lore.add(ChatColor.RED + "+" + "25" + criticalDamageStr);
+		lore.add(ChatColor.RED + "+" + "26" + knockbackStr);
+		lore.add(ChatColor.RED + "+" + "27" + lifestealStr);
+		
+		lore.add(ChatColor.RED + "+" + "28" + reflectStr);
+		lore.add(ChatColor.RED + "+" + "29" + blockStr);
+		lore.add(ChatColor.RED + "+" + "30" + dodgeStr);
+
+		//Set the item lore
+		im.setLore(lore);
+		//Set the item meta
+		item.setItemMeta(im);
+		
+		//Put the test item in the players slot.
+		player.getInventory().setItem(1, item);
+	}
 
 	/**
 	 * Generates random attributes based on the item tier and quality.
@@ -148,7 +210,7 @@ public class RandomItemFactory {
 		 * Base Stats:
 		 * 	Strength
 		 * 	Agility
-		 * 	Stamina
+		 * 	Vitality
 		 * 	Intellect
 		 * 	Spirit
 		 * 	+ Armor (must have every time)
@@ -176,14 +238,14 @@ public class RandomItemFactory {
 		int strengthMax = armorConfig.getInt(configPath + ".strengthMax");
 		int agilityMin = armorConfig.getInt(configPath + ".agilityMin");
 		int agilityMax = armorConfig.getInt(configPath + ".agilityMax");
-		int staminaMin = armorConfig.getInt(configPath + ".staminaMin");
-		int staminaMax = armorConfig.getInt(configPath + ".staminaMax");
+		int vitalityMin = armorConfig.getInt(configPath + ".vitalityMin");
+		int vitalityMax = armorConfig.getInt(configPath + ".vitalityMax");
 		int intellectMin = armorConfig.getInt(configPath + ".intellectMin");
 		int intellectMax = armorConfig.getInt(configPath + ".intellectMax");
 		int spiritMin = armorConfig.getInt(configPath + ".spiritMin");
 		int spiritMax = armorConfig.getInt(configPath + ".spiritMax");
-		int armorMin = armorConfig.getInt(configPath + ".armorMin");		//EVERY ARMOR ITEM MUST HAVE ARMOR STAT!!!
-		int armorMax = armorConfig.getInt(configPath + ".armorMax");		//EVERY ARMOR ITEM MUST HAVE ARMOR STAT!!!
+		int armorMin = armorConfig.getInt(configPath + ".armorMin");
+		int armorMax = armorConfig.getInt(configPath + ".armorMax");
 
 		//Resistances
 		int fireResistMin = armorConfig.getInt(configPath + ".fireResistMin");
@@ -211,7 +273,6 @@ public class RandomItemFactory {
 		int criticalChanceMin = armorConfig.getInt(configPath + ".criticalChanceMin");
 		int criticalChanceMax = armorConfig.getInt(configPath + ".criticalChanceMax");
 
-
 		////////////////////////////
 		/// Calculate Item Stats ///
 		////////////////////////////
@@ -219,7 +280,7 @@ public class RandomItemFactory {
 		//Base stats
 		int strength = randomInt(strengthMin, strengthMax);
 		int agility = randomInt(agilityMin, agilityMax);
-		int stamina = randomInt(staminaMin, staminaMax);
+		int vitality = randomInt(vitalityMin, vitalityMax);
 		int intellect = randomInt(intellectMin, intellectMax);
 		int spirit = randomInt(spiritMin, spiritMax);
 		int armor = randomInt(armorMin, armorMax);		//EVERY ARMOR ITEM MUST HAVE ARMOR STAT!!!
@@ -262,6 +323,7 @@ public class RandomItemFactory {
 		//Always add "armor" attribute to an armor item.
 		//Lets do this beforehand, it does not need to be picked, its automatic.
 		attributesBaseFinal.add(ChatColor.YELLOW + Integer.toString(armor) + armorStr);
+		attributesBaseFinal.add(ChatColor.YELLOW + "+" + vitality + vitalityStr);
 
 		//Lets start the break down and see what attributes can be on what tier and quality item.
 
@@ -273,7 +335,6 @@ public class RandomItemFactory {
 
 			attributesBaseTemp.add(ChatColor.YELLOW + "+" + strength + strengthStr);
 			attributesBaseTemp.add(ChatColor.YELLOW + "+" + agility + agilityStr);
-			attributesBaseTemp.add(ChatColor.YELLOW + "+" + stamina + staminaStr);
 			attributesBaseTemp.add(ChatColor.YELLOW + "+" + intellect + intellectStr);
 			attributesBaseTemp.add(ChatColor.YELLOW + "+" + spirit + spiritStr);
 
@@ -343,7 +404,6 @@ public class RandomItemFactory {
 
 			attributesBaseTemp.add(ChatColor.YELLOW + "+" + strength + strengthStr);
 			attributesBaseTemp.add(ChatColor.YELLOW + "+" + agility + agilityStr);
-			attributesBaseTemp.add(ChatColor.YELLOW + "+" + stamina + staminaStr);
 			attributesBaseTemp.add(ChatColor.YELLOW + "+" + intellect + intellectStr);
 			attributesBaseTemp.add(ChatColor.YELLOW + "+" + spirit + spiritStr);
 
@@ -420,7 +480,6 @@ public class RandomItemFactory {
 
 			attributesBaseTemp.add(ChatColor.YELLOW + "+" + strength + strengthStr);
 			attributesBaseTemp.add(ChatColor.YELLOW + "+" + agility + agilityStr);
-			attributesBaseTemp.add(ChatColor.YELLOW + "+" + stamina + staminaStr);
 			attributesBaseTemp.add(ChatColor.YELLOW + "+" + intellect + intellectStr);
 			attributesBaseTemp.add(ChatColor.YELLOW + "+" + spirit + spiritStr);
 
@@ -589,7 +648,6 @@ public class RandomItemFactory {
 
 			attributesBaseTemp.add(ChatColor.YELLOW + "+" + strength + strengthStr);
 			attributesBaseTemp.add(ChatColor.YELLOW + "+" + agility + agilityStr);
-			attributesBaseTemp.add(ChatColor.YELLOW + "+" + stamina + staminaStr);
 			attributesBaseTemp.add(ChatColor.YELLOW + "+" + intellect + intellectStr);
 			attributesBaseTemp.add(ChatColor.YELLOW + "+" + spirit + spiritStr);
 
@@ -758,7 +816,6 @@ public class RandomItemFactory {
 
 			attributesBaseTemp.add(ChatColor.YELLOW + "+" + strength + strengthStr);
 			attributesBaseTemp.add(ChatColor.YELLOW + "+" + agility + agilityStr);
-			attributesBaseTemp.add(ChatColor.YELLOW + "+" + stamina + staminaStr);
 			attributesBaseTemp.add(ChatColor.YELLOW + "+" + intellect + intellectStr);
 			attributesBaseTemp.add(ChatColor.YELLOW + "+" + spirit + spiritStr);
 
@@ -927,7 +984,6 @@ public class RandomItemFactory {
 
 			attributesBaseTemp.add(ChatColor.YELLOW + "+" + strength + strengthStr);
 			attributesBaseTemp.add(ChatColor.YELLOW + "+" + agility + agilityStr);
-			attributesBaseTemp.add(ChatColor.YELLOW + "+" + stamina + staminaStr);
 			attributesBaseTemp.add(ChatColor.YELLOW + "+" + intellect + intellectStr);
 			attributesBaseTemp.add(ChatColor.YELLOW + "+" + spirit + spiritStr);
 
@@ -1187,7 +1243,7 @@ public class RandomItemFactory {
 		 * Base Stats:
 		 * 	Strength
 		 * 	Agility
-		 * 	Stamina
+		 * 	Vitality
 		 * 	Intellect
 		 * 	Spirit
 		 * 	+ Damage (must have every time)
@@ -1214,8 +1270,8 @@ public class RandomItemFactory {
 		int strengthMax = weaponConfig.getInt(configPath + ".strengthMax");
 		int agilityMin = weaponConfig.getInt(configPath + ".agilityMin");
 		int agilityMax = weaponConfig.getInt(configPath + ".agilityMax");
-		int staminaMin = weaponConfig.getInt(configPath + ".staminaMin");
-		int staminaMax = weaponConfig.getInt(configPath + ".staminaMax");
+		int vitalityMin = weaponConfig.getInt(configPath + ".vitalityMin");
+		int vitalityMax = weaponConfig.getInt(configPath + ".vitalityMax");
 		int intellectMin = weaponConfig.getInt(configPath + ".intellectMin");
 		int intellectMax = weaponConfig.getInt(configPath + ".intellectMax");
 		int spiritMin = weaponConfig.getInt(configPath + ".spiritMin");
@@ -1255,7 +1311,7 @@ public class RandomItemFactory {
 		//Base stats
 		int strength = randomInt(strengthMin, strengthMax);
 		int agility = randomInt(agilityMin, agilityMax);
-		int stamina = randomInt(staminaMin, staminaMax);
+		int vitality = randomInt(vitalityMin, vitalityMax);
 		int intellect = randomInt(intellectMin, intellectMax);
 		int spirit = randomInt(spiritMin, spiritMax);
 		int damageMin = randomInt(damageLowMin, damageLowMax);
@@ -1308,7 +1364,7 @@ public class RandomItemFactory {
 
 			attributesBaseTemp.add(ChatColor.RED + "+" + strength + strengthStr);
 			attributesBaseTemp.add(ChatColor.RED + "+" + agility + agilityStr);
-			attributesBaseTemp.add(ChatColor.RED + "+" + stamina + staminaStr);
+			attributesBaseTemp.add(ChatColor.RED + "+" + vitality + vitalityStr);
 			attributesBaseTemp.add(ChatColor.RED + "+" + intellect + intellectStr);
 			attributesBaseTemp.add(ChatColor.RED + "+" + spirit + spiritStr);
 
@@ -1377,7 +1433,7 @@ public class RandomItemFactory {
 
 			attributesBaseTemp.add(ChatColor.RED + "+" + strength + strengthStr);
 			attributesBaseTemp.add(ChatColor.RED + "+" + agility + agilityStr);
-			attributesBaseTemp.add(ChatColor.RED + "+" + stamina + staminaStr);
+			attributesBaseTemp.add(ChatColor.RED + "+" + vitality + vitalityStr);
 			attributesBaseTemp.add(ChatColor.RED + "+" + intellect + intellectStr);
 			attributesBaseTemp.add(ChatColor.RED + "+" + spirit + spiritStr);
 
@@ -1453,7 +1509,7 @@ public class RandomItemFactory {
 
 			attributesBaseTemp.add(ChatColor.RED + "+" + strength + strengthStr);
 			attributesBaseTemp.add(ChatColor.RED + "+" + agility + agilityStr);
-			attributesBaseTemp.add(ChatColor.RED + "+" + stamina + staminaStr);
+			attributesBaseTemp.add(ChatColor.RED + "+" + vitality + vitalityStr);
 			attributesBaseTemp.add(ChatColor.RED + "+" + intellect + intellectStr);
 			attributesBaseTemp.add(ChatColor.RED + "+" + spirit + spiritStr);
 
@@ -1619,7 +1675,7 @@ public class RandomItemFactory {
 
 			attributesBaseTemp.add(ChatColor.RED + "+" + strength + strengthStr);
 			attributesBaseTemp.add(ChatColor.RED + "+" + agility + agilityStr);
-			attributesBaseTemp.add(ChatColor.RED + "+" + stamina + staminaStr);
+			attributesBaseTemp.add(ChatColor.RED + "+" + vitality + vitalityStr);
 			attributesBaseTemp.add(ChatColor.RED + "+" + intellect + intellectStr);
 			attributesBaseTemp.add(ChatColor.RED + "+" + spirit + spiritStr);
 
@@ -1785,7 +1841,7 @@ public class RandomItemFactory {
 
 			attributesBaseTemp.add(ChatColor.RED + "+" + strength + strengthStr);
 			attributesBaseTemp.add(ChatColor.RED + "+" + agility + agilityStr);
-			attributesBaseTemp.add(ChatColor.RED + "+" + stamina + staminaStr);
+			attributesBaseTemp.add(ChatColor.RED + "+" + vitality + vitalityStr);
 			attributesBaseTemp.add(ChatColor.RED + "+" + intellect + intellectStr);
 			attributesBaseTemp.add(ChatColor.RED + "+" + spirit + spiritStr);
 
@@ -1951,7 +2007,7 @@ public class RandomItemFactory {
 
 			attributesBaseTemp.add(ChatColor.RED + "+" + strength + strengthStr);
 			attributesBaseTemp.add(ChatColor.RED + "+" + agility + agilityStr);
-			attributesBaseTemp.add(ChatColor.RED + "+" + stamina + staminaStr);
+			attributesBaseTemp.add(ChatColor.RED + "+" + vitality + vitalityStr);
 			attributesBaseTemp.add(ChatColor.RED + "+" + intellect + intellectStr);
 			attributesBaseTemp.add(ChatColor.RED + "+" + spirit + spiritStr);
 
@@ -2202,8 +2258,8 @@ public class RandomItemFactory {
 		armorConfig.set("T1.JUNK.strengthMax", 5);
 		armorConfig.set("T1.JUNK.agilityMin", 1);
 		armorConfig.set("T1.JUNK.agilityMax", 5);
-		armorConfig.set("T1.JUNK.staminaMin", 1);
-		armorConfig.set("T1.JUNK.staminaMax", 5);
+		armorConfig.set("T1.JUNK.vitalityMin", 1);
+		armorConfig.set("T1.JUNK.vitalityMax", 5);
 		armorConfig.set("T1.JUNK.intellectMin", 1);
 		armorConfig.set("T1.JUNK.intellectMax", 5);
 		armorConfig.set("T1.JUNK.spiritMin", 1);
@@ -2246,8 +2302,8 @@ public class RandomItemFactory {
 		weaponConfig.set("T1.JUNK.strengthMax", 5);
 		weaponConfig.set("T1.JUNK.agilityMin", 1);
 		weaponConfig.set("T1.JUNK.agilityMax", 5);
-		weaponConfig.set("T1.JUNK.staminaMin", 1);
-		weaponConfig.set("T1.JUNK.staminaMax", 5);
+		weaponConfig.set("T1.JUNK.vitalityMin", 1);
+		weaponConfig.set("T1.JUNK.vitalityMax", 5);
 		weaponConfig.set("T1.JUNK.intellectMin", 1);
 		weaponConfig.set("T1.JUNK.intellectMax", 5);
 		weaponConfig.set("T1.JUNK.spiritMin", 1);

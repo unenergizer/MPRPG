@@ -1,23 +1,15 @@
 package com.minepile.mprpg.items;
 
 import java.util.List;
-import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.Sound;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.potion.PotionEffect;
-import org.bukkit.potion.PotionEffectType;
 
 import com.minepile.mprpg.MPRPG;
-import com.minepile.mprpg.items.ItemAttributes.ItemAttribute;
-import com.minepile.mprpg.player.PlayerManager;
 
 public class ItemLoreFactory {
 
@@ -25,35 +17,46 @@ public class ItemLoreFactory {
 	public static MPRPG plugin;
 	static ItemLoreFactory loreManagerV2Instance = new ItemLoreFactory();
 
-	//String regex.
-	private static Pattern armorRegex = 		Pattern.compile("[+](\\d+)[ ](armor)");
-	private static Pattern blindnessRegex = 	Pattern.compile("[+](\\d+)[ ](blindness)");
-	private static Pattern blockChanceRegex = 	Pattern.compile("[+](\\d+)[ ](block chance)");
-	private static Pattern coldDamageRegex = 	Pattern.compile("[+](\\d+)[ ](cold damage)");
-	private static Pattern coldResistRegex = 	Pattern.compile("[+](\\d+)[ ](cold resistance)");
-	private static Pattern critChanceRegex = 	Pattern.compile("[+](\\d+)[ ](critical hit chance)");
+	//Base attributes regex.
+	private static Pattern strengthRegex = 		Pattern.compile("[+](\\d+)[ ](strength)");
+	private static Pattern agilityRegex = 		Pattern.compile("[+](\\d+)[ ](agility)");
+	private static Pattern vitalityRegex = 		Pattern.compile("[+](\\d+)[ ](vitality)");
+	private static Pattern intellectRegex = 	Pattern.compile("[+](\\d+)[ ](intellect)");
+	private static Pattern spiritRegex = 		Pattern.compile("[+](\\d+)[ ](spirit)");
+	private static Pattern armorRegex = 		Pattern.compile("(\\d+)[ ](armor)");
 	private static Pattern damageRegex = 		Pattern.compile("[+](\\d+)[ ](damage)");
-	private static Pattern damageRangeRegex = 	Pattern.compile("[+](\\d+)(-)(\\d+)[ ](damage)"); //TODO: Implement me. "2-5 Damage"
-	private static Pattern dodgeChanceRegex =	Pattern.compile("[+](\\d+)[ ](dodge chance)");
-	private static Pattern fireDamageRegex = 	Pattern.compile("[+](\\d+)[ ](fire damage)");
-	private static Pattern fireResistRegex = 	Pattern.compile("[+](\\d+)[ ](fire resistance)");
-	private static Pattern goldFindRegex = 		Pattern.compile("[+](\\d+)[ ](gold find)");
-	private static Pattern healthRegex = 		Pattern.compile("[+](\\d+)[ ](health)");
-	private static Pattern healthRegenRegex = 	Pattern.compile("[+](\\d+)[ ](health regeneration)");
-	private static Pattern itemFindRegex = 		Pattern.compile("[+](\\d+)[ ](item find)");
-	private static Pattern knockbackRegex = 	Pattern.compile("[+](\\d+)[ ](knockback)");
-	private static Pattern lifestealRegex = 	Pattern.compile("[+](\\d+)[ ](lifesteal)");
-	private static Pattern manaRegex = 			Pattern.compile("[+](\\d+)[ ](mana)");
-	private static Pattern manaRegenRegex = 	Pattern.compile("[+](\\d+)[ ](mana regeneration)");
-	private static Pattern manastealRegex = 	Pattern.compile("[+](\\d+)[ ](mana steal)");
+	private static Pattern damageRangeRegex = 	Pattern.compile("[+](\\d+)( - )(\\d+)[ ](damage)");
+
+	//Damage attributes regex
+	private static Pattern reflectRegex = 		Pattern.compile("[+](\\d+)[ ](reflect)");
+	private static Pattern blockRegex = 		Pattern.compile("[+](\\d+)[ ](block)");
+	private static Pattern dodgeRegex = 		Pattern.compile("[+](\\d+)[ ](dodge)");
+	private static Pattern criticalDamageRegex =Pattern.compile("[+](\\d+)[ ](critical hit damage)");
+	private static Pattern criticalChanceRegex =Pattern.compile("[+](\\d+)[ ](critical hit chance)");
+	
+	//Magic damage
+	private static Pattern fireDamageRegex =	Pattern.compile("[+](\\d+)[ ](fire damage)");
+	private static Pattern iceDamageRegex = 	Pattern.compile("[+](\\d+)[ ](ice damage)");
+	private static Pattern lightningDamageRegex = Pattern.compile("[+](\\d+)[ ](lightning damage)");
 	private static Pattern poisonDamageRegex = 	Pattern.compile("[+](\\d+)[ ](poison damage)");
-	private static Pattern poisonResistRegex = 	Pattern.compile("[+](\\d+)[ ](poison resistance)");
-	private static Pattern reflectionRegex = 	Pattern.compile("[+](\\d+)[ ](damage reflection)");
-	private static Pattern slownessRegex = 		Pattern.compile("[+](\\d+)[ ](slowness)");
-	private static Pattern staminaRegex = 		Pattern.compile("[+](\\d+)[ ](stamina)");
-	private static Pattern staminaRegenRegex = 	Pattern.compile("[+](\\d+)[ ](stamina regeneration)");
-	private static Pattern thornDamageRegex = 	Pattern.compile("[+](\\d+)[ ](thorn damage)");
-	private static Pattern thornResistRegex = 	Pattern.compile("[+](\\d+)[ ](thorn resistance)");
+	private static Pattern paralyzeDamageRegex =Pattern.compile("[+](\\d+)[ ](paralyze)");
+	private static Pattern blindnessDamageRegex =Pattern.compile("[+](\\d+)[ ](blindness)");
+
+	//Magic Resistnce
+	private static Pattern fireResistanceRegex =Pattern.compile("[+](\\d+)[ ](fire resistance)");
+	private static Pattern iceResistanceRegex =Pattern.compile("[+](\\d+)[ ](ice resistance)");
+	private static Pattern lightningResistanceRegex =Pattern.compile("[+](\\d+)[ ](lightning resistance)");
+	private static Pattern poisonResistanceRegex =Pattern.compile("[+](\\d+)[ ](poison resistance)");
+	private static Pattern paralyzeResistanceRegex =Pattern.compile("[+](\\d+)[ ](paralyze resistance)");
+	private static Pattern blindnessResistanceRegex =Pattern.compile("[+](\\d+)[ ](blindness resistance)");
+
+	//Extras
+	private static Pattern waterbreathingRegex =Pattern.compile("[+](\\d+)[ ](waterbreathing)");
+	private static Pattern personalityRegex =Pattern.compile("[+](\\d+)[ ](personality)");
+	private static Pattern goldFindRegex =Pattern.compile("[+](\\d+)[ ](gold find)");
+	private static Pattern magicFindRegex =Pattern.compile("[+](\\d+)[ ](magic find)");
+	private static Pattern knockbackRegex =Pattern.compile("[+](\\d+)[ ](knockback)");
+	private static Pattern lifestealRegex =Pattern.compile("[+](\\d+)[ ](lifesteal)");
 
 	//Create instance
 	public static ItemLoreFactory getInstance() {
@@ -67,214 +70,308 @@ public class ItemLoreFactory {
 	}	
 
 	/**
-	 * This will apply the players current attribute totals placed on armor.
-	 * @param player
+	 * This is used to test and show if attributes are being read from armor and weapon.
+	 * 
+	 * @param player The player who's armor and weapon we are reading from.
 	 */
-	public void applyHPBonus(Player player, Boolean playSoundEffect) {
-		//Get armor HP bonuses
-		Double hpToAdd = Double.valueOf(getHealthPointsBonus(player));
-		UUID uuid = player.getUniqueId();
-		
-		double currentHP = PlayerManager.getHealthPoints(uuid);
-		double newMaxHP = PlayerManager.getBaseHealthPoints() + hpToAdd.doubleValue();
-		double oldMaxHP = PlayerManager.getMaxHealthPoints(uuid);
-
-		//If the players HP is greater than the base HP + HP bonus,
-		//set the players HP.  BaseHP + Armor HP.
-		if (currentHP > newMaxHP) {
-
-			//entity.setHealth(newHP);
-			PlayerManager.setPlayerHitPoints(player, newMaxHP);
-			player.sendMessage(ChatColor.BLUE + "" + ChatColor.BOLD + "New HP: " + ChatColor.RESET + newMaxHP);
-
-			//Set players heart's level to 20 (full health).
-			player.setHealth(20);
-
-		}
-
-		//Lets grab the players HP again, just incase it was updated above.
-		double updatedHP = PlayerManager.getHealthPoints(uuid);
-		//This is the percent determines how many play hearts are shown.
-		double healthPercent = ((20 * updatedHP) / newMaxHP);
-
-		//If the players maximum HP has changed, then lets update
-		//the user on that change.  If the oldMaxHP equals the newMaxHP
-		//then no change has been made and the user does not need updates.
-		if (newMaxHP != oldMaxHP) {
-
-			PlayerManager.setMaxHealthPoints(uuid, newMaxHP);
-			player.sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "New MaxHP: " + ChatColor.RESET + Integer.toString((int) newMaxHP));
-
-			//If the players HP percent is over 20,
-			//then just set the players hearts to 20.
-			if (healthPercent >= 20) {
-				player.setHealth(20);
-
-			} else if (healthPercent < 0.01) { //Player died.
-
-				PlayerManager.killPlayer(player);
-			} else {
-				player.setHealth(healthPercent);
-			}
-
-			if (playSoundEffect == true) {
-				//Play sound effect.
-				player.playSound(player.getLocation(), Sound.ANVIL_LAND, .5F, 1F);
-			}
-		}
-
-		//Show the total attributes the player currently has.
-		//displayAttributes(player);
-	}
-	
-	public static boolean useRangeOfDamage(LivingEntity entity) {
-		//If the entity is not valid, lets exit the method.
-		if (!entity.isValid()) {
-			return false;
-		}
-		//Lets loop through the armor slots and get the armor contents.
-		for (ItemStack item : entity.getEquipment().getArmorContents()) {
-
-			//If the armor slot is not null and the item has meta and the item has lore, continue.
-			if ((item != null) && (item.hasItemMeta()) && (item.getItemMeta().hasLore())) {
-				//Create an array of strings from the items lore.
-				List<String> lore = item.getItemMeta().getLore();
-				//Convert the array of strings to a single string, all lower case.
-				String allLore = lore.toString().toLowerCase();
-				//Prepare the string to math the damage range.
-				Matcher rangeMatcher = damageRangeRegex.matcher(allLore);
-				//If a match is found, return true.
-				if (rangeMatcher.find()) {
-					return true;
-				}
-			}
-		}
-		//Get the item in the players hand (looking for a weapon).
-		ItemStack item = entity.getEquipment().getItemInHand();
-		//If the item is not null and the item has meta and the item has lore, continue.
-		if ((item != null) && (item.hasItemMeta()) && (item.getItemMeta().hasLore())) {
-			//Get the items lore.
-			Object lore = item.getItemMeta().getLore();
-			//Convert the array of strings to a single string, all lower case.
-			String allLore = lore.toString().toLowerCase();
-			//Prepare the string to math the damage range.
-			Matcher rangeMatcher = damageRangeRegex.matcher(allLore);
-			//If a match is found, return true.
-			if (rangeMatcher.find()) {
-				return true;
-			}
-		}
-		return false;
-	}
-	
-	private int getPlayerHearts(Player player, int maxPlayerHP) {
-		if (maxPlayerHP >= 101 && maxPlayerHP <= 399) {
-			return 8;
-		} else if (maxPlayerHP >= 400) {
-			return 12;
-		} else if (maxPlayerHP >= 100) {
-			return 16;
-		} else if (maxPlayerHP >= 100) {
-			return 20;
-		} else if (maxPlayerHP >= 100) {
-			return 24;
-		} else if (maxPlayerHP >= 100) {
-			return 28;
-		} else if (maxPlayerHP >= 100) {
-			return 32;
-		} else if (maxPlayerHP >= 100) {
-			return 36;
-		} else if (maxPlayerHP >= 100) {
-			return 40;
-		} else {
-			return 4;
-		}
-	}
-
 	public void displayAttributes(Player player) {
-		//TODO: Show player all of their attribute totals.
 
 		String stringPrefix = ChatColor.GREEN + "";
 		String seperator = ChatColor.DARK_GRAY + ": ";
 		String stringSuffix = ChatColor.YELLOW + "";
 
+		player.sendMessage(" ");
+		player.sendMessage(" ");
+		player.sendMessage(" ");
 		//Show player their total attributes.
 		player.sendMessage(ChatColor.GREEN + "" + ChatColor.BOLD + "Your Attributes" 
 				+ ChatColor.DARK_GRAY + ChatColor.BOLD + ":");
-		player.sendMessage("");
-		player.sendMessage(stringPrefix +"Armor" + seperator + stringSuffix + Integer.toString((int) getArmorBonus(player)));
-		player.sendMessage(stringPrefix +"Blindness" + seperator + stringSuffix + Integer.toString((int) getBlindnessBonus(player)));
-		player.sendMessage(stringPrefix +"Block" + seperator + stringSuffix + Integer.toString((int) getBlockBonus(player)));
-		player.sendMessage(stringPrefix +"Cold Damage" + seperator + stringSuffix + Integer.toString((int) getColdDamage(player)));
-		player.sendMessage(stringPrefix +"Cold Resist" + stringSuffix + Integer.toString((int) getColdResist(player)));
-		player.sendMessage(stringPrefix +"Critical Hit Chance" + seperator + stringSuffix + Integer.toString((int) getCriticalBonus(player)));
-		player.sendMessage(stringPrefix +"Damage" + seperator + stringSuffix + Integer.toString((int) getDamageBonus(player)));
-		player.sendMessage(stringPrefix +"Dodge" + seperator + stringSuffix + Integer.toString((int) getDodgeBonus(player)));
-		player.sendMessage(stringPrefix +"Fire Damage" + seperator + stringSuffix + Integer.toString((int) getFireDamage(player)));
-		player.sendMessage(stringPrefix +"Fire Resist" + seperator + stringSuffix + Integer.toString((int) getFireResist(player)));
-		player.sendMessage(stringPrefix +"Gold Find" + seperator + stringSuffix + Integer.toString((int) getGoldFindBonus(player)));
-		player.sendMessage(stringPrefix +"HP" + seperator + stringSuffix + Integer.toString((int) getHealthPointsBonus(player)));
-		player.sendMessage(stringPrefix +"HP Regen" + seperator + stringSuffix + Integer.toString((int) getHealthPointsRegenerate(player)));
-		player.sendMessage(stringPrefix +"Item Find" + seperator + stringSuffix + Integer.toString((int) getItemFindBonus(player)));
-		player.sendMessage(stringPrefix +"Knockback" + seperator + stringSuffix + Integer.toString((int) getKnockBackBonus(player)));
-		player.sendMessage(stringPrefix +"Lifesteal" + seperator + stringSuffix + Integer.toString((int) getLifeStealBonus(player)));
-		player.sendMessage(stringPrefix +"Mana" + seperator + stringSuffix + Integer.toString((int) getManaPointsBonus(player)));
-		player.sendMessage(stringPrefix +"Mana Regen" + seperator + stringSuffix + Integer.toString((int) getManaPointsRegenerate(player)));
-		player.sendMessage(stringPrefix +"Manasteal" + seperator + stringSuffix + Integer.toString((int) getManasteal(player)));
-		player.sendMessage(stringPrefix +"Poison Damage" + seperator + stringSuffix + Integer.toString((int) getPoisonDamage(player)));
-		player.sendMessage(stringPrefix +"Poison Resist" + seperator + stringSuffix + Integer.toString((int) getPoisonResist(player)));
-		player.sendMessage(stringPrefix +"Reflection" + seperator + stringSuffix + Integer.toString((int) getReflectionBonus(player)));
-		player.sendMessage(stringPrefix +"Slow" + seperator + stringSuffix + Integer.toString((int) getSlowBonus(player)));
-		player.sendMessage(stringPrefix +"Stamina" + seperator + stringSuffix + Integer.toString((int) getStaminaBonus(player)));
-		player.sendMessage(stringPrefix +"Stamina Regen" + seperator + stringSuffix + Integer.toString((int) getStaminaRegenerate(player)));
-		player.sendMessage(stringPrefix +"Thorn Damage" + seperator + stringSuffix + Integer.toString((int) getThornDamage(player)));
-		player.sendMessage(stringPrefix +"Thorn Resist" + seperator + stringSuffix + Integer.toString((int) getThornResist(player)));
+		player.sendMessage("BASE:");
+		player.sendMessage(stringPrefix +"Strength" + seperator + stringSuffix + Integer.toString((int) getStrength(player)));
+		player.sendMessage(stringPrefix +"Agility" + seperator + stringSuffix + Integer.toString((int) getAgility(player)));
+		player.sendMessage(stringPrefix +"Vitality" + seperator + stringSuffix + Integer.toString((int) getVitality(player)));
+		player.sendMessage(stringPrefix +"Intellect" + seperator + stringSuffix + Integer.toString((int) getIntellect(player)));
+		player.sendMessage(stringPrefix +"Spirit" + seperator + stringSuffix + Integer.toString((int) getSpirit(player)));
+		player.sendMessage("Combat:");
+		player.sendMessage(stringPrefix +"Armor" + seperator + stringSuffix + Integer.toString((int) getArmor(player)));
+		player.sendMessage(stringPrefix +"Damage" + seperator + stringSuffix + Integer.toString((int) getDamage(player)));
+		//player.sendMessage(stringPrefix +"DamageRange" + seperator + stringSuffix + Integer.toString((int) getDamageRange(player)));
+		player.sendMessage(stringPrefix +"Reflect" + seperator + stringSuffix + Integer.toString((int) getReflect(player)));
+		player.sendMessage(stringPrefix +"Block" + seperator + stringSuffix + Integer.toString((int) getBlock(player)));
+		player.sendMessage(stringPrefix +"Dodge" + seperator + stringSuffix + Integer.toString((int) getDodge(player)));
+		player.sendMessage(stringPrefix +"CriticalDamage" + seperator + stringSuffix + Integer.toString((int) getCriticalDamage(player)));
+		player.sendMessage(stringPrefix +"CriticalChance" + seperator + stringSuffix + Integer.toString((int) getCriticalHitChance(player)));
+		player.sendMessage(stringPrefix +"Knockback" + seperator + stringSuffix + Integer.toString((int) getKnockback(player)));
+		player.sendMessage(stringPrefix +"Lifesteal" + seperator + stringSuffix + Integer.toString((int) getLifesteal(player)));
+		player.sendMessage("Magic Damage:");
+		player.sendMessage(stringPrefix +"FireDamage" + seperator + stringSuffix + Integer.toString((int) getFireDamage(player)));
+		player.sendMessage(stringPrefix +"IceDamage" + seperator + stringSuffix + Integer.toString((int) getIceDamage(player)));
+		player.sendMessage(stringPrefix +"LightningDamage" + seperator + stringSuffix + Integer.toString((int) getLightningDamage(player)));
+		player.sendMessage(stringPrefix +"PoisonDamage" + seperator + stringSuffix + Integer.toString((int) getPoisonDamage(player)));
+		player.sendMessage(stringPrefix +"ParalyzeDamage" + seperator + stringSuffix + Integer.toString((int) getParalyzeDamage(player)));
+		player.sendMessage(stringPrefix +"BlindnessDamage" + seperator + stringSuffix + Integer.toString((int) getBlindnessDamage(player)));
+		player.sendMessage("Magic Resistance:");
+		player.sendMessage(stringPrefix +"FireResistance" + seperator + stringSuffix + Integer.toString((int) getFireResistance(player)));
+		player.sendMessage(stringPrefix +"IceResistance" + seperator + stringSuffix + Integer.toString((int) getIceResistance(player)));
+		player.sendMessage(stringPrefix +"LightningResistance" + seperator + stringSuffix + Integer.toString((int) getLightningResistance(player)));
+		player.sendMessage(stringPrefix +"PoisonResistance" + seperator + stringSuffix + Integer.toString((int) getPoisonResistance(player)));
+		player.sendMessage(stringPrefix +"ParalyzeResistance" + seperator + stringSuffix + Integer.toString((int) getParalyzeResistance(player)));
+		player.sendMessage(stringPrefix +"BlindnessResistance" + seperator + stringSuffix + Integer.toString((int) getBlindnessResistance(player)));
+		player.sendMessage("Extras:");
+		player.sendMessage(stringPrefix +"Waterbreathing" + seperator + stringSuffix + Integer.toString((int) getWaterbreathing(player)));
+		player.sendMessage(stringPrefix +"Personality" + seperator + stringSuffix + Integer.toString((int) getPersonality(player)));
+		player.sendMessage(stringPrefix +"GoldFind" + seperator + stringSuffix + Integer.toString((int) getGoldFind(player)));
+		player.sendMessage(stringPrefix +"MagicFind" + seperator + stringSuffix + Integer.toString((int) getMagicFind(player)));
 	}
+	
+	public static double getStrength(LivingEntity entity) {
+		Integer value = Integer.valueOf(0);
 
-	public void applyEffect(LivingEntity entity, ItemAttributes itemAttribute, int duration, int amplifier) {
-		if (itemAttribute.equals(ItemAttribute.BLINDNESS_EFFECT)) {
-			entity.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, duration, amplifier));
+		//Loop through the armor slots and find armor.
+		for (ItemStack item : entity.getEquipment().getArmorContents()) {
 
-		} else if (itemAttribute.equals(ItemAttribute.BLOCK_EFFECT)) {
-			Bukkit.getWorlds().get(0).playSound(entity.getLocation(), Sound.ANVIL_LAND, .8f, .8f);
+			//If the item is not null and has meta and has lore, continue.
+			if ((item != null) && (item.hasItemMeta()) && (item.getItemMeta().hasLore())) {
 
-		} else if (itemAttribute.equals(ItemAttribute.COLD_EFFECT)) {
-			entity.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, duration, amplifier));
+				//Create an array list of "Lore" strings and add them to it.
+				List<String> lore = item.getItemMeta().getLore();
 
-		} else if (itemAttribute.equals(ItemAttribute.CRITICAL_EFFECT)) {
-			Bukkit.getWorlds().get(0).playSound(entity.getLocation(), Sound.HURT_FLESH, .8f, .8f);
+				//Convert the array to a string, and make it all lowercase.
+				String allLore = ChatColor.stripColor(lore.toString().toLowerCase());
+				
+				//Prepare for text matching using regular expressions.
+				Matcher matcher = strengthRegex.matcher(allLore);
 
-		} else if (itemAttribute.equals(ItemAttribute.DAMAGE_EFFECT)) {
-			//TODO: Cool blood particle effect.
-
-		} else if (itemAttribute.equals(ItemAttribute.DODGE_EFFECT)) {
-			Bukkit.getWorlds().get(0).playSound(entity.getLocation(), Sound.BAT_TAKEOFF, .8f, .8f);
-
-		} else if (itemAttribute.equals(ItemAttribute.FIRE_EFFECT)) {
-			entity.setFireTicks(duration * 20); //Duration times 20 (ticks per second)
-
-		} else if (itemAttribute.equals(ItemAttribute.KNOCKBACK_EFFECT)) {
-			Bukkit.getWorlds().get(0).playSound(entity.getLocation(), Sound.SHEEP_SHEAR, .8f, .8f);
-
-		} else if (itemAttribute.equals(ItemAttribute.LIFESTEAL_EFFECT)) {
-			Bukkit.getWorlds().get(0).playSound(entity.getLocation(), Sound.PORTAL_TRAVEL, .8f, .8f);
-
-		} else if (itemAttribute.equals(ItemAttribute.MANASTEAL_EFFECT)) {
-			Bukkit.getWorlds().get(0).playSound(entity.getLocation(), Sound.PORTAL_TRIGGER, .8f, .8f);
-
-		} else if (itemAttribute.equals(ItemAttribute.POISION_EFFECT)) {
-			entity.addPotionEffect(new PotionEffect(PotionEffectType.POISON, duration, amplifier));
-
-		} else if (itemAttribute.equals(ItemAttribute.SLOW_EFFECT)) {
-			entity.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, duration, amplifier));
-
-		} else if (itemAttribute.equals(ItemAttribute.THORN_EFFECT)) {
-			Bukkit.getWorlds().get(0).playSound(entity.getLocation(), Sound.DIG_STONE, .8f, .8f);
-
+				//Find the new value.
+				if (matcher.find()) {
+					//Add the value to the total.
+					value = Integer.valueOf(value.intValue() + Integer.valueOf(matcher.group(1)).intValue());
+				}
+			}
 		}
+		
+		//Check the item in the players hand.
+		ItemStack item = entity.getEquipment().getItemInHand();
+		//If the item is not null and has meta and has lore, continue.
+		if ((item != null) && (item.hasItemMeta()) && (item.getItemMeta().hasLore())) {
+			
+			//Create an array list of "Lore" strings and add them to it.
+			Object lore = item.getItemMeta().getLore();
+			
+			//Convert the array to a string, and make it all lowercase.
+			String allLore =  ChatColor.stripColor(lore.toString().toLowerCase());
+			
+			//Prepare for text matching using regular expressions.
+			Matcher valueMatcher = strengthRegex.matcher(allLore);
+			
+			//Find the new value.
+			if (valueMatcher.find()) {
+				//Add the value to the total.
+				value += Integer.valueOf(valueMatcher.group(1)).intValue();
+			}
+		}
+		//Return the value.
+		return value.intValue();
 	}
+	
+	public static double getAgility(LivingEntity entity) {
+		Integer value = Integer.valueOf(0);
 
-	public double getArmorBonus(LivingEntity entity) {
+		//Loop through the armor slots and find armor.
+		for (ItemStack item : entity.getEquipment().getArmorContents()) {
+
+			//If the item is not null and has meta and has lore, continue.
+			if ((item != null) && (item.hasItemMeta()) && (item.getItemMeta().hasLore())) {
+
+				//Create an array list of "Lore" strings and add them to it.
+				List<String> lore = item.getItemMeta().getLore();
+
+				//Convert the array to a string, and make it all lowercase.
+				String allLore = ChatColor.stripColor(lore.toString().toLowerCase());
+
+				//Prepare for text matching using regular expressions.
+				Matcher matcher = agilityRegex.matcher(allLore);
+
+				//Find the new value.
+				if (matcher.find()) {
+					//Add the value to the total.
+					value = Integer.valueOf(value.intValue() + Integer.valueOf(matcher.group(1)).intValue());
+				}
+			}
+		}
+		
+		//Check the item in the players hand.
+		ItemStack item = entity.getEquipment().getItemInHand();
+		//If the item is not null and has meta and has lore, continue.
+		if ((item != null) && (item.hasItemMeta()) && (item.getItemMeta().hasLore())) {
+			
+			//Create an array list of "Lore" strings and add them to it.
+			Object lore = item.getItemMeta().getLore();
+			
+			//Convert the array to a string, and make it all lowercase.
+			String allLore =  ChatColor.stripColor(lore.toString().toLowerCase());
+			
+			//Prepare for text matching using regular expressions.
+			Matcher valueMatcher = agilityRegex.matcher(allLore);
+			
+			//Find the new value.
+			if (valueMatcher.find()) {
+				//Add the value to the total.
+				value += Integer.valueOf(valueMatcher.group(1)).intValue();
+			}
+		}
+		//Return the value.
+		return value.intValue();
+	}
+	
+	public static double getVitality(LivingEntity entity) {
+		Integer value = Integer.valueOf(0);
+
+		//Loop through the armor slots and find armor.
+		for (ItemStack item : entity.getEquipment().getArmorContents()) {
+
+			//If the item is not null and has meta and has lore, continue.
+			if ((item != null) && (item.hasItemMeta()) && (item.getItemMeta().hasLore())) {
+
+				//Create an array list of "Lore" strings and add them to it.
+				List<String> lore = item.getItemMeta().getLore();
+
+				//Convert the array to a string, and make it all lowercase.
+				String allLore = ChatColor.stripColor(lore.toString().toLowerCase());
+
+				//Prepare for text matching using regular expressions.
+				Matcher matcher = vitalityRegex.matcher(allLore);
+
+				//Find the new value.
+				if (matcher.find()) {
+					value = Integer.valueOf(value.intValue() + Integer.valueOf(matcher.group(1)).intValue());
+				}
+			}
+		}
+		
+		//Check the item in the players hand.
+		ItemStack item = entity.getEquipment().getItemInHand();
+		//If the item is not null and has meta and has lore, continue.
+		if ((item != null) && (item.hasItemMeta()) && (item.getItemMeta().hasLore())) {
+			
+			//Create an array list of "Lore" strings and add them to it.
+			Object lore = item.getItemMeta().getLore();
+			
+			//Convert the array to a string, and make it all lowercase.
+			String allLore =  ChatColor.stripColor(lore.toString().toLowerCase());
+			
+			//Prepare for text matching using regular expressions.
+			Matcher valueMatcher = vitalityRegex.matcher(allLore);
+			
+			//Find the new value.
+			if (valueMatcher.find()) {
+				//Add the value to the total.
+				value += Integer.valueOf(valueMatcher.group(1)).intValue();
+			}
+		}
+		//Return the value.
+		return value.intValue();
+	}
+	
+	public static double getIntellect(LivingEntity entity) {
+		Integer value = Integer.valueOf(0);
+
+		//Loop through the armor slots and find armor.
+		for (ItemStack item : entity.getEquipment().getArmorContents()) {
+
+			//If the item is not null and has meta and has lore, continue.
+			if ((item != null) && (item.hasItemMeta()) && (item.getItemMeta().hasLore())) {
+
+				//Create an array list of "Lore" strings and add them to it.
+				List<String> lore = item.getItemMeta().getLore();
+
+				//Convert the array to a string, and make it all lowercase.
+				String allLore = ChatColor.stripColor(lore.toString().toLowerCase());
+
+				//Prepare for text matching using regular expressions.
+				Matcher matcher = intellectRegex.matcher(allLore);
+
+				//Find the new value.
+				if (matcher.find()) {
+					value = Integer.valueOf(value.intValue() + Integer.valueOf(matcher.group(1)).intValue());
+				}
+			}
+		}
+		
+		//Check the item in the players hand.
+		ItemStack item = entity.getEquipment().getItemInHand();
+		//If the item is not null and has meta and has lore, continue.
+		if ((item != null) && (item.hasItemMeta()) && (item.getItemMeta().hasLore())) {
+			
+			//Create an array list of "Lore" strings and add them to it.
+			Object lore = item.getItemMeta().getLore();
+			
+			//Convert the array to a string, and make it all lowercase.
+			String allLore =  ChatColor.stripColor(lore.toString().toLowerCase());
+			
+			//Prepare for text matching using regular expressions.
+			Matcher valueMatcher = intellectRegex.matcher(allLore);
+			
+			//Find the new value.
+			if (valueMatcher.find()) {
+				//Add the value to the total.
+				value += Integer.valueOf(valueMatcher.group(1)).intValue();
+			}
+		}
+		//Return the value.
+		return value.intValue();
+	}
+	
+	public static double getSpirit(LivingEntity entity) {
+		Integer value = Integer.valueOf(0);
+
+		//Loop through the armor slots and find armor.
+		for (ItemStack item : entity.getEquipment().getArmorContents()) {
+
+			//If the item is not null and has meta and has lore, continue.
+			if ((item != null) && (item.hasItemMeta()) && (item.getItemMeta().hasLore())) {
+
+				//Create an array list of "Lore" strings and add them to it.
+				List<String> lore = item.getItemMeta().getLore();
+
+				//Convert the array to a string, and make it all lowercase.
+				String allLore = ChatColor.stripColor(lore.toString().toLowerCase());
+
+				//Prepare for text matching using regular expressions.
+				Matcher matcher = spiritRegex.matcher(allLore);
+
+				//Find the new value.
+				if (matcher.find()) {
+					value = Integer.valueOf(value.intValue() + Integer.valueOf(matcher.group(1)).intValue());
+				}
+			}
+		}
+		
+		//Check the item in the players hand.
+		ItemStack item = entity.getEquipment().getItemInHand();
+		//If the item is not null and has meta and has lore, continue.
+		if ((item != null) && (item.hasItemMeta()) && (item.getItemMeta().hasLore())) {
+			
+			//Create an array list of "Lore" strings and add them to it.
+			Object lore = item.getItemMeta().getLore();
+			
+			//Convert the array to a string, and make it all lowercase.
+			String allLore =  ChatColor.stripColor(lore.toString().toLowerCase());
+			
+			//Prepare for text matching using regular expressions.
+			Matcher valueMatcher = spiritRegex.matcher(allLore);
+			
+			//Find the new value.
+			if (valueMatcher.find()) {
+				//Add the value to the total.
+				value += Integer.valueOf(valueMatcher.group(1)).intValue();
+			}
+		}
+		//Return the value.
+		return value.intValue();
+	}
+	
+	public static double getArmor(LivingEntity entity) {
 		Integer value = Integer.valueOf(0);
 
 		//Loop through the armor slots and find armor.
@@ -298,177 +395,73 @@ public class ItemLoreFactory {
 				}
 			}
 		}
-		//Return the value.
-		return value.intValue();
-	}
-
-	public double getArrorDamage(Entity damager) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	public double getBlindnessBonus(LivingEntity entity) {
-		Integer value = Integer.valueOf(0);
-
-		//Loop through the armor slots and find armor.
-		for (ItemStack item : entity.getEquipment().getArmorContents()) {
-
-			//If the item is not null and has meta and has lore, continue.
-			if ((item != null) && (item.hasItemMeta()) && (item.getItemMeta().hasLore())) {
-
-				//Create an array list of "Lore" strings and add them to it.
-				List<String> lore = item.getItemMeta().getLore();
-
-				//Convert the array to a string, and make it all lowercase.
-				String allLore = ChatColor.stripColor(lore.toString().toLowerCase());
-
-				//Prepare for text matching using regular expressions.
-				Matcher matcher = blindnessRegex.matcher(allLore);
-
-				//Find the new value.
-				if (matcher.find()) {
-					value = Integer.valueOf(value.intValue() + Integer.valueOf(matcher.group(1)).intValue());
-				}
-			}
-		}
 		
+		//Check the item in the players hand.
 		ItemStack item = entity.getEquipment().getItemInHand();
+		//If the item is not null and has meta and has lore, continue.
 		if ((item != null) && (item.hasItemMeta()) && (item.getItemMeta().hasLore())) {
+			
+			//Create an array list of "Lore" strings and add them to it.
 			Object lore = item.getItemMeta().getLore();
-			String allLore = lore.toString().toLowerCase();
-
-			Matcher valueMatcher = blindnessRegex.matcher(allLore);
+			
+			//Convert the array to a string, and make it all lowercase.
+			String allLore =  ChatColor.stripColor(lore.toString().toLowerCase());
+			
+			//Prepare for text matching using regular expressions.
+			Matcher valueMatcher = armorRegex.matcher(allLore);
+			
+			//Find the new value.
 			if (valueMatcher.find()) {
+				//Add the value to the total.
 				value += Integer.valueOf(valueMatcher.group(1)).intValue();
 			}
 		}
 		//Return the value.
 		return value.intValue();
 	}
-
-	public double getBlockBonus(LivingEntity entity) {
-		Integer value = Integer.valueOf(0);
-
-		//Loop through the armor slots and find armor.
-		for (ItemStack item : entity.getEquipment().getArmorContents()) {
-
-			//If the item is not null and has meta and has lore, continue.
-			if ((item != null) && (item.hasItemMeta()) && (item.getItemMeta().hasLore())) {
-
-				//Create an array list of "Lore" strings and add them to it.
-				List<String> lore = item.getItemMeta().getLore();
-
-				//Convert the array to a string, and make it all lowercase.
-				String allLore = ChatColor.stripColor(lore.toString().toLowerCase());
-
-				//Prepare for text matching using regular expressions.
-				Matcher matcher = blockChanceRegex.matcher(allLore);
-
-				//Find the new value.
-				if (matcher.find()) {
-					value = Integer.valueOf(value.intValue() + Integer.valueOf(matcher.group(1)).intValue());
-				}
-			}
-		}	
-		//Return the value.
-		return value.intValue();
-	}
-
-	public double getColdDamage(LivingEntity entity) {
-		Integer value = Integer.valueOf(0);
-		
-		ItemStack item = entity.getEquipment().getItemInHand();
-		if ((item != null) && (item.hasItemMeta()) && (item.getItemMeta().hasLore())) {
-			Object lore = item.getItemMeta().getLore();
-			String allLore = lore.toString().toLowerCase();
-
-			Matcher valueMatcher = coldDamageRegex.matcher(allLore);
-			if (valueMatcher.find()) {
-				value += Integer.valueOf(valueMatcher.group(1)).intValue();
-			}
-		}
-		//Return the value.
-		return value.intValue();
-	}
-
-	public double getColdResist(LivingEntity entity) {
-		Integer value = Integer.valueOf(0);
-
-		//Loop through the armor slots and find armor.
-		for (ItemStack item : entity.getEquipment().getArmorContents()) {
-
-			//If the item is not null and has meta and has lore, continue.
-			if ((item != null) && (item.hasItemMeta()) && (item.getItemMeta().hasLore())) {
-
-				//Create an array list of "Lore" strings and add them to it.
-				List<String> lore = item.getItemMeta().getLore();
-
-				//Convert the array to a string, and make it all lowercase.
-				String allLore = ChatColor.stripColor(lore.toString().toLowerCase());
-
-				//Prepare for text matching using regular expressions.
-				Matcher matcher = coldResistRegex.matcher(allLore);
-
-				//Find the new value.
-				if (matcher.find()) {
-					value = Integer.valueOf(value.intValue() + Integer.valueOf(matcher.group(1)).intValue());
-				}
-			}
-		}
-		//Return the value.
-		return value.intValue();
-	}
-
-
-	public double getCriticalBonus(LivingEntity entity) {
-		Integer value = Integer.valueOf(0);
-
-		//Loop through the armor slots and find armor.
-		for (ItemStack item : entity.getEquipment().getArmorContents()) {
-
-			//If the item is not null and has meta and has lore, continue.
-			if ((item != null) && (item.hasItemMeta()) && (item.getItemMeta().hasLore())) {
-
-				//Create an array list of "Lore" strings and add them to it.
-				List<String> lore = item.getItemMeta().getLore();
-
-				//Convert the array to a string, and make it all lowercase.
-				String allLore = ChatColor.stripColor(lore.toString().toLowerCase());
-
-				//Prepare for text matching using regular expressions.
-				Matcher matcher = critChanceRegex.matcher(allLore);
-
-				//Find the new value.
-				if (matcher.find()) {
-					value = Integer.valueOf(value.intValue() + Integer.valueOf(matcher.group(1)).intValue());
-				}
-			}
-		}		
-		ItemStack item = entity.getEquipment().getItemInHand();
-		if ((item != null) && (item.hasItemMeta()) && (item.getItemMeta().hasLore())) {
-			Object lore = item.getItemMeta().getLore();
-			String allLore = lore.toString().toLowerCase();
-
-			Matcher valueMatcher = critChanceRegex.matcher(allLore);
-			if (valueMatcher.find()) {
-				value += Integer.valueOf(valueMatcher.group(1)).intValue();
-			}
-		}
-		//Return the value.
-		return value.intValue();
-	}
-
-
-	public double getDamageBonus(LivingEntity entity) {
-		Integer value = Integer.valueOf(0);
 	
-		ItemStack item = entity.getEquipment().getItemInHand();
-		if ((item != null) && (item.hasItemMeta()) && (item.getItemMeta().hasLore())) {
-			Object lore = item.getItemMeta().getLore();
-			String allLore = lore.toString().toLowerCase();
+	public static double getDamage(LivingEntity entity) {
+		Integer value = Integer.valueOf(0);
 
+		//Loop through the armor slots and find armor.
+		for (ItemStack item : entity.getEquipment().getArmorContents()) {
+
+			//If the item is not null and has meta and has lore, continue.
+			if ((item != null) && (item.hasItemMeta()) && (item.getItemMeta().hasLore())) {
+
+				//Create an array list of "Lore" strings and add them to it.
+				List<String> lore = item.getItemMeta().getLore();
+
+				//Convert the array to a string, and make it all lowercase.
+				String allLore = ChatColor.stripColor(lore.toString().toLowerCase());
+
+				//Prepare for text matching using regular expressions.
+				Matcher matcher = damageRegex.matcher(allLore);
+
+				//Find the new value.
+				if (matcher.find()) {
+					value = Integer.valueOf(value.intValue() + Integer.valueOf(matcher.group(1)).intValue());
+				}
+			}
+		}
+		
+		//Check the item in the players hand.
+		ItemStack item = entity.getEquipment().getItemInHand();
+		//If the item is not null and has meta and has lore, continue.
+		if ((item != null) && (item.hasItemMeta()) && (item.getItemMeta().hasLore())) {
+			
+			//Create an array list of "Lore" strings and add them to it.
+			Object lore = item.getItemMeta().getLore();
+			
+			//Convert the array to a string, and make it all lowercase.
+			String allLore =  ChatColor.stripColor(lore.toString().toLowerCase());
+			
+			//Prepare for text matching using regular expressions.
 			Matcher valueMatcher = damageRegex.matcher(allLore);
+			
+			//Find the new value.
 			if (valueMatcher.find()) {
+				//Add the value to the total.
 				value += Integer.valueOf(valueMatcher.group(1)).intValue();
 			}
 		}
@@ -476,53 +469,47 @@ public class ItemLoreFactory {
 		return value.intValue();
 	}
 
-
-	public double getDodgeBonus(LivingEntity entity) {
-		Integer value = Integer.valueOf(0);
-
-		//Loop through the armor slots and find armor.
+	public static boolean getDamageRange(LivingEntity entity) {
+		//If the entity is not valid, lets exit the method.
+		if (!entity.isValid()) {
+			return false;
+		}
+		//Lets loop through the armor slots and get the armor contents.
 		for (ItemStack item : entity.getEquipment().getArmorContents()) {
 
-			//If the item is not null and has meta and has lore, continue.
+			//If the armor slot is not null and the item has meta and the item has lore, continue.
 			if ((item != null) && (item.hasItemMeta()) && (item.getItemMeta().hasLore())) {
-
-				//Create an array list of "Lore" strings and add them to it.
+				//Create an array of strings from the items lore.
 				List<String> lore = item.getItemMeta().getLore();
-
-				//Convert the array to a string, and make it all lowercase.
-				String allLore = ChatColor.stripColor(lore.toString().toLowerCase());
-
-				//Prepare for text matching using regular expressions.
-				Matcher matcher = dodgeChanceRegex.matcher(allLore);
-
-				//Find the new value.
-				if (matcher.find()) {
-					value = Integer.valueOf(value.intValue() + Integer.valueOf(matcher.group(1)).intValue());
+				//Convert the array of strings to a single string, all lower case.
+				String allLore =  ChatColor.stripColor(lore.toString().toLowerCase());
+				//Prepare the string to math the damage range.
+				Matcher rangeMatcher = damageRangeRegex.matcher(allLore);
+				//If a match is found, return true.
+				if (rangeMatcher.find()) {
+					return true;
 				}
 			}
 		}
-		//Return the value.
-		return value.intValue();
-	}
-
-	public double getFireDamage(LivingEntity entity) {
-		Integer value = Integer.valueOf(0);
-	
+		//Get the item in the players hand (looking for a weapon).
 		ItemStack item = entity.getEquipment().getItemInHand();
+		//If the item is not null and the item has meta and the item has lore, continue.
 		if ((item != null) && (item.hasItemMeta()) && (item.getItemMeta().hasLore())) {
+			//Get the items lore.
 			Object lore = item.getItemMeta().getLore();
-			String allLore = lore.toString().toLowerCase();
-
-			Matcher valueMatcher = fireDamageRegex.matcher(allLore);
-			if (valueMatcher.find()) {
-				value += Integer.valueOf(valueMatcher.group(1)).intValue();
+			//Convert the array of strings to a single string, all lower case.
+			String allLore =  ChatColor.stripColor(lore.toString().toLowerCase());
+			//Prepare the string to math the damage range.
+			Matcher rangeMatcher = damageRangeRegex.matcher(allLore);
+			//If a match is found, return true.
+			if (rangeMatcher.find()) {
+				return true;
 			}
 		}
-		//Return the value.
-		return value.intValue();
+		return false;
 	}
-
-	public double getFireResist(LivingEntity entity) {
+	
+	public static double getReflect(LivingEntity entity) {
 		Integer value = Integer.valueOf(0);
 
 		//Loop through the armor slots and find armor.
@@ -538,7 +525,7 @@ public class ItemLoreFactory {
 				String allLore = ChatColor.stripColor(lore.toString().toLowerCase());
 
 				//Prepare for text matching using regular expressions.
-				Matcher matcher = fireResistRegex.matcher(allLore);
+				Matcher matcher = reflectRegex.matcher(allLore);
 
 				//Find the new value.
 				if (matcher.find()) {
@@ -546,11 +533,914 @@ public class ItemLoreFactory {
 				}
 			}
 		}
+		
+		//Check the item in the players hand.
+		ItemStack item = entity.getEquipment().getItemInHand();
+		//If the item is not null and has meta and has lore, continue.
+		if ((item != null) && (item.hasItemMeta()) && (item.getItemMeta().hasLore())) {
+			
+			//Create an array list of "Lore" strings and add them to it.
+			Object lore = item.getItemMeta().getLore();
+			
+			//Convert the array to a string, and make it all lowercase.
+			String allLore =  ChatColor.stripColor(lore.toString().toLowerCase());
+			
+			//Prepare for text matching using regular expressions.
+			Matcher valueMatcher = reflectRegex.matcher(allLore);
+			
+			//Find the new value.
+			if (valueMatcher.find()) {
+				//Add the value to the total.
+				value += Integer.valueOf(valueMatcher.group(1)).intValue();
+			}
+		}
 		//Return the value.
 		return value.intValue();
 	}
+	
+	public static double getBlock(LivingEntity entity) {
+		Integer value = Integer.valueOf(0);
 
-	public double getGoldFindBonus(LivingEntity entity) {
+		//Loop through the armor slots and find armor.
+		for (ItemStack item : entity.getEquipment().getArmorContents()) {
+
+			//If the item is not null and has meta and has lore, continue.
+			if ((item != null) && (item.hasItemMeta()) && (item.getItemMeta().hasLore())) {
+
+				//Create an array list of "Lore" strings and add them to it.
+				List<String> lore = item.getItemMeta().getLore();
+
+				//Convert the array to a string, and make it all lowercase.
+				String allLore = ChatColor.stripColor(lore.toString().toLowerCase());
+
+				//Prepare for text matching using regular expressions.
+				Matcher matcher = blockRegex.matcher(allLore);
+
+				//Find the new value.
+				if (matcher.find()) {
+					value = Integer.valueOf(value.intValue() + Integer.valueOf(matcher.group(1)).intValue());
+				}
+			}
+		}
+		
+		//Check the item in the players hand.
+		ItemStack item = entity.getEquipment().getItemInHand();
+		//If the item is not null and has meta and has lore, continue.
+		if ((item != null) && (item.hasItemMeta()) && (item.getItemMeta().hasLore())) {
+			
+			//Create an array list of "Lore" strings and add them to it.
+			Object lore = item.getItemMeta().getLore();
+			
+			//Convert the array to a string, and make it all lowercase.
+			String allLore =  ChatColor.stripColor(lore.toString().toLowerCase());
+			
+			//Prepare for text matching using regular expressions.
+			Matcher valueMatcher = blockRegex.matcher(allLore);
+			
+			//Find the new value.
+			if (valueMatcher.find()) {
+				//Add the value to the total.
+				value += Integer.valueOf(valueMatcher.group(1)).intValue();
+			}
+		}
+		//Return the value.
+		return value.intValue();
+	}
+	
+	public static double getDodge(LivingEntity entity) {
+		Integer value = Integer.valueOf(0);
+
+		//Loop through the armor slots and find armor.
+		for (ItemStack item : entity.getEquipment().getArmorContents()) {
+
+			//If the item is not null and has meta and has lore, continue.
+			if ((item != null) && (item.hasItemMeta()) && (item.getItemMeta().hasLore())) {
+
+				//Create an array list of "Lore" strings and add them to it.
+				List<String> lore = item.getItemMeta().getLore();
+
+				//Convert the array to a string, and make it all lowercase.
+				String allLore = ChatColor.stripColor(lore.toString().toLowerCase());
+
+				//Prepare for text matching using regular expressions.
+				Matcher matcher = dodgeRegex.matcher(allLore);
+
+				//Find the new value.
+				if (matcher.find()) {
+					value = Integer.valueOf(value.intValue() + Integer.valueOf(matcher.group(1)).intValue());
+				}
+			}
+		}
+		
+		//Check the item in the players hand.
+		ItemStack item = entity.getEquipment().getItemInHand();
+		//If the item is not null and has meta and has lore, continue.
+		if ((item != null) && (item.hasItemMeta()) && (item.getItemMeta().hasLore())) {
+			
+			//Create an array list of "Lore" strings and add them to it.
+			Object lore = item.getItemMeta().getLore();
+			
+			//Convert the array to a string, and make it all lowercase.
+			String allLore =  ChatColor.stripColor(lore.toString().toLowerCase());
+			
+			//Prepare for text matching using regular expressions.
+			Matcher valueMatcher = dodgeRegex.matcher(allLore);
+			
+			//Find the new value.
+			if (valueMatcher.find()) {
+				//Add the value to the total.
+				value += Integer.valueOf(valueMatcher.group(1)).intValue();
+			}
+		}
+		//Return the value.
+		return value.intValue();
+	}
+	
+	public static double getCriticalDamage(LivingEntity entity) {
+		Integer value = Integer.valueOf(0);
+
+		//Loop through the armor slots and find armor.
+		for (ItemStack item : entity.getEquipment().getArmorContents()) {
+
+			//If the item is not null and has meta and has lore, continue.
+			if ((item != null) && (item.hasItemMeta()) && (item.getItemMeta().hasLore())) {
+
+				//Create an array list of "Lore" strings and add them to it.
+				List<String> lore = item.getItemMeta().getLore();
+
+				//Convert the array to a string, and make it all lowercase.
+				String allLore = ChatColor.stripColor(lore.toString().toLowerCase());
+
+				//Prepare for text matching using regular expressions.
+				Matcher matcher = criticalDamageRegex.matcher(allLore);
+
+				//Find the new value.
+				if (matcher.find()) {
+					value = Integer.valueOf(value.intValue() + Integer.valueOf(matcher.group(1)).intValue());
+				}
+			}
+		}
+		
+		//Check the item in the players hand.
+		ItemStack item = entity.getEquipment().getItemInHand();
+		//If the item is not null and has meta and has lore, continue.
+		if ((item != null) && (item.hasItemMeta()) && (item.getItemMeta().hasLore())) {
+			
+			//Create an array list of "Lore" strings and add them to it.
+			Object lore = item.getItemMeta().getLore();
+			
+			//Convert the array to a string, and make it all lowercase.
+			String allLore =  ChatColor.stripColor(lore.toString().toLowerCase());
+			
+			//Prepare for text matching using regular expressions.
+			Matcher valueMatcher = criticalDamageRegex.matcher(allLore);
+			
+			//Find the new value.
+			if (valueMatcher.find()) {
+				//Add the value to the total.
+				value += Integer.valueOf(valueMatcher.group(1)).intValue();
+			}
+		}
+		//Return the value.
+		return value.intValue();
+	}
+	
+	public static double getCriticalHitChance(LivingEntity entity) {
+		Integer value = Integer.valueOf(0);
+
+		//Loop through the armor slots and find armor.
+		for (ItemStack item : entity.getEquipment().getArmorContents()) {
+
+			//If the item is not null and has meta and has lore, continue.
+			if ((item != null) && (item.hasItemMeta()) && (item.getItemMeta().hasLore())) {
+
+				//Create an array list of "Lore" strings and add them to it.
+				List<String> lore = item.getItemMeta().getLore();
+
+				//Convert the array to a string, and make it all lowercase.
+				String allLore = ChatColor.stripColor(lore.toString().toLowerCase());
+
+				//Prepare for text matching using regular expressions.
+				Matcher matcher = criticalChanceRegex.matcher(allLore);
+
+				//Find the new value.
+				if (matcher.find()) {
+					value = Integer.valueOf(value.intValue() + Integer.valueOf(matcher.group(1)).intValue());
+				}
+			}
+		}
+		
+		//Check the item in the players hand.
+		ItemStack item = entity.getEquipment().getItemInHand();
+		//If the item is not null and has meta and has lore, continue.
+		if ((item != null) && (item.hasItemMeta()) && (item.getItemMeta().hasLore())) {
+			
+			//Create an array list of "Lore" strings and add them to it.
+			Object lore = item.getItemMeta().getLore();
+			
+			//Convert the array to a string, and make it all lowercase.
+			String allLore =  ChatColor.stripColor(lore.toString().toLowerCase());
+			
+			//Prepare for text matching using regular expressions.
+			Matcher valueMatcher = criticalChanceRegex.matcher(allLore);
+			
+			//Find the new value.
+			if (valueMatcher.find()) {
+				//Add the value to the total.
+				value += Integer.valueOf(valueMatcher.group(1)).intValue();
+			}
+		}
+		//Return the value.
+		return value.intValue();
+	}
+	
+	public static double getFireDamage(LivingEntity entity) {
+		Integer value = Integer.valueOf(0);
+
+		//Loop through the armor slots and find armor.
+		for (ItemStack item : entity.getEquipment().getArmorContents()) {
+
+			//If the item is not null and has meta and has lore, continue.
+			if ((item != null) && (item.hasItemMeta()) && (item.getItemMeta().hasLore())) {
+
+				//Create an array list of "Lore" strings and add them to it.
+				List<String> lore = item.getItemMeta().getLore();
+
+				//Convert the array to a string, and make it all lowercase.
+				String allLore = ChatColor.stripColor(lore.toString().toLowerCase());
+
+				//Prepare for text matching using regular expressions.
+				Matcher matcher = fireDamageRegex.matcher(allLore);
+
+				//Find the new value.
+				if (matcher.find()) {
+					value = Integer.valueOf(value.intValue() + Integer.valueOf(matcher.group(1)).intValue());
+				}
+			}
+		}
+		
+		//Check the item in the players hand.
+		ItemStack item = entity.getEquipment().getItemInHand();
+		//If the item is not null and has meta and has lore, continue.
+		if ((item != null) && (item.hasItemMeta()) && (item.getItemMeta().hasLore())) {
+			
+			//Create an array list of "Lore" strings and add them to it.
+			Object lore = item.getItemMeta().getLore();
+			
+			//Convert the array to a string, and make it all lowercase.
+			String allLore =  ChatColor.stripColor(lore.toString().toLowerCase());
+			
+			//Prepare for text matching using regular expressions.
+			Matcher valueMatcher = fireDamageRegex.matcher(allLore);
+			
+			//Find the new value.
+			if (valueMatcher.find()) {
+				//Add the value to the total.
+				value += Integer.valueOf(valueMatcher.group(1)).intValue();
+			}
+		}
+		//Return the value.
+		return value.intValue();
+	}
+	
+	public static double getIceDamage(LivingEntity entity) {
+		Integer value = Integer.valueOf(0);
+
+		//Loop through the armor slots and find armor.
+		for (ItemStack item : entity.getEquipment().getArmorContents()) {
+
+			//If the item is not null and has meta and has lore, continue.
+			if ((item != null) && (item.hasItemMeta()) && (item.getItemMeta().hasLore())) {
+
+				//Create an array list of "Lore" strings and add them to it.
+				List<String> lore = item.getItemMeta().getLore();
+
+				//Convert the array to a string, and make it all lowercase.
+				String allLore = ChatColor.stripColor(lore.toString().toLowerCase());
+
+				//Prepare for text matching using regular expressions.
+				Matcher matcher = iceDamageRegex.matcher(allLore);
+
+				//Find the new value.
+				if (matcher.find()) {
+					value = Integer.valueOf(value.intValue() + Integer.valueOf(matcher.group(1)).intValue());
+				}
+			}
+		}
+		
+		//Check the item in the players hand.
+		ItemStack item = entity.getEquipment().getItemInHand();
+		//If the item is not null and has meta and has lore, continue.
+		if ((item != null) && (item.hasItemMeta()) && (item.getItemMeta().hasLore())) {
+			
+			//Create an array list of "Lore" strings and add them to it.
+			Object lore = item.getItemMeta().getLore();
+			
+			//Convert the array to a string, and make it all lowercase.
+			String allLore =  ChatColor.stripColor(lore.toString().toLowerCase());
+			
+			//Prepare for text matching using regular expressions.
+			Matcher valueMatcher = iceDamageRegex.matcher(allLore);
+			
+			//Find the new value.
+			if (valueMatcher.find()) {
+				//Add the value to the total.
+				value += Integer.valueOf(valueMatcher.group(1)).intValue();
+			}
+		}
+		//Return the value.
+		return value.intValue();
+	}
+	
+	public static double getLightningDamage(LivingEntity entity) {
+		Integer value = Integer.valueOf(0);
+
+		//Loop through the armor slots and find armor.
+		for (ItemStack item : entity.getEquipment().getArmorContents()) {
+
+			//If the item is not null and has meta and has lore, continue.
+			if ((item != null) && (item.hasItemMeta()) && (item.getItemMeta().hasLore())) {
+
+				//Create an array list of "Lore" strings and add them to it.
+				List<String> lore = item.getItemMeta().getLore();
+
+				//Convert the array to a string, and make it all lowercase.
+				String allLore = ChatColor.stripColor(lore.toString().toLowerCase());
+
+				//Prepare for text matching using regular expressions.
+				Matcher matcher = lightningDamageRegex.matcher(allLore);
+
+				//Find the new value.
+				if (matcher.find()) {
+					value = Integer.valueOf(value.intValue() + Integer.valueOf(matcher.group(1)).intValue());
+				}
+			}
+		}
+		
+		//Check the item in the players hand.
+		ItemStack item = entity.getEquipment().getItemInHand();
+		//If the item is not null and has meta and has lore, continue.
+		if ((item != null) && (item.hasItemMeta()) && (item.getItemMeta().hasLore())) {
+			
+			//Create an array list of "Lore" strings and add them to it.
+			Object lore = item.getItemMeta().getLore();
+			
+			//Convert the array to a string, and make it all lowercase.
+			String allLore =  ChatColor.stripColor(lore.toString().toLowerCase());
+			
+			//Prepare for text matching using regular expressions.
+			Matcher valueMatcher = lightningDamageRegex.matcher(allLore);
+			
+			//Find the new value.
+			if (valueMatcher.find()) {
+				//Add the value to the total.
+				value += Integer.valueOf(valueMatcher.group(1)).intValue();
+			}
+		}
+		//Return the value.
+		return value.intValue();
+	}
+	
+	public static double getPoisonDamage(LivingEntity entity) {
+		Integer value = Integer.valueOf(0);
+
+		//Loop through the armor slots and find armor.
+		for (ItemStack item : entity.getEquipment().getArmorContents()) {
+
+			//If the item is not null and has meta and has lore, continue.
+			if ((item != null) && (item.hasItemMeta()) && (item.getItemMeta().hasLore())) {
+
+				//Create an array list of "Lore" strings and add them to it.
+				List<String> lore = item.getItemMeta().getLore();
+
+				//Convert the array to a string, and make it all lowercase.
+				String allLore = ChatColor.stripColor(lore.toString().toLowerCase());
+
+				//Prepare for text matching using regular expressions.
+				Matcher matcher = poisonDamageRegex.matcher(allLore);
+
+				//Find the new value.
+				if (matcher.find()) {
+					value = Integer.valueOf(value.intValue() + Integer.valueOf(matcher.group(1)).intValue());
+				}
+			}
+		}
+		
+		//Check the item in the players hand.
+		ItemStack item = entity.getEquipment().getItemInHand();
+		//If the item is not null and has meta and has lore, continue.
+		if ((item != null) && (item.hasItemMeta()) && (item.getItemMeta().hasLore())) {
+			
+			//Create an array list of "Lore" strings and add them to it.
+			Object lore = item.getItemMeta().getLore();
+			
+			//Convert the array to a string, and make it all lowercase.
+			String allLore =  ChatColor.stripColor(lore.toString().toLowerCase());
+			
+			//Prepare for text matching using regular expressions.
+			Matcher valueMatcher = poisonDamageRegex.matcher(allLore);
+			
+			//Find the new value.
+			if (valueMatcher.find()) {
+				//Add the value to the total.
+				value += Integer.valueOf(valueMatcher.group(1)).intValue();
+			}
+		}
+		//Return the value.
+		return value.intValue();
+	}
+	
+	public static double getParalyzeDamage(LivingEntity entity) {
+		Integer value = Integer.valueOf(0);
+
+		//Loop through the armor slots and find armor.
+		for (ItemStack item : entity.getEquipment().getArmorContents()) {
+
+			//If the item is not null and has meta and has lore, continue.
+			if ((item != null) && (item.hasItemMeta()) && (item.getItemMeta().hasLore())) {
+
+				//Create an array list of "Lore" strings and add them to it.
+				List<String> lore = item.getItemMeta().getLore();
+
+				//Convert the array to a string, and make it all lowercase.
+				String allLore = ChatColor.stripColor(lore.toString().toLowerCase());
+
+				//Prepare for text matching using regular expressions.
+				Matcher matcher = paralyzeDamageRegex.matcher(allLore);
+
+				//Find the new value.
+				if (matcher.find()) {
+					value = Integer.valueOf(value.intValue() + Integer.valueOf(matcher.group(1)).intValue());
+				}
+			}
+		}
+		
+		//Check the item in the players hand.
+		ItemStack item = entity.getEquipment().getItemInHand();
+		//If the item is not null and has meta and has lore, continue.
+		if ((item != null) && (item.hasItemMeta()) && (item.getItemMeta().hasLore())) {
+			
+			//Create an array list of "Lore" strings and add them to it.
+			Object lore = item.getItemMeta().getLore();
+			
+			//Convert the array to a string, and make it all lowercase.
+			String allLore =  ChatColor.stripColor(lore.toString().toLowerCase());
+			
+			//Prepare for text matching using regular expressions.
+			Matcher valueMatcher = paralyzeDamageRegex.matcher(allLore);
+			
+			//Find the new value.
+			if (valueMatcher.find()) {
+				//Add the value to the total.
+				value += Integer.valueOf(valueMatcher.group(1)).intValue();
+			}
+		}
+		//Return the value.
+		return value.intValue();
+	}
+	
+	public static double getBlindnessDamage(LivingEntity entity) {
+		Integer value = Integer.valueOf(0);
+
+		//Loop through the armor slots and find armor.
+		for (ItemStack item : entity.getEquipment().getArmorContents()) {
+
+			//If the item is not null and has meta and has lore, continue.
+			if ((item != null) && (item.hasItemMeta()) && (item.getItemMeta().hasLore())) {
+
+				//Create an array list of "Lore" strings and add them to it.
+				List<String> lore = item.getItemMeta().getLore();
+
+				//Convert the array to a string, and make it all lowercase.
+				String allLore = ChatColor.stripColor(lore.toString().toLowerCase());
+
+				//Prepare for text matching using regular expressions.
+				Matcher matcher = blindnessDamageRegex.matcher(allLore);
+
+				//Find the new value.
+				if (matcher.find()) {
+					value = Integer.valueOf(value.intValue() + Integer.valueOf(matcher.group(1)).intValue());
+				}
+			}
+		}
+		
+		//Check the item in the players hand.
+		ItemStack item = entity.getEquipment().getItemInHand();
+		//If the item is not null and has meta and has lore, continue.
+		if ((item != null) && (item.hasItemMeta()) && (item.getItemMeta().hasLore())) {
+			
+			//Create an array list of "Lore" strings and add them to it.
+			Object lore = item.getItemMeta().getLore();
+			
+			//Convert the array to a string, and make it all lowercase.
+			String allLore =  ChatColor.stripColor(lore.toString().toLowerCase());
+			
+			//Prepare for text matching using regular expressions.
+			Matcher valueMatcher = blindnessDamageRegex.matcher(allLore);
+			
+			//Find the new value.
+			if (valueMatcher.find()) {
+				//Add the value to the total.
+				value += Integer.valueOf(valueMatcher.group(1)).intValue();
+			}
+		}
+		//Return the value.
+		return value.intValue();
+	}
+	
+	public static double getFireResistance(LivingEntity entity) {
+		Integer value = Integer.valueOf(0);
+
+		//Loop through the armor slots and find armor.
+		for (ItemStack item : entity.getEquipment().getArmorContents()) {
+
+			//If the item is not null and has meta and has lore, continue.
+			if ((item != null) && (item.hasItemMeta()) && (item.getItemMeta().hasLore())) {
+
+				//Create an array list of "Lore" strings and add them to it.
+				List<String> lore = item.getItemMeta().getLore();
+
+				//Convert the array to a string, and make it all lowercase.
+				String allLore = ChatColor.stripColor(lore.toString().toLowerCase());
+
+				//Prepare for text matching using regular expressions.
+				Matcher matcher = fireResistanceRegex.matcher(allLore);
+
+				//Find the new value.
+				if (matcher.find()) {
+					value = Integer.valueOf(value.intValue() + Integer.valueOf(matcher.group(1)).intValue());
+				}
+			}
+		}
+		
+		//Check the item in the players hand.
+		ItemStack item = entity.getEquipment().getItemInHand();
+		//If the item is not null and has meta and has lore, continue.
+		if ((item != null) && (item.hasItemMeta()) && (item.getItemMeta().hasLore())) {
+			
+			//Create an array list of "Lore" strings and add them to it.
+			Object lore = item.getItemMeta().getLore();
+			
+			//Convert the array to a string, and make it all lowercase.
+			String allLore =  ChatColor.stripColor(lore.toString().toLowerCase());
+			
+			//Prepare for text matching using regular expressions.
+			Matcher valueMatcher = fireResistanceRegex.matcher(allLore);
+			
+			//Find the new value.
+			if (valueMatcher.find()) {
+				//Add the value to the total.
+				value += Integer.valueOf(valueMatcher.group(1)).intValue();
+			}
+		}
+		//Return the value.
+		return value.intValue();
+	}
+	
+	public static double getIceResistance(LivingEntity entity) {
+		Integer value = Integer.valueOf(0);
+
+		//Loop through the armor slots and find armor.
+		for (ItemStack item : entity.getEquipment().getArmorContents()) {
+
+			//If the item is not null and has meta and has lore, continue.
+			if ((item != null) && (item.hasItemMeta()) && (item.getItemMeta().hasLore())) {
+
+				//Create an array list of "Lore" strings and add them to it.
+				List<String> lore = item.getItemMeta().getLore();
+
+				//Convert the array to a string, and make it all lowercase.
+				String allLore = ChatColor.stripColor(lore.toString().toLowerCase());
+
+				//Prepare for text matching using regular expressions.
+				Matcher matcher = iceResistanceRegex.matcher(allLore);
+
+				//Find the new value.
+				if (matcher.find()) {
+					value = Integer.valueOf(value.intValue() + Integer.valueOf(matcher.group(1)).intValue());
+				}
+			}
+		}
+		
+		//Check the item in the players hand.
+		ItemStack item = entity.getEquipment().getItemInHand();
+		//If the item is not null and has meta and has lore, continue.
+		if ((item != null) && (item.hasItemMeta()) && (item.getItemMeta().hasLore())) {
+			
+			//Create an array list of "Lore" strings and add them to it.
+			Object lore = item.getItemMeta().getLore();
+			
+			//Convert the array to a string, and make it all lowercase.
+			String allLore =  ChatColor.stripColor(lore.toString().toLowerCase());
+			
+			//Prepare for text matching using regular expressions.
+			Matcher valueMatcher = iceResistanceRegex.matcher(allLore);
+			
+			//Find the new value.
+			if (valueMatcher.find()) {
+				//Add the value to the total.
+				value += Integer.valueOf(valueMatcher.group(1)).intValue();
+			}
+		}
+		//Return the value.
+		return value.intValue();
+	}
+	
+	public static double getLightningResistance(LivingEntity entity) {
+		Integer value = Integer.valueOf(0);
+
+		//Loop through the armor slots and find armor.
+		for (ItemStack item : entity.getEquipment().getArmorContents()) {
+
+			//If the item is not null and has meta and has lore, continue.
+			if ((item != null) && (item.hasItemMeta()) && (item.getItemMeta().hasLore())) {
+
+				//Create an array list of "Lore" strings and add them to it.
+				List<String> lore = item.getItemMeta().getLore();
+
+				//Convert the array to a string, and make it all lowercase.
+				String allLore = ChatColor.stripColor(lore.toString().toLowerCase());
+
+				//Prepare for text matching using regular expressions.
+				Matcher matcher = lightningResistanceRegex.matcher(allLore);
+
+				//Find the new value.
+				if (matcher.find()) {
+					value = Integer.valueOf(value.intValue() + Integer.valueOf(matcher.group(1)).intValue());
+				}
+			}
+		}
+		
+		//Check the item in the players hand.
+		ItemStack item = entity.getEquipment().getItemInHand();
+		//If the item is not null and has meta and has lore, continue.
+		if ((item != null) && (item.hasItemMeta()) && (item.getItemMeta().hasLore())) {
+			
+			//Create an array list of "Lore" strings and add them to it.
+			Object lore = item.getItemMeta().getLore();
+			
+			//Convert the array to a string, and make it all lowercase.
+			String allLore =  ChatColor.stripColor(lore.toString().toLowerCase());
+			
+			//Prepare for text matching using regular expressions.
+			Matcher valueMatcher = lightningResistanceRegex.matcher(allLore);
+			
+			//Find the new value.
+			if (valueMatcher.find()) {
+				//Add the value to the total.
+				value += Integer.valueOf(valueMatcher.group(1)).intValue();
+			}
+		}
+		//Return the value.
+		return value.intValue();
+	}
+	
+	public static double getPoisonResistance(LivingEntity entity) {
+		Integer value = Integer.valueOf(0);
+
+		//Loop through the armor slots and find armor.
+		for (ItemStack item : entity.getEquipment().getArmorContents()) {
+
+			//If the item is not null and has meta and has lore, continue.
+			if ((item != null) && (item.hasItemMeta()) && (item.getItemMeta().hasLore())) {
+
+				//Create an array list of "Lore" strings and add them to it.
+				List<String> lore = item.getItemMeta().getLore();
+
+				//Convert the array to a string, and make it all lowercase.
+				String allLore = ChatColor.stripColor(lore.toString().toLowerCase());
+
+				//Prepare for text matching using regular expressions.
+				Matcher matcher = poisonResistanceRegex.matcher(allLore);
+
+				//Find the new value.
+				if (matcher.find()) {
+					value = Integer.valueOf(value.intValue() + Integer.valueOf(matcher.group(1)).intValue());
+				}
+			}
+		}
+		
+		//Check the item in the players hand.
+		ItemStack item = entity.getEquipment().getItemInHand();
+		//If the item is not null and has meta and has lore, continue.
+		if ((item != null) && (item.hasItemMeta()) && (item.getItemMeta().hasLore())) {
+			
+			//Create an array list of "Lore" strings and add them to it.
+			Object lore = item.getItemMeta().getLore();
+			
+			//Convert the array to a string, and make it all lowercase.
+			String allLore =  ChatColor.stripColor(lore.toString().toLowerCase());
+			
+			//Prepare for text matching using regular expressions.
+			Matcher valueMatcher = poisonResistanceRegex.matcher(allLore);
+			
+			//Find the new value.
+			if (valueMatcher.find()) {
+				//Add the value to the total.
+				value += Integer.valueOf(valueMatcher.group(1)).intValue();
+			}
+		}
+		//Return the value.
+		return value.intValue();
+	}
+	
+	public static double getParalyzeResistance(LivingEntity entity) {
+		Integer value = Integer.valueOf(0);
+
+		//Loop through the armor slots and find armor.
+		for (ItemStack item : entity.getEquipment().getArmorContents()) {
+
+			//If the item is not null and has meta and has lore, continue.
+			if ((item != null) && (item.hasItemMeta()) && (item.getItemMeta().hasLore())) {
+
+				//Create an array list of "Lore" strings and add them to it.
+				List<String> lore = item.getItemMeta().getLore();
+
+				//Convert the array to a string, and make it all lowercase.
+				String allLore = ChatColor.stripColor(lore.toString().toLowerCase());
+
+				//Prepare for text matching using regular expressions.
+				Matcher matcher = paralyzeResistanceRegex.matcher(allLore);
+
+				//Find the new value.
+				if (matcher.find()) {
+					value = Integer.valueOf(value.intValue() + Integer.valueOf(matcher.group(1)).intValue());
+				}
+			}
+		}
+		
+		//Check the item in the players hand.
+		ItemStack item = entity.getEquipment().getItemInHand();
+		//If the item is not null and has meta and has lore, continue.
+		if ((item != null) && (item.hasItemMeta()) && (item.getItemMeta().hasLore())) {
+			
+			//Create an array list of "Lore" strings and add them to it.
+			Object lore = item.getItemMeta().getLore();
+			
+			//Convert the array to a string, and make it all lowercase.
+			String allLore =  ChatColor.stripColor(lore.toString().toLowerCase());
+			
+			//Prepare for text matching using regular expressions.
+			Matcher valueMatcher = paralyzeResistanceRegex.matcher(allLore);
+			
+			//Find the new value.
+			if (valueMatcher.find()) {
+				//Add the value to the total.
+				value += Integer.valueOf(valueMatcher.group(1)).intValue();
+			}
+		}
+		//Return the value.
+		return value.intValue();
+	}
+	
+	public static double getBlindnessResistance(LivingEntity entity) {
+		Integer value = Integer.valueOf(0);
+
+		//Loop through the armor slots and find armor.
+		for (ItemStack item : entity.getEquipment().getArmorContents()) {
+
+			//If the item is not null and has meta and has lore, continue.
+			if ((item != null) && (item.hasItemMeta()) && (item.getItemMeta().hasLore())) {
+
+				//Create an array list of "Lore" strings and add them to it.
+				List<String> lore = item.getItemMeta().getLore();
+
+				//Convert the array to a string, and make it all lowercase.
+				String allLore = ChatColor.stripColor(lore.toString().toLowerCase());
+
+				//Prepare for text matching using regular expressions.
+				Matcher matcher = blindnessResistanceRegex.matcher(allLore);
+
+				//Find the new value.
+				if (matcher.find()) {
+					value = Integer.valueOf(value.intValue() + Integer.valueOf(matcher.group(1)).intValue());
+				}
+			}
+		}
+		
+		//Check the item in the players hand.
+		ItemStack item = entity.getEquipment().getItemInHand();
+		//If the item is not null and has meta and has lore, continue.
+		if ((item != null) && (item.hasItemMeta()) && (item.getItemMeta().hasLore())) {
+			
+			//Create an array list of "Lore" strings and add them to it.
+			Object lore = item.getItemMeta().getLore();
+			
+			//Convert the array to a string, and make it all lowercase.
+			String allLore =  ChatColor.stripColor(lore.toString().toLowerCase());
+			
+			//Prepare for text matching using regular expressions.
+			Matcher valueMatcher = blindnessResistanceRegex.matcher(allLore);
+			
+			//Find the new value.
+			if (valueMatcher.find()) {
+				//Add the value to the total.
+				value += Integer.valueOf(valueMatcher.group(1)).intValue();
+			}
+		}
+		//Return the value.
+		return value.intValue();
+	}
+	
+	public static double getWaterbreathing(LivingEntity entity) {
+		Integer value = Integer.valueOf(0);
+
+		//Loop through the armor slots and find armor.
+		for (ItemStack item : entity.getEquipment().getArmorContents()) {
+
+			//If the item is not null and has meta and has lore, continue.
+			if ((item != null) && (item.hasItemMeta()) && (item.getItemMeta().hasLore())) {
+
+				//Create an array list of "Lore" strings and add them to it.
+				List<String> lore = item.getItemMeta().getLore();
+
+				//Convert the array to a string, and make it all lowercase.
+				String allLore = ChatColor.stripColor(lore.toString().toLowerCase());
+
+				//Prepare for text matching using regular expressions.
+				Matcher matcher = waterbreathingRegex.matcher(allLore);
+
+				//Find the new value.
+				if (matcher.find()) {
+					value = Integer.valueOf(value.intValue() + Integer.valueOf(matcher.group(1)).intValue());
+				}
+			}
+		}
+		
+		//Check the item in the players hand.
+		ItemStack item = entity.getEquipment().getItemInHand();
+		//If the item is not null and has meta and has lore, continue.
+		if ((item != null) && (item.hasItemMeta()) && (item.getItemMeta().hasLore())) {
+			
+			//Create an array list of "Lore" strings and add them to it.
+			Object lore = item.getItemMeta().getLore();
+			
+			//Convert the array to a string, and make it all lowercase.
+			String allLore =  ChatColor.stripColor(lore.toString().toLowerCase());
+			
+			//Prepare for text matching using regular expressions.
+			Matcher valueMatcher = waterbreathingRegex.matcher(allLore);
+			
+			//Find the new value.
+			if (valueMatcher.find()) {
+				//Add the value to the total.
+				value += Integer.valueOf(valueMatcher.group(1)).intValue();
+			}
+		}
+		//Return the value.
+		return value.intValue();
+	}
+	
+	public static double getPersonality(LivingEntity entity) {
+		Integer value = Integer.valueOf(0);
+
+		//Loop through the armor slots and find armor.
+		for (ItemStack item : entity.getEquipment().getArmorContents()) {
+
+			//If the item is not null and has meta and has lore, continue.
+			if ((item != null) && (item.hasItemMeta()) && (item.getItemMeta().hasLore())) {
+
+				//Create an array list of "Lore" strings and add them to it.
+				List<String> lore = item.getItemMeta().getLore();
+
+				//Convert the array to a string, and make it all lowercase.
+				String allLore = ChatColor.stripColor(lore.toString().toLowerCase());
+
+				//Prepare for text matching using regular expressions.
+				Matcher matcher = personalityRegex.matcher(allLore);
+
+				//Find the new value.
+				if (matcher.find()) {
+					value = Integer.valueOf(value.intValue() + Integer.valueOf(matcher.group(1)).intValue());
+				}
+			}
+		}
+		
+		//Check the item in the players hand.
+		ItemStack item = entity.getEquipment().getItemInHand();
+		//If the item is not null and has meta and has lore, continue.
+		if ((item != null) && (item.hasItemMeta()) && (item.getItemMeta().hasLore())) {
+			
+			//Create an array list of "Lore" strings and add them to it.
+			Object lore = item.getItemMeta().getLore();
+			
+			//Convert the array to a string, and make it all lowercase.
+			String allLore =  ChatColor.stripColor(lore.toString().toLowerCase());
+			
+			//Prepare for text matching using regular expressions.
+			Matcher valueMatcher = personalityRegex.matcher(allLore);
+			
+			//Find the new value.
+			if (valueMatcher.find()) {
+				//Add the value to the total.
+				value += Integer.valueOf(valueMatcher.group(1)).intValue();
+			}
+		}
+		//Return the value.
+		return value.intValue();
+	}
+	
+	public static double getGoldFind(LivingEntity entity) {
 		Integer value = Integer.valueOf(0);
 
 		//Loop through the armor slots and find armor.
@@ -574,11 +1464,32 @@ public class ItemLoreFactory {
 				}
 			}
 		}
+		
+		//Check the item in the players hand.
+		ItemStack item = entity.getEquipment().getItemInHand();
+		//If the item is not null and has meta and has lore, continue.
+		if ((item != null) && (item.hasItemMeta()) && (item.getItemMeta().hasLore())) {
+			
+			//Create an array list of "Lore" strings and add them to it.
+			Object lore = item.getItemMeta().getLore();
+			
+			//Convert the array to a string, and make it all lowercase.
+			String allLore =  ChatColor.stripColor(lore.toString().toLowerCase());
+			
+			//Prepare for text matching using regular expressions.
+			Matcher valueMatcher = goldFindRegex.matcher(allLore);
+			
+			//Find the new value.
+			if (valueMatcher.find()) {
+				//Add the value to the total.
+				value += Integer.valueOf(valueMatcher.group(1)).intValue();
+			}
+		}
 		//Return the value.
 		return value.intValue();
 	}
-
-	public double getHealthPointsBonus(LivingEntity entity) {
+	
+	public static double getMagicFind(LivingEntity entity) {
 		Integer value = Integer.valueOf(0);
 
 		//Loop through the armor slots and find armor.
@@ -594,7 +1505,7 @@ public class ItemLoreFactory {
 				String allLore = ChatColor.stripColor(lore.toString().toLowerCase());
 
 				//Prepare for text matching using regular expressions.
-				Matcher matcher = healthRegex.matcher(allLore);
+				Matcher matcher = magicFindRegex.matcher(allLore);
 
 				//Find the new value.
 				if (matcher.find()) {
@@ -602,68 +1513,32 @@ public class ItemLoreFactory {
 				}
 			}
 		}
-		//Return the value.
-		return value.intValue();
-	}
-
-	public double getHealthPointsRegenerate(LivingEntity entity) {
-		Integer value = Integer.valueOf(0);
-
-		//Loop through the armor slots and find armor.
-		for (ItemStack item : entity.getEquipment().getArmorContents()) {
-
-			//If the item is not null and has meta and has lore, continue.
-			if ((item != null) && (item.hasItemMeta()) && (item.getItemMeta().hasLore())) {
-
-				//Create an array list of "Lore" strings and add them to it.
-				List<String> lore = item.getItemMeta().getLore();
-
-				//Convert the array to a string, and make it all lowercase.
-				String allLore = ChatColor.stripColor(lore.toString().toLowerCase());
-
-				//Prepare for text matching using regular expressions.
-				Matcher matcher = healthRegenRegex.matcher(allLore);
-
-				//Find the new value.
-				if (matcher.find()) {
-					value = Integer.valueOf(value.intValue() + Integer.valueOf(matcher.group(1)).intValue());
-				}
+		
+		//Check the item in the players hand.
+		ItemStack item = entity.getEquipment().getItemInHand();
+		//If the item is not null and has meta and has lore, continue.
+		if ((item != null) && (item.hasItemMeta()) && (item.getItemMeta().hasLore())) {
+			
+			//Create an array list of "Lore" strings and add them to it.
+			Object lore = item.getItemMeta().getLore();
+			
+			//Convert the array to a string, and make it all lowercase.
+			String allLore =  ChatColor.stripColor(lore.toString().toLowerCase());
+			
+			//Prepare for text matching using regular expressions.
+			Matcher valueMatcher = magicFindRegex.matcher(allLore);
+			
+			//Find the new value.
+			if (valueMatcher.find()) {
+				//Add the value to the total.
+				value += Integer.valueOf(valueMatcher.group(1)).intValue();
 			}
 		}
 		//Return the value.
 		return value.intValue();
 	}
-
-
-	public double getItemFindBonus(LivingEntity entity) {
-		Integer value = Integer.valueOf(0);
-
-		//Loop through the armor slots and find armor.
-		for (ItemStack item : entity.getEquipment().getArmorContents()) {
-
-			//If the item is not null and has meta and has lore, continue.
-			if ((item != null) && (item.hasItemMeta()) && (item.getItemMeta().hasLore())) {
-
-				//Create an array list of "Lore" strings and add them to it.
-				List<String> lore = item.getItemMeta().getLore();
-
-				//Convert the array to a string, and make it all lowercase.
-				String allLore = ChatColor.stripColor(lore.toString().toLowerCase());
-
-				//Prepare for text matching using regular expressions.
-				Matcher matcher = itemFindRegex.matcher(allLore);
-
-				//Find the new value.
-				if (matcher.find()) {
-					value = Integer.valueOf(value.intValue() + Integer.valueOf(matcher.group(1)).intValue());
-				}
-			}
-		}
-		//Return the value.
-		return value.intValue();
-	}
-
-	public double getKnockBackBonus(LivingEntity entity) {
+	
+	public static double getKnockback(LivingEntity entity) {
 		Integer value = Integer.valueOf(0);
 
 		//Loop through the armor slots and find armor.
@@ -686,22 +1561,33 @@ public class ItemLoreFactory {
 					value = Integer.valueOf(value.intValue() + Integer.valueOf(matcher.group(1)).intValue());
 				}
 			}
-		}		
+		}
+		
+		//Check the item in the players hand.
 		ItemStack item = entity.getEquipment().getItemInHand();
+		//If the item is not null and has meta and has lore, continue.
 		if ((item != null) && (item.hasItemMeta()) && (item.getItemMeta().hasLore())) {
+			
+			//Create an array list of "Lore" strings and add them to it.
 			Object lore = item.getItemMeta().getLore();
-			String allLore = lore.toString().toLowerCase();
-
+			
+			//Convert the array to a string, and make it all lowercase.
+			String allLore =  ChatColor.stripColor(lore.toString().toLowerCase());
+			
+			//Prepare for text matching using regular expressions.
 			Matcher valueMatcher = knockbackRegex.matcher(allLore);
+			
+			//Find the new value.
 			if (valueMatcher.find()) {
+				//Add the value to the total.
 				value += Integer.valueOf(valueMatcher.group(1)).intValue();
 			}
 		}
 		//Return the value.
 		return value.intValue();
 	}
-
-	public double getLifeStealBonus(LivingEntity entity) {
+	
+	public static double getLifesteal(LivingEntity entity) {
 		Integer value = Integer.valueOf(0);
 
 		//Loop through the armor slots and find armor.
@@ -726,326 +1612,27 @@ public class ItemLoreFactory {
 			}
 		}
 		
+		//Check the item in the players hand.
 		ItemStack item = entity.getEquipment().getItemInHand();
+		//If the item is not null and has meta and has lore, continue.
 		if ((item != null) && (item.hasItemMeta()) && (item.getItemMeta().hasLore())) {
+			
+			//Create an array list of "Lore" strings and add them to it.
 			Object lore = item.getItemMeta().getLore();
-			String allLore = lore.toString().toLowerCase();
-
+			
+			//Convert the array to a string, and make it all lowercase.
+			String allLore =  ChatColor.stripColor(lore.toString().toLowerCase());
+			
+			//Prepare for text matching using regular expressions.
 			Matcher valueMatcher = lifestealRegex.matcher(allLore);
+			
+			//Find the new value.
 			if (valueMatcher.find()) {
+				//Add the value to the total.
 				value += Integer.valueOf(valueMatcher.group(1)).intValue();
 			}
 		}
 		//Return the value.
 		return value.intValue();
 	}
-
-	public double getManaPointsBonus(LivingEntity entity) {
-		Integer value = Integer.valueOf(0);
-
-		//Loop through the armor slots and find armor.
-		for (ItemStack item : entity.getEquipment().getArmorContents()) {
-
-			//If the item is not null and has meta and has lore, continue.
-			if ((item != null) && (item.hasItemMeta()) && (item.getItemMeta().hasLore())) {
-
-				//Create an array list of "Lore" strings and add them to it.
-				List<String> lore = item.getItemMeta().getLore();
-
-				//Convert the array to a string, and make it all lowercase.
-				String allLore = ChatColor.stripColor(lore.toString().toLowerCase());
-
-				//Prepare for text matching using regular expressions.
-				Matcher matcher = manaRegex.matcher(allLore);
-
-				//Find the new value.
-				if (matcher.find()) {
-					value = Integer.valueOf(value.intValue() + Integer.valueOf(matcher.group(1)).intValue());
-				}
-			}
-		}
-		//Return the value.
-		return value.intValue();
-	}
-
-	public double getManaPointsRegenerate(LivingEntity entity) {
-		Integer value = Integer.valueOf(0);
-
-		//Loop through the armor slots and find armor.
-		for (ItemStack item : entity.getEquipment().getArmorContents()) {
-
-			//If the item is not null and has meta and has lore, continue.
-			if ((item != null) && (item.hasItemMeta()) && (item.getItemMeta().hasLore())) {
-
-				//Create an array list of "Lore" strings and add them to it.
-				List<String> lore = item.getItemMeta().getLore();
-
-				//Convert the array to a string, and make it all lowercase.
-				String allLore = ChatColor.stripColor(lore.toString().toLowerCase());
-
-				//Prepare for text matching using regular expressions.
-				Matcher matcher = manaRegenRegex.matcher(allLore);
-
-				//Find the new value.
-				if (matcher.find()) {
-					value = Integer.valueOf(value.intValue() + Integer.valueOf(matcher.group(1)).intValue());
-				}
-			}
-		}
-		//Return the value.
-		return value.intValue();
-	}
-
-	public double getManasteal(LivingEntity entity) {
-		Integer value = Integer.valueOf(0);
-
-		//Loop through the armor slots and find armor.
-		for (ItemStack item : entity.getEquipment().getArmorContents()) {
-
-			//If the item is not null and has meta and has lore, continue.
-			if ((item != null) && (item.hasItemMeta()) && (item.getItemMeta().hasLore())) {
-
-				//Create an array list of "Lore" strings and add them to it.
-				List<String> lore = item.getItemMeta().getLore();
-
-				//Convert the array to a string, and make it all lowercase.
-				String allLore = ChatColor.stripColor(lore.toString().toLowerCase());
-
-				//Prepare for text matching using regular expressions.
-				Matcher matcher = manastealRegex.matcher(allLore);
-
-				//Find the new value.
-				if (matcher.find()) {
-					value = Integer.valueOf(value.intValue() + Integer.valueOf(matcher.group(1)).intValue());
-				}
-			}
-		}		
-		ItemStack item = entity.getEquipment().getItemInHand();
-		if ((item != null) && (item.hasItemMeta()) && (item.getItemMeta().hasLore())) {
-			Object lore = item.getItemMeta().getLore();
-			String allLore = lore.toString().toLowerCase();
-
-			Matcher valueMatcher = manastealRegex.matcher(allLore);
-			if (valueMatcher.find()) {
-				value += Integer.valueOf(valueMatcher.group(1)).intValue();
-			}
-		}
-		//Return the value.
-		return value.intValue();
-	}
-
-
-	public double getPoisonDamage(LivingEntity entity) {
-		Integer value = Integer.valueOf(0);
-		
-		ItemStack item = entity.getEquipment().getItemInHand();
-		if ((item != null) && (item.hasItemMeta()) && (item.getItemMeta().hasLore())) {
-			Object lore = item.getItemMeta().getLore();
-			String allLore = lore.toString().toLowerCase();
-
-			Matcher valueMatcher = poisonDamageRegex.matcher(allLore);
-			if (valueMatcher.find()) {
-				value += Integer.valueOf(valueMatcher.group(1)).intValue();
-			}
-		}
-		//Return the value.
-		return value.intValue();
-	}
-
-	public double getPoisonResist(LivingEntity entity) {
-		Integer value = Integer.valueOf(0);
-
-		//Loop through the armor slots and find armor.
-		for (ItemStack item : entity.getEquipment().getArmorContents()) {
-
-			//If the item is not null and has meta and has lore, continue.
-			if ((item != null) && (item.hasItemMeta()) && (item.getItemMeta().hasLore())) {
-
-				//Create an array list of "Lore" strings and add them to it.
-				List<String> lore = item.getItemMeta().getLore();
-
-				//Convert the array to a string, and make it all lowercase.
-				String allLore = ChatColor.stripColor(lore.toString().toLowerCase());
-
-				//Prepare for text matching using regular expressions.
-				Matcher matcher = poisonResistRegex.matcher(allLore);
-
-				//Find the new value.
-				if (matcher.find()) {
-					value = Integer.valueOf(value.intValue() + Integer.valueOf(matcher.group(1)).intValue());
-				}
-			}
-		}
-		//Return the value.
-		return value.intValue();
-	}
-
-	public double getReflectionBonus(LivingEntity entity) {
-		Integer value = Integer.valueOf(0);
-
-		//Loop through the armor slots and find armor.
-		for (ItemStack item : entity.getEquipment().getArmorContents()) {
-
-			//If the item is not null and has meta and has lore, continue.
-			if ((item != null) && (item.hasItemMeta()) && (item.getItemMeta().hasLore())) {
-
-				//Create an array list of "Lore" strings and add them to it.
-				List<String> lore = item.getItemMeta().getLore();
-
-				//Convert the array to a string, and make it all lowercase.
-				String allLore = ChatColor.stripColor(lore.toString().toLowerCase());
-
-				//Prepare for text matching using regular expressions.
-				Matcher matcher = reflectionRegex.matcher(allLore);
-
-				//Find the new value.
-				if (matcher.find()) {
-					value = Integer.valueOf(value.intValue() + Integer.valueOf(matcher.group(1)).intValue());
-				}
-			}
-		}
-		//Return the value.
-		return value.intValue();
-	}
-
-	public double getSlowBonus(LivingEntity entity) {
-		Integer value = Integer.valueOf(0);
-
-		//Loop through the armor slots and find armor.
-		for (ItemStack item : entity.getEquipment().getArmorContents()) {
-
-			//If the item is not null and has meta and has lore, continue.
-			if ((item != null) && (item.hasItemMeta()) && (item.getItemMeta().hasLore())) {
-
-				//Create an array list of "Lore" strings and add them to it.
-				List<String> lore = item.getItemMeta().getLore();
-
-				//Convert the array to a string, and make it all lowercase.
-				String allLore = ChatColor.stripColor(lore.toString().toLowerCase());
-
-				//Prepare for text matching using regular expressions.
-				Matcher matcher = slownessRegex.matcher(allLore);
-
-				//Find the new value.
-				if (matcher.find()) {
-					value = Integer.valueOf(value.intValue() + Integer.valueOf(matcher.group(1)).intValue());
-				}
-			}
-		}		
-		ItemStack item = entity.getEquipment().getItemInHand();
-		if ((item != null) && (item.hasItemMeta()) && (item.getItemMeta().hasLore())) {
-			Object lore = item.getItemMeta().getLore();
-			String allLore = lore.toString().toLowerCase();
-
-			Matcher valueMatcher = slownessRegex.matcher(allLore);
-			if (valueMatcher.find()) {
-				value += Integer.valueOf(valueMatcher.group(1)).intValue();
-			}
-		}
-		//Return the value.
-		return value.intValue();
-	}
-
-	public double getStaminaBonus(LivingEntity entity) {
-		Integer value = Integer.valueOf(0);
-
-		//Loop through the armor slots and find armor.
-		for (ItemStack item : entity.getEquipment().getArmorContents()) {
-
-			//If the item is not null and has meta and has lore, continue.
-			if ((item != null) && (item.hasItemMeta()) && (item.getItemMeta().hasLore())) {
-
-				//Create an array list of "Lore" strings and add them to it.
-				List<String> lore = item.getItemMeta().getLore();
-
-				//Convert the array to a string, and make it all lowercase.
-				String allLore = ChatColor.stripColor(lore.toString().toLowerCase());
-
-				//Prepare for text matching using regular expressions.
-				Matcher matcher = staminaRegex.matcher(allLore);
-
-				//Find the new value.
-				if (matcher.find()) {
-					value = Integer.valueOf(value.intValue() + Integer.valueOf(matcher.group(1)).intValue());
-				}
-			}
-		}
-		//Return the value.
-		return value.intValue();
-	}
-
-	public double getStaminaRegenerate(LivingEntity entity) {
-		Integer value = Integer.valueOf(0);
-
-		//Loop through the armor slots and find armor.
-		for (ItemStack item : entity.getEquipment().getArmorContents()) {
-
-			//If the item is not null and has meta and has lore, continue.
-			if ((item != null) && (item.hasItemMeta()) && (item.getItemMeta().hasLore())) {
-
-				//Create an array list of "Lore" strings and add them to it.
-				List<String> lore = item.getItemMeta().getLore();
-
-				//Convert the array to a string, and make it all lowercase.
-				String allLore = ChatColor.stripColor(lore.toString().toLowerCase());
-
-				//Prepare for text matching using regular expressions.
-				Matcher matcher = staminaRegenRegex.matcher(allLore);
-
-				//Find the new value.
-				if (matcher.find()) {
-					value = Integer.valueOf(value.intValue() + Integer.valueOf(matcher.group(1)).intValue());
-				}
-			}
-		}
-		//Return the value.
-		return value.intValue();
-	}
-
-
-	public double getThornDamage(LivingEntity entity) {
-		Integer value = Integer.valueOf(0);
-		
-		ItemStack item = entity.getEquipment().getItemInHand();
-		if ((item != null) && (item.hasItemMeta()) && (item.getItemMeta().hasLore())) {
-			Object lore = item.getItemMeta().getLore();
-			String allLore = lore.toString().toLowerCase();
-
-			Matcher valueMatcher = thornDamageRegex.matcher(allLore);
-			if (valueMatcher.find()) {
-				value += Integer.valueOf(valueMatcher.group(1)).intValue();
-			}
-		}
-		//Return the value.
-		return value.intValue();
-	}
-
-	public double getThornResist(LivingEntity entity) {
-		Integer value = Integer.valueOf(0);
-
-		//Loop through the armor slots and find armor.
-		for (ItemStack item : entity.getEquipment().getArmorContents()) {
-
-			//If the item is not null and has meta and has lore, continue.
-			if ((item != null) && (item.hasItemMeta()) && (item.getItemMeta().hasLore())) {
-
-				//Create an array list of "Lore" strings and add them to it.
-				List<String> lore = item.getItemMeta().getLore();
-
-				//Convert the array to a string, and make it all lowercase.
-				String allLore = ChatColor.stripColor(lore.toString().toLowerCase());
-
-				//Prepare for text matching using regular expressions.
-				Matcher matcher = thornResistRegex.matcher(allLore);
-
-				//Find the new value.
-				if (matcher.find()) {
-					value = Integer.valueOf(value.intValue() + Integer.valueOf(matcher.group(1)).intValue());
-				}
-			}
-		}
-		//Return the value.
-		return value.intValue();
-	}
-
 }

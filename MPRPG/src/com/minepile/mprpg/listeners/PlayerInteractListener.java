@@ -16,8 +16,8 @@ import com.minepile.mprpg.MPRPG;
 import com.minepile.mprpg.gui.PlayerMailManager;
 import com.minepile.mprpg.gui.PlayerMenuManager;
 import com.minepile.mprpg.inventory.BankChestManager;
-import com.minepile.mprpg.items.ItemLoreFactory;
 import com.minepile.mprpg.items.LootTableChestManager;
+import com.minepile.mprpg.player.PlayerAttributesManager;
 import com.minepile.mprpg.player.PlayerCharacterManager;
 import com.minepile.mprpg.professions.Alchemy;
 import com.minepile.mprpg.professions.Blacksmithing;
@@ -360,7 +360,8 @@ public class PlayerInteractListener implements Listener{
 		taskID = Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
 			@Override
 			public void run() {
-				ItemLoreFactory.getInstance().applyHPBonus(player, true);
+				//TODO: ItemLoreFactory.getInstance().applyHPBonus(player, true);
+				PlayerAttributesManager.getMaxHealthPoints(player);
 			} //END Run method.
 		}, 10); //(20 ticks = 1 second)
 	}

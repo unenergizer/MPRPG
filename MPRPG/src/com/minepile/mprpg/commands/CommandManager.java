@@ -20,6 +20,7 @@ import com.minepile.mprpg.chat.MessageManager;
 import com.minepile.mprpg.entities.MonsterCreatorManager;
 import com.minepile.mprpg.guild.GuildManager;
 import com.minepile.mprpg.items.ItemLoreFactory;
+import com.minepile.mprpg.player.PlayerAttributesManager;
 import com.minepile.mprpg.player.PlayerCharacterManager;
 import com.minepile.mprpg.player.PlayerManager;
 
@@ -656,6 +657,18 @@ public class CommandManager implements CommandExecutor{
 					player.sendMessage(ChatColor.DARK_GRAY + "" + ChatColor.BOLD +"---------------------------------------------");
 
 				}
+
+
+				/////////////////////////////////////////////////////////////////////////////////
+				// STATS: Opens a inventory menu so the player can assing attribute points //////
+				/////////////////////////////////////////////////////////////////////////////////
+
+				//Teleports the player back to the spawn location.
+				if (cmd.getLabel().equalsIgnoreCase("stats")) {
+					PlayerAttributesManager.createAttributeAssignMenu(player);
+					PlayerAttributesManager.openAttributeAssingMenu(player);
+				}
+				
 			} else {
 				player.sendMessage(ChatColor.RED + "You can not use this command until you have selected or created a new character" + ChatColor.DARK_GRAY + ".");
 			}
