@@ -34,7 +34,7 @@ public class PlayerMenuManager {
 	static String gameSettingsMenu = "Settings";
 	
 	//Global Menu Items
-	static ItemStack on, off;
+	static ItemStack trackingDevice, hearthStone, changeLobby, cosmeticMenu, ruleBook, achievements, gameStats, guildManagement, playerSettings, on, off;
 	
 	//Create instance
 	public static PlayerMenuManager getInstance() {
@@ -46,6 +46,10 @@ public class PlayerMenuManager {
 	public void setup(MPRPG plugin) {
 		this.plugin = plugin;
 		
+		makeMenuItems();
+	}
+	
+	private void makeMenuItems() {
 		//Setup global menu items
 		Dye dyeOn = new Dye(Material.INK_SACK);
 		Dye dyeOff = new Dye(Material.INK_SACK);
@@ -54,6 +58,68 @@ public class PlayerMenuManager {
 		on = dyeOn.toItemStack(1);
 		off = dyeOff.toItemStack(1);
 		
+		/////////////////////////////////
+		//// Main Menu Items ////////////
+		/////////////////////////////////
+
+		ArrayList<String> loreTrackingDevice = new ArrayList<String>();
+		ArrayList<String> loreHearthStone = new ArrayList<String>();
+		ArrayList<String> loreChangeLobby = new ArrayList<String>();
+		ArrayList<String> loreCosmeticMenu = new ArrayList<String>();
+		
+		ArrayList<String> loreRuleBook = new ArrayList<String>();
+		ArrayList<String> loreAchievements = new ArrayList<String>();
+		ArrayList<String> loreGameStats = new ArrayList<String>();
+		ArrayList<String> loreGuildManagement = new ArrayList<String>();
+		ArrayList<String> lorePlayerSettings = new ArrayList<String>();
+		
+		loreTrackingDevice.add(ChatColor.GRAY + "This menu will allow you to");
+		loreTrackingDevice.add(ChatColor.GRAY + " track party members, guild");
+		loreTrackingDevice.add(ChatColor.GRAY + " members, locations, and NPC's.");
+		
+		loreHearthStone.add(ChatColor.GRAY + "This will warp you to the last");
+		loreHearthStone.add(ChatColor.GRAY + " Inn you set your home at.");
+		
+		loreChangeLobby.add(ChatColor.GRAY + "This will let you change what game");
+		loreChangeLobby.add(ChatColor.GRAY + " ");
+		
+		loreCosmeticMenu.add(ChatColor.GRAY + "Support the server and buy cool");
+		loreCosmeticMenu.add(ChatColor.GRAY + " cosmetic items here!  This best");
+		loreCosmeticMenu.add(ChatColor.GRAY + " way to stand out in a crowd!");
+		
+		loreRuleBook.add(ChatColor.GRAY + "This book covers all the rules.");
+		loreRuleBook.add(ChatColor.GRAY + " Read this and get a reward!");
+		
+		loreAchievements.add(ChatColor.GRAY + "This shows your current");
+		loreAchievements.add(ChatColor.GRAY + " characters in game");
+		loreAchievements.add(ChatColor.GRAY + " achievements.");
+		
+		loreGameStats.add(ChatColor.GRAY + "This shows your current");
+		loreGameStats.add(ChatColor.GRAY + " characters in game");
+		loreGameStats.add(ChatColor.GRAY + " statistics.");
+		
+		loreGuildManagement.add(ChatColor.GRAY + "This menu will let you manage");
+		loreGuildManagement.add(ChatColor.GRAY + " your guild.  You can also see");
+		loreGuildManagement.add(ChatColor.GRAY + " what members are online here.");
+		
+		lorePlayerSettings.add(ChatColor.GRAY + "Edit your game settings here.");
+		lorePlayerSettings.add(ChatColor.GRAY + " The settings menu holds a lot");
+		lorePlayerSettings.add(ChatColor.GRAY + " of options to customize your");
+		lorePlayerSettings.add(ChatColor.GRAY + " game experience.");
+		
+		
+		//Row 1
+		trackingDevice = new ItemBuilder(Material.COMPASS).setTitle(ChatColor.GREEN + "Tracking Device").addLores(loreTrackingDevice).build();
+		hearthStone = new ItemBuilder(Material.NETHER_STAR).setTitle(ChatColor.LIGHT_PURPLE + "Hearth Stone").addLores(loreHearthStone).build();
+		changeLobby = new ItemBuilder(Material.WATCH).setTitle(ChatColor.GREEN + "Change Lobby").addLores(loreChangeLobby).build();
+		cosmeticMenu = new ItemBuilder(Material.ENDER_CHEST).setTitle(ChatColor.AQUA + "Cosmetic Menu").addLores(loreCosmeticMenu).build();
+		
+		//Row 2
+		ruleBook = new ItemBuilder(Material.BOOK, 1).setTitle(ChatColor.RED + "Rule Book").addLores(loreRuleBook).build();
+        achievements = new ItemBuilder(Material.ENCHANTED_BOOK, 1).setTitle(ChatColor.GREEN + "Player Achievement").addLores(loreAchievements).build();
+        gameStats = new ItemBuilder(Material.MAP).setTitle(ChatColor.GREEN + "Game Stats").addLores(loreGameStats).build();
+        guildManagement = new ItemBuilder(Material.CAKE).setTitle(ChatColor.GREEN + "Guild Management").addLores(loreGuildManagement).build();
+        playerSettings = new ItemBuilder(Material.REDSTONE_COMPARATOR).setTitle(ChatColor.RED + "Player Settings").addLores(lorePlayerSettings).build();
 	}
 	
 	/**
@@ -68,32 +134,48 @@ public class PlayerMenuManager {
 		/// MAIN MENU ///
 		/////////////////
 		
-		Inventory mainMenu = Bukkit.createInventory(player, 27, gameMenu);
+		Inventory mainMenu = Bukkit.createInventory(player, 9 * 4, gameMenu);
 		//Define the items in the Main Menu.
-		mainMenu.setItem(0, new ItemBuilder(Material.BOOK, 1).setTitle(ChatColor.GREEN + "Rule Book").build());
-        mainMenu.setItem(1, new ItemBuilder(Material.ENCHANTED_BOOK, 1).setTitle(ChatColor.GREEN + "Achievement").build());
-        mainMenu.setItem(2, new ItemBuilder(Material.MAP).setTitle(ChatColor.GREEN + "Stats").build());
-        mainMenu.setItem(3, new ItemBuilder(Material.WOOD_SWORD).setTitle(ChatColor.GREEN + "Guild Info").build());
-        mainMenu.setItem(6, new ItemBuilder(Material.ENDER_CHEST).setTitle(ChatColor.GREEN + "Cosmetic Menu").build());
-        mainMenu.setItem(7, new ItemBuilder(Material.MONSTER_EGG).setTitle(ChatColor.GREEN + "Pet Menu").build());
-        mainMenu.setItem(8, new ItemBuilder(Material.REDSTONE_COMPARATOR).setTitle(ChatColor.GREEN + "Settings").build());
-        
-        mainMenu.setItem(18, new ItemBuilder(Material.COMPASS).setTitle(ChatColor.GREEN + "Tracking Device").build());
-        mainMenu.setItem(19, new ItemBuilder(Material.WATCH).setTitle(ChatColor.GREEN + "Game/Lobby Menu").build());
-        mainMenu.setItem(21, new ItemBuilder(Material.GOLD_INGOT).setTitle(ChatColor.GREEN + "Gold value here").build());
-        mainMenu.setItem(22, new ItemBuilder(Material.IRON_INGOT).setTitle(ChatColor.GREEN + "Silver value here").build());
-        mainMenu.setItem(23, new ItemBuilder(Material.CLAY_BRICK).setTitle(ChatColor.GREEN + "Copper value here").build());
+		
+		ArrayList<String> playerInfo = new ArrayList<String>();
 
-        mainMenu.setItem(25, new ItemBuilder(Material.DIAMOND).setTitle(ChatColor.GREEN + "eCash value here").build());
-        mainMenu.setItem(26, new ItemBuilder(Material.ENCHANTMENT_TABLE).setTitle(ChatColor.GREEN + "Server Store").build());
+		playerInfo.add(ChatColor.GRAY + "Various information about");
+		playerInfo.add(ChatColor.GRAY + " your character.");
+		playerInfo.add("");
+		playerInfo.add(ChatColor.GRAY + "Class: " + ChatColor.RED + PlayerCharacterManager.getPlayerClass(player));
+		playerInfo.add(ChatColor.GRAY + "Level: " + ChatColor.RED + player.getLevel());
+		playerInfo.add(ChatColor.GRAY + "Guild: " + ChatColor.RED + "null");
+		playerInfo.add("");
+		playerInfo.add(ChatColor.GRAY + "Money: " + ChatColor.RED + "null");
+		playerInfo.add(ChatColor.GRAY + "eCash: " + ChatColor.RED + "null");
+		playerInfo.add("");
+		playerInfo.add(ChatColor.LIGHT_PURPLE + "Left-Click" + ChatColor.GRAY + " to change your");
+		playerInfo.add(ChatColor.GRAY + " character. You must be");
+		playerInfo.add(ChatColor.GRAY + " out of combat to switch.");
+		
+		
+		//Row 1
+		mainMenu.setItem(11, new ItemBuilder(Material.SKULL_ITEM).setTitle(ChatColor.AQUA + "Player Info").addLores(playerInfo).build());
+		mainMenu.setItem(12, trackingDevice.clone());
+		mainMenu.setItem(13, hearthStone.clone());
+		mainMenu.setItem(14, changeLobby.clone());
+		mainMenu.setItem(15, cosmeticMenu.clone());
+		
+		//Row 2
+		mainMenu.setItem(20, ruleBook.clone());
+        mainMenu.setItem(21, achievements.clone());
+        mainMenu.setItem(22, gameStats.clone());
+        mainMenu.setItem(23, guildManagement.clone());
+        mainMenu.setItem(24, playerSettings.clone());
         
+        //Save players menu.
         playerMainMenu.put(player.getUniqueId(), mainMenu);
         
         /////////////////////
         /// SETTINGS MENU ///
         /////////////////////
         
-		Inventory settingsMenu = Bukkit.createInventory(player, 36, playerName + "'s " + ChatColor.RED + gameSettingsMenu);
+		Inventory settingsMenu = Bukkit.createInventory(player, 36, gameSettingsMenu);
 		//Row Header
 		settingsMenu.setItem(0, new ItemBuilder(Material.HOPPER).setTitle(ChatColor.GREEN + "Previous Menu / Back").build());//Back to previous menu
 		settingsMenu.setItem(1, new ItemBuilder(Material.STAINED_GLASS_PANE,  1, (short) 15).setTitle(" ").build());
@@ -144,10 +226,7 @@ public class PlayerMenuManager {
 	public static void givePlayerMenu(Player player) {
 		PlayerInventory playerInv = player.getInventory();
 		
-		if (playerInv.contains(Material.COMPASS)) {
-			playerInv.remove(Material.COMPASS);
-		}
-		
+		//Don't give the player a compass, if they already have one.
 		if (!playerInv.contains(Material.COMPASS)) {
 				
 			ItemStack tool = new ItemStack(Material.COMPASS);
@@ -179,15 +258,6 @@ public class PlayerMenuManager {
 	 */
 	public static void openPlayerMenu(Player player) {
 		player.openInventory(playerMainMenu.get(player.getUniqueId()));
-		
-		/*
-		PageInventory inv = new PageInventory(player);
-		ItemStack items = new ItemBuilder(Material.SKULL_ITEM).setTitle("Test").build();
-		
-		inv.setPages(items);
-		inv.setTitle("Players online");
-		inv.openInventory();
-		*/
 	}
 	
 	/**
@@ -198,7 +268,7 @@ public class PlayerMenuManager {
 	 * @param item The item in the menu that has been clicked.
 	 */
 	public static void playerInteractMenu(Player player, String menuName, ItemStack item) {
-		if (menuName.endsWith(gameMenu)) {
+		if (menuName.equalsIgnoreCase(gameMenu)) {
 			if (item.getType().equals(Material.ENCHANTMENT_TABLE)) {
 				player.sendMessage("Game Menu - You clicked the enchant table.");
 			}
@@ -207,7 +277,7 @@ public class PlayerMenuManager {
 				//Open up the settings menu.
 				player.openInventory(playerSettingsMenu.get(player.getUniqueId()));
 			}
-		} else if (menuName.contains(gameSettingsMenu)) {
+		} else if (menuName.equalsIgnoreCase(gameSettingsMenu)) {
 			boolean healthDebugMessages = PlayerCharacterManager.getPlayerConfigBoolean(player, "setting.chat.healthDebug");
 			boolean monsterDebugMessages = PlayerCharacterManager.getPlayerConfigBoolean(player, "setting.chat.monsterDebug");
 			boolean professionDebugMessages = PlayerCharacterManager.getPlayerConfigBoolean(player, "setting.chat.professionDebug");

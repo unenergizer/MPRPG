@@ -22,7 +22,6 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.FireworkMeta;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
-import org.bukkit.scheduler.BukkitRunnable;
 
 import com.minepile.mprpg.MPRPG;
 import com.minepile.mprpg.gui.PlayerMenuManager;
@@ -49,47 +48,6 @@ public class PlayerManager {
 
 	//Flashing action bar message
 	private static int classColor = 1;
-
-	/**
-	 * Base Stats:
-	 * 	Strength
-	 * 	Agility
-	 * 	Stamina
-	 * 	Intellect
-	 * 	Spirit
-	 * 	Armor
-	 * 	Damage
-	 * 
-	 *  Reflect
-	 *  Block
-	 *  Dodge
-	 * 	Critical Damage
-	 *  Critical Chance
-	 * 
-	 * Magic Damage:
-	 * 	Fire Damage
-	 * 	Ice Damage
-	 * 	Lightning Damage
-	 * 	Poison Damage
-	 * 	Paralyze Damage
-	 * 	Blindness Damage
-	 * 
-	 * Resistances:
-	 * 	Fire Resistance
-	 * 	Ice Resistance
-	 * 	Lightning Resistance
-	 * 	Poison Resistance
-	 * 	Paralyze Resistance
-	 *  Blindness Resistance
-	 *  
-	 * Extras:
-	 * 	Waterbreathing
-	 * 	Personality
-	 *  Gold Find
-	 *  Magic Find
-	 *  Knockback
-	 *  Lifesteal
-	 */
 
 	//Create instance
 	public static PlayerManager getInstance() {
@@ -122,7 +80,7 @@ public class PlayerManager {
 					setColor(1);
 				}
 			}
-		}, 0L, 20);
+		}, 0, 20);
 
 		//Starts a thread that will regen a players health every few seconds.
 		Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(plugin,  new Runnable() {
@@ -133,7 +91,7 @@ public class PlayerManager {
 					}
 				}
 			}
-		}, 0L, 2 * 20);
+		}, 20, 20);
 	}
 
 	/**
@@ -392,10 +350,9 @@ public class PlayerManager {
 	}
 
 	private static void startPlayerRespawn(final Player player) {
-		// Create the task anonymously and schedule to run it once, after 20 ticks
-		new BukkitRunnable() {
-
-			@Override
+		// Create the task asynchronously and schedule to run it once, after 20 ticks
+		
+		Bukkit.getServer().getScheduler().runTaskLaterAsynchronously(plugin, new Runnable() {
 			public void run() {
 				UUID uuid = player.getUniqueId();
 
@@ -411,10 +368,8 @@ public class PlayerManager {
 
 				//Player is no longer dead.
 				setPlayerDead(uuid, false);
-
 			}
-
-		}.runTaskLater(plugin, 20 * 10); //7 seconds
+		}, 2 * 20L);//7 seconds
 	}
 
 	/**

@@ -4,8 +4,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
-import java.util.concurrent.ConcurrentHashMap;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -36,7 +34,7 @@ public class ChestMenuManager {
 	private static String PAGE_FILE = "pages.yml";
 
 	//Protect inventory hashmap.
-	private static ConcurrentHashMap<UUID, Boolean> inventoryProtected = new ConcurrentHashMap<UUID, Boolean>();
+	private static ArrayList<String> protectedPages = new ArrayList<String>();
 
 	//Create instance
 	public static ChestMenuManager getInstance() {
@@ -59,40 +57,15 @@ public class ChestMenuManager {
 			pagesConfigFile = new File(FILE_PATH + PAGE_FILE);
 			menuPagesConfig =  YamlConfiguration.loadConfiguration(pagesConfigFile);
 		}
-
-		//Build menu pages
-		//buildMenuPage();
-	}
-
-	public static void protectInventoryFromPlayer(Player player, String invName) {
-		String invNameFormatted = invName.replace(" ", "_");
-		if (getMenuExistsInConfig(invNameFormatted) == true) {
-			addPlayerToProtectedInventory(player);
-		} else if (invName.equalsIgnoreCase(ChatColor.stripColor("Game Menu")) || invName.equalsIgnoreCase(ChatColor.stripColor("Game Menu"))) {
-			addPlayerToProtectedInventory(player);
-		}
-	}
-
-	public static void addPlayerToProtectedInventory(Player player) {
-		UUID id = player.getUniqueId();
-		inventoryProtected.put(id, true);
-	}
-
-	public static void removePlayerFromProtectedInventory(Player player) {
-		UUID id = player.getUniqueId();
-		inventoryProtected.remove(id);
-	}
-
-	public static boolean isInventoryProtectedFromPlayer(Player player) {
-		UUID id = player.getUniqueId();
-		if (inventoryProtected.containsKey(id)) {
-			return true;
-		} else {
-			return false;
-		}
 	}
 
 	public static Inventory buildMenuPage(Player player, String pageName) {
+		//For menu safety, lets add the pageName to the array,
+		//if it has not been done already.
+		if (!protectedPages.contains(pageName)) {
+			protectedPages.add(pageName);
+		}
+		
 		//Get config page
 		String owner = menuPagesConfig.getString(pageName + ".owner");	
 		int rows = menuPagesConfig.getInt(pageName + ".rows");
@@ -194,10 +167,9 @@ public class ChestMenuManager {
 			e.printStackTrace();
 		} 
 	}
-
-	public static boolean getMenuExistsInConfig(String invName) {
-		String name = menuPagesConfig.getString(invName + ".owner");
-		if (name != null) {
+	
+	public static boolean isPageProtected(String pageName) {
+		if (protectedPages.contains(pageName.replace(" ", "_"))) {
 			return true;
 		} else {
 			return false;

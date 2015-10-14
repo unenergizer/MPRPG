@@ -39,6 +39,7 @@ import com.minepile.mprpg.items.LootTableMobManager;
 import com.minepile.mprpg.items.MerchantManager;
 import com.minepile.mprpg.items.MiscItemManager;
 import com.minepile.mprpg.items.RandomItemFactory;
+import com.minepile.mprpg.items.SoulboundManager;
 import com.minepile.mprpg.items.WeaponItemManager;
 import com.minepile.mprpg.listeners.AsyncPlayerChatListener;
 import com.minepile.mprpg.listeners.BlockBreakListener;
@@ -90,8 +91,8 @@ public class MPRPG extends JavaPlugin {
 	private PluginManager pluginManager;
 
 	//A few setup variables.
-	String pluginVersion = "v0.7.4";
-
+	String pluginVersion = "v0.8.3";
+	
 	@Override
 	public void onEnable() {
 		this.pluginManager = getServer().getPluginManager();
@@ -161,6 +162,7 @@ public class MPRPG extends JavaPlugin {
 		MerchantManager.getInstance().setup(this);
 		MiscItemManager.getInstance().setup(this);
 		RandomItemFactory.getInstance().setup(this);
+		SoulboundManager.getInstance().setup(this);
 		WeaponItemManager.getInstance().setup(this);
 
 		//setup profession manager instances

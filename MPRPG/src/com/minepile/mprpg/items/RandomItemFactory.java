@@ -141,13 +141,13 @@ public class RandomItemFactory {
 		ArrayList<String> lore = new ArrayList<String>();
 
 		lore.add(ChatColor.AQUA + "THIS ITEM IS ONLY FOR TESTING");
-		
-		lore.add(ChatColor.RED + "+" + "1" + strengthStr);
-		lore.add(ChatColor.RED + "+" + "2" + agilityStr);
-		lore.add(ChatColor.RED + "+" + "3" + vitalityStr);
-		lore.add(ChatColor.RED + "+" + "4" + intellectStr);
-		lore.add(ChatColor.RED + "+" + "5" + spiritStr);
-		lore.add(ChatColor.RED + "6" + armorStr);
+
+		lore.add(ChatColor.YELLOW + "1" + armorStr);
+		lore.add(ChatColor.RED + "+" + "2" + strengthStr);
+		lore.add(ChatColor.RED + "+" + "3" + agilityStr);
+		lore.add(ChatColor.RED + "+" + "4" + vitalityStr);
+		lore.add(ChatColor.RED + "+" + "5" + intellectStr);
+		lore.add(ChatColor.RED + "+" + "6" + spiritStr);
 		lore.add(ChatColor.RED + "+" + "7" + damageStr);
 		
 		lore.add(ChatColor.RED + "+" + "8" + fireResistStr);

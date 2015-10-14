@@ -18,9 +18,6 @@ public class PlayerHealthTagManager {
 	public static MPRPG plugin;
 	static PlayerHealthTagManager playerHealthTagManagerInstance = new PlayerHealthTagManager();
 
-	@SuppressWarnings("unused")
-	private static int taskID; 
-
 	//Variables to set up the scoreboard.
 	static Scoreboard sb;
 	static Team team;
@@ -96,7 +93,7 @@ public class PlayerHealthTagManager {
 	@SuppressWarnings("deprecation")
 	public static void updateHealthTag(final Player player) {
 		//Lets start a  task
-		Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
+		Bukkit.getScheduler().runTaskLaterAsynchronously(plugin, new Runnable() {
 			@Override
 			public void run() {
 				if (PlayerCharacterManager.isPlayerLoaded(player)) {
@@ -115,7 +112,7 @@ public class PlayerHealthTagManager {
 	@SuppressWarnings("deprecation")
 	public static void updateNPCHealthTag(final Player npc, final double maxHP) {
 		//Lets start a  task
-		Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
+		Bukkit.getScheduler().runTaskLaterAsynchronously(plugin, new Runnable() {
 			@Override
 			public void run() {
 

@@ -8,7 +8,6 @@ import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
 
 import com.minepile.mprpg.MPRPG;
-import com.minepile.mprpg.gui.ChestMenuManager;
 import com.minepile.mprpg.items.LootTableChestManager;
 
 public class InventoryOpenListener implements Listener{
@@ -22,17 +21,11 @@ public class InventoryOpenListener implements Listener{
 	
 	@EventHandler
 	public void onInventoryOpen(InventoryOpenEvent event) {
-		Player player = (Player) event.getPlayer();
 		
 		if (event.getPlayer() instanceof Player) {
 			Inventory inv = event.getInventory();
 			InventoryType invType = inv.getType();
 			String invName = inv.getName();
-			
-			//Test to see if the inventory is protected.
-			//If it is, this method will notify the chestMenuManager 
-			//that this inventory needs to be protected.
-			ChestMenuManager.protectInventoryFromPlayer(player, invName);
 			
 			switch(invType) {
 			case ANVIL:

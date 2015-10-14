@@ -361,7 +361,7 @@ public class PlayerInteractListener implements Listener{
 			@Override
 			public void run() {
 				//TODO: ItemLoreFactory.getInstance().applyHPBonus(player, true);
-				PlayerAttributesManager.getMaxHealthPoints(player);
+				PlayerAttributesManager.applyNewAttributes(player, false);
 			} //END Run method.
 		}, 10); //(20 ticks = 1 second)
 	}

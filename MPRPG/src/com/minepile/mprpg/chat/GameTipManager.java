@@ -8,7 +8,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.scheduler.BukkitScheduler;
 
 import com.minepile.mprpg.MPRPG;
 
@@ -67,8 +66,7 @@ public class GameTipManager {
 		numberOfTips = tips.size();
 		
 		//Start a repeating task.
-        BukkitScheduler scheduler = Bukkit.getServer().getScheduler();
-        scheduler.scheduleSyncRepeatingTask(plugin, new Runnable() {
+        Bukkit.getServer().getScheduler().runTaskTimerAsynchronously(plugin, new Runnable() {
             @Override
             public void run() {
             	
@@ -91,7 +89,7 @@ public class GameTipManager {
             		tipDisplayed++;
             	}
             }
-        }, 0L, 20 * gameTipTime);
+        }, 0, gameTipTime);
 	}
 	
 	/**
@@ -99,6 +97,7 @@ public class GameTipManager {
 	 * 
 	 * @return A list of all tips (messages) in the configuration file.
 	 */
+	@SuppressWarnings("unchecked")
 	private static void loadMessages() {
 		configFile = new File(FILE_PATH);
 		gameTipConfig =  YamlConfiguration.loadConfiguration(configFile);

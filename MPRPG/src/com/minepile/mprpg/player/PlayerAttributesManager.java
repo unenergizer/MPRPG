@@ -8,7 +8,6 @@ import java.util.UUID;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
-import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -37,7 +36,48 @@ public class PlayerAttributesManager {
 		this.plugin = plugin;
 
 	}
-
+	
+	/**
+	 * Base Stats:
+	 * 	Strength
+	 * 	Agility
+	 * 	Stamina
+	 * 	Intellect
+	 * 	Spirit
+	 * 	Armor
+	 * 	Damage
+	 * 
+	 *  Reflect
+	 *  Block
+	 *  Dodge
+	 * 	Critical Damage
+	 *  Critical Chance
+	 * 
+	 * Magic Damage:
+	 * 	Fire Damage
+	 * 	Ice Damage
+	 * 	Lightning Damage
+	 * 	Poison Damage
+	 * 	Paralyze Damage
+	 * 	Blindness Damage
+	 * 
+	 * Resistances:
+	 * 	Fire Resistance
+	 * 	Ice Resistance
+	 * 	Lightning Resistance
+	 * 	Poison Resistance
+	 * 	Paralyze Resistance
+	 *  Blindness Resistance
+	 *  
+	 * Extras:
+	 * 	Waterbreathing
+	 * 	Personality
+	 *  Gold Find
+	 *  Magic Find
+	 *  Knockback
+	 *  Lifesteal
+	 */
+	
 	//Archer base attributes
 	private static int archerStrength = 22;
 	private static int archerAgility = 19;
@@ -246,7 +286,7 @@ public class PlayerAttributesManager {
 		
 		//Play sound effect.
 		if (playSound) {
-			player.playSound(player.getLocation(), Sound.ANVIL_LAND, .5F, 1F);
+			//player.playSound(player.getLocation(), Sound.ANVIL_LAND, .5F, 1F);
 		}
 	}
 	

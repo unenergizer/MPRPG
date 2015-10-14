@@ -24,9 +24,6 @@ public class NPCManager {
 	public static HashMap<UUID, Integer> entityLevel = new HashMap<UUID, Integer>();
 	public static HashMap<UUID, Location> entityLocation = new HashMap<UUID, Location>();
 	
-	@SuppressWarnings("unused")
-	private static int taskID;
-	
 	public static Location kit0Location = new Location(world, -8, 74, -18);
 	public static Location kit1Location = new Location(world, -4, 74, -18);
 	public static Location kit2Location = new Location(world, 0, 74, -18);
@@ -101,7 +98,7 @@ public class NPCManager {
 	 */
 	public static void teleportNPC() {
 		//Lets start a repeating task
-		taskID = Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, new Runnable() {
+		Bukkit.getScheduler().runTaskAsynchronously(plugin, new Runnable() {
 			@Override
 			public void run() {
 				//Loop through our entityKitLocation hashmap and teleport mobs back to their spawns.
@@ -117,6 +114,6 @@ public class NPCManager {
 					}
 				}
 			} //END Run method.
-		}, 0, 5); //(20 ticks = 1 second)
+		}); //(20 ticks = 1 second)
 	}
 }
