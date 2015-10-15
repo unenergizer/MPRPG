@@ -18,6 +18,7 @@ import com.minepile.mprpg.chat.DiceRollManager;
 import com.minepile.mprpg.chat.LagManager;
 import com.minepile.mprpg.chat.MessageManager;
 import com.minepile.mprpg.entities.MonsterCreatorManager;
+import com.minepile.mprpg.gui.PlayerMenuManager;
 import com.minepile.mprpg.guild.GuildManager;
 import com.minepile.mprpg.items.ItemLoreFactory;
 import com.minepile.mprpg.player.PlayerAttributesManager;
@@ -667,6 +668,16 @@ public class CommandManager implements CommandExecutor{
 				if (cmd.getLabel().equalsIgnoreCase("stats")) {
 					PlayerAttributesManager.createAttributeAssignMenu(player);
 					PlayerAttributesManager.openAttributeAssingMenu(player);
+				}
+
+
+				/////////////////////////////////////////////////////////////////////////////////
+				// HELP COMMAND REPLACE  ////////////////////////////////////////////////////////
+				/////////////////////////////////////////////////////////////////////////////////
+
+				//Teleports the player back to the spawn location.
+				if (cmd.getLabel().equalsIgnoreCase("help")) {
+					PlayerMenuManager.giveRuleBook(player);
 				}
 				
 			} else {

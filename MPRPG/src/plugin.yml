@@ -32,4 +32,6 @@ commands:
       description: Performs various guild functions.
    stats:
       description: Lets player assign attribute points.
+   help:
+      description: Gives the player the help book.
   

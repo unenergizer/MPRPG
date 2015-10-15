@@ -74,12 +74,12 @@ public class InventorySave {
 		
 		//YML path inside of file.
 		String path = "Character" + characterSlot + "." + invType + "." + "Slot" + invSlot;
-
+		
 		//Check to make sure were about to save an item that has meta data.
 		if ((item != null) && (item.hasItemMeta())) {
 			
 			//Check to make sure the item we are saving is not the players compass menu.
-			if (!item.getType().equals(Material.COMPASS)) {
+			if (!item.getType().equals(Material.COMPASS) || !item.getType().equals(Material.WRITTEN_BOOK)) {
 				
 				//Get basic item info.
 				String itemType = item.getType().name();

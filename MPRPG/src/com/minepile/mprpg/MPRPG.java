@@ -259,6 +259,9 @@ public class MPRPG extends JavaPlugin {
 		//opens a menu so a player can assing attribute points.
 		getCommand("stats").setExecutor(new CommandManager(this));
 
+		//this gives the player the help book.
+		getCommand("help").setExecutor(new CommandManager(this));
+
 		///////////////////
 		/// Startup End ///
 		///////////////////

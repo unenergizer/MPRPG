@@ -27,6 +27,7 @@ public class InventoryClickListener implements Listener{
 	public InventoryClickListener(MPRPG plugin) {
 		this.plugin = plugin;
 	}
+	
 
 	@EventHandler
 	public void onInventoryClick(InventoryClickEvent event) {
@@ -42,6 +43,11 @@ public class InventoryClickListener implements Listener{
 				//Name of the inventory.
 				String invName = event.getInventory().getTitle();
 				int slot = event.getSlot();
+
+				//Close inventories if they are a redstone block.
+				if (clickedItem.getType().equals(Material.REDSTONE_BLOCK)) {
+					player.closeInventory();
+				}
 
 				//Stop player from putting their soulbound items in chests.
 				if (PlayerCharacterManager.isPlayerLoaded(player)) {
@@ -62,23 +68,28 @@ public class InventoryClickListener implements Listener{
 				if (clickedItem.getType().equals(Material.COMPASS)) {
 					//Cancel the event.
 					event.setCancelled(true);
+					
+					//Prevent the compass button in the compass menu from making noise when clicked.
+					if (event.getView().getBottomInventory().contains(clickedItem)) {
+						//Send the player a message.
+						player.sendMessage(ChatColor.RED + "You can not place your compass menu in a chest.");
 
-					//Send the player a message.
-					player.sendMessage(ChatColor.RED + "You can not place your compass menu in a chest.");
-
-					//Play a sound.
-					player.playSound(player.getLocation(), Sound.NOTE_BASS, 1F, 1F);
+						//Play a sound.
+						player.playSound(player.getLocation(), Sound.NOTE_BASS, 1F, .5F);
+					}
 				}
 
 				if (invName.equalsIgnoreCase("Game Menu")) {
 					//Cancel the item pickup/click (or item move).
 					event.setCancelled(true);
-
-					//Toggle player clicking a character slot.
-					PlayerMenuManager.playerInteractMenu(player, "Game Menu", clickedItem);
 					
+					if (event.getView().getTopInventory().contains(clickedItem)) {
+						//Toggle player clicking a character slot.
+						PlayerMenuManager.playerInteractMenu(player, "Game Menu", clickedItem);
+					}
+
 					//Play error sound if the item clicked was in the players inventory.
-					if (event.getView().getBottomInventory().contains(clickedItem)) {
+					if (event.getView().getBottomInventory().contains(clickedItem) && !clickedItem.getType().equals(Material.COMPASS)) {
 
 						//Send the player a message.
 						player.sendMessage(ChatColor.RED + "You can not move items when this menu is open.");
@@ -104,12 +115,13 @@ public class InventoryClickListener implements Listener{
 
 					//Cancel the item pickup/click (or item move).
 					event.setCancelled(true);
+					if (event.getView().getBottomInventory().contains(clickedItem)) {
+						//Send the player a message.
+						player.sendMessage(ChatColor.RED + "You can not move items when this menu is open.");
 
-					//Send the player a message.
-					player.sendMessage(ChatColor.RED + "You can not move items when this menu is open.");
-
-					//Play a sound.
-					player.playSound(player.getLocation(), Sound.NOTE_BASS, 1F, 1F);
+						//Play a sound.
+						player.playSound(player.getLocation(), Sound.NOTE_BASS, 1F, 1F);
+					}
 				}
 			}
 
