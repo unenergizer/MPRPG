@@ -6,6 +6,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
 import com.minepile.mprpg.MPRPG;
+import com.minepile.mprpg.guild.GuildManager;
 import com.minepile.mprpg.player.PlayerCharacterManager;
 
 public class ChatManager {
@@ -29,16 +30,17 @@ public class ChatManager {
 	}
 	
 	/**
-	 * Displays the players clan tag in the chat console.
+	 * Displays the players guild tag in the chat console.
 	 * 
-	 * @param player The player to assign a clan tag.
-	 * @return The players clan tag, if one exists.
+	 * @param player The player to assign a guild tag.
+	 * @return The players guild tag, if one exists.
 	 */
-	public static String getClanTag(Player player) {
-		String clanTag = PlayerCharacterManager.getPlayerConfigString(player, "clan.tag");
+	public static String getGuildTag(Player player) {
+		String guildName = PlayerCharacterManager.getPlayerConfigString(player, "guild.name");
+		String guildTag = GuildManager.getGuildConfigString(guildName, "guildTag");
 		
-		if (clanTag != null) {
-			return ChatColor.GRAY + "[" + clanTag.toUpperCase() + "] ";
+		if (guildTag != null) {
+			return ChatColor.GRAY + "[" + guildTag + "] ";
 		} else {
 			return "";
 		}

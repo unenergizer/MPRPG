@@ -208,7 +208,7 @@ public class CommandManager implements CommandExecutor{
 							PlayerCharacterManager.setPlayerConfigString(target, "setting.chat.lastpm", player.getName());
 
 							//Get guild tag (if any).
-							String guildTag = ChatManager.getClanTag(player);
+							String guildTag = ChatManager.getGuildTag(player);
 
 							//Append a staff tag (if any).
 							String prefix = ChatManager.getStaffPrefix(player);
@@ -267,7 +267,7 @@ public class CommandManager implements CommandExecutor{
 							PlayerCharacterManager.setPlayerConfigString(target, "setting.chat.lastpm", player.getName());
 
 							//Get clan tag (if any).
-							String clanTag = ChatManager.getClanTag(player);
+							String clanTag = ChatManager.getGuildTag(player);
 
 							//Append a staff tag (if any).
 							String prefix = ChatManager.getStaffPrefix(player);
@@ -604,18 +604,25 @@ public class CommandManager implements CommandExecutor{
 
 						if (args.length == 2 && args[0].toString().startsWith("addMember")) {
 							GuildManager.addGuild(player, guildName);
+							
 						} else if (args.length == 2 && args[0].toString().startsWith("deleteMember")) {
 							GuildManager.removePlayer(player, guildName, args[1].toString());
+							
 						} else if (args.length == 2 && args[0].toString().startsWith("promoteMember")) {
 							GuildManager.promotePlayer(player, guildName, args[1].toString());
+							
 						} else if (args.length == 2 && args[0].toString().startsWith("demoteMember")) {
 							GuildManager.demotePlayer(player, guildName, args[1].toString());
+							
 						} else if (args.length == 2 && args[0].toString().startsWith("setMotd")) {
 							GuildManager.setMotd(player, guildName, "< WORK IN PROGRESS >");
+							
 						} else if (args.length == 2 && args[0].toString().startsWith("setTag")) {
 							GuildManager.setGuildTag(player, guildName, args[1].toString());
+							
 						} else if (args.length == 2 && args[0].toString().startsWith("disband")) {
 							GuildManager.disbandGuild(player, guildName);
+							
 						} else {
 							//Default info text when "/guild" command is run.
 							player.sendMessage(ChatColor.RED + "  " + ChatColor.BOLD + "! " +

@@ -519,6 +519,7 @@ public class PlayerCharacterManager {
 		
 		playerConfig.set(slot + ".guild.owner", false);
 		playerConfig.set(slot + ".guild.name", null);
+		playerConfig.set(slot + ".guild.member", null);
 
 		playerConfig.set(slot + ".permissions.admin", 0);
 		playerConfig.set(slot + ".permissions.dev", 0);

@@ -5,9 +5,10 @@ import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.regex.Pattern;
 
 import org.bukkit.ChatColor;
+import org.bukkit.Location;
+import org.bukkit.Sound;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
@@ -21,7 +22,7 @@ public class GuildManager {
 	//setup instance variables
 	public static MPRPG plugin;
 	private static GuildManager guildManagerInstance = new GuildManager();
-	private static String filePath = "plugins/MPCore/guilds/";
+	private static String filePath = "plugins/MPRPG/guilds/";
 	private static String fileExtension = ".yml";
 
 	//Create instance
@@ -34,7 +35,7 @@ public class GuildManager {
 	public void setup(MPRPG plugin) {
 		this.plugin = plugin;
 	}	
-	
+
 	/**
 	 * Checks to see if the player owns a guild.
 	 * <p>
@@ -42,7 +43,7 @@ public class GuildManager {
 	 * 
 	 * @param player The player who might own a guild.
 	 * @return Return a boolean true if player owns a guild.
-	  */
+	 */
 	public static boolean getGuildOwner(Player player) {
 		if (PlayerCharacterManager.getPlayerConfigBoolean(player, "guild.owner") == true) {
 			return true;
@@ -50,7 +51,7 @@ public class GuildManager {
 			return false;
 		}
 	}
-	
+
 	/**
 	 * Sets the players guild.
 	 * <p>
@@ -58,11 +59,11 @@ public class GuildManager {
 	 * 
 	 * @param player The player who might be in a guild.
 	 * @param guildName Name The name of the guild.
-	  */
+	 */
 	public static void setGuildOwner(Player player, boolean value) {
 		PlayerCharacterManager.setPlayerConfigBoolean(player, "guild.owner", value);
 	}
-	
+
 	/**
 	 * Gets the guild the player is currently in.
 	 * <p>
@@ -70,7 +71,7 @@ public class GuildManager {
 	 * 
 	 * @param player The player who might be in a guild.
 	 * @return Name of the guild the player is in.
-	  */
+	 */
 	public static String getPlayerGuild(Player player) {
 		if (PlayerCharacterManager.getPlayerConfigString(player, "guild.name") != null) {
 			return PlayerCharacterManager.getPlayerConfigString(player, "guild.name");
@@ -78,18 +79,18 @@ public class GuildManager {
 			return null;
 		}
 	}
-	
+
 	/**
 	 * Sets the players guild.
 	 * <p>
 	 * This information comes from the Players configuration file. MPCore/players/playerUUID
 	 * @param player The player who might be in a guild.
 	 * @param guildName Name The name of the guild.
-	  */
+	 */
 	public static void setPlayerGuild(Player player, String guildName) {
 		PlayerCharacterManager.setPlayerConfigString(player, "guild.name", guildName);
 	}
-	
+
 	/**
 	 * This will create a new guild, if a guild with the same name doesn't already exist.
 	 * 
@@ -126,11 +127,11 @@ public class GuildManager {
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-			
+
 			//Update player file.
-			//setPlayerGuild(player, guildName);
-			//setGuildOwner(player, true);
-			
+			setPlayerGuild(player, guildName);
+			setGuildOwner(player, true);
+
 			player.sendMessage(ChatColor.YELLOW + "" + ChatColor.BOLD + 
 					"Your have created a new guild called " + 
 					ChatColor.WHITE + ChatColor.BOLD + ChatColor.UNDERLINE + guildName + 
@@ -159,7 +160,7 @@ public class GuildManager {
 
 			setGuildConfigBoolean(guildName, "guildDisbanded", true);
 			setGuildConfigString(guildName, "guildDisbandedDate", dateFormat.format(date));
-			
+
 			//Save changes to player configuration file.
 			//setGuildOwner(player, false);
 			//setPlayerGuild(player, null);
@@ -199,33 +200,46 @@ public class GuildManager {
 		String playerName = player.getName();
 		String playerUUID = player.getUniqueId().toString();
 		String guildOwnerUUID = getGuildConfigString(guildName, "guildOwnerUUID");
+		String tagUpper = tag.toUpperCase();
+		String numRegex   = ".*[0-9].*";
+		String alphaRegex = ".*[A-Z].*";
+		Location loc = player.getLocation();
 		
-		//Check to make sure the guild name length isn't longer than 24 characters.
-		if (guildName.length() > 24) {
-			//Make sure the guild owner is setting the tag.
-			if (playerUUID.equals(guildOwnerUUID)) {
-				//Make sure the tag is 3 characters long.
-				if (tag.length() == 3) {
-					//Make sure tag only contains letters and numbers.
-					if (Pattern.matches("[^a-zA-Z0-9]", tag) == true) {
+		
+		//Make sure the guild owner is setting the tag.
+		if (playerUUID.equals(guildOwnerUUID)) {
+			//Make sure the tag is 3 characters long.
+			if (tag.length() == 3) {
+				//Make sure tag only contains letters and numbers.
+				if ((tagUpper.matches(numRegex) && tagUpper.matches(alphaRegex)) || (tagUpper.matches(numRegex) || tagUpper.matches(alphaRegex))) {
 
-						setGuildConfigString(guildName, "guildTag", tag);
-
-						player.sendMessage(ChatColor.GREEN + playerName + ", your guild tag has been successfully added.");
-						player.sendMessage(ChatColor.YELLOW + "Your guild tag will now appear next to your name in chat.");
-					} else {
-						player.sendMessage(ChatColor.RED + "Your guild tag can only contain letters and numbers Do not use special characters.");
-					}
-				} else if (tag.length() > 3) {
-					player.sendMessage(ChatColor.RED + "Your guild tag is too long. It must be 3 characters long.");
+					setGuildConfigString(guildName, "guildTag", tagUpper);
+					
+					//Send success message.
+					player.sendMessage(ChatColor.GREEN + playerName + ", your guild tag has been successfully added.");
+					player.sendMessage(ChatColor.YELLOW + "Your guild tag will now appear next to your name in chat.");
+					
+					//Play success sound
+					player.playSound(loc, Sound.NOTE_PLING, 1F, 1F);
+					
 				} else {
-					player.sendMessage(ChatColor.RED + "Your guild tag is too short. It must be 3 characters long.");
+					player.sendMessage(ChatColor.RED + "Your guild tag can only contain numbers and letters. Do not use special characters.");
+					//Play a sound.
+					player.playSound(loc, Sound.NOTE_BASS, 1F, 1F);
 				}
+			} else if (tag.length() > 3) {
+				player.sendMessage(ChatColor.RED + "Your guild tag is too long. It must be 3 characters long.");
+				//Play a sound.
+				player.playSound(loc, Sound.NOTE_BASS, 1F, 1F);
 			} else {
-				player.sendMessage(ChatColor.RED + "You must be the owner of '" + guildName + "' to add a guild tag.");
+				player.sendMessage(ChatColor.RED + "Your guild tag is too short. It must be 3 characters long.");
+				//Play a sound.
+				player.playSound(loc, Sound.NOTE_BASS, 1F, 1F);
 			}
 		} else {
-			player.sendMessage(ChatColor.RED + "Your guild name is too long.  It must be under 24 characters long.");
+			player.sendMessage(ChatColor.RED + "You must be the owner of '" + guildName + "' to add a guild tag.");
+			//Play a sound.
+			player.playSound(loc, Sound.NOTE_BASS, 1F, 1F);
 		}
 	}
 
@@ -257,13 +271,13 @@ public class GuildManager {
 	}
 
 	private static void addPlayer(Player player, String guildName, String playerName) {
-		
+
 		//Save changes to player configuration file.
 		//setPlayerGuild(player, guildName);
 	}
 
 	public static void removePlayer(Player player, String guildName, String playerName) {
-		
+
 		//Save changes to player configuration file.
 		//setPlayerGuild(player, null);
 	}
@@ -300,7 +314,7 @@ public class GuildManager {
 	 * @param value The entry to get.
 	 * @return A string form the guilds config file.
 	 */
-	private static void setGuildConfigBoolean(String guild, String config, boolean value) {
+	public static void setGuildConfigBoolean(String guild, String config, boolean value) {
 		File configFile = new File(filePath + guild + fileExtension);
 		FileConfiguration guildConfig =  YamlConfiguration.loadConfiguration(configFile);
 		guildConfig.set(config, value);
@@ -332,7 +346,7 @@ public class GuildManager {
 	 * @param config The setting to be changed in the config.
 	 * @param value The new value for the setting.
 	 */ 
-	private static void setGuildConfigInt(String guild, String config, int value) {
+	public static void setGuildConfigInt(String guild, String config, int value) {
 		File configFile = new File(filePath + guild + fileExtension);
 		FileConfiguration guildConfig =  YamlConfiguration.loadConfiguration(configFile);
 		guildConfig.set(config, value);
@@ -351,7 +365,7 @@ public class GuildManager {
 	 * @param value The entry to get.
 	 * @return A string form the guild's configuration file.
 	 */
-	private static void setGuildConfigString(String guild, String config, String value) {
+	public static void setGuildConfigString(String guild, String config, String value) {
 		File configFile = new File(filePath + guild + fileExtension);
 		FileConfiguration guildConfig =  YamlConfiguration.loadConfiguration(configFile);
 		guildConfig.set(config, value);
@@ -370,7 +384,7 @@ public class GuildManager {
 	 * @param value The entry to get.
 	 * @return A string form the guild's configuration file.
 	 */
-	private static String getGuildConfigString(String guild, String value) {
+	public static String getGuildConfigString(String guild, String value) {
 		File configFile = new File(filePath + guild + fileExtension);
 		FileConfiguration guildConfig =  YamlConfiguration.loadConfiguration(configFile);
 		return  (String) guildConfig.get(value);

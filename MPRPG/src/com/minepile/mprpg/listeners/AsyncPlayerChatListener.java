@@ -48,7 +48,7 @@ public class AsyncPlayerChatListener implements Listener{
 				//setting.chatchannel.trade
 
 				//Get clan tag (if any).
-				String clanTag = ChatManager.getClanTag(player);
+				String clanTag = ChatManager.getGuildTag(player);
 
 				//Append a staff tag (if any).
 				String prefix = ChatManager.getStaffPrefix(player);

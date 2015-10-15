@@ -482,6 +482,12 @@ public class PlayerMenuManager {
 						//Place book in empty slot.
 						player.getInventory().setItem(i, fullHelpBook.clone());
 						hasBook = true;
+						
+						//Send message.
+						player.sendMessage(ChatColor.GREEN + "The book has been placed in your inventory.");
+						
+						//Play notification sound.
+						player.playSound(player.getLocation(), Sound.ITEM_PICKUP, 1F, 1F);
 					}
 				} 
 			}
