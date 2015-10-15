@@ -21,6 +21,7 @@ import org.bukkit.material.Dye;
 
 import com.minepile.mprpg.MPRPG;
 import com.minepile.mprpg.player.PlayerCharacterManager;
+import com.minepile.mprpg.player.PlayerHearthStoneManager;
 import com.minepile.mprpg.player.PlayerManager;
 import com.minepile.mprpg.util.ItemBuilder;
 
@@ -40,7 +41,8 @@ public class PlayerMenuManager {
 
 	//Global Menu Items
 	static ItemStack trackingDevice, hearthStone, changeLobby, cosmeticMenu, helpBook, achievements, gameStats, gameCredits, guildManagement, playerSettings, on, off;
-
+	static ItemStack fullHelpBook;
+	
 	//Create instance
 	public static PlayerMenuManager getInstance() {
 		return menuManagerInstance;
@@ -52,6 +54,97 @@ public class PlayerMenuManager {
 		this.plugin = plugin;
 
 		makeMenuItems();
+		makeHelpBook();
+	}
+	
+	private void makeHelpBook() {
+		ArrayList<String> lores = new ArrayList<String>();
+
+		lores.add(ChatColor.GRAY + "Soulbound");
+		lores.add("");
+		lores.add(ChatColor.GRAY + "This book covers all the help topics.");
+		lores.add(ChatColor.GRAY + " Read this and get a reward!");
+
+		//Give user the welcome/stats book.
+		fullHelpBook = new ItemStack(Material.WRITTEN_BOOK, 1);
+		BookMeta bookMeta = (BookMeta) fullHelpBook.getItemMeta();
+		bookMeta.setTitle(ChatColor.GOLD + "" + ChatColor.BOLD + "Help Book");
+		bookMeta.setLore(lores);
+		bookMeta.setAuthor(ChatColor.DARK_PURPLE + "" + ChatColor.BOLD + "MinePile");
+		bookMeta.addPage(ChatColor.RED + "" + ChatColor.BOLD + "     Valenguard" + ChatColor.RESET +
+				"\n" + "         a game by" +
+				"\n" + "     " + ChatColor.BLUE + ChatColor.UNDERLINE + "www.MinePile.com" + ChatColor.RESET +
+				"\n" + "" +
+				"\n" + "" +
+				"\n" + ChatColor.BOLD + "Contents:" + ChatColor.RESET +
+				"\n" + "   1. Index" +
+				"\n" + "   2. Introduction" +
+				"\n" + "   3. Game Guide" +
+				"\n" + "   4. Rules" +
+				"\n" + "   5. World Map" +
+				"\n" + "   6. Commands");
+		bookMeta.addPage(ChatColor.RED + "" + ChatColor.BOLD + "    Introduction" + ChatColor.RESET +
+				"\n" + "    * the beggining *" +
+				"\n" + "" +
+				"\n" + "Welcome traveler!  You are about to embark on an epic adventure full of treasure and wonder." + 
+				"\n" + "Tread carefully, as the world has been corrupted by an unknown evil force.  Are you up for a challenge?");
+		bookMeta.addPage(ChatColor.RED + "" + ChatColor.BOLD + "     Game Guide" + ChatColor.RESET +
+				"\n" + "     * how to play *" +
+				"\n" + "" +
+				"\n" + "This is a Role Playing Game (RPG), which has several custom features not found on any other server." +
+				"\n" + "" +
+				"\n" + "" +
+				"\n" + "" + ChatColor.BOLD + "Guide:" +
+				"\n" + ChatColor.BLUE + ChatColor.UNDERLINE + "www.MinePile.com/guide");
+		bookMeta.addPage(ChatColor.RED + "" + ChatColor.BOLD + "   Server Rules" + ChatColor.RESET +
+				"\n" + "   * don't break'em *" +
+				"\n" + "" +
+				"\n" + ChatColor.BOLD + "Rules:" + ChatColor.RESET +
+				"\n" + "1. Do not hack!" +
+				"\n" + "2. Do not advertise!" +
+				"\n" + "3. Don't ask for items!" +
+				"\n" + "4. Respect players." +
+				"\n" + "5. Respect staff members." +
+				"\n" + "6. No full CAPS messages.");
+		bookMeta.addPage(ChatColor.RED + "" + ChatColor.BOLD + "     World Map" + ChatColor.RESET +
+				"\n" + "  * whoa, thats big *" +
+				"\n" + "" +
+				"\n" + "The map can be found with the link below." +
+				"\n" + "" +
+				"\n" + "" +
+				"\n" + ChatColor.BOLD + "Map:" + ChatColor.RESET +
+				"\n" + ChatColor.BLUE + ChatColor.UNDERLINE + "www.MinePile.com/map");
+		bookMeta.addPage(ChatColor.RED + "" + ChatColor.BOLD + "     Commands" + ChatColor.RESET +
+				"\n" + "    * boss mode *" +
+				"\n" + "" +
+				"\n" + "There are many commands that will help you on your adventures." +
+				"\n" + "" +
+				"\n" + "The next few pages will contain a list of all the commands you can use." +
+				"\n" + "");
+		bookMeta.addPage(ChatColor.BOLD + "/help" + ChatColor.RESET +
+				"\n" + "Gives you a copy of this book" +
+				"\n" + "" +
+				"\n" + ChatColor.BOLD + "/c <ChannelName>" + ChatColor.RESET +
+				"\n" + "Changes your chat channel." +
+				"\n" + "" +
+				"\n" + ChatColor.BOLD + "/pm <PlayerName>" + ChatColor.RESET +
+				"\n" + "Sends a private message.");
+		bookMeta.addPage(ChatColor.BOLD + "/r <MessageHere>" + ChatColor.RESET +
+				"\n" + "Quick replay to last pm." +
+				"\n" + "" +
+				"\n" + ChatColor.BOLD + "/armorstats" + ChatColor.RESET +
+				"\n" + "Lists all your stats." +
+				"\n" + "" +
+				"\n" + ChatColor.BOLD + "/roll <NumberHere>" + ChatColor.RESET +
+				"\n" + "Rolls a dice.  Can be used to decide who gets an item drop.  Can also be used for gambling.");
+		bookMeta.addPage(ChatColor.BOLD + "/guild" + ChatColor.RESET +
+				"\n" + "Various guild related commands." +
+				"\n" + "" +
+				"\n" + ChatColor.BOLD + "/spawn" + ChatColor.RESET +
+				"\n" + "Takes you back to spawn.");
+		
+
+		fullHelpBook.setItemMeta(bookMeta);
 	}
 
 	private void makeMenuItems() {
@@ -132,7 +225,7 @@ public class PlayerMenuManager {
 
 		//Row 1
 		trackingDevice = new ItemBuilder(Material.COMPASS).setTitle(ChatColor.GREEN + "Tracking Device").addLores(loreTrackingDevice).build();
-		hearthStone = new ItemBuilder(Material.NETHER_STAR).setTitle(ChatColor.LIGHT_PURPLE + "Hearth Stone").addLores(loreHearthStone).build();
+		hearthStone = new ItemBuilder(Material.NETHER_STAR).setTitle(ChatColor.LIGHT_PURPLE + "Hearthstone").addLores(loreHearthStone).build();
 		changeLobby = new ItemBuilder(Material.WATCH).setTitle(ChatColor.GREEN + "Change Lobby").addLores(loreChangeLobby).build();
 		cosmeticMenu = new ItemBuilder(Material.ENDER_CHEST).setTitle(ChatColor.AQUA + "Cosmetic Menu").addLores(loreCosmeticMenu).build();
 
@@ -315,12 +408,19 @@ public class PlayerMenuManager {
 
 				//Setup player again.
 				PlayerCharacterManager.initializePlayer(player);
+				
 			} else if (item.getType().equals(Material.BOOK)) {
 				//Give the player the rule book.
 				giveRuleBook(player);
+				
+			} else if (item.getType().equals(Material.NETHER_STAR)) {
+				//Let the player use the hearth stone.
+				PlayerHearthStoneManager.useHearthStone(player);
+				
 			} else if (item.getType().equals(Material.REDSTONE_COMPARATOR)) {
 				//Open up the settings menu.
 				player.openInventory(playerSettingsMenu.get(player.getUniqueId()));
+				
 			} else {
 				player.sendMessage(ChatColor.GREEN + "Feature coming soon! ™");
 			}
@@ -342,26 +442,7 @@ public class PlayerMenuManager {
 
 	public static void giveRuleBook(Player player) {
 
-		ArrayList<String> lores = new ArrayList<String>();
-
-		lores.add(ChatColor.GRAY + "Soulbound");
-		lores.add("");
-		lores.add(ChatColor.GRAY + "This book covers all the help topics.");
-		lores.add(ChatColor.GRAY + " Read this and get a reward!");
-
-		//Give user the welcome/stats book.
-		ItemStack book = new ItemStack(Material.WRITTEN_BOOK, 1);
-		BookMeta bookMeta = (BookMeta) book.getItemMeta();
-		bookMeta.setTitle(ChatColor.GOLD + "" + ChatColor.BOLD + "Help Book");
-		bookMeta.setLore(lores);
-		bookMeta.setAuthor(ChatColor.DARK_PURPLE + "" + ChatColor.BOLD + "MinePile");
-		bookMeta.addPage(ChatColor.BOLD + "About this Book:");
-		bookMeta.addPage(ChatColor.BOLD + "Commands:");
-		bookMeta.addPage(ChatColor.BOLD + "Help Topics:");
-		bookMeta.addPage(ChatColor.BOLD + "Server Rules:");
 		
-
-		book.setItemMeta(bookMeta);
 
 		//Setup for placing the item in blank inventory slot
 		boolean hasBook = false;
@@ -379,7 +460,7 @@ public class PlayerMenuManager {
 			}
 			
 			//Check if the book exists.
-			if (item != null && item.isSimilar(book)) {
+			if (item != null && item.isSimilar(fullHelpBook)) {
 				hasBook = true;
 				player.sendMessage(ChatColor.RED + "You already have a copy of the help book.");
 
@@ -399,7 +480,7 @@ public class PlayerMenuManager {
 					//Make sure we have not already sent them a book.
 					if (hasBook == false) {
 						//Place book in empty slot.
-						player.getInventory().setItem(i, book);
+						player.getInventory().setItem(i, fullHelpBook.clone());
 						hasBook = true;
 					}
 				} 

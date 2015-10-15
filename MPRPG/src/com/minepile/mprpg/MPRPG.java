@@ -76,6 +76,7 @@ import com.minepile.mprpg.listeners.WeatherChangeListener;
 import com.minepile.mprpg.player.PlayerAttributesManager;
 import com.minepile.mprpg.player.PlayerCharacterManager;
 import com.minepile.mprpg.player.PlayerHealthTagManager;
+import com.minepile.mprpg.player.PlayerHearthStoneManager;
 import com.minepile.mprpg.player.PlayerManager;
 import com.minepile.mprpg.professions.Alchemy;
 import com.minepile.mprpg.professions.Blacksmithing;
@@ -121,6 +122,7 @@ public class MPRPG extends JavaPlugin {
 		PlayerMailManager.getInstance().setup(this);
 		PlayerManager.getInstance().setup(this);
 		PlayerHealthTagManager.getInstance().setup(this);
+		PlayerHearthStoneManager.getInstance().setup(this);
 		PlayerMenuManager.getInstance().setup(this);
 		
 		

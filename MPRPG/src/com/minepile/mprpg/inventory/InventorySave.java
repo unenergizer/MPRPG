@@ -84,6 +84,8 @@ public class InventorySave {
 				//Get basic item info.
 				String itemType = item.getType().name();
 				String itemName = item.getItemMeta().getDisplayName();
+				
+				@SuppressWarnings("deprecation")
 				int itemData = item.getData().getData();
 				int stackSize = item.getAmount();
 
